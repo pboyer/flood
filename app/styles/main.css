@@ -1,0 +1,997 @@
+/* http://blog.stevensanderson.com/2011/10/05/full-height-app-layouts-a-css-trick-to-make-it-easier/ */
+body { 
+	width:  100%;
+  	height: 100%;
+  	margin: 0px;
+  	margin: 0;
+  }
+.row, .col { overflow: hidden; position: absolute; }
+.row { left: 0; right: 0; }
+.col { top: 0; bottom: 0; }
+.scroll-x { overflow-x: auto; }
+.scroll-y { overflow-y: auto; }
+
+#app {
+	font-family: "Trebuchet MS", Helvetica, sans-serif;
+}
+
+.connection {
+	fill:none; 
+	stroke-width: 6;
+	stroke:gray;
+}
+
+#top_container { 
+	z-index: 100;
+	color: white;
+
+	font-size: 12px;
+	top: 0;
+	height: 40px;
+	background: black;
+	width: 100%;
+
+	/* IE10 Consumer Preview */ 
+	background-image: -ms-linear-gradient(top, #333333 0%, #000000 100%);
+
+	/* Mozilla Firefox */ 
+	background-image: -moz-linear-gradient(top, #333333 0%, #000000 100%);
+
+	/* Opera */ 
+	background-image: -o-linear-gradient(top, #333333 0%, #000000 100%);
+
+	/* Webkit (Safari/Chrome 10) */ 
+	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0, #333333), color-stop(1, #000000));
+
+	/* Webkit (Chrome 11+) */ 
+	background-image: -webkit-linear-gradient(top, #333333 0%, #000000 100%);
+
+	/* W3C Markup, IE10 Release Preview */ 
+	background-image: linear-gradient(to bottom, #333333 0%, #000000 100%);
+}
+
+#menus {
+	float: right;
+	padding-left: 20px;
+	padding-top: 10px;
+}
+
+.menu {
+	padding-right: 15px;
+	color: gray;
+}
+
+#file span { 
+	font-weight: 100;
+	padding-top: 50px;
+	margin-left: 20px;
+}
+
+.search-container {
+	z-index: 105;
+	top: 50%;
+	left: 50%;
+	height: 300px;
+	margin-top: -150px;
+	margin-left: -100px;
+	width: 200px;
+	background: none;
+}
+
+.search-top-container {
+	background: black;
+	height: 80px;
+}
+
+.search-title {
+	color: white;
+	padding: 5px;
+	margin: 0px;
+}
+
+.search-list {
+	height: 220px;
+	overflow-y: scroll;
+	overflow-x: hidden;
+	list-style: none;
+	padding: 0;
+	margin: 0;
+}
+
+.search-element {
+	background: #333;
+	color: white;
+	display: block;
+	width: 100%;
+	margin: 0;
+	border-top: solid 1px #444;
+	border-bottom: solid 1px #222;
+	padding: 5px;
+}
+
+.search-element:hover {
+	background: #444;
+}
+
+.library-search-input {
+	padding: 5px;
+	margin: 10px;
+	width: 170px;
+}
+
+#workspaces {
+	position: absolute;
+	top: 40px;
+	bottom: 0px;
+}
+
+#viewer {
+	position: absolute;
+	top: 0px;
+	bottom: 0px;
+}
+
+.blur {
+	-webkit-filter: blur(2px);
+    -moz-filter: blur(2px);
+    -ms-filter: blur(2px);
+    -o-filter: blur(2px);
+    filter: blur(2px);
+}
+
+.workspace_container {
+	position: absolute;
+	top: 0px;
+	bottom: 0px;
+}
+
+.menu-element {
+	height: 40px;
+	color: gray;
+	float: right;
+	padding: 12px;
+	display: inline-block;
+	border-left: 1px solid black;
+}
+
+.menu-element:hover {
+	color: white;
+	background: #333;
+}
+
+#add-workspace-button {
+	border-right: 1px solid black;
+	font-size: 16px;
+	padding: 10px;
+}
+
+.workspace-tab {
+	float: left;
+	height: 40px;
+	color: gray;
+	display: inline-block;
+	border-left: 1px solid black;
+}
+
+.workspace-tab span{
+	margin: 14px 14px 0px 20px;
+	display: inline-block;
+}
+
+.workspace-tab i{
+	opacity: 0.4;
+	margin-right: 10px;
+	padding: 0;
+	display: inline-block;
+}
+
+.workspace-tab i:hover{
+	opacity: 1;
+}
+
+.current-workspace {
+	color: lightblue;
+	background: #222;
+}
+
+.workspace-tab:hover {
+	color: white;
+	background: #333;
+}
+
+.workspaces_curtain {
+	display: none;
+	opacity: 0.7;
+	background: black;
+	top: 0;
+	bottom: 0;
+	z-index: 95;
+}
+
+.collapsed {
+	opacity: 0;
+}
+
+.workspace {
+	z-index: 90;
+	position: absolute;
+	width: 20000px;
+	height: 20000px;
+}
+
+.workspace_back {
+	z-index: 50;
+	position: absolute;
+	width: 20000px;
+	height: 20000px;
+}
+
+.workspace_canvas {
+	position: absolute;
+	width: 20000px;
+	height: 20000px;
+	background-color: rgba(0,0,0,0.3);
+}
+
+#workspace_hide {
+	font-size: 16px;
+	padding: 10px;
+	bottom: 0;
+	opacity: 0.7;
+	position: absolute;
+	z-index: 100;
+}
+
+.rightside {
+	right: 0;
+}
+
+.leftside {
+	left: 0;
+}
+
+#workspace_hide:hover {
+	opacity: 0.5;
+}
+
+.node {
+
+	text-shadow: 0px -3px #000;
+
+	transition: box-shadow 0.15s;
+	-webkit-transition: box-shadow 0.15s; /* Safari */
+
+	-webkit-user-select: none; /* Chrome/Safari */        
+	-moz-user-select: none; /* Firefox */
+	-ms-user-select: none; /* IE10+ */
+
+	/* Rules below not implemented in browsers yet */
+	-o-user-select: none;
+	user-select: none;
+
+	-webkit-box-shadow: 0px 0px 3px 0px #000; /* Android 2.3+, iOS 4.0.2-4.2, Safari 3-4 */
+    box-shadow: 0px 0px 3px 0px #000; /* Chrome 6+, Firefox 4+, IE 9+, iOS 5+, */
+
+	z-index: 98;
+	border-radius:5px;
+	position: absolute;
+	background: #444;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	color: #DDD;
+
+	/* IE10 Consumer Preview */ 
+	background-image: -ms-radial-gradient(center top, circle farthest-corner, #444444 0%, #1D0722 100%);
+
+	/* Mozilla Firefox */ 
+	background-image: -moz-radial-gradient(center top, circle farthest-corner, #444444 0%, #1D0722 100%);
+
+	/* Opera */ 
+	background-image: -o-radial-gradient(center top, circle farthest-corner, #444444 0%, #1D0722 100%);
+
+	/* Webkit (Safari/Chrome 10) */ 
+	background-image: -webkit-gradient(radial, center top, 0, center top, 553, color-stop(0, #444444), color-stop(1, #1D0722));
+
+	/* Webkit (Chrome 11+) */ 
+	background-image: -webkit-radial-gradient(center top, circle farthest-corner, #444444 0%, #1D0722 100%);
+
+	/* W3C Markup, IE10 Release Preview */ 
+	background-image: radial-gradient(circle farthest-corner at center top, #444444 0%, #1D0722 100%);
+}
+
+.watch-data-container{
+	max-width: 180px;
+	max-height: 360px;
+	font-size: 8;
+	font-family: monospace;
+	overflow:scroll;
+	text-overflow:clip;
+	margin: 0px 5px 0px 10px;
+	color: lightblue;
+	text-shadow: none;
+	scroll: auto;
+	border-radius:3px;
+	font-size: 10;
+	border-top: 1px solid #111;
+	border-bottom-color: : 1px solid #AAA;
+
+
+	background-image: -webkit-gradient(linear, 0 100%, 0 0, from(#888888), to(#444444));
+	background-image: -webkit-linear-gradient(#888888 0%, #444444 100%);
+	background-image: -moz-linear-gradient(#888888 0%, #444444 100%);
+	background-image: -o-linear-gradient(#888888 0%, #444444 100%);
+	background-image: linear-gradient(#888888 0%, #444444 100%);
+}
+
+.currentValue {
+	color:lightblue;
+}
+
+.toggle-vis {
+	display: none;
+	position: absolute;
+	bottom: 0;
+	right: 0;
+	opacity: 0.3;
+	padding: 5px;
+}
+
+.toggle-vis:hover {
+	opacity: 1;
+}
+
+.node-number-input {
+	padding:2px;
+	margin:2px;
+}
+
+.node-selected {
+	color: white;
+	-webkit-box-shadow: 0px 0px 10px 3px lightblue;
+	-moz-box-shadow: 0px 0px 10px 3px lightblue;
+	box-shadow: 0px 0px 10px 3px lightblue;
+}
+
+.node-data-container {
+	display: inline-block;
+	text-align: center;
+	height: 100%;
+	float: left;
+	padding: 10px;
+}
+
+.node-inputs, .node-outputs {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: inline-block;
+	border-bottom: 1px solid #666;
+	float: left;
+}
+
+.node-port {
+	padding: 5px;
+	margin: 0;
+
+	border: 1px solid #555;
+	border-bottom: none;
+}
+
+.node-port:hover {
+	color: white;
+	background-color: rgba(0,0,0,0.7);
+}
+
+.node-port-output {
+	border-right: none;
+}
+
+.node-port-input {
+	border-left: none;
+}
+
+body {
+	margin: 0;
+	padding: 0;
+}
+
+
+
+[class^="icon-"],
+[class*=" icon-"] {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin-top: 1px;
+  *margin-right: .3em;
+  line-height: 14px;
+  vertical-align: text-top;
+  background-image: url("../images/glyphicons-halflings.png");
+  background-position: 14px 14px;
+  background-repeat: no-repeat;
+}
+
+/* White icons with optional class, or on hover/focus/active states of certain elements */
+
+.icon-white,
+.nav-pills > .active > a > [class^="icon-"],
+.nav-pills > .active > a > [class*=" icon-"],
+.nav-list > .active > a > [class^="icon-"],
+.nav-list > .active > a > [class*=" icon-"],
+.navbar-inverse .nav > .active > a > [class^="icon-"],
+.navbar-inverse .nav > .active > a > [class*=" icon-"],
+.dropdown-menu > li > a:hover > [class^="icon-"],
+.dropdown-menu > li > a:focus > [class^="icon-"],
+.dropdown-menu > li > a:hover > [class*=" icon-"],
+.dropdown-menu > li > a:focus > [class*=" icon-"],
+.dropdown-menu > .active > a > [class^="icon-"],
+.dropdown-menu > .active > a > [class*=" icon-"],
+.dropdown-submenu:hover > a > [class^="icon-"],
+.dropdown-submenu:focus > a > [class^="icon-"],
+.dropdown-submenu:hover > a > [class*=" icon-"],
+.dropdown-submenu:focus > a > [class*=" icon-"] {
+  background-image: url("../images/glyphicons-halflings-white.png");
+}
+
+.icon-glass {
+  background-position: 0      0;
+}
+
+.icon-music {
+  background-position: -24px 0;
+}
+
+.icon-search {
+  background-position: -48px 0;
+}
+
+.icon-envelope {
+  background-position: -72px 0;
+}
+
+.icon-heart {
+  background-position: -96px 0;
+}
+
+.icon-star {
+  background-position: -120px 0;
+}
+
+.icon-star-empty {
+  background-position: -144px 0;
+}
+
+.icon-user {
+  background-position: -168px 0;
+}
+
+.icon-film {
+  background-position: -192px 0;
+}
+
+.icon-th-large {
+  background-position: -216px 0;
+}
+
+.icon-th {
+  background-position: -240px 0;
+}
+
+.icon-th-list {
+  background-position: -264px 0;
+}
+
+.icon-ok {
+  background-position: -288px 0;
+}
+
+.icon-remove {
+  background-position: -312px 0;
+}
+
+.icon-zoom-in {
+  background-position: -336px 0;
+}
+
+.icon-zoom-out {
+  background-position: -360px 0;
+}
+
+.icon-off {
+  background-position: -384px 0;
+}
+
+.icon-signal {
+  background-position: -408px 0;
+}
+
+.icon-cog {
+  background-position: -432px 0;
+}
+
+.icon-trash {
+  background-position: -456px 0;
+}
+
+.icon-home {
+  background-position: 0 -24px;
+}
+
+.icon-file {
+  background-position: -24px -24px;
+}
+
+.icon-time {
+  background-position: -48px -24px;
+}
+
+.icon-road {
+  background-position: -72px -24px;
+}
+
+.icon-download-alt {
+  background-position: -96px -24px;
+}
+
+.icon-download {
+  background-position: -120px -24px;
+}
+
+.icon-upload {
+  background-position: -144px -24px;
+}
+
+.icon-inbox {
+  background-position: -168px -24px;
+}
+
+.icon-play-circle {
+  background-position: -192px -24px;
+}
+
+.icon-repeat {
+  background-position: -216px -24px;
+}
+
+.icon-refresh {
+  background-position: -240px -24px;
+}
+
+.icon-list-alt {
+  background-position: -264px -24px;
+}
+
+.icon-lock {
+  background-position: -287px -24px;
+}
+
+.icon-flag {
+  background-position: -312px -24px;
+}
+
+.icon-headphones {
+  background-position: -336px -24px;
+}
+
+.icon-volume-off {
+  background-position: -360px -24px;
+}
+
+.icon-volume-down {
+  background-position: -384px -24px;
+}
+
+.icon-volume-up {
+  background-position: -408px -24px;
+}
+
+.icon-qrcode {
+  background-position: -432px -24px;
+}
+
+.icon-barcode {
+  background-position: -456px -24px;
+}
+
+.icon-tag {
+  background-position: 0 -48px;
+}
+
+.icon-tags {
+  background-position: -25px -48px;
+}
+
+.icon-book {
+  background-position: -48px -48px;
+}
+
+.icon-bookmark {
+  background-position: -72px -48px;
+}
+
+.icon-print {
+  background-position: -96px -48px;
+}
+
+.icon-camera {
+  background-position: -120px -48px;
+}
+
+.icon-font {
+  background-position: -144px -48px;
+}
+
+.icon-bold {
+  background-position: -167px -48px;
+}
+
+.icon-italic {
+  background-position: -192px -48px;
+}
+
+.icon-text-height {
+  background-position: -216px -48px;
+}
+
+.icon-text-width {
+  background-position: -240px -48px;
+}
+
+.icon-align-left {
+  background-position: -264px -48px;
+}
+
+.icon-align-center {
+  background-position: -288px -48px;
+}
+
+.icon-align-right {
+  background-position: -312px -48px;
+}
+
+.icon-align-justify {
+  background-position: -336px -48px;
+}
+
+.icon-list {
+  background-position: -360px -48px;
+}
+
+.icon-indent-left {
+  background-position: -384px -48px;
+}
+
+.icon-indent-right {
+  background-position: -408px -48px;
+}
+
+.icon-facetime-video {
+  background-position: -432px -48px;
+}
+
+.icon-picture {
+  background-position: -456px -48px;
+}
+
+.icon-pencil {
+  background-position: 0 -72px;
+}
+
+.icon-map-marker {
+  background-position: -24px -72px;
+}
+
+.icon-adjust {
+  background-position: -48px -72px;
+}
+
+.icon-tint {
+  background-position: -72px -72px;
+}
+
+.icon-edit {
+  background-position: -96px -72px;
+}
+
+.icon-share {
+  background-position: -120px -72px;
+}
+
+.icon-check {
+  background-position: -144px -72px;
+}
+
+.icon-move {
+  background-position: -168px -72px;
+}
+
+.icon-step-backward {
+  background-position: -192px -72px;
+}
+
+.icon-fast-backward {
+  background-position: -216px -72px;
+}
+
+.icon-backward {
+  background-position: -240px -72px;
+}
+
+.icon-play {
+  background-position: -264px -72px;
+}
+
+.icon-pause {
+  background-position: -288px -72px;
+}
+
+.icon-stop {
+  background-position: -312px -72px;
+}
+
+.icon-forward {
+  background-position: -336px -72px;
+}
+
+.icon-fast-forward {
+  background-position: -360px -72px;
+}
+
+.icon-step-forward {
+  background-position: -384px -72px;
+}
+
+.icon-eject {
+  background-position: -408px -72px;
+}
+
+.icon-chevron-left {
+  background-position: -432px -72px;
+}
+
+.icon-chevron-right {
+  background-position: -456px -72px;
+}
+
+.icon-plus-sign {
+  background-position: 0 -96px;
+}
+
+.icon-minus-sign {
+  background-position: -24px -96px;
+}
+
+.icon-remove-sign {
+  background-position: -48px -96px;
+}
+
+.icon-ok-sign {
+  background-position: -72px -96px;
+}
+
+.icon-question-sign {
+  background-position: -96px -96px;
+}
+
+.icon-info-sign {
+  background-position: -120px -96px;
+}
+
+.icon-screenshot {
+  background-position: -144px -96px;
+}
+
+.icon-remove-circle {
+  background-position: -168px -96px;
+}
+
+.icon-ok-circle {
+  background-position: -192px -96px;
+}
+
+.icon-ban-circle {
+  background-position: -216px -96px;
+}
+
+.icon-arrow-left {
+  background-position: -240px -96px;
+}
+
+.icon-arrow-right {
+  background-position: -264px -96px;
+}
+
+.icon-arrow-up {
+  background-position: -289px -96px;
+}
+
+.icon-arrow-down {
+  background-position: -312px -96px;
+}
+
+.icon-share-alt {
+  background-position: -336px -96px;
+}
+
+.icon-resize-full {
+  background-position: -360px -96px;
+}
+
+.icon-resize-small {
+  background-position: -384px -96px;
+}
+
+.icon-plus {
+  background-position: -408px -96px;
+}
+
+.icon-minus {
+  background-position: -433px -96px;
+}
+
+.icon-asterisk {
+  background-position: -456px -96px;
+}
+
+.icon-exclamation-sign {
+  background-position: 0 -120px;
+}
+
+.icon-gift {
+  background-position: -24px -120px;
+}
+
+.icon-leaf {
+  background-position: -48px -120px;
+}
+
+.icon-fire {
+  background-position: -72px -120px;
+}
+
+.icon-eye-open {
+  background-position: -96px -120px;
+}
+
+.icon-eye-close {
+  background-position: -120px -120px;
+}
+
+.icon-warning-sign {
+  background-position: -144px -120px;
+}
+
+.icon-plane {
+  background-position: -168px -120px;
+}
+
+.icon-calendar {
+  background-position: -192px -120px;
+}
+
+.icon-random {
+  width: 16px;
+  background-position: -216px -120px;
+}
+
+.icon-comment {
+  background-position: -240px -120px;
+}
+
+.icon-magnet {
+  background-position: -264px -120px;
+}
+
+.icon-chevron-up {
+  background-position: -288px -120px;
+}
+
+.icon-chevron-down {
+  background-position: -313px -119px;
+}
+
+.icon-retweet {
+  background-position: -336px -120px;
+}
+
+.icon-shopping-cart {
+  background-position: -360px -120px;
+}
+
+.icon-folder-close {
+  width: 16px;
+  background-position: -384px -120px;
+}
+
+.icon-folder-open {
+  width: 16px;
+  background-position: -408px -120px;
+}
+
+.icon-resize-vertical {
+  background-position: -432px -119px;
+}
+
+.icon-resize-horizontal {
+  background-position: -456px -118px;
+}
+
+.icon-hdd {
+  background-position: 0 -144px;
+}
+
+.icon-bullhorn {
+  background-position: -24px -144px;
+}
+
+.icon-bell {
+  background-position: -48px -144px;
+}
+
+.icon-certificate {
+  background-position: -72px -144px;
+}
+
+.icon-thumbs-up {
+  background-position: -96px -144px;
+}
+
+.icon-thumbs-down {
+  background-position: -120px -144px;
+}
+
+.icon-hand-right {
+  background-position: -144px -144px;
+}
+
+.icon-hand-left {
+  background-position: -168px -144px;
+}
+
+.icon-hand-up {
+  background-position: -192px -144px;
+}
+
+.icon-hand-down {
+  background-position: -216px -144px;
+}
+
+.icon-circle-arrow-right {
+  background-position: -240px -144px;
+}
+
+.icon-circle-arrow-left {
+  background-position: -264px -144px;
+}
+
+.icon-circle-arrow-up {
+  background-position: -288px -144px;
+}
+
+.icon-circle-arrow-down {
+  background-position: -312px -144px;
+}
+
+.icon-globe {
+  background-position: -336px -144px;
+}
+
+.icon-wrench {
+  background-position: -360px -144px;
+}
+
+.icon-tasks {
+  background-position: -384px -144px;
+}
+
+.icon-filter {
+  background-position: -408px -144px;
+}
+
+.icon-briefcase {
+  background-position: -432px -144px;
+}
+
+.icon-fullscreen {
+  background-position: -456px -144px;
+}

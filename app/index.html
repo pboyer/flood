@@ -1,0 +1,149 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title></title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+        <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+        <link rel="stylesheet" href="styles/main.css">
+        <!-- build:js scripts/vendor/modernizr.js -->
+        <script src="bower_components/modernizr/modernizr.js"></script>
+        <!-- endbuild -->
+    </head>
+    
+    <body>
+
+        <div id="app">
+
+          <div id="top_container" class="row">
+                
+            <div id="workspace-tabs"></div>
+
+            <div id="add-workspace-button" class="menu-element" style="float: left">+</div>
+            <div id="login-button" class="menu-element">Login</div>
+            <div id="settings-button" class="menu-element">Settings</div>
+            <div id="help-button" class="menu-element">Help</div>
+
+          </div> 
+
+          <div id="workspaces" class="row">
+
+            <div id="workspace_hide" src="assets/arrow_left.png" class="rightside">
+              Show/Hide 3d
+            </div>
+            <div class="workspaces_curtain row"></div>
+
+          </div>
+
+          <div id="viewer" class="row blur"></div>
+
+        </div>
+
+      </body>
+
+      <script type="text/template" id="node-template">
+
+        <ul class="node-inputs">
+          <% _.each(type.inputs, function(ele, index) { %> 
+            <li class="node-port node-port-input" data-index=" <%= index %> "> <span class="node-port-name"> <%= ele.name %> </span>  </li> 
+          <% }); %>
+        </ul>
+
+        <div class="node-data-container" >
+          <span class="name searchfield"><%- typeName %></span>
+        </div>
+
+        <ul class="node-outputs" >
+          <% _.each(type.outputs, function(ele, index) { %> 
+            <li class="node-port node-port-output" data-index=" <%= index %> "> <span class="node-port-name"> <%= ele.name %> </span> </li> 
+          <% }); %>
+        </ul>
+
+        <div class="toggle-vis" title="Toggle geometry visibility">
+          <img src="images/toggle_vis.png"  />
+        </div>
+
+      </script>
+
+      <script type="text/template" id="node-watch-template">
+
+        <ul class="node-inputs">
+          <% _.each(type.inputs, function(ele, index) { %> 
+            <li class="node-port node-port-input" data-index=" <%= index %> "> <span class="node-port-name"> <%= ele.name %> </span>  </li> 
+          <% }); %>
+        </ul>
+
+        <div class="node-data-container watch-data-container" >
+          <span class="name searchfield"><%= JSON.stringify(lastValue) %></span>
+        </div>
+
+      </script>
+
+      <script type="text/template" id="workspace-tab-template">
+
+        <span> 
+          <%= name %> 
+        </span>
+        <i class="icon-remove icon-white remove-button"></i>
+
+      </script>
+
+      <script type="text/template" id="node-num-template">
+
+        <div class="node-data-container" >
+          <input class="node-number-input" min="-100" max="100" type="range" value="<%= type.value %>"></input> 
+        </div>
+
+        <div class="node-data-container watch-data-container" style="margin-right: 10px; margin-left: 5px">
+          <span class="currentValue" style="font-size: 14px;"><%= type.value %></span>
+        </div>
+
+        <ul class="node-outputs" >
+          <% _.each(type.outputs, function(ele, index) { %> 
+            <li class="node-port node-port-output" data-index=" <%= index %> "> <span class="node-port-name"> <%= ele.name %> </span> </li> 
+          <% }); %>
+        </ul>
+
+      </script>
+
+      <script type="text/template" id="search-template">
+        <div class="search-top-container">
+          <h3 class="search-title">Add a node</h3>
+          <input placeholder="Search for a node..." class="library-search-input search"></input>
+        </div>
+        <ul class="list search-list">
+        </ul>
+      </script>
+
+      <script type="text/template" id="library-element-template">
+        <span class="name"><%= name %></span>
+      </script>
+
+      <script type="text/template" id="connection-template">
+        M<%-aX%>,<%-aY%> C<%-bX%>,<%-bY%> <%-cX%>,<%-cY%> <%-dX%>,<%-dY%>
+      </script>
+
+
+
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+
+        <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+        <!-- <script>
+            var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']];
+            (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+            g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+            s.parentNode.insertBefore(g,s)}(document,'script'));
+        </script> -->
+
+        <!-- build:js scripts/main.js -->
+        <script data-main="scripts/main" src="bower_components/requirejs/require.js"></script>
+        <!-- endbuild -->
+</body>
+</html>

@@ -1,0 +1,18 @@
+{ 
+	"_id": 1,
+	"name": "Peter's Session",
+	"currentWorkspace": 1,
+	"workspaces": [{
+		"name": "First Workspace",
+		"_id": 1,
+	  "nodes": [
+			{"_id": 5, "typeName": "Mult", "name": "node1", "position": [50,100] },
+			{"_id": 6, "typeName": "Num", "name": "node2", "position": [100,200] },
+			{"_id": 7, "typeName": "Div", "name": "node4", "position": [200,200] },
+			{"_id": 8, "typeName": "Sub", "name": "node5", "position": [300,200] }
+		],
+	  "connections": [
+			{"_id": 1, "startNodeId": 5, "endNodeId": 7}
+		]
+	}]
+}
