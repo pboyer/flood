@@ -40,6 +40,10 @@
 
           </div>
 
+          <div id="help" class="col">
+            
+          </div>
+
           <div id="viewer" class="row blur"></div>
 
         </div>
@@ -128,7 +132,25 @@
         M<%-aX%>,<%-aY%> C<%-bX%>,<%-bY%> <%-cX%>,<%-cY%> <%-dX%>,<%-dY%>
       </script>
 
+      <script type="text/template" id="help-template">
 
+        <div class="help-container">
+          <h2 class="help-title">Help</h2>
+          <h3 class="help-title">Add a node</h3>
+          <p>Double click on your workspace to make a new node </p>
+          <h3 class="help-title">Remove a node</h3>
+          <p>Select the node and hit the delete key</p>
+          <h3 class="help-title">Making a connection</h3>
+          <p>Click and drag from an output port to an input port</p>
+          <h3 class="help-title">Removing a connection</h3>
+          <p>Click and drag away from the connections end port</p>
+          <h3 class="help-title">Select multiple nodes</h3>
+          <p>Hold shift while clicking on new nodes</p>
+        </div>
+
+        <i class="icon-remove exit-help" />
+
+      </script>
 
         <!--[if lt IE 7]>
             <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>

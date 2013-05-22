@@ -47,6 +47,10 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView'], function(Backbone, 
       var lastValue = this.model.get('lastValue');
       var temp;
 
+
+      if ( !lastValue )
+        return;
+
       if ( lastValue.polygons ){ 
         temp = [];
         temp.push(lastValue);

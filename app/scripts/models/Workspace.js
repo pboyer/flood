@@ -57,6 +57,8 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD'], fu
 
       this.run();
 
+      this.on('change', this.printModel, this);
+
       // need custom event on Workspace model to update the proxyConnectionView
     },
 
@@ -64,6 +66,10 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD'], fu
       resp.nodes = new Nodes( resp.nodes );
       resp.connections = new Connections( resp.connections )
       return resp;
+    },
+
+    printModel: function(){
+      console.log(this.toJSON());
     },
 
     startProxyConnection: function(startNodeId, nodePort, startPosition) {

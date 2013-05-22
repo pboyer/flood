@@ -4,8 +4,10 @@ define([  'backbone',
           'Search', 
           'SearchView', 
           'WorkspaceTabView', 
-          'Workspace'], 
-          function(Backbone, App, WorkspaceView, Search, SearchView, WorkspaceTabView, Workspace) {
+          'Workspace',
+          'HelpView',
+          'Help'], 
+          function(Backbone, App, WorkspaceView, Search, SearchView, WorkspaceTabView, Workspace, HelpView, Help) {
 
   return Backbone.View.extend({
 
@@ -17,15 +19,16 @@ define([  'backbone',
 
       this.model.get('workspaces').on('add', this.addWorkspaceTab, this);
       this.model.get('workspaces').on('remove', this.removeWorkspaceTab, this);
-      this.model.get('workspaces').on('change:showingSettings', this.viewSettings, this);
-      this.model.get('workspaces').on('change:showingLogin', this.viewLogin, this);
-      this.model.get('workspaces').on('change:showingHelp', this.viewHelp, this);
+
+      this.model.on('change:showingSettings', this.viewSettings, this);
+      this.model.on('change:showingLogin', this.viewLogin, this);
+      this.model.on('change:showingHelp', this.viewHelp, this);
 
     },
 
     events: {
       'click .workspaces_curtain' : 'endSearch',
-      'click #help-button': 'helpClick',
+      'click #help-button': 'showHelpClick',
       'click #settings-button': 'settingsClick',
       'click #login-button': 'loginClick',
       'click #workspace_hide' : 'toggleViewer',
@@ -37,7 +40,16 @@ define([  'backbone',
     },
 
     viewHelp: function(){
-      
+      if (!this.helpView){
+        this.helpView = new HelpView({model: new Help() }, { app: this.model });
+        this.helpView.render();
+      }
+
+      if (this.model.get('showingHelp') === true){
+        this.helpView.$el.show();  
+      } else {
+        this.helpView.$el.hide();
+      }
     },
 
     viewLogin: function(){
@@ -48,14 +60,17 @@ define([  'backbone',
 
     },
 
-    helpClick: function(){
-      this.model.showHelp();
-      console.log('help me');
+    showHelpClick: function(){
+      this.model.set('showingHelp', true);
+    },
+
+    hideHelpClick: function(){
+      this.model.set('showingHelp', true);
     },
 
     settingsClick: function(){
       this.model.showSettings();
-      console.log('set me')
+      console.log('set me');
     },
 
     loginClick: function(){

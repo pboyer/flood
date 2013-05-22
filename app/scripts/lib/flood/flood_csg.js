@@ -80,7 +80,7 @@ define(['FLOOD'], function(FLOOD) {
 		FLOOD.baseTypes.NodeType.call(this, typeData );
 
 		this.eval = function(center, radius) {
-			console.log('cube eval')
+
 			return CSG.cube({
 					  center: center,
 					  radius: radius

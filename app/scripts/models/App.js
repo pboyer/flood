@@ -21,7 +21,7 @@ define(['backbone', 'Workspaces', 'Node'], function(Backbone, Workspaces, Node){
       workspaces: new Workspaces(),
       currentWorkspace: null,
       searching: false,
-      mode: 0
+      showingHelp: false
     },
 
     parse : function(resp) {

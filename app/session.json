@@ -6,13 +6,17 @@
 		"name": "First Workspace",
 		"_id": 1,
 	  "nodes": [
-			{"_id": 5, "typeName": "Mult", "name": "node1", "position": [50,100] },
-			{"_id": 6, "typeName": "Num", "name": "node2", "position": [100,200] },
-			{"_id": 7, "typeName": "Div", "name": "node4", "position": [200,200] },
-			{"_id": 8, "typeName": "Sub", "name": "node5", "position": [300,200] }
+			{"_id": 6, "typeName": "Num", "lastValue": 10, "name": "node2", "position": [100,200] },
+			{"_id": 8, "typeName": "Sub", "name": "node5", "position": [400,300] },
+			{"_id": 9, "typeName": "Vec3", "name": "node6", "position": [600,300] },
+			{"_id": 10, "typeName": "Sphere", "name": "node7", "position": [800,300] },
+			{"_id": 11, "typeName": "Cube", "name": "node7", "position": [600,100] }
 		],
 	  "connections": [
-			{"_id": 1, "startNodeId": 5, "endNodeId": 7}
+	  		{"_id": 1, "startNodeId": 6, "endNodeId": 11, "endPortIndex": 1},
+	  		{"_id": 2, "startNodeId": 6, "endNodeId": 8, "endPortIndex": 1},
+	  		{"_id": 3, "startNodeId": 8, "endNodeId": 9, "endPortIndex": 2},
+	  		{"_id": 4, "startNodeId": 9, "endNodeId": 10, "endPortIndex": 0}
 		]
 	}]
 }

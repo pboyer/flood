@@ -21,6 +21,42 @@ body {
 	stroke:gray;
 }
 
+#help {
+	display: none;
+	z-index: 100;
+	right: 0;
+	width: 300px;
+	bottom: 0;
+	top: 40px;
+	/* IE10 Consumer Preview */ 
+	background-image: -ms-radial-gradient(center, circle farthest-corner, #CCCCCC 0%, #EFEFEF 100%);
+
+	/* Mozilla Firefox */ 
+	background-image: -moz-radial-gradient(center, circle farthest-corner, #CCCCCC 0%, #EFEFEF 100%);
+
+	/* Opera */ 
+	background-image: -o-radial-gradient(center, circle farthest-corner, #CCCCCC 0%, #EFEFEF 100%);
+
+	/* Webkit (Safari/Chrome 10) */ 
+	background-image: -webkit-gradient(radial, center center, 0, center center, 497, color-stop(0, #CCCCCC), color-stop(1, #EFEFEF));
+
+	/* Webkit (Chrome 11+) */ 
+	background-image: -webkit-radial-gradient(center, circle farthest-corner, #CCCCCC 0%, #EFEFEF 100%);
+
+	/* W3C Markup, IE10 Release Preview */ 
+	background-image: radial-gradient(circle farthest-corner at center, #CCCCCC 0%, #EFEFEF 100%);
+}
+
+.help-container {
+	margin: 30px;
+}
+
+.exit-help {
+	position: absolute;
+	top: 15px;
+	right: 15px;
+}
+
 #top_container { 
 	z-index: 100;
 	color: white;

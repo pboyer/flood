@@ -88,14 +88,16 @@ define(['backbone'], function(Backbone) {
         endPos = this.model.get('endProxyPosition');
       }
 
+      var offset = 0.65 * Math.sqrt( Math.pow( endPos[0]-startPos[0], 2 ) + Math.pow( startPos[1]-endPos[1], 2 ) );
+
       return {
           aX : startPos[0]
           , aY : startPos[1]
-          , bX : startPos[0] + 80
+          , bX : startPos[0] + offset
           , bY : startPos[1]
           , dX : endPos[0]
           , dY : endPos[1]
-          , cX : endPos[0] - 80
+          , cX : endPos[0] - offset
           , cY : endPos[1]
         };
     }

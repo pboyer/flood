@@ -26,6 +26,10 @@ define(['backbone', 'FLOOD'], function(Backbone, FLOOD) {
         this.set( 'type', new FLOOD.nodeTypes.Add() );
       }
 
+      if (atts.lastValue){
+        this.get('type').value = atts.lastValue;
+      }
+
       var that = this;
       this.get('type').evalComplete = function(a, b){
         return that.evalComplete(a,b);
