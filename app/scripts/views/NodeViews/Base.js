@@ -61,6 +61,8 @@ define(['backbone', 'jqueryuidraggable'], function(Backbone, jqueryuidraggable) 
       if ( !this.model.isPortConnected(index, false) )
         return;
 
+      console.log('begin port disconnection')
+
       var inputConnections = this.model.get('inputConnections')
         , connection = inputConnections[index][0]
         , oppos = connection.getOpposite( this.model );
@@ -73,9 +75,11 @@ define(['backbone', 'jqueryuidraggable'], function(Backbone, jqueryuidraggable) 
 
     endPortConnection: function(e){
 
-      if (!this.workspace.draggingProxy)
+      if ( !this.workspace.draggingProxy )
         return;
 
+      console.log( this.workspace.draggingProxy )
+      console.log('end port disconnection')
       var index = parseInt( $(e.currentTarget).attr('data-index') );
       this.workspace.completeProxyConnection(this.model.get('_id'), index );
       e.stopPropagation();

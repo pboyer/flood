@@ -119,56 +119,7 @@ define(function() {
 			var evalClosure = (function() { 
 				return function() {
 						if ( that.isDirty() ){
-
-							// look at all the arguments, if one or more than one of the arguments is a FloodList
-							// we form the longest list possible 
-							var args = Array.prototype.slice.call(arguments);
-							
-							// are any of the args a FloodList
-							// if not, use the familiar functionality
-							// if so, we need do some iteration
-							var containsList = args.reduce(function(prev, current){
-								return (typeof current === "object" && current.List) || prev;
-							}, 0);
-
-							if (!containsList){
-								that.value = that.eval.apply(that, arguments);
-							} else {
-
-								// get the maximum length array in the list
-								var listLength = {};
-								var maxLength = args.reduce(function(prev, current, i){
-									if (typeof current === "object" && current.List){
-										var l = current.List.length;
-										listLength[i] = l; 
-										return l > prev ? l : prev;
-									}
-									return prev;
-								}, 0);
-
-								var results = new FLOOD.baseTypes.List();
-
-								// there will be at most maxLength invocations
-								for (var i = 0; i < maxLength; i++) {
-									var argList = [];
-
-									// we look at each argument
-									for (var j = 0; j < args.length; j++) {
-
-										var argLength = listLength[j];
-										if (argLength === undefined) { // it's not a floodList
-											argList.push( args[j] );
-										} else {
-											// get the ith or last element in the array
-											var ind = Math.min(i, listLength[j]-1);
-											argList.push( args[j].List[ind] );
-										}
-									}
-
-									results.List.push( that.eval.apply(that, argList) );
-								}
-								that.value = results;
-							}
+							that.value = that.eval.apply(that, arguments);
 							that.markClean();
 						}
 						that.evalComplete(that, arguments);

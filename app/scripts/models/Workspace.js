@@ -92,6 +92,7 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD'], fu
 
     completeProxyConnection: function(endNode, endPort) {
 
+      this.draggingProxy = false;
       this.trigger('endProxyDrag');
 
       // this is where we started drawing the connection
@@ -99,7 +100,7 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD'], fu
         , startPort = this.proxyConnection.get('startPortIndex');
 
       this.makeConnection(startNodeId, startPort, endNode, endPort);
-      this.draggingProxy = true;
+      
       return this;
     },
 
@@ -143,7 +144,7 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD'], fu
 
     endProxyConnection: function() {
       this.proxyConnection.set('hidden', true);
-      this.draggingProxy = true;
+      this.draggingProxy = false;
       return this;
     },
 
