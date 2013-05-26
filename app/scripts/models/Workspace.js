@@ -57,7 +57,7 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD'], fu
 
       this.run();
 
-      this.on('change', this.printModel, this);
+      // this.on('change', this.printModel, this);
 
       // need custom event on Workspace model to update the proxyConnectionView
     },

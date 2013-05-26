@@ -1,3 +1,7 @@
+if (typeof define !== 'function') {
+    var define = require('amdefine')(module);
+}
+
 define(function() {
 
 	if (typeof Object.create !== 'function') {
@@ -7,6 +11,28 @@ define(function() {
 	        return new F();
 	    };
 	}
+
+
+	// partial function application
+	Function.prototype.curry = function() {
+    var fn = this, args = Array.prototype.slice.call(arguments);
+
+    return function() {
+      return fn.apply(this, args.concat(
+        Array.prototype.slice.call(arguments)));
+    };
+  };
+
+	Function.prototype.partial = function(){
+    var fn = this, args = Array.prototype.slice.call(arguments);
+    return function(){
+      var arg = 0;
+      for ( var i = 0; i < args.length && arg < arguments.length; i++ )
+        if ( args[i] === undefined )
+          args[i] = arguments[arg++];
+      return fn.apply(this, args);
+    };
+  };
 
 	Array.prototype.remove = function(from, to) {
 	  var rest = this.slice((to || from) + 1 || this.length);
@@ -116,18 +142,42 @@ define(function() {
 		this.compile = function() { 
 			
 			var that = this;
-			var evalClosure = (function() { 
-				return function() {
+
+			var partialEvalClosure = (function() { 
+
+					// if we have enough args, execute, otherwise return function
+					return function() {
 						if ( that.isDirty() ){
-							that.value = that.eval.apply(that, arguments);
+
+							// if any argument is undefined, perform partial fun application
+							var noUndefinedArgs = true;
+							for (var i = 0; i < arguments.length; i++){
+								if ( arguments[i] === undefined ){
+									noUndefinedArgs = false;
+									break;
+								}
+							}
+
+							if (noUndefinedArgs){ // actually evaluate the function
+								that.value = that.eval.apply(that, arguments);
+							} else { // return a partial function application
+								var originalArgs = arguments;
+								that.value = (function(){
+									return function(){
+										return that.eval.partial.apply(that.eval, originalArgs).apply(that, arguments);
+									}
+								})();
+							}
+							
 							that.markClean();
 						}
 						that.evalComplete(that, arguments);
 						return that.value;
 					};
+
 			})();
 
-			return [evalClosure].concat( this.inputs.map(function(input){
+			return [partialEvalClosure].concat( this.inputs.map(function(input){
 				return input.compile();
 			}));
 		
@@ -173,13 +223,16 @@ define(function() {
 
 		FLOOD.baseTypes.NodePort.call(this, name, type, parentNode, parentIndex, oppNode, oppIndex );
 		this.defaultVal = defaultVal || 0;
+		this.useDefault = true;
 
 		this.printExpression = function() {
 			if (this.oppNode && this.oppIndex === 0)
 				return this.oppNode.printExpression();
 			if (this.oppNode && this.oppIndex != 0)
 				return '(pick ' + this.oppIndex + ' ' + this.oppNode.printExpression() + ')';
-			return this.defaultVal;
+			if (this.useDefault === true )
+				return this.defaultVal;
+			return "_";
 		}
 
 		this.compile = function() {
@@ -187,7 +240,9 @@ define(function() {
 				return this.oppNode.compile();
 			if (this.oppNode && this.oppIndex != 0)
 				return ['pick', this.oppIndex, this.oppNode.compile()];
-			return this.defaultVal;
+			if (this.useDefault === true)
+				return this.defaultVal;
+			return undefined;
 		}
 
 		this.connect = function(otherNode, outIndexOnOtherNode){
@@ -355,7 +410,7 @@ define(function() {
 
 		this.eval = function(min, max, steps) {
 
-			var range = new FLOOD.baseTypes.List();
+			var range = [];
 
 			if (min > max || steps <= 0){
 				return range;
@@ -363,10 +418,87 @@ define(function() {
 			 
 			var stepSize = (max - min) / steps;
 			for (var i = 0; i < steps; i++){
-				range.List.push(i * stepSize);
+				range.push(i * stepSize);
 			}
 
 			return range;
+
+		};
+
+	}.inherits( FLOOD.baseTypes.NodeType );
+
+	FLOOD.nodeTypes.Sort = function() {
+
+		var typeData = {
+			inputs: [ 	new FLOOD.baseTypes.InputPort( "Func", "function", null ),
+						new FLOOD.baseTypes.InputPort( "List", "list:t", [] )],
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "O", "list:t" ) ],
+			typeName: "Sort" 
+		};
+
+		FLOOD.baseTypes.NodeType.call(this, typeData );
+
+		this.eval = function(F, L) {
+
+			return L.sort(F);
+
+		};
+
+	}.inherits( FLOOD.baseTypes.NodeType );
+
+	FLOOD.nodeTypes.Map = function() {
+
+		var typeData = {
+			inputs: [ 	new FLOOD.baseTypes.InputPort( "Func", "function", null ),
+						new FLOOD.baseTypes.InputPort( "List", "list:t", [] )],
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "O", "list:t" ) ],
+			typeName: "Map" 
+		};
+
+		FLOOD.baseTypes.NodeType.call(this, typeData );
+
+		this.eval = function(F, L) {
+
+			return L.map(F);
+
+		};
+
+	}.inherits( FLOOD.baseTypes.NodeType );
+
+	FLOOD.nodeTypes.Reduce = function() {
+
+		var typeData = {
+			inputs: [ 	new FLOOD.baseTypes.InputPort( "Func", "function", null ),
+						new FLOOD.baseTypes.InputPort( "List", "list:t", [] ), 
+						new FLOOD.baseTypes.InputPort( "Acc", "t", [] ) ],
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "O", "t" ) ],
+			typeName: "Reduce" 
+		};
+
+		FLOOD.baseTypes.NodeType.call(this, typeData );
+
+		this.eval = function(F, L, A) {
+
+			return L.reduce(F, A);
+
+		};
+
+	}.inherits( FLOOD.baseTypes.NodeType );
+
+	FLOOD.nodeTypes.Filter = function() {
+
+		var typeData = {
+			inputs: [ 	new FLOOD.baseTypes.InputPort( "Func", "function", null ),
+									new FLOOD.baseTypes.InputPort( "List", "list:t", [] )],
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "O", "t" ) ],
+			typeName: "Filter" 
+		};
+
+		FLOOD.baseTypes.NodeType.call(this, typeData );
+
+		this.eval = function(F, L) {
+
+			return L.filter(F);
 
 		};
 

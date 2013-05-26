@@ -1,3 +1,7 @@
+if (typeof define !== 'function') {
+    var define = require('amdefine')(module);
+}
+
 define(function() {
 
 	// Env
@@ -48,6 +52,11 @@ define(function() {
 		'null?': function(e) { return e === []; },
 		'symbol?': function(e) { return typeof e === "string"; },
 		'pick': function(i, l) { return l[i]; },
+		'map': function(f, l) { return l.map(f); },
+		'reduce': function(f, a, l) { return l.reduce(f, a); },
+		'filter': function(f, l) { return l.filter(f); },
+		'reverse': function(l) { return l.reverse(); },
+		'sort': function(l, f) { return l.sort(f); },
 	}
 
 	function add_globals(env) {
