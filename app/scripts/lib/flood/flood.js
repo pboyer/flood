@@ -12,7 +12,6 @@ define(function() {
 	    };
 	}
 
-
 	// partial function application
 	Function.prototype.curry = function() {
     var fn = this, args = Array.prototype.slice.call(arguments);
@@ -236,13 +235,19 @@ define(function() {
 		}
 
 		this.compile = function() {
-			if (this.oppNode && this.oppIndex === 0)
-				return this.oppNode.compile();
-			if (this.oppNode && this.oppIndex != 0)
-				return ['pick', this.oppIndex, this.oppNode.compile()];
-			if (this.useDefault === true)
-				return this.defaultVal;
-			return undefined;
+			// quote list input
+			var quote = this.type.indexOf("list") != -1 ? "quote" : null
+				, val = null;
+
+			if (this.oppNode && this.oppIndex === 0){
+				val = this.oppNode.compile();
+			} else if (this.oppNode && this.oppIndex != 0){
+				val = ['pick', this.oppIndex, this.oppNode.compile()];
+			} else if (this.useDefault === true) {
+				val = this.defaultVal;
+			}
+
+			return quote ? [quote, val] : val;
 		}
 
 		this.connect = function(otherNode, outIndexOnOtherNode){
@@ -449,16 +454,17 @@ define(function() {
 	FLOOD.nodeTypes.Map = function() {
 
 		var typeData = {
-			inputs: [ 	new FLOOD.baseTypes.InputPort( "Func", "function", null ),
-						new FLOOD.baseTypes.InputPort( "List", "list:t", [] )],
+			inputs: [ 	new FLOOD.baseTypes.InputPort( "Func", "function", function(a){ return 2 * a; } ),
+						new FLOOD.baseTypes.InputPort( "List", "list:t", [1, 2] ) ],
 			outputs: [ 	new FLOOD.baseTypes.OutputPort( "O", "list:t" ) ],
 			typeName: "Map" 
 		};
 
-		FLOOD.baseTypes.NodeType.call(this, typeData );
+		FLOOD.baseTypes.NodeType.call( this, typeData );
 
 		this.eval = function(F, L) {
 
+			console.log(L)
 			return L.map(F);
 
 		};
@@ -475,7 +481,7 @@ define(function() {
 			typeName: "Reduce" 
 		};
 
-		FLOOD.baseTypes.NodeType.call(this, typeData );
+		FLOOD.baseTypes.NodeType.call( this, typeData );
 
 		this.eval = function(F, L, A) {
 

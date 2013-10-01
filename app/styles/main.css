@@ -340,7 +340,7 @@ body {
 	max-height: 360px;
 	font-size: 8;
 	font-family: monospace;
-	overflow:scroll;
+	overflow:hidden;
 	text-overflow:clip;
 	margin: 0px 5px 0px 10px;
 	color: lightblue;

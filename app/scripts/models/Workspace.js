@@ -112,14 +112,14 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD'], fu
       // get all nodes with output ports
       var S = new scheme.Interpreter()
         , baseNode = null
-        , bottomNodes = this.get('nodes').filter(function(ele){
-                                return ele.isOutputNode();
-                              }).map(function(ele){
-                                return ele.get('type');
-                              }).map(function(type){
-                                return type.outputs[0];
-                              });
-
+        , bottomNodes = this.get('nodes')
+                            .filter(function(ele){
+                              return ele.isOutputNode();
+                            }).map(function(ele){
+                              return ele.get('type');
+                            }).map(function(type){
+                              return type.outputs[0];
+                            });
 
       // if more than one output, make a begin node
       if ( bottomNodes.length > 1) {
@@ -133,6 +133,7 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD'], fu
         baseNode = bottomNodes[0].parentNode;
       }
 
+      console.log( baseNode.compile() );
       console.log( baseNode.printExpression() );
 
       if (baseNode){

@@ -9,6 +9,8 @@ define(['backbone', 'Workspaces', 'Node'], function(Backbone, Workspaces, Node){
     },
 
     initialize: function(args, options){
+      
+      
       this.on('change:searching', this.onSearchingChanged);
       this.on('change:currentWorkspace', this.updateCurrentWorkspace, this);
       this.updateCurrentWorkspace();

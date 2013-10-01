@@ -24,6 +24,7 @@ define(['backbone', 'Workspace', 'ConnectionView', 'NodeViewTypes'], function(Ba
       this.listenTo(this.model, 'endProxyDrag', this.endProxyDrag);
 
       this.renderProxyConnection();
+      
     },
 
     onChangeCurrent: function() {
