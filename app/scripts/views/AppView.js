@@ -6,7 +6,7 @@ define([  'backbone',
           'WorkspaceTabView', 
           'Workspace',
           'HelpView',
-          'Help'], 
+          'Help' ], 
           function(Backbone, App, WorkspaceView, Search, SearchView, WorkspaceTabView, Workspace, HelpView, Help) {
 
   return Backbone.View.extend({
@@ -14,6 +14,7 @@ define([  'backbone',
     el: '#app',
 
     initialize: function() { 
+      
       this.listenTo(this.model, 'change', this.render);
       this.$workspace_tabs = this.$('#workspace-tabs');
 
@@ -70,12 +71,10 @@ define([  'backbone',
 
     settingsClick: function(){
       this.model.showSettings();
-      console.log('set me');
     },
 
     loginClick: function(){
       this.model.showLogin();
-      console.log('log me in')
     },
 
     showingHelp: false,
@@ -229,6 +228,9 @@ define([  'backbone',
       this.$el.find('#workspace_hide').removeClass('leftside');
       this.$el.find('#workspace_hide').addClass('rightside');
 
+      this.$el.find('#workspace_hide i').removeClass('icon-arrow-right');
+      this.$el.find('#workspace_hide i').addClass('icon-arrow-left');
+
       // change whether workspace_container is visible or not
       this.currentWorkspaceView.$el.show();
 
@@ -240,6 +242,9 @@ define([  'backbone',
       this.$el.find('#workspace_hide').addClass('leftside');
       this.$el.find('#workspace_hide').removeClass('rightside');
 
+      this.$el.find('#workspace_hide i').removeClass('icon-arrow-left');
+      this.$el.find('#workspace_hide i').addClass('icon-arrow-right');
+
       this.currentWorkspaceView.$el.hide();
 
       $('#viewer').removeClass('blur');
@@ -249,6 +254,7 @@ define([  'backbone',
     toggleViewer: function(event) {
 
       this.lookingAtViewer = !this.lookingAtViewer;
+
       if ( this.lookingAtViewer ){
         this.focusViewer();
       } else {

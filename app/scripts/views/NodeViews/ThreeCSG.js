@@ -6,19 +6,17 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView'], function(Backbone, 
 
       BaseNodeView.prototype.initialize.apply(this, arguments);
 
-      this.model.on('change:selected', this.onSelect, this);
-      this.model.on('change:visible', this.onVisibilityChanged, this);
+      this.model.on('change:selected', this.selectGeom, this);
+      this.model.on('change:visible', this.changeVisibility, this);
       this.model.on('remove', this.onRemove, this);
       this.model.on('change:lastValue', this.evalCompleted, this );
-      this.model.workspace.on('change:current', this.onVisibilityChanged, this);
+      this.model.workspace.on('change:current', this.changeVisibility, this);
 
-      // the node view is created after the eval
       this.evalCompleted();
 
     },
 
-    // 3D move to node subclass
-    onSelect: function(){
+    selectGeom: function(){
 
       if ( this.threeGeom && this.model.get('visible') ){
 
@@ -38,7 +36,7 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView'], function(Backbone, 
 
     // 3D move to node subclass
     onRemove: function(){
-      this.model.workspace.off('change:current', this.onVisibilityChanged, this);
+      this.model.workspace.off('change:current', this.changeVisibility, this);
       scene.remove(this.threeGeom); 
     }, 
 
@@ -46,7 +44,6 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView'], function(Backbone, 
 
       var lastValue = this.model.get('lastValue');
       var temp;
-
 
       if ( !lastValue )
         return;
@@ -81,11 +78,11 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView'], function(Backbone, 
 
       });
 
-      this.onVisibilityChanged();
+      this.changeVisibility();
 
     }, 
 
-    onVisibilityChanged: function(){
+    changeVisibility: function(){
 
       if ( !this.threeGeom ){
         return
@@ -93,7 +90,6 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView'], function(Backbone, 
         
       if (!this.model.get('visible') || !this.model.workspace.get('current') )
       {
-        console.log('remove geometry')
         scene.remove(this.threeGeom);
       } else if ( this.model.get('visible') )
       {
@@ -103,7 +99,7 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView'], function(Backbone, 
     },
 
     render: function() {
-
+      
       BaseNodeView.prototype.render.apply(this, arguments);
 
       this.$toggleVis = this.$el.find('.toggle-vis');

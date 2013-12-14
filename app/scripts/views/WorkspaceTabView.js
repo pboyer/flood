@@ -15,8 +15,14 @@ define(['backbone'], function(Backbone) {
     template: _.template( $('#workspace-tab-template').html() ),
 
     events: {
-      'click':  'click',
-      'click .remove-button': 'remove'
+
+      'click': 'click',
+      'click .remove-button': 'remove',
+      'mouseover': 'showEditButton',
+      'mouseout': 'hideEditButton',
+      'click .edit-button': 'startEdit',
+      'blur .workspace-name': 'endEdit'
+
     },
 
     render: function() {
@@ -29,6 +35,25 @@ define(['backbone'], function(Backbone) {
         this.$el.removeClass('current-workspace')
       }
 
+    },
+
+    showEditButton: function() {
+      this.$('.edit-button').css('visibility', 'visible');
+    },
+
+    startEdit: function(e) {
+      this.$('.workspace-name').prop('disabled', false);
+      this.$('.workspace-name').focus();
+      e.stopPropagation();
+    },
+
+    endEdit: function() {
+      this.$('.workspace-name').prop('disabled', true);
+      this.model.set('name', this.$('.workspace-name').val() );
+    },
+
+    hideEditButton: function() {
+      this.$('.edit-button').css('visibility', 'hidden');
     },
 
     click: function(e) {

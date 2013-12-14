@@ -17,7 +17,15 @@ define(['backbone', 'Workspace', 'ConnectionView', 'NodeViewTypes'], function(Ba
       this.$workspace.append( this.$workspace_back );
       this.$workspace.append( this.$workspace_canvas );
 
-      this.listenTo(this.model, 'change', this.render );
+      var that = this;
+
+      this.listenTo(this.model, 'change:connections', function() {
+        that.cleanup().renderConnections();
+      });
+      this.listenTo(this.model, 'change:nodes', function() {
+        that.cleanup().renderNodes();
+      });
+
       this.listenTo(this.model, 'change:current', this.onChangeCurrent );
 
       this.listenTo(this.model, 'startProxyDrag', this.startProxyDrag);
@@ -47,12 +55,11 @@ define(['backbone', 'Workspace', 'ConnectionView', 'NodeViewTypes'], function(Ba
       //   console.log('render zoom')
       //   return this;
       // }
-
-      // console.log('render normal')
-
-      this.clearWorkspace();
-      this.renderNodes();
-      this.renderConnections();
+      
+      this
+      .cleanup()
+      .renderNodes()
+      .renderConnections();
 
       return this;
 
@@ -91,11 +98,13 @@ define(['backbone', 'Workspace', 'ConnectionView', 'NodeViewTypes'], function(Ba
 
       view.render();
       this.$workspace_canvas.prepend( view.el );
+
     },
 
-    clearWorkspace: function() {
+    cleanup: function() {
       this.clearDeadNodes();
       this.clearDeadConnections();
+      return this;
     },
 
     renderNodes: function() {
@@ -126,6 +135,8 @@ define(['backbone', 'Workspace', 'ConnectionView', 'NodeViewTypes'], function(Ba
 
       });
 
+      return this;
+
     },
 
     renderConnections: function() {
@@ -150,6 +161,9 @@ define(['backbone', 'Workspace', 'ConnectionView', 'NodeViewTypes'], function(Ba
         }
 
       });
+
+      return this;
+
     },
 
     clearDeadNodes: function() {

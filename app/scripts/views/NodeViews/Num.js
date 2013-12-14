@@ -8,10 +8,8 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView'], function(Backbone, 
                     'change .node-number-input': 'inputChanged' },
 
     initialize: function(args) {
-
       BaseNodeView.prototype.initialize.apply(this, arguments);
       this.events = _.extend( {}, this.events, this.watchEvents );
-
     },
 
     inputFocused: function(e) {

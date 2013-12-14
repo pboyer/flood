@@ -9,8 +9,10 @@
         <title></title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width">
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300' rel='stylesheet' type='text/css'>
         <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
         <link rel="stylesheet" href="styles/main.css">
+        <!--<link rel="stylesheet" href="styles/bootstrap.min.css">-->
         <!-- build:js scripts/vendor/modernizr.js -->
         <script src="bower_components/modernizr/modernizr.js"></script>
         <!-- endbuild -->
@@ -24,17 +26,26 @@
                 
             <div id="workspace-tabs"></div>
 
-            <div id="add-workspace-button" class="menu-element" style="float: left">+</div>
-            <div id="login-button" class="menu-element">Login</div>
-            <div id="settings-button" class="menu-element">Settings</div>
-            <div id="help-button" class="menu-element">Help</div>
+            <div id="add-workspace-button" class="menu-element" style="float: left">
+              <i class="icon-file icon-white dim-button"></i>
+            </div>
 
+            <div id ="help-button" class="menu-element"> 
+              <i class="icon-question-sign icon-white dim-button"></i>
+            </div>
+            
+            <div id="more-menu" style="display: none;">
+              <div id="login-button" class="menu-element">Login</div>
+              <div id="settings-button" class="menu-element">Settings</div>
+              <!-- <div id="help-button" class="menu-element">Help</div> -->
+            </div>
+  
           </div> 
 
           <div id="workspaces" class="row">
 
-            <div id="workspace_hide" src="assets/arrow_left.png" class="rightside">
-              Show/Hide 3d
+            <div id="workspace_hide" class="rightside">
+              <i class="icon-arrow-left icon-white dim-button" ></i>
             </div>
             <div class="workspaces_curtain row"></div>
 
@@ -90,21 +101,20 @@
 
       <script type="text/template" id="workspace-tab-template">
 
-        <span> 
-          <%= name %> 
-        </span>
-        <i class="icon-remove icon-white remove-button"></i>
+        <i class="icon-pencil icon-white dim-button edit-button" style="visibility: hidden; margin-left: 10px"></i>
+        <input class="workspace-name" disabled=”disabled” value="<%= name %>"></input>
+        <i class="icon-remove icon-white dim-button remove-button"></i>
 
       </script>
 
       <script type="text/template" id="node-num-template">
 
         <div class="node-data-container" >
-          <input class="node-number-input" min="-100" max="100" type="range" value="<%= type.value %>"></input> 
+          <input class="node-number-input" min="-100" max="100" step ="0.1" type="range" value="<%= type.value %>"></input> 
         </div>
 
-        <div class="node-data-container watch-data-container" style="margin-right: 10px; margin-left: 5px">
-          <span class="currentValue" style="font-size: 14px;"><%= type.value %></span>
+        <div class="node-data-container num-data-container" style="margin-right: 10px; margin-left: 5px">
+          <span class="currentValue" style="font-size: 12px;"><%= type.value %></span>
         </div>
 
         <ul class="node-outputs" >

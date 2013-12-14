@@ -160,6 +160,7 @@ define(function() {
 							if (noUndefinedArgs){ // actually evaluate the function
 								that.value = that.eval.apply(that, arguments);
 							} else { // return a partial function application
+
 								var originalArgs = arguments;
 								that.value = (function(){
 									return function(){
@@ -221,8 +222,8 @@ define(function() {
 	FLOOD.baseTypes.InputPort = function(name, type, defaultVal, parentNode, parentIndex, oppNode, oppIndex) {
 
 		FLOOD.baseTypes.NodePort.call(this, name, type, parentNode, parentIndex, oppNode, oppIndex );
-		this.defaultVal = defaultVal || 0;
-		this.useDefault = true;
+		this.defaultVal = defaultVal;
+		this.useDefault = defaultVal === undefined ? false : true;
 
 		this.printExpression = function() {
 			if (this.oppNode && this.oppIndex === 0)
@@ -241,13 +242,17 @@ define(function() {
 
 			if (this.oppNode && this.oppIndex === 0){
 				val = this.oppNode.compile();
+				return quote ? [quote, val] : val;
 			} else if (this.oppNode && this.oppIndex != 0){
 				val = ['pick', this.oppIndex, this.oppNode.compile()];
+				return quote ? [quote, val] : val;
 			} else if (this.useDefault === true) {
 				val = this.defaultVal;
+				return quote ? [quote, val] : val;
 			}
 
-			return quote ? [quote, val] : val;
+			// undefined value causes partial function application
+			return undefined;
 		}
 
 		this.connect = function(otherNode, outIndexOnOtherNode){
@@ -306,7 +311,6 @@ define(function() {
 	// Multiply
 
 	FLOOD.nodeTypes.Mult = function() {
-
 
 		var typeData = {
 			inputs: [ 	new FLOOD.baseTypes.InputPort( "A", "number", 0 ),
@@ -430,12 +434,12 @@ define(function() {
 
 		};
 
-	}.inherits( FLOOD.baseTypes.NodeType );
+	}.inherits( FLOOD.baseTypes.NodeType )
 
 	FLOOD.nodeTypes.Sort = function() {
 
 		var typeData = {
-			inputs: [ 	new FLOOD.baseTypes.InputPort( "Func", "function", null ),
+			inputs: [ 	new FLOOD.baseTypes.InputPort( "Func", "function", function(a){ return a; } ),
 						new FLOOD.baseTypes.InputPort( "List", "list:t", [] )],
 			outputs: [ 	new FLOOD.baseTypes.OutputPort( "O", "list:t" ) ],
 			typeName: "Sort" 
@@ -454,8 +458,8 @@ define(function() {
 	FLOOD.nodeTypes.Map = function() {
 
 		var typeData = {
-			inputs: [ 	new FLOOD.baseTypes.InputPort( "Func", "function", function(a){ return 2 * a; } ),
-						new FLOOD.baseTypes.InputPort( "List", "list:t", [1, 2] ) ],
+			inputs: [ 	new FLOOD.baseTypes.InputPort( "Func", "function", function(a){ return a; } ),
+						new FLOOD.baseTypes.InputPort( "List", "list:t", [] ) ],
 			outputs: [ 	new FLOOD.baseTypes.OutputPort( "O", "list:t" ) ],
 			typeName: "Map" 
 		};
@@ -474,7 +478,7 @@ define(function() {
 	FLOOD.nodeTypes.Reduce = function() {
 
 		var typeData = {
-			inputs: [ 	new FLOOD.baseTypes.InputPort( "Func", "function", null ),
+			inputs: [ 	new FLOOD.baseTypes.InputPort( "Func", "function", function(a){ return a; } ),
 						new FLOOD.baseTypes.InputPort( "List", "list:t", [] ), 
 						new FLOOD.baseTypes.InputPort( "Acc", "t", [] ) ],
 			outputs: [ 	new FLOOD.baseTypes.OutputPort( "O", "t" ) ],
@@ -494,7 +498,7 @@ define(function() {
 	FLOOD.nodeTypes.Filter = function() {
 
 		var typeData = {
-			inputs: [ 	new FLOOD.baseTypes.InputPort( "Func", "function", null ),
+			inputs: [ 	new FLOOD.baseTypes.InputPort( "Func", "function", function(a){ return a; } ),
 									new FLOOD.baseTypes.InputPort( "List", "list:t", [] )],
 			outputs: [ 	new FLOOD.baseTypes.OutputPort( "O", "t" ) ],
 			typeName: "Filter" 

@@ -12,13 +12,13 @@ body {
 .scroll-y { overflow-y: auto; }
 
 #app {
-	font-family: "Trebuchet MS", Helvetica, sans-serif;
+	font-family: 'Open Sans', sans-serif;
 }
 
 .connection {
 	fill:none; 
-	stroke-width: 6;
-	stroke:gray;
+	stroke-width: 4;
+	stroke:#333;
 }
 
 #help {
@@ -201,6 +201,14 @@ body {
 	padding: 10px;
 }
 
+.dim-button {
+	opacity: 0.4;
+}
+
+.dim-button:hover{
+	opacity: 1;
+}
+
 .workspace-tab {
 	float: left;
 	height: 40px;
@@ -209,20 +217,19 @@ body {
 	border-left: 1px solid black;
 }
 
-.workspace-tab span{
-	margin: 14px 14px 0px 20px;
+.workspace-tab input{
+	border: none;
+	margin: 0px 5px 0px 0px;
+	padding: 14px 0 10px 10px;
 	display: inline-block;
+	background: rgba(0,0,0,0);
+	color: whitesmoke;
+	font-size: 13px;
 }
 
-.workspace-tab i{
-	opacity: 0.4;
-	margin-right: 10px;
-	padding: 0;
-	display: inline-block;
-}
-
-.workspace-tab i:hover{
-	opacity: 1;
+.workspace-tab input:focus{
+	outline: none;
+	background: rgba(0,0,0,0.2);
 }
 
 .current-workspace {
@@ -271,9 +278,10 @@ body {
 
 #workspace_hide {
 	font-size: 16px;
-	padding: 10px;
+	padding: 5px 5px 0px 5px;
 	bottom: 0;
-	opacity: 0.7;
+	opacity: 1;
+	background: #222;
 	position: absolute;
 	z-index: 100;
 }
@@ -288,6 +296,10 @@ body {
 
 #workspace_hide:hover {
 	opacity: 0.5;
+}
+
+.remove-button {
+	margin: 0 10px 0 0;
 }
 
 .node {
@@ -351,6 +363,27 @@ body {
 	border-top: 1px solid #111;
 	border-bottom-color: : 1px solid #AAA;
 
+	background-image: -webkit-gradient(linear, 0 100%, 0 0, from(#888888), to(#444444));
+	background-image: -webkit-linear-gradient(#888888 0%, #444444 100%);
+	background-image: -moz-linear-gradient(#888888 0%, #444444 100%);
+	background-image: -o-linear-gradient(#888888 0%, #444444 100%);
+	background-image: linear-gradient(#888888 0%, #444444 100%);
+}
+
+.num-data-container{
+	width: 36px;
+	font-size: 10px;
+	font-family: monospace;
+	overflow:hidden;
+	text-overflow:clip;
+	margin: 0px 5px 0px 10px;
+	color: lightblue;
+	text-shadow: none;
+	scroll: auto;
+	border-radius:3px;
+	font-size: 10;
+	border-top: 1px solid #111;
+	border-bottom-color: : 1px solid #AAA;
 
 	background-image: -webkit-gradient(linear, 0 100%, 0 0, from(#888888), to(#444444));
 	background-image: -webkit-linear-gradient(#888888 0%, #444444 100%);
@@ -373,6 +406,19 @@ body {
 }
 
 .toggle-vis:hover {
+	opacity: 1;
+}
+
+.node-settings-button {
+	position: absolute;
+	bottom: 0;
+	right: 0;
+
+	opacity: 0.3;
+	padding: 1px
+}
+
+.node-settings-button:hover {
 	opacity: 1;
 }
 

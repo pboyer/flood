@@ -20,7 +20,13 @@ define(['backbone', 'jqueryuidraggable'], function(Backbone, jqueryuidraggable) 
     initialize: function(args) {
 
       this.workspace = args.workspace;
-      this.listenTo(this.model, 'change', this.render);
+
+      this.listenTo(this.model, 'change:position', this.move );
+      this.listenTo(this.model, 'connection', this.colorPorts);
+      this.listenTo(this.model, 'disconnection', this.colorPorts);
+      this.listenTo(this.model, 'change:selected', this.colorSelected);
+      this.listenTo(this.model, 'change:visible', this.render);
+
       this.makeDraggable();
       this.$workspace_canvas = $('#workspace_canvas');
       this.position = this.model.get('position');
@@ -61,8 +67,6 @@ define(['backbone', 'jqueryuidraggable'], function(Backbone, jqueryuidraggable) 
       if ( !this.model.isPortConnected(index, false) )
         return;
 
-      console.log('begin port disconnection')
-
       var inputConnections = this.model.get('inputConnections')
         , connection = inputConnections[index][0]
         , oppos = connection.getOpposite( this.model );
@@ -78,8 +82,6 @@ define(['backbone', 'jqueryuidraggable'], function(Backbone, jqueryuidraggable) 
       if ( !this.workspace.draggingProxy )
         return;
 
-      console.log( this.workspace.draggingProxy )
-      console.log('end port disconnection')
       var index = parseInt( $(e.currentTarget).attr('data-index') );
       this.workspace.completeProxyConnection(this.model.get('_id'), index );
       e.stopPropagation();
@@ -110,6 +112,25 @@ define(['backbone', 'jqueryuidraggable'], function(Backbone, jqueryuidraggable) 
 
     render: function() {
 
+      this
+      .renderNode()
+      .colorSelected()
+      .moveNode()
+      .renderPorts();
+
+      return this;
+
+    },
+
+    renderNode: function() {
+
+      this.$el.html( this.template( this.model.toJSON() ) );
+      return this;
+
+    },
+
+    colorSelected: function() {
+
       if ( this.model.get('selected') ){
         this.$el.addClass('node-selected');
         $(document).bind('keydown', $.proxy( this.handleKeyDownWhenSelected, this) );
@@ -117,10 +138,6 @@ define(['backbone', 'jqueryuidraggable'], function(Backbone, jqueryuidraggable) 
         this.$el.removeClass('node-selected');
         $(document).unbind('keydown', this.handleKeyDownWhenSelected);
       }
-
-      this.$el.html( this.template( this.model.toJSON() ) );
-      this.move();
-      this.updatePorts();
 
       return this;
 
@@ -157,56 +174,7 @@ define(['backbone', 'jqueryuidraggable'], function(Backbone, jqueryuidraggable) 
 
     },
 
-    updatePorts: function() {
-
-      // if the port group is already constructed, simply transform it
-      if (this.portGroup != undefined) { 
-
-        // update positions
-        this.portGroup.setAttribute( 'transform', this.svgTransform() );
-
-      } else {// if ports haven't already been constructed, do it now
-
-        // create an svg group to hold the port circles
-        this.portGroup = document.createElementNS('http://www.w3.org/2000/svg','g');
-        this.portGroup.setAttribute( 'transform', this.svgTransform() );
-
-        // create data structures to store the input ports
-        this.inputPorts = [];
-        this.outputPorts = [];
-
-        // draw the circles
-        var that = this;
-        var inIndex = 0;
-        var outIndex = 0;
-        this.$el.find('.node-port').each(function(index, ele) {
-
-          var nodeCircle = document.createElementNS('http://www.w3.org/2000/svg','circle');
-          
-          // assign default appearance
-          nodeCircle.setAttribute('r',5);
-          nodeCircle.setAttribute('stroke','black');
-          nodeCircle.setAttribute('fill','white');
-          nodeCircle.setAttribute('stroke-width','3');
-
-          // position input ports on left side, output ports on right side
-          if ( $(ele).hasClass('node-port-input') ) {
-            nodeCircle.setAttribute('cx', 0);
-            nodeCircle.setAttribute('cy', that.portHeight / 2 + $(ele).position().top); 
-            that.inputPorts.push(nodeCircle);
-            inIndex++;
-          } else {
-            nodeCircle.setAttribute('cx', that.$el.width() );
-            nodeCircle.setAttribute('cy', that.portHeight / 2 + $(ele).position().top); 
-            that.outputPorts.push(nodeCircle);
-            outIndex++;
-          }
-          
-          // append 
-          that.portGroup.appendChild(nodeCircle);
-
-        });
-      } 
+    colorPorts: function() {
 
       // update port colors
       var that = this;
@@ -228,13 +196,78 @@ define(['backbone', 'jqueryuidraggable'], function(Backbone, jqueryuidraggable) 
         }
           
       });
+
+      return this;
+
     },
 
     move: function() {
+      return this.moveNode().movePorts();
+    },
+
+    moveNode: function() {
+      
       this.position = this.model.get('position');
       this.$el.css("left", this.model.get('position')[0] );
       this.$el.css("top", this.model.get('position')[1] );
+
       return this;
+    },
+
+    movePorts: function(){
+      if (this.portGroup) { 
+        this.portGroup.setAttribute( 'transform', this.svgTransform() );
+      }
+
+      return this;
+    },
+
+    renderPorts: function() {
+
+      if (this.portGroup) return this.movePorts().colorPorts();
+
+      // create an svg group to hold the port circles
+      this.portGroup = document.createElementNS('http://www.w3.org/2000/svg','g');
+      this.portGroup.setAttribute( 'transform', this.svgTransform() );
+
+      // create data structures to store the input ports
+      this.inputPorts = [];
+      this.outputPorts = [];
+
+      // draw the circles
+      var that = this;
+      var inIndex = 0;
+      var outIndex = 0;
+      this.$el.find('.node-port').each(function(index, ele) {
+
+        var nodeCircle = document.createElementNS('http://www.w3.org/2000/svg','circle');
+        
+        // assign default appearance
+        nodeCircle.setAttribute('r',5);
+        nodeCircle.setAttribute('stroke','black');
+        nodeCircle.setAttribute('fill','white');
+        nodeCircle.setAttribute('stroke-width','3');
+
+        // position input ports on left side, output ports on right side
+        if ( $(ele).hasClass('node-port-input') ) {
+          nodeCircle.setAttribute('cx', 0);
+          nodeCircle.setAttribute('cy', that.portHeight / 2 + $(ele).position().top); 
+          that.inputPorts.push(nodeCircle);
+          inIndex++;
+        } else {
+          nodeCircle.setAttribute('cx', that.$el.width() );
+          nodeCircle.setAttribute('cy', that.portHeight / 2 + $(ele).position().top); 
+          that.outputPorts.push(nodeCircle);
+          outIndex++;
+        }
+        
+        // append 
+        that.portGroup.appendChild(nodeCircle);
+
+      });
+
+      return this;
+
     },
 
     remove: function() {

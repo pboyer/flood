@@ -188,9 +188,6 @@ define(['backbone', 'FLOOD'], function(Backbone, FLOOD) {
 
       type.inputs[portIndex].connect( oppType, oppIndex );
 
-      if (this.workspace)
-        this.workspace.run();
-
     },
 
     onDisconnectPort: function( portIndex, isOutput, connection){
@@ -198,8 +195,6 @@ define(['backbone', 'FLOOD'], function(Backbone, FLOOD) {
       if (isOutput){
         return;
       }
-
-      // connect the logic nodes
 
       if (!isOutput){
         this.get('type').inputs[portIndex].disconnect();

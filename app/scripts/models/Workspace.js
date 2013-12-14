@@ -34,14 +34,14 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD'], fu
 
       // updates to connections and nodes are emitted to listeners
       var that = this;
-      this.get('connections').on('add remove', 
-        function(){ 
-          that.trigger('change'); 
+      this.get('connections').on('add remove', function(){ 
+        that.trigger('change:connections'); 
+        that.run();
       });
 
       this.get('nodes').on('add remove', function(){ 
+        that.trigger('change:nodes'); 
         that.run();
-        that.trigger('change'); 
       });
 
       this.proxyConnection = new Connection({
@@ -59,7 +59,6 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD'], fu
 
       // this.on('change', this.printModel, this);
 
-      // need custom event on Workspace model to update the proxyConnectionView
     },
 
     parse : function(resp) {
@@ -85,7 +84,7 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD'], fu
       this.proxyConnection.set('endProxyPosition', startPosition);
 
       this.draggingProxy = true;
-      // alert the view that we are now dragging
+
       this.trigger('startProxyDrag');
       return this;
     },
@@ -160,7 +159,7 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD'], fu
     },
 
     makeConnection : function(startNodeId, startPort, endNodeId, endPort) {
-
+      
       if (!this.validateConnection(startNodeId, startPort, endNodeId, endPort)){
         return;
       }

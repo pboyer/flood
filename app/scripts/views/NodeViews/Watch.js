@@ -7,6 +7,7 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView'], function(Backbone, 
     initialize: function(args) {
 
       BaseNodeView.prototype.initialize.apply(this, arguments);
+      this.listenTo(this.model, 'evalCompleted', this.renderNode );
 
     }
 
