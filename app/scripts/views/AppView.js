@@ -89,7 +89,9 @@ define([  'backbone',
 
     newWorkspace: function(){
 
-      this.model.get('workspaces').add( new Workspace({_id: this.model.makeId() }, {app: this.model}) );
+      var newWorkspace = new Workspace({_id: this.model.makeId() }, {app: this.model});
+      this.model.get('workspaces').add( newWorkspace );
+      return newWorkspace;
 
     },
 

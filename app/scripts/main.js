@@ -127,23 +127,21 @@ require.config({
         scheme: 'lib/flood/scheme',
 
         // bower
-        List: '../bower_components/listjs/list.min',
+        List: '../bower_components/listjs/dist/list.min',
         Three: '../bower_components/threejs/build/three.min',
         jqueryuidraggable: '../bower_components/jquery.ui/ui/jquery.ui.draggable',
         jqueryuicore: '../bower_components/jquery.ui/ui/jquery.ui.core',
         jqueryuimouse: '../bower_components/jquery.ui/ui/jquery.ui.mouse',
         jqueryuiwidget: '../bower_components/jquery.ui/ui/jquery.ui.widget',
         jquery: '../bower_components/jquery/jquery',
-        zoomooz: 'lib/zoomooz',
         backbone: '../bower_components/backbone-amd/backbone',
         underscore: '../bower_components/underscore-amd/underscore',
     }
 
-
 });
 
 
-require(['backbone', 'App', 'LibraryElements', 'AppView', 'Three', 'FThree', 'FCSG', 'ThreeCSG', 'zoomooz'], function (Backbone, App, LibraryElements, AppView) {
+require(['backbone', 'App', 'LibraryElements', 'AppView', 'Three', 'FThree', 'FCSG', 'ThreeCSG'], function (Backbone, App, LibraryElements, AppView) {
 
   var app = new App();
 
@@ -160,7 +158,10 @@ require(['backbone', 'App', 'LibraryElements', 'AppView', 'Three', 'FThree', 'FC
   app.LibraryElements = new LibraryElements({app:app});
   app.LibraryElements.fetch();
 
-  new AppView({model: app});
+  var appView = new AppView({model: app});
+
+  var workspace = appView.newWorkspace();
+  app.set('currentWorkspace', workspace.get('_id'));
 
   // Backbone.history.start();
 

@@ -7,6 +7,9 @@
     "requirejs-text": "~2.0.5",
     "backbone-amd": "~1.0.0",
     "underscore-amd": "~1.4.4",
+    "threejs": "r64",
+    "jquery.ui": "1.10.3",
+    "listjs": "1.0.0",
     "modernizr": "~2.6.2"
   },
   "devDependencies": {}
