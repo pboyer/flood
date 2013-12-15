@@ -29,9 +29,9 @@ define([  'backbone',
 
     events: {
       'click .workspaces_curtain' : 'endSearch',
-      'click #help-button': 'showHelpClick',
-      'click #settings-button': 'settingsClick',
-      'click #login-button': 'loginClick',
+      'click #help-button': 'showHelp',
+      'click #settings-button': 'showSettings',
+      'click #login-button': 'showLogin',
       'click #workspace_hide' : 'toggleViewer',
       'click #add-workspace-button': 'newWorkspace'
     },
@@ -61,19 +61,19 @@ define([  'backbone',
 
     },
 
-    showHelpClick: function(){
+    showHelp: function(){
       this.model.set('showingHelp', true);
     },
 
-    hideHelpClick: function(){
+    hideHelp: function(){
       this.model.set('showingHelp', true);
     },
 
-    settingsClick: function(){
+    showSettings: function(){
       this.model.showSettings();
     },
 
-    loginClick: function(){
+    showLogin: function(){
       this.model.showLogin();
     },
 
