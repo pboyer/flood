@@ -1,4 +1,4 @@
-var container, stats, $container;
+var container, $container;
 
 var camera, controls, scene, projector, renderer;
 
@@ -37,7 +37,7 @@ function init() {
 	scene = new THREE.Scene();
 
 	renderer = new THREE.WebGLRenderer();
-	renderer.setClearColorHex( 0xffffff, 1 );
+	renderer.setClearColor( 0xffffff, 1 );
 	renderer.setSize( $container.width(), $container.height() );
 	renderer.sortObjects = false;
 

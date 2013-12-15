@@ -181,6 +181,7 @@ module.exports = function (grunt) {
                         '*.{ico,txt}',
                         '.htaccess',
                         '*.html',
+                        '*.json',
                         'images/{,*/}*.{webp,gif}'
                     ]
                 }]
