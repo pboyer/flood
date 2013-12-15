@@ -147,10 +147,10 @@ require(['backbone', 'App', 'LibraryElements', 'AppView', 'Three', 'FThree', 'FC
 
   var app = new App();
 
-  app.fetch({ 
+  app.fetch({
     success: function() {
         console.log('success')
-      }, 
+      },
     error: function(ok) {
       console.log('error')
       console.log(ok)
@@ -159,7 +159,7 @@ require(['backbone', 'App', 'LibraryElements', 'AppView', 'Three', 'FThree', 'FC
 
   app.LibraryElements = new LibraryElements({app:app});
   app.LibraryElements.fetch();
-  
+
   new AppView({model: app});
 
   // Backbone.history.start();
