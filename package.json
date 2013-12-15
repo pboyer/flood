@@ -1,8 +1,12 @@
 {
   "name": "flood",
   "version": "0.0.4",
-  "dependencies": {},
+  "description": "A visual programming language for JavaScript, based on Scheme",
+  "dependencies": {
+    
+  },
   "devDependencies": {
+    "grunt-node-webkit-builder": "~0.1.13",
     "grunt": "0.4.2",
     "grunt-processhtml": "~0.2.6",
     "grunt-contrib-copy": "0.4.1",
@@ -27,4 +31,5 @@
   "engines": {
     "node": ">=0.10.0"
   }
+
 }

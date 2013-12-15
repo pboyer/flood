@@ -80,17 +80,6 @@ module.exports = function (grunt) {
             dist: ['.tmp', '<%= yeoman.dist %>/*'],
             server: '.tmp'
         },
-        // jshint: {
-        //     options: {
-        //         jshintrc: '.jshintrc'
-        //     },
-        //     all: [
-        //         'Gruntfile.js',
-        //         '<%= yeoman.app %>/scripts/{,*/}*.js',
-        //         '!<%= yeoman.app %>/scripts/vendor/*',
-        //         'test/spec/{,*/}*.js'
-        //     ]
-        // },
         mocha: {
             all: {
                 options: {
@@ -137,19 +126,6 @@ module.exports = function (grunt) {
             }
           }
         },
-        // useminPrepare: {
-        //     html: '<%= yeoman.app %>/index.html',
-        //     options: {
-        //         dest: '<%= yeoman.dist %>'
-        //     }
-        // },
-        // usemin: {
-        //     html: ['<%= yeoman.dist %>/{,*/}*.html'],
-        //     css: ['<%= yeoman.dist %>/styles/{,*/}*.css'],
-        //     options: {
-        //         dirs: ['<%= yeoman.dist %>']
-        //     }
-        // },
         imagemin: {
             dist: {
                 files: [{
@@ -198,7 +174,18 @@ module.exports = function (grunt) {
               "dist/index.html": ["app/index.html"]
             }
           }
-    },
+        },
+        nodewebkit: {
+            options: {
+                version: '0.8.1',
+                build_dir: './dist_desktop', // Where the build version of my node-webkit app is saved
+                mac: true, // We want to build it for mac
+                win: false, // We want to build it for win
+                linux32: false, // We don't need linux32
+                linux64: false // We don't need linux64
+            },
+            src: ['./dist/**'] // Your node-wekit app
+        }
     });
 
     grunt.renameTask('regarde', 'watch');
@@ -230,6 +217,16 @@ module.exports = function (grunt) {
         'cssmin',
         'copy',
         'processhtml'
+    ]);
+
+    grunt.registerTask('desktop', [
+        'clean:dist',
+        'requirejs',
+        'imagemin',
+        'cssmin',
+        'copy',
+        'processhtml',
+        'nodewebkit'
     ]);
 
     grunt.registerTask('default', [

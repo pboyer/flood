@@ -1,10 +1,12 @@
-// config file for node-webkit
 {
   "name": "flood",
+  "version": "0.0.4",
+  "description": "A visual programming language for JavaScript, based on Scheme",
+
   "main": "index.html",
   "window": {
     "toolbar": false,
-    "width": 800,
-    "height": 600
+    "frame": true
   }
+  
 }
