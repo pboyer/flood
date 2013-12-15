@@ -24,10 +24,6 @@ define(['backbone', 'Workspaces', 'Node'], function(Backbone, Workspaces, Node){
       showingHelp: false
     },
 
-    fetch: function(input){
-      
-    },
-
     parse : function(resp) {
 
       this.get('workspaces').add(resp.workspaces, {app: this});

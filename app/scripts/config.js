@@ -78,12 +78,6 @@ require.config({
             deps: [
             ],
             exports: 'almond'
-        },
-        zoomooz: {
-            deps: [
-                'jquery'
-            ],
-            exports: 'zoomooz'
         }
     },
     paths: {

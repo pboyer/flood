@@ -26,6 +26,7 @@ define(['backbone', 'FLOOD'], function(Backbone, FLOOD) {
         this.set( 'type', new FLOOD.nodeTypes.Add() );
       }
 
+      // set the current value from the last stored value
       if (atts.lastValue){
         this.get('type').value = atts.lastValue;
       }
@@ -37,6 +38,8 @@ define(['backbone', 'FLOOD'], function(Backbone, FLOOD) {
       this.on('connection', this.onConnectPort);
       this.on('disconnection', this.onDisconnectPort);
       this.workspace = vals.workspace;
+
+      this.on('remove', this.onRemove);
 
       this.initializePorts();
       
@@ -50,6 +53,11 @@ define(['backbone', 'FLOOD'], function(Backbone, FLOOD) {
       this.set('inputConnections', new Array( type.inputs.length ));
       this.set('outputConnections', new Array( type.outputs.length ));
 
+    },
+
+    onRemove: function(){
+      console.log('removed event')
+      this.trigger('removed');
     },
 
     evalComplete: function(type){
@@ -82,7 +90,7 @@ define(['backbone', 'FLOOD'], function(Backbone, FLOOD) {
 
     },
 
-    // get the type of a given node
+    // get the type of a given node port
     getPortType: function(index, isOutput){
       
       if (index < 0)

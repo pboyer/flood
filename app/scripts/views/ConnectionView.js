@@ -27,8 +27,14 @@ define(['backbone'], function(Backbone) {
         this.startId = this.model.get('startNodeId');
         this.endId = this.model.get('endNodeId');
         var nodes = this.workspace.get('nodes');
-        this.listenTo( nodes.get(this.endId), 'change:position', this.render);
-        this.listenTo( nodes.get(this.startId), 'change:position', this.render);
+
+        if (nodes.get(this.endId) != undefined ){
+          this.listenTo( nodes.get(this.endId), 'change:position', this.render);
+        }
+        
+        if (nodes.get(this.startId) != undefined ){
+          this.listenTo( nodes.get(this.startId), 'change:position', this.render);
+        }
       }
       
       this.listenTo(this.model, 'change', this.render);

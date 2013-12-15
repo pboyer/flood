@@ -180,7 +180,7 @@ module.exports = function (grunt) {
                 version: '0.8.1',
                 build_dir: './dist_desktop', // Where the build version of my node-webkit app is saved
                 mac: true, // We want to build it for mac
-                win: false, // We want to build it for win
+                win: true, // We want to build it for win
                 linux32: false, // We don't need linux32
                 linux64: false // We don't need linux64
             },

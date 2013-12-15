@@ -28,6 +28,7 @@ define(['backbone'], function(Backbone) {
       if ( args.startProxy || args.endProxy ) {
         this.workspace.bind('proxyMove', this.proxyMove, this);
       } else {
+
         // bind to end nodes
         this.startNode = this.workspace.get('nodes').get(args.startNodeId);
         this.endNode = this.workspace.get('nodes').get(args.endNodeId);
@@ -35,13 +36,13 @@ define(['backbone'], function(Backbone) {
         var that = this;
 
         // watch the start and end node for removal
-        this.startNode.on('remove', (function(){
+        this.startNode.on('removed', (function(){
           return function() {
             that.onNodeRemoved(true);
           };
         })());
 
-        this.endNode.on('remove', (function(){
+        this.endNode.on('removed', (function(){
           return function() {
             that.onNodeRemoved(false);
           };
@@ -54,9 +55,11 @@ define(['backbone'], function(Backbone) {
     },
 
     onNodeRemoved: function(isStart){ 
-
       this.workspace.get('connections').remove(this);
 
+      // if (this.workspace.get('connections').contains(this)){
+        
+      // }
     },
 
     onRemove: function(model, collection, options){

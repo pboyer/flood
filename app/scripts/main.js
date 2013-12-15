@@ -7,12 +7,9 @@ require(["config"], function() {
       var app = new App();
 
       app.fetch({
-        success: function() {
-            console.log('success')
-          },
-        error: function(ok) {
-          console.log('error')
-          console.log(ok)
+        error: function(result) {
+          console.error('error')
+          console.error(result)
         }
       });
 
@@ -21,11 +18,11 @@ require(["config"], function() {
 
       var appView = new AppView({model: app});
 
-      var workspace = appView.newWorkspace();
-      app.set('currentWorkspace', workspace.get('_id'));
+      // var workspace = appView.newWorkspace();
+      // app.set('currentWorkspace', workspace.get('_id'));
 
       // Backbone.history.start();
 
     });
-    
+
 });

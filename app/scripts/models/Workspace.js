@@ -5,7 +5,7 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD'], fu
     idAttribute: "_id",
 
     defaults: {
-      name: "WorkspaceName",
+      name: "New Workspace",
       nodes: null,
       connections: null,
       selectedNodes: new Nodes(),
