@@ -55,9 +55,8 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD'], fu
 
       this.runAllowed = true;
 
+      // run the workspace for the first time
       this.run();
-
-      // this.on('change', this.printModel, this);
 
     },
 
@@ -120,7 +119,7 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD'], fu
                               return type.outputs[0];
                             });
 
-      // if more than one output, make a begin node
+      // if more than one output in the workspace, make a begin node
       if ( bottomNodes.length > 1) {
         baseNode = new FLOOD.nodeTypes.Begin();
         var count = 0;
@@ -164,7 +163,8 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD'], fu
         return;
       }
 
-      // type validation here
+      // one could perform a type comparison here
+      
       var newCon = new Connection({
           startNodeId: startNodeId,
           startPortIndex: startPort,

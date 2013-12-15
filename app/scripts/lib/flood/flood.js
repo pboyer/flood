@@ -144,11 +144,11 @@ define(function() {
 
 			var partialEvalClosure = (function() { 
 
-					// if we have enough args, execute, otherwise return function
+					// if we have enough args, eval, otherwise return function
 					return function() {
 						if ( that.isDirty() ){
 
-							// if any argument is undefined, perform partial fun application
+							// if any argument is undefined, perform partial function application
 							var noUndefinedArgs = true;
 							for (var i = 0; i < arguments.length; i++){
 								if ( arguments[i] === undefined ){
@@ -157,12 +157,15 @@ define(function() {
 								}
 							}
 
-							if (noUndefinedArgs){ // actually evaluate the function
+							// actually evaluate the function
+							if (noUndefinedArgs){ 
 								that.value = that.eval.apply(that, arguments);
-							} else { // return a partial function application
+							// return a partial function application
+							} else { 
 
 								var originalArgs = arguments;
 								that.value = (function(){
+									// return a closure
 									return function(){
 										return that.eval.partial.apply(that.eval, originalArgs).apply(that, arguments);
 									}
@@ -171,12 +174,17 @@ define(function() {
 							
 							that.markClean();
 						}
+						// tell listeners that the evalation is complete
 						that.evalComplete(that, arguments);
+
+						// yield the value
 						return that.value;
 					};
 
 			})();
 
+			// return an s-expression, represented by the function to execute, and the list
+			// of arguments to apply to it
 			return [partialEvalClosure].concat( this.inputs.map(function(input){
 				return input.compile();
 			}));
@@ -445,7 +453,7 @@ define(function() {
 			typeName: "Sort" 
 		};
 
-		FLOOD.baseTypes.NodeType.call(this, typeData );
+		FLOOD.baseTypes.NodeType.call( this, typeData );
 
 		this.eval = function(F, L) {
 
