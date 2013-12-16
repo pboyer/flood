@@ -5,16 +5,25 @@
 
 ###What is it?
 
-flood is a dataflow-style visual programming language based on Scheme that runs on JavaScript.  It is based on the [Dynamo]](http://github.com/ikeough/Dynamo) visual programming language.  flood runs in a browser and as a standalone application via node-webkit.
+flood is a [dataflow](http://en.wikipedia.org/wiki/Dataflow_programming)-style visual programming language based on Scheme that runs on JavaScript.  It is based on the [Dynamo](http://github.com/ikeough/Dynamo) visual programming language.  flood runs in a browser and as a standalone application on all platforms via [node-webkit](https://github.com/rogerwang/node-webkit).  
 
-As an interactive visual programming environment, flood allows the user to search for nodes, drag and select nodes, make connections between nodes, and get feedback about data as it is transformed through the graph.  flood, like Dynamo, extends Scheme for partial functional application.  Unlike Dynamo, flood currently does not have automapping functionality.
+As an interactive visual programming environment, flood allows the user to search for nodes, drag and select nodes, make connections between nodes, and get feedback about data as it is transformed through the graph.  flood, like Dynamo, is based on Scheme and provides "visual syntactic sugar" for partial function application.  It uses a [lightweight scheme interpreter](http://github.com/pboyer/scheme.js) to evaluate the graph and caches values on a per node basis by storing dirty state.  Unlike Dynamo, flood currently does not have automapping functionality.
 
 flood is bundled with a library of nodes for [csg.js](http://evanw.github.io/csg.js/) and basic arithmetic.  
 
 
+###Use it now!
+
+[flood on the web](http://floodlang.com.s3-website-us-west-2.amazonaws.com)
+
+[flood for Mac](http://floodlang.com.s3-website-us-west-2.amazonaws.com/releases/flood/flood-mac.zip)
+
+[flood for Windows](http://floodlang.com.s3-website-us-west-2.amazonaws.com/releases/flood/flood-windows.zip)
+
+
 ###Getting started
 
-flood is scaffolded with Yeoman, uses Grunt for task management and Bower for web package management.  If you're not familiar with these tools, you should take a look at the docs and get them installed.  
+flood is scaffolded with [Yeoman](http://yeoman.io/), uses [Grunt](http://gruntjs.com/) for task management and [Bower](http://bower.io/) for web package management.  flood uses [require.js](http://requirejs.org/) to manage dependencies between JavaScript files and [backbone.js](http://backbonejs.org/) to stick it all together.  If you're not familiar with these tools, you should take a look at the docs and get them installed.  
 
 
 ####Installing dependencies
@@ -34,7 +43,7 @@ This will start a HTTP server serving up the app directory and start your favori
 
 ####Building for the web
 
-The app directory can be compressed into a lightweight package - made up of a single compressed .js file.  
+The entire app can be compressed into lightweight, minified, and concatenated css, js, and html files using Grunt:
 
 	grunt 
 
