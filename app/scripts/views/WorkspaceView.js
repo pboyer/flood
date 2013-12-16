@@ -22,6 +22,7 @@ define(['backbone', 'Workspace', 'ConnectionView', 'NodeViewTypes'], function(Ba
       this.listenTo(this.model, 'change:connections', function() {
         that.cleanup().renderConnections();
       });
+
       this.listenTo(this.model, 'change:nodes', function() {
         that.cleanup().renderNodes();
       });
@@ -49,13 +50,6 @@ define(['backbone', 'Workspace', 'ConnectionView', 'NodeViewTypes'], function(Ba
 
     render: function() {
 
-      // check if zoom has changed
-      // if (this.model.changed.zoom){
-      //   this.$workspace.css('-webkit-transform', 'scale('+this.model.get('zoom')+')');
-      //   console.log('render zoom')
-      //   return this;
-      // }
-      
       this
       .cleanup()
       .renderNodes()
@@ -66,7 +60,7 @@ define(['backbone', 'Workspace', 'ConnectionView', 'NodeViewTypes'], function(Ba
     },
 
     showNodeSearch: function(e){
-      this.app.set('searching', true);
+      this.app.set('showingSearch', true);
       this.app.newNodePosition = [e.offsetX, e.offsetY];
     },
 
@@ -173,6 +167,12 @@ define(['backbone', 'Workspace', 'ConnectionView', 'NodeViewTypes'], function(Ba
         }
       }
 
+    },
+
+    onRemove: function(){
+      this.get('nodes').forEach(function(n){
+        if (n.onRemove) n.onRemove();
+      })
     },
 
     clearDeadConnections: function() {

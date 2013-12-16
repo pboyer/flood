@@ -1,4 +1,4 @@
-define(['backbone', 'List', 'LibraryElementView'], function(Backbone, List, LibraryElementView) {
+define(['backbone', 'List', 'SearchElementView'], function(Backbone, List, SearchElementView) {
 
   return Backbone.View.extend({
 
@@ -26,9 +26,9 @@ define(['backbone', 'List', 'LibraryElementView'], function(Backbone, List, Libr
 
       var that = this;
 
-      this.app.LibraryElements.forEach(function(ele) {
+      this.app.SearchElements.forEach(function(ele) {
 
-        var eleView = new LibraryElementView({ model: ele });
+        var eleView = new SearchElementView({ model: ele });
 
         eleView.render();
         that.$list.append( eleView.$el );
@@ -46,14 +46,10 @@ define(['backbone', 'List', 'LibraryElementView'], function(Backbone, List, Libr
     searchKeyup: function(event) {
 
       if ( event.keyCode === 13) { // enter key causes first result to be inserted
-
         var nodeName = this.$list.find('.search-element').first().find('.name').first().html();
         this.app.addNodeToWorkspace( nodeName );
-
       } else if ( event.keyCode === 27) { // esc key exits search
-
-        this.app.set('searching', false);
-
+        this.app.set('showingSearch', false);
       }
     } 
 

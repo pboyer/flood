@@ -5,7 +5,7 @@ define(['backbone'], function(Backbone) {
     tagName: 'li',
     className: 'search-element',
 
-    template: _.template( $('#library-element-template').html() ),
+    template: _.template( $('#search-element-template').html() ),
 
     events: {
       'click':  'click'
@@ -20,6 +20,7 @@ define(['backbone'], function(Backbone) {
     click: function(e) {
 
       this.model.app.addNodeToWorkspace( this.model.get('name') );
+      this.model.app.set('showingSearch', false);
 
     }
 

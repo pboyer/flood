@@ -40,7 +40,8 @@
           <div id="workspaces" class="row">
 
             <div id="workspace_hide" class="rightside">
-              <i class="icon-arrow-left icon-white dim-button" ></i>
+              <span style="display:inline-block; font-weight: bold; line-height: 20px;font-size: 11px; margin: 3px; color: #AAA">Toggle 3D</span>
+              <i  style="display:inline-block;" class="icon-arrow-left icon-white dim-button" ></i>
             </div>
             <div class="workspaces_curtain row"></div>
 
@@ -75,7 +76,7 @@
         </ul>
 
         <div class="toggle-vis" title="Toggle geometry visibility">
-          <img src="images/toggle_vis.png"  />
+          <img src="images/toggle_vis.png" style="width: 14px; height: 13px" />
         </div>
 
       </script>
@@ -122,14 +123,13 @@
 
       <script type="text/template" id="search-template">
         <div class="search-top-container">
-          <h3 class="search-title">Add a node</h3>
-          <input placeholder="Search for a node..." class="library-search-input search"></input>
+          <input placeholder="Add a node..." class="library-search-input search"></input>
         </div>
         <ul class="list search-list">
         </ul>
       </script>
 
-      <script type="text/template" id="library-element-template">
+      <script type="text/template" id="search-element-template">
         <span class="name"><%= name %></span>
       </script>
 

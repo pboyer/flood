@@ -9,7 +9,6 @@ define(['backbone', 'Workspaces', 'Node'], function(Backbone, Workspaces, Node){
     },
 
     initialize: function(args, options){
-      this.on('change:searching', this.onSearchingChanged);
       this.on('change:currentWorkspace', this.updateCurrentWorkspace, this);
       this.updateCurrentWorkspace();
     },
@@ -20,7 +19,7 @@ define(['backbone', 'Workspaces', 'Node'], function(Backbone, Workspaces, Node){
       name: "DefaultWorkspace",
       workspaces: new Workspaces(),
       currentWorkspace: null,
-      searching: false,
+      showingSearch: false,
       showingHelp: false
     },
 
@@ -50,7 +49,7 @@ define(['backbone', 'Workspaces', 'Node'], function(Backbone, Workspaces, Node){
       var newNode = new Node({ typeName: name, position: position, _id: this.makeId() }, {workspace: currWS});
 
       currWS.get('nodes').add( newNode );
-      this.set('searching', false);
+      this.set('showingSearch', false);
 
     },
 

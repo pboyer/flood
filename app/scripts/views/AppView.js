@@ -37,7 +37,7 @@ define([  'backbone',
     },
 
     endSearch: function() {
-      this.model.set('searching', false);
+      this.model.set('showingSearch', false);
     },
 
     viewHelp: function(){
@@ -77,6 +77,39 @@ define([  'backbone',
       this.model.showLogin();
     },
 
+    showSearch: function() {
+
+      if (this.model.get('showingSearch') === true) {
+        
+        // darken the workspace container
+        this.$el.find('.workspaces_curtain').css('display', 'block');
+
+        // if we haven't already, create the search view element and add to the ui
+        if (this.searchView === undefined){
+          this.searchView = new SearchView( { model: new Search() }, {app: this.model } );
+          this.searchView.render();
+          this.$el.find('#workspaces').prepend(this.searchView.$el);
+
+        } else {
+          this.searchView.$el.css('display', 'block');
+        }
+
+        $('.workspace_container').addClass('blur');
+        this.searchView.$el.find('.library-search-input').focus();
+
+      } else {
+
+        $('.workspace_container').removeClass('blur');
+        
+        this.$el.find('.workspaces_curtain').css('display', 'none');
+        if (this.searchView != undefined) {
+          this.searchView.$el.css('display', 'none');
+        }
+
+      }
+
+    },
+
     showingHelp: false,
     showingSettings: false,
     showingSearch: false,
@@ -87,14 +120,18 @@ define([  'backbone',
     workspaceTabViews: {},
     workspaceViews: {},
 
+    workspaceCounter: 1,
+
     newWorkspace: function(){
 
-      var newWorkspace = new Workspace({_id: this.model.makeId() }, {app: this.model});
+      var newWorkspace = new Workspace({_id: this.model.makeId(), name: 'New Workspace ' + this.workspaceCounter++ }, {app: this.model});
       this.model.get('workspaces').add( newWorkspace );
       return newWorkspace;
 
     },
 
+    // This callback is called when a Workspace is added to
+    // the App's Workspace Collection
     addWorkspaceTab: function(workspace){
 
       var view = new WorkspaceTabView({ model: workspace });
@@ -105,9 +142,30 @@ define([  'backbone',
 
     },
 
+    // Function is called when a workspace is removed from the 
+    // App's Workspace Collection
     removeWorkspaceTab: function(workspace){
+
+      // The Workspace can no longer be current
+      workspace.set('current', false);
+
+       // check if the removed workspace is the current one
+      if (workspace.get('_id') == this.model.get('currentWorkspace') ){
+
+        // are there any more workspaces?
+        if ( this.model.get('workspaces').length != 0 ){
+          this.model.set('currentWorkspace', this.model.get('workspaces').first().get('_id') );
+
+        // if we're out of workspaces, just add a new one
+        } else {
+          var newWorkspace = this.newWorkspace();
+          this.model.set('currentWorkspace', newWorkspace.get('_id') );
+        }
+      }
+
       this.workspaceTabViews[workspace.get('_id')].$el.remove();
       delete this.workspaceTabViews[workspace.get('_id')];
+
     },
 
     getWorkspaceView: function(workspaceModel) {
@@ -154,13 +212,10 @@ define([  'backbone',
       var workspaces = this.model.get('workspaces')
       var currentWorkspaceId = this.model.get('currentWorkspace');
       var currentWorkspace = workspaces.get(currentWorkspaceId);
-
       currentWorkspace.set('current', true);
-
       this.model.updateCurrentWorkspace();
-
+    
       // render tabs
-
         if (!this.workspaceTabViews){
           this.workspaceTabViews = {};
           workspaces.each(this.addWorkspaceTab, this);
@@ -180,53 +235,13 @@ define([  'backbone',
       // render search
       this.showSearch();
 
-
     },
 
-    showSearch: function() {
-
-      if (this.model.get('searching') === true) {
-        
-        // darken the workspace container
-        this.$el.find('.workspaces_curtain').css('display', 'block');
-
-        // if we haven't already, create the search view element and add to the ui
-        if (this.searchView === undefined){
-          this.searchView = new SearchView( { model: new Search() }, {app: this.model } );
-          this.searchView.render();
-          this.$el.find('#workspaces').prepend(this.searchView.$el);
-
-        } else {
-          this.searchView.$el.css('display', 'block');
-        }
-
-        $('.workspace_container').addClass('blur');
-        this.searchView.$el.find('.library-search-input').focus();
-
-      } else {
-
-        $('.workspace_container').removeClass('blur');
-        
-        this.$el.find('.workspaces_curtain').css('display', 'none');
-        if (this.searchView != undefined) {
-          this.searchView.$el.css('display', 'none');
-        }
-
-      }
-
-    },
-
-    // updateZoom: function() {
-    //   var inputVal = this.$el.find('#workspace-zoom-slider').val()
-    //     , val = parseFloat( inputVal )
-    //     , val = isNaN(val) ? 0 : val;=-
-
-    //   this.currentWorkspaceView.model.set('zoom', val);
-    // },
 
     lookingAtViewer: false,
 
     focusWorkspace: function(){
+
       this.$el.find('#workspace_hide').removeClass('leftside');
       this.$el.find('#workspace_hide').addClass('rightside');
 

@@ -61,6 +61,9 @@ body {
 	z-index: 100;
 	color: white;
 
+	-webkit-box-shadow: 0px 0px 20px 0px #000;  /*Android 2.3+, iOS 4.0.2-4.2, Safari 3-4 */
+    box-shadow: 0px 0px 20px 0px #000; /* Chrome 6+, Firefox 4+, IE 9+, iOS 5+, */
+
 	font-size: 12px;
 	top: 0;
 	height: 40px;
@@ -105,18 +108,16 @@ body {
 
 .search-container {
 	z-index: 105;
-	top: 50%;
+	top: 40%;
 	left: 50%;
-	height: 300px;
+	max-height:  500px;
 	margin-top: -150px;
 	margin-left: -100px;
 	width: 200px;
 	background: none;
-}
 
-.search-top-container {
-	background: black;
-	height: 80px;
+	-webkit-box-shadow: 0px 0px 20px 0px #333;  /*Android 2.3+, iOS 4.0.2-4.2, Safari 3-4 */
+    box-shadow: 0px 0px 20px 0px #333; /* Chrome 6+, Firefox 4+, IE 9+, iOS 5+, */
 }
 
 .search-title {
@@ -126,7 +127,6 @@ body {
 }
 
 .search-list {
-	height: 220px;
 	overflow-y: scroll;
 	overflow-x: hidden;
 	list-style: none;
@@ -140,6 +140,7 @@ body {
 	display: block;
 	width: 100%;
 	margin: 0;
+	font-size: 11px;
 	border-top: solid 1px #444;
 	border-bottom: solid 1px #222;
 	padding: 5px;
@@ -150,9 +151,16 @@ body {
 }
 
 .library-search-input {
-	padding: 5px;
-	margin: 10px;
-	width: 170px;
+	color: lightblue;
+	padding: 10px;
+	width: 200px;
+	background: #222;
+	border: none;
+	font-size: 15px;
+}
+
+.library-search-input:focus {
+    outline:none;
 }
 
 #workspaces {
@@ -284,6 +292,10 @@ body {
 	background: #222;
 	position: absolute;
 	z-index: 100;
+	
+	-webkit-box-shadow: 0px 0px 20px 0px #333;  /*Android 2.3+, iOS 4.0.2-4.2, Safari 3-4 */
+    box-shadow: 0px 0px 20px 0px #333; /* Chrome 6+, Firefox 4+, IE 9+, iOS 5+, */
+
 }
 
 .rightside {
@@ -306,9 +318,6 @@ body {
 
 	text-shadow: 0px -3px #000;
 
-	transition: box-shadow 0.15s;
-	-webkit-transition: box-shadow 0.15s; /* Safari */
-
 	-webkit-user-select: none; /* Chrome/Safari */        
 	-moz-user-select: none; /* Firefox */
 	-ms-user-select: none; /* IE10+ */
@@ -316,9 +325,6 @@ body {
 	/* Rules below not implemented in browsers yet */
 	-o-user-select: none;
 	user-select: none;
-
-	-webkit-box-shadow: 0px 0px 3px 0px #000; /* Android 2.3+, iOS 4.0.2-4.2, Safari 3-4 */
-    box-shadow: 0px 0px 3px 0px #000; /* Chrome 6+, Firefox 4+, IE 9+, iOS 5+, */
 
 	z-index: 98;
 	border-radius:5px;
@@ -350,18 +356,14 @@ body {
 .watch-data-container{
 	max-width: 180px;
 	max-height: 360px;
-	font-size: 8;
 	font-family: monospace;
-	overflow:hidden;
-	text-overflow:clip;
 	margin: 0px 5px 0px 10px;
 	color: lightblue;
 	text-shadow: none;
-	scroll: auto;
+	overflow-y: scroll;
+	overflow-x: hidden;
 	border-radius:3px;
-	font-size: 10;
 	border-top: 1px solid #111;
-	border-bottom-color: : 1px solid #AAA;
 
 	background-image: -webkit-gradient(linear, 0 100%, 0 0, from(#888888), to(#444444));
 	background-image: -webkit-linear-gradient(#888888 0%, #444444 100%);
@@ -375,15 +377,11 @@ body {
 	font-size: 10px;
 	font-family: monospace;
 	overflow:hidden;
-	text-overflow:clip;
 	margin: 0px 5px 0px 10px;
 	color: lightblue;
 	text-shadow: none;
-	scroll: auto;
 	border-radius:3px;
-	font-size: 10;
 	border-top: 1px solid #111;
-	border-bottom-color: : 1px solid #AAA;
 
 	background-image: -webkit-gradient(linear, 0 100%, 0 0, from(#888888), to(#444444));
 	background-image: -webkit-linear-gradient(#888888 0%, #444444 100%);
@@ -939,141 +937,4 @@ body {
   background-position: -120px -120px;
 }
 
-.icon-warning-sign {
-  background-position: -144px -120px;
-}
 
-.icon-plane {
-  background-position: -168px -120px;
-}
-
-.icon-calendar {
-  background-position: -192px -120px;
-}
-
-.icon-random {
-  width: 16px;
-  background-position: -216px -120px;
-}
-
-.icon-comment {
-  background-position: -240px -120px;
-}
-
-.icon-magnet {
-  background-position: -264px -120px;
-}
-
-.icon-chevron-up {
-  background-position: -288px -120px;
-}
-
-.icon-chevron-down {
-  background-position: -313px -119px;
-}
-
-.icon-retweet {
-  background-position: -336px -120px;
-}
-
-.icon-shopping-cart {
-  background-position: -360px -120px;
-}
-
-.icon-folder-close {
-  width: 16px;
-  background-position: -384px -120px;
-}
-
-.icon-folder-open {
-  width: 16px;
-  background-position: -408px -120px;
-}
-
-.icon-resize-vertical {
-  background-position: -432px -119px;
-}
-
-.icon-resize-horizontal {
-  background-position: -456px -118px;
-}
-
-.icon-hdd {
-  background-position: 0 -144px;
-}
-
-.icon-bullhorn {
-  background-position: -24px -144px;
-}
-
-.icon-bell {
-  background-position: -48px -144px;
-}
-
-.icon-certificate {
-  background-position: -72px -144px;
-}
-
-.icon-thumbs-up {
-  background-position: -96px -144px;
-}
-
-.icon-thumbs-down {
-  background-position: -120px -144px;
-}
-
-.icon-hand-right {
-  background-position: -144px -144px;
-}
-
-.icon-hand-left {
-  background-position: -168px -144px;
-}
-
-.icon-hand-up {
-  background-position: -192px -144px;
-}
-
-.icon-hand-down {
-  background-position: -216px -144px;
-}
-
-.icon-circle-arrow-right {
-  background-position: -240px -144px;
-}
-
-.icon-circle-arrow-left {
-  background-position: -264px -144px;
-}
-
-.icon-circle-arrow-up {
-  background-position: -288px -144px;
-}
-
-.icon-circle-arrow-down {
-  background-position: -312px -144px;
-}
-
-.icon-globe {
-  background-position: -336px -144px;
-}
-
-.icon-wrench {
-  background-position: -360px -144px;
-}
-
-.icon-tasks {
-  background-position: -384px -144px;
-}
-
-.icon-filter {
-  background-position: -408px -144px;
-}
-
-.icon-briefcase {
-  background-position: -432px -144px;
-}
-
-.icon-fullscreen {
-  background-position: -456px -144px;
-}

@@ -84,16 +84,16 @@ require.config({
 
         // backbone collections
         Connections: 'collections/Connections',
-        LibraryElements: 'collections/LibraryElements',
+        SearchElements: 'collections/SearchElements',
         Nodes: 'collections/Nodes',
         Workspaces: 'collections/Workspaces',
 
         // backbone models
         App: 'models/App',
         Connection: 'models/Connection',
-        LibraryElement: 'models/LibraryElement',
         Node: 'models/Node',
         Search: 'models/Search',
+        SearchElement: 'models/SearchElement',
         Workspace: 'models/Workspace',
         Help: 'models/Help',
 
@@ -103,8 +103,8 @@ require.config({
         // backbone views
         AppView: 'views/AppView',
         ConnectionView: 'views/ConnectionView',
-        LibraryElementView: 'views/LibraryElementView',
         SearchView: 'views/SearchView',
+        SearchElementView: 'views/SearchElementView',
         WorkspaceView: 'views/WorkspaceView',
         WorkspaceTabView: 'views/WorkspaceTabView',
         HelpView: 'views/HelpView',

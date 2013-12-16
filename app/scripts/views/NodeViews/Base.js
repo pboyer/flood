@@ -271,6 +271,7 @@ define(['backbone', 'jqueryuidraggable'], function(Backbone, jqueryuidraggable) 
     },
 
     remove: function() {
+      console.log('nodeView remove');
       this.$el.remove();
       $(document).unbind('keydown', this.handleKeyDownWhenSelected);
       if (this.portGroup.parentNode)

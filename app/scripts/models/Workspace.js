@@ -5,7 +5,7 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD'], fu
     idAttribute: "_id",
 
     defaults: {
-      name: "New Workspace",
+      name: "Unnamed Workspace",
       nodes: null,
       connections: null,
       selectedNodes: new Nodes(),
@@ -131,7 +131,6 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD'], fu
         baseNode = bottomNodes[0].parentNode;
       }
 
-      console.log( baseNode.compile() );
       console.log( baseNode.printExpression() );
 
       if (baseNode){

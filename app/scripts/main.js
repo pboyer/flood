@@ -2,7 +2,7 @@
 // assist with testing.
 require(["config"], function() {
 
-    require(['backbone', 'App', 'LibraryElements', 'AppView', 'Three', 'FThree', 'FCSG', 'ThreeCSG'], function (Backbone, App, LibraryElements, AppView) {
+    require(['backbone', 'App', 'SearchElements', 'AppView', 'Three', 'FThree', 'FCSG', 'ThreeCSG'], function (Backbone, App, SearchElements, AppView) {
 
       var app = new App();
 
@@ -13,15 +13,10 @@ require(["config"], function() {
         }
       });
 
-      app.LibraryElements = new LibraryElements({app:app});
-      app.LibraryElements.fetch();
+      app.SearchElements = new SearchElements({app:app});
+      app.SearchElements.fetch();
 
       var appView = new AppView({model: app});
-
-      // var workspace = appView.newWorkspace();
-      // app.set('currentWorkspace', workspace.get('_id'));
-
-      // Backbone.history.start();
 
     });
 
