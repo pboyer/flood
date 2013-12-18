@@ -301,10 +301,8 @@ body {
 	opacity: 0;
 }
 
-
 .workspace {
 	z-index: 90;
-	background: red;
 	position: absolute;
 	width: 20000px;
 	height: 20000px;
