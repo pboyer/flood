@@ -56,7 +56,6 @@ define(['backbone', 'FLOOD'], function(Backbone, FLOOD) {
     },
 
     onRemove: function(){
-      console.log('removed event')
       this.trigger('removed');
     },
 

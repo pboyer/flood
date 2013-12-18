@@ -3,16 +3,18 @@ define(['backbone', 'List', 'SearchElementView'], function(Backbone, List, Searc
   return Backbone.View.extend({
 
     tagName: 'div',
-    className: 'search-container row',
+    className: 'workspace-search',
 
     initialize: function(atts, arr) {
       this.app = arr.app;
     },
 
-    template: _.template( $('#search-template').html() ),
+    template: _.template( $('#workspace-search-template').html() ),
 
     events: {
-      'keyup .library-search-input': 'searchKeyup'
+      'keyup .library-search-input': 'searchKeyup',
+      'focus .library-search-input': 'focus',
+      'blur .library-search-input': 'blur'
     },
 
     render: function(arg) {
@@ -44,6 +46,18 @@ define(['backbone', 'List', 'SearchElementView'], function(Backbone, List, Searc
 
     },
 
+    focus: function(event){
+      this.$('.search-list').show();
+      this.$('.library-search-input').select();
+    },
+
+    blur: function(event){
+      var that = this;
+      window.setTimeout(function(){
+        that.$('.search-list').hide();
+      }, 100);
+    },
+
     elementClick: function(e){
       this.model.app.addNodeToWorkspace( this.model.get('name') );
       this.model.app.set('showingSearch', false);
@@ -54,9 +68,8 @@ define(['backbone', 'List', 'SearchElementView'], function(Backbone, List, Searc
       if ( event.keyCode === 13) { // enter key causes first result to be inserted
         var nodeName = this.$list.find('.search-element').first().find('.name').first().html();
         this.app.addNodeToWorkspace( nodeName );
-      } else if ( event.keyCode === 27) { // esc key exits search
-        this.app.set('showingSearch', false);
-      }
+      } 
+
     } 
 
   });

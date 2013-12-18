@@ -18,10 +18,7 @@ define(['backbone'], function(Backbone) {
     },
 
     click: function(e) {
-
-      this.model.app.addNodeToWorkspace( this.model.get('name') );
-      this.model.app.set('showingSearch', false);
-
+      this.elementClick.call(this, e);
     }
 
   });

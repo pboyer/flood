@@ -3,11 +3,12 @@ define([  'backbone',
           'WorkspaceView', 
           'Search', 
           'SearchView', 
+          'WorkspaceSearchView', 
           'WorkspaceTabView', 
           'Workspace',
           'HelpView',
           'Help' ], 
-          function(Backbone, App, WorkspaceView, Search, SearchView, WorkspaceTabView, Workspace, HelpView, Help) {
+          function(Backbone, App, WorkspaceView, Search, SearchView, WorkspaceSearchView, WorkspaceTabView, Workspace, HelpView, Help) {
 
   return Backbone.View.extend({
 
@@ -215,6 +216,15 @@ define([  'backbone',
       currentWorkspace.set('current', true);
       this.model.updateCurrentWorkspace();
     
+      // render search
+        if (!this.workspaceSearchView){
+
+          this.workspaceSearchView = new WorkspaceSearchView( { model: new Search() }, {app: this.model } );
+          this.workspaceSearchView.render();
+          this.$el.find('#workspaces').prepend(this.workspaceSearchView.$el);
+
+        }
+
       // render tabs
         if (!this.workspaceTabViews){
           this.workspaceTabViews = {};
