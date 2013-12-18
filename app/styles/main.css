@@ -329,7 +329,7 @@ body {
 	opacity: 0.5;
 	font-size: 16px;
 	padding: 10px;
-	bottom: 10px;
+	top: 60px;
 	background: #222;
 	position: absolute;
 	z-index: 100;
@@ -356,11 +356,11 @@ body {
 }
 
 .rightside {
-	right: 10px;
+	right: 20px;
 }
 
 .leftside {
-	left: 10px;
+	left: 20px;
 }
 
 
