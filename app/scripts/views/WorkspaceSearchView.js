@@ -59,8 +59,7 @@ define(['backbone', 'List', 'SearchElementView'], function(Backbone, List, Searc
     },
 
     elementClick: function(e){
-      this.model.app.addNodeToWorkspace( this.model.get('name') );
-      this.model.app.set('showingSearch', false);
+      this.model.app.addNodeToWorkspace( this.model.get('name'), [500,500] );
     },
 
     searchKeyup: function(event) {

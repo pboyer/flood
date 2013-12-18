@@ -203,9 +203,7 @@ body {
 }
 
 #workspaces {
-	position: absolute;
-	top: 40px;
-	bottom: 0px;
+	overflow:hidden; /*hide the scrollbar*/
 }
 
 #viewer {
@@ -224,8 +222,9 @@ body {
 
 .workspace_container {
 	position: absolute;
-	top: 0px;
+	top: 40px;
 	bottom: 0px;
+	overflow: auto;
 }
 
 .menu-element {
@@ -302,8 +301,10 @@ body {
 	opacity: 0;
 }
 
+
 .workspace {
 	z-index: 90;
+	background: red;
 	position: absolute;
 	width: 20000px;
 	height: 20000px;

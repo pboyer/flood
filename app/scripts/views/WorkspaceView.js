@@ -3,15 +3,15 @@ define(['backbone', 'Workspace', 'ConnectionView', 'NodeViewTypes'], function(Ba
   return Backbone.View.extend({
 
     tagName: 'div',
-    className: 'workspace_container row scroll-x scroll-y',
+    className: 'workspace_container row',
 
     initialize: function(atts) { 
 
       this.app = this.model.app;
 
-      this.$workspace = $('<div/>', {class: 'workspace scroll-x scroll-y'});
-      this.$workspace_back = $('<div/>', {class: 'workspace_back scroll-x scroll-y'});
-      this.$workspace_canvas = $('<svg class="workspace_canvas scroll-x scroll-y" xmlns="http://www.w3.org/2000/svg" version="1.1" />');
+      this.$workspace = $('<div/>', {class: 'workspace'});
+      this.$workspace_back = $('<div/>', {class: 'workspace_back'});
+      this.$workspace_canvas = $('<svg class="workspace_canvas" xmlns="http://www.w3.org/2000/svg" version="1.1" />');
 
       this.$el.append( this.$workspace );
       this.$workspace.append( this.$workspace_back );
