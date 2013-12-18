@@ -166,7 +166,7 @@ body {
 }
 
 .search-list {
-	overflow-y: scroll;
+	overflow-y: hidden;
 	overflow-x: hidden;
 	list-style: none;
 	padding: 0;
@@ -324,6 +324,7 @@ body {
 	height: 20000px;
 	background-color: rgba(0,0,0,0.3);
 }
+
 
 #workspace_hide {
 	opacity: 0.5;
