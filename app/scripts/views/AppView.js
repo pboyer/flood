@@ -260,6 +260,7 @@ define([  'backbone',
 
       // change whether workspace_container is visible or not
       this.currentWorkspaceView.$el.show();
+      this.workspaceSearchView.$el.show();
 
       $('#viewer').addClass('blur');
     },
@@ -273,6 +274,7 @@ define([  'backbone',
       this.$el.find('#workspace_hide i').addClass('icon-arrow-right');
 
       this.currentWorkspaceView.$el.hide();
+      this.workspaceSearchView.$el.hide();
 
       $('#viewer').removeClass('blur');
 

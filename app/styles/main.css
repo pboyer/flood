@@ -13,8 +13,8 @@ body {
 
 
 .workspace-search {
-	bottom: 10px;
-	left: 10px;
+	bottom: 30px;
+	left: 30px;
 	z-index: 110;
 
 	font-size: 16px;
@@ -223,8 +223,11 @@ body {
 .workspace_container {
 	position: absolute;
 	top: 40px;
-	bottom: 0px;
 	overflow: auto;
+
+	/* hide the scrollbar */
+	bottom: -18px;
+	right: -18px;
 }
 
 .menu-element {
@@ -406,42 +409,6 @@ body {
 	background-image: radial-gradient(circle farthest-corner at center top, #444444 0%, #1D0722 100%);
 }
 
-.watch-data-container{
-	max-width: 180px;
-	max-height: 360px;
-	font-family: monospace;
-	margin: 0px 5px 0px 10px;
-	color: lightblue;
-	text-shadow: none;
-	overflow-y: scroll;
-	overflow-x: hidden;
-	border-radius:3px;
-	border-top: 1px solid #111;
-
-	background-image: -webkit-gradient(linear, 0 100%, 0 0, from(#888888), to(#444444));
-	background-image: -webkit-linear-gradient(#888888 0%, #444444 100%);
-	background-image: -moz-linear-gradient(#888888 0%, #444444 100%);
-	background-image: -o-linear-gradient(#888888 0%, #444444 100%);
-	background-image: linear-gradient(#888888 0%, #444444 100%);
-}
-
-.num-data-container{
-	width: 36px;
-	font-size: 10px;
-	font-family: monospace;
-	overflow:hidden;
-	margin: 0px 5px 0px 10px;
-	color: lightblue;
-	text-shadow: none;
-	border-radius:3px;
-	border-top: 1px solid #111;
-
-	background-image: -webkit-gradient(linear, 0 100%, 0 0, from(#888888), to(#444444));
-	background-image: -webkit-linear-gradient(#888888 0%, #444444 100%);
-	background-image: -moz-linear-gradient(#888888 0%, #444444 100%);
-	background-image: -o-linear-gradient(#888888 0%, #444444 100%);
-	background-image: linear-gradient(#888888 0%, #444444 100%);
-}
 
 .currentValue {
 	color:lightblue;
@@ -489,9 +456,45 @@ body {
 .node-data-container {
 	display: inline-block;
 	text-align: center;
-	height: 100%;
 	float: left;
 	padding: 10px;
+}
+
+.watch-data-container{
+	max-width: 220px;
+	max-height: 360px;
+	font-family: monospace;
+	margin: 0px 5px 0px 10px;
+	color: lightblue;
+	text-shadow: none;
+	overflow-y: scroll;
+	overflow-x: hidden;
+	border-radius:3px;
+	border-top: 1px solid #111;
+
+	background-image: -webkit-gradient(linear, 0 100%, 0 0, from(#888888), to(#444444));
+	background-image: -webkit-linear-gradient(#888888 0%, #444444 100%);
+	background-image: -moz-linear-gradient(#888888 0%, #444444 100%);
+	background-image: -o-linear-gradient(#888888 0%, #444444 100%);
+	background-image: linear-gradient(#888888 0%, #444444 100%);
+}
+
+.num-data-container{
+	width: 54px;
+	font-size: 10px;
+	font-family: monospace;
+	overflow:hidden;
+	margin: 0px 5px 0px 10px;
+	color: lightblue;
+	text-shadow: none;
+	border-radius:3px;
+	border-top: 1px solid #111;
+
+	background-image: -webkit-gradient(linear, 0 100%, 0 0, from(#888888), to(#444444));
+	background-image: -webkit-linear-gradient(#888888 0%, #444444 100%);
+	background-image: -moz-linear-gradient(#888888 0%, #444444 100%);
+	background-image: -o-linear-gradient(#888888 0%, #444444 100%);
+	background-image: linear-gradient(#888888 0%, #444444 100%);
 }
 
 .node-inputs, .node-outputs {

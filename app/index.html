@@ -15,7 +15,7 @@
     
     <body>
 
-        <div id="app">
+        <div id="app" class="row col">
 
           <div id="top_container" class="row">
                 
@@ -57,6 +57,8 @@
 
       </body>
 
+
+
       <script type="text/template" id="node-template">
 
         <ul class="node-inputs">
@@ -81,6 +83,9 @@
 
       </script>
 
+
+
+
       <script type="text/template" id="node-watch-template">
 
         <ul class="node-inputs">
@@ -103,10 +108,12 @@
 
       </script>
 
+
+
       <script type="text/template" id="node-num-template">
 
         <div class="node-data-container" >
-          <input class="node-number-input" min="-100" max="100" step ="0.1" type="range" value="<%= type.value %>"></input> 
+          <input class="node-number-input" min="-150" max="150" step ="0.05" type="range" value="<%= type.value %>"></input> 
         </div>
 
         <div class="node-data-container num-data-container" style="margin-right: 10px; margin-left: 5px">
@@ -120,6 +127,9 @@
         </ul>
 
       </script>
+
+
+
 
       <script type="text/template" id="search-template">
         <div class="search-top-container">
