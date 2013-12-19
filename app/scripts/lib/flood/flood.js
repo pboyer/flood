@@ -22,7 +22,7 @@ define(function() {
     };
   };
 
-	Function.prototype.partial = function(){
+  Function.prototype.partial = function(){
     var fn = this, args = Array.prototype.slice.call(arguments);
     return function(){
       var arg = 0;
@@ -32,6 +32,59 @@ define(function() {
       return fn.apply(this, args);
     };
   };
+
+  // provides recursive replication behavior for array style args
+  Function.prototype.mapApply = function( this_arg, orig_arg_array, options ){
+
+  	// based on the properties of the individual input ports, provide 
+  	// the appropriate replication
+
+  	var arg_array = Array.prototype.slice.call(orig_arg_array, 0);
+
+  	// get the longest array
+  	var length_array = arg_array.map( function( a ){ 
+  		if (a instanceof Array) {
+  			return a.length;
+  		} else {
+  			return -1; // return -1 if arg is not an array
+  		}
+  	});
+
+  	// get the longest list array
+  	var max_length = Math.max.apply( Math, length_array );
+
+  	// if no arrays, just return normal application
+  	if (max_length === -1){
+  		return this.apply(this_arg, arg_array);
+  	}
+
+  	// otherwise, apply recursive 'longest' mapping operation
+  	var result = [];
+  	for (var i = 0; i < max_length; i++){
+
+  		var this_arg_array = [];
+  		for (var j = 0; j < arg_array.length; j++){	
+  			
+  			var arg = arg_array[j];
+  			if ( arg instanceof Array){
+
+  				// this may not be the longest, pick its length
+  				var arg_max_length = Math.min(max_length, arg.length ) - 1;
+  				this_arg_array.push( arg_array[j][ Math.min( i, arg_max_length )] );
+
+  			} else {
+
+  				this_arg_array.push( arg );
+
+  			}
+  		}
+
+  		result.push( this.mapApply(this_arg, this_arg_array) );
+  	}
+
+  	return result;
+
+  }
 
 	Array.prototype.remove = function(from, to) {
 	  var rest = this.slice((to || from) + 1 || this.length);
@@ -159,7 +212,7 @@ define(function() {
 
 							// actually evaluate the function
 							if (noUndefinedArgs){ 
-								that.value = that.eval.apply(that, arguments);
+								that.value = that.eval.mapApply(that, arguments);
 							// return a partial function application
 							} else { 
 
@@ -476,7 +529,6 @@ define(function() {
 
 		this.eval = function(F, L) {
 
-			console.log(L)
 			return L.map(F);
 
 		};
