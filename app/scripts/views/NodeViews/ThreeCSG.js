@@ -52,7 +52,7 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView'], function(Backbone, 
         temp = [];
         temp.push(lastValue);
       } else {
-        temp = lastValue.List; // extract the list
+        temp = lastValue; // extract the list
       } 
 
       if ( this.threeGeom ){
