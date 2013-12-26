@@ -6,8 +6,8 @@
 		"name": "Example Workspace",
 		"_id": 1,
 	  "nodes": [
-			{"_id": 6, "typeName": "Num", "lastValue": 10, "name": "node2", "position": [100,200] },
-			{"_id": 12, "typeName": "Num", "lastValue": 16, "name": "node8", "position": [100,350] },
+			{"_id": 6, "typeName": "Number", "lastValue": 10, "name": "node2", "position": [100,200] },
+			{"_id": 12, "typeName": "Number", "lastValue": 16, "name": "node8", "position": [100,350] },
 			{"_id": 13, "typeName": "SolidInter", "name": "node10", "position": [1200,200] },
 			{"_id": 8, "typeName": "Add", "name": "node5", "position": [500,300] },
 			{"_id": 9, "typeName": "Vec3", "name": "node6", "position": [700,300] },

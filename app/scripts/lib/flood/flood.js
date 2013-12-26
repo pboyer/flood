@@ -4,6 +4,12 @@ if (typeof define !== 'function') {
 
 define(function() {
 
+	// initialize core types
+	var FLOOD = FLOOD || {};
+
+	FLOOD.baseTypes = {};
+	FLOOD.nodeTypes = {};
+
 	if (typeof Object.create !== 'function') {
 	    Object.create = function (o) {
 	        function F() {}
@@ -33,59 +39,6 @@ define(function() {
     };
   };
 
-  // provides recursive replication behavior for array style args
-  Function.prototype.mapApply = function( this_arg, orig_arg_array, options ){
-
-  	// based on the properties of the individual input ports, provide 
-  	// the appropriate replication
-
-  	var arg_array = Array.prototype.slice.call(orig_arg_array, 0);
-
-  	// get the longest array
-  	var length_array = arg_array.map( function( a ){ 
-  		if (a instanceof Array) {
-  			return a.length;
-  		} else {
-  			return -1; // return -1 if arg is not an array
-  		}
-  	});
-
-  	// get the longest list array
-  	var max_length = Math.max.apply( Math, length_array );
-
-  	// if no arrays, just return normal application
-  	if (max_length === -1){
-  		return this.apply(this_arg, arg_array);
-  	}
-
-  	// otherwise, apply recursive 'longest' mapping operation
-  	var result = [];
-  	for (var i = 0; i < max_length; i++){
-
-  		var this_arg_array = [];
-  		for (var j = 0; j < arg_array.length; j++){	
-  			
-  			var arg = arg_array[j];
-  			if ( arg instanceof Array){
-
-  				// this may not be the longest, pick its length
-  				var arg_max_length = Math.min(max_length, arg.length ) - 1;
-  				this_arg_array.push( arg_array[j][ Math.min( i, arg_max_length )] );
-
-  			} else {
-
-  				this_arg_array.push( arg );
-
-  			}
-  		}
-
-  		result.push( this.mapApply(this_arg, this_arg_array) );
-  	}
-
-  	return result;
-
-  }
-
 	Array.prototype.remove = function(from, to) {
 	  var rest = this.slice((to || from) + 1 || this.length);
 	  this.length = from < 0 ? this.length + from : from;
@@ -105,20 +58,38 @@ define(function() {
 	    return this;
 	});
 
+	// QuotedArray
+	// ===========
+	// QuotedArray is a slight modification of Array.  It makes it 
+	// clear to the interpreter whether we're intending to pass
+	// an expression Array or an Array as a value.  The interpreter checks
+	// the constructor function in order to check the type.
 
-	// initialize core types
+	function QuotedArray(){
+		Array.apply(this, arguments);
+	};
 
-	var FLOOD = FLOOD || {};
+	QuotedArray.prototype = new Array();
+	QuotedArray.prototype.toString = function(){
+		if (this.length === 0) return "[]";
+		var eles = []; 
+		for (var i = 0; i < this.length; i++){
+			eles.push( this[i] );
+		}
+		return "[ " + eles.join(", ") + " ]"
+	};
+	QuotedArray.prototype.constructor = QuotedArray;
 
-	FLOOD.baseTypes = {};
-	FLOOD.nodeTypes = {};
+	FLOOD.QuotedArray = QuotedArray;
 
 	// NodeType
+	// ========
 
 	FLOOD.baseTypes.NodeType = function(options) {
 
 		var that = this;
 		var options = options || {};
+		this.replication = "applyLongest";
 
 		// tell the inputs about their parent node & index
 		if (options.inputs) {
@@ -210,12 +181,18 @@ define(function() {
 								}
 							}
 
-							// actually evaluate the function
 							if (noUndefinedArgs){ 
-								that.value = that.eval.mapApply(that, arguments);
-							// return a partial function application
-							} else { 
+								
+								// build replication options and types
+								var options = {};
+								options.replication = that.replication;
+								options.expected_arg_types = that.inputs.map(function(x){ return x.type; });
 
+								// actually evaluate the function!
+								that.value = that.eval.mapApply(that, Array.prototype.slice.call(arguments, 0), options);
+
+							} else { 
+								// return a partial function application
 								var originalArgs = arguments;
 								that.value = (function(){
 									// return a closure
@@ -244,10 +221,6 @@ define(function() {
 		
 		};
 
-	}
-
-	FLOOD.baseTypes.List = function(){
-		this.List = [];
 	}
 
 	// InputPort
@@ -279,7 +252,6 @@ define(function() {
 
 	}.inherits( FLOOD.baseTypes.NodePort );
 
-
 	FLOOD.baseTypes.InputPort = function(name, type, defaultVal, parentNode, parentIndex, oppNode, oppIndex) {
 
 		FLOOD.baseTypes.NodePort.call(this, name, type, parentNode, parentIndex, oppNode, oppIndex );
@@ -297,19 +269,18 @@ define(function() {
 		}
 
 		this.compile = function() {
-			// quote list input
-			var quote = this.type.indexOf("list") != -1 ? "quote" : null
-				, val = null;
+
+			var val = null;
 
 			if (this.oppNode && this.oppIndex === 0){
 				val = this.oppNode.compile();
-				return quote ? [quote, val] : val;
+				return val;
 			} else if (this.oppNode && this.oppIndex != 0){
 				val = ['pick', this.oppIndex, this.oppNode.compile()];
-				return quote ? [quote, val] : val;
+				return val;
 			} else if (this.useDefault === true) {
 				val = this.defaultVal;
-				return quote ? [quote, val] : val;
+				return val;
 			}
 
 			// undefined value causes partial function application
@@ -336,9 +307,9 @@ define(function() {
 	FLOOD.nodeTypes.Add = function() {
 
 		var typeData = {
-			inputs: [ 	new FLOOD.baseTypes.InputPort( "A", "number", 0 ),
-						new FLOOD.baseTypes.InputPort( "B", "number", 0 ) ],
-			outputs: [ 	new FLOOD.baseTypes.OutputPort( "O", "number" ) ],
+			inputs: [ 	new FLOOD.baseTypes.InputPort( "A", [Number], 0 ),
+						new FLOOD.baseTypes.InputPort( "B", [Number], 0 ) ],
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "O", [Number] ) ],
 			typeName: "+" 
 		};
 
@@ -355,9 +326,9 @@ define(function() {
 	FLOOD.nodeTypes.Sub = function() {
 
 		var typeData = {
-			inputs: [ 	new FLOOD.baseTypes.InputPort( "A", "number", 0 ),
-						new FLOOD.baseTypes.InputPort( "B", "number", 0 ) ],
-			outputs: [ 	new FLOOD.baseTypes.OutputPort( "O", "number" ) ],
+			inputs: [ 	new FLOOD.baseTypes.InputPort( "A", [Number], 0 ),
+						new FLOOD.baseTypes.InputPort( "B", [Number], 0 ) ],
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "O", [Number] ) ],
 			typeName: "-" 
 		};
 
@@ -374,9 +345,9 @@ define(function() {
 	FLOOD.nodeTypes.Mult = function() {
 
 		var typeData = {
-			inputs: [ 	new FLOOD.baseTypes.InputPort( "A", "number", 0 ),
-						new FLOOD.baseTypes.InputPort( "B", "number", 0 ) ],
-			outputs: [ 	new FLOOD.baseTypes.OutputPort( "O", "number" ) ],
+			inputs: [ 	new FLOOD.baseTypes.InputPort( "A", [Number], 0 ),
+						new FLOOD.baseTypes.InputPort( "B", [Number], 0 ) ],
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "O", [Number] ) ],
 			typeName: "*" 
 		};
 
@@ -393,9 +364,9 @@ define(function() {
 	FLOOD.nodeTypes.Div = function() {
 
 		var typeData = {
-			inputs: [ 	new FLOOD.baseTypes.InputPort( "A", "number", 0 ),
-						new FLOOD.baseTypes.InputPort( "B", "number", 0 ) ],
-			outputs: [ 	new FLOOD.baseTypes.OutputPort( "O", "number" ) ],
+			inputs: [ 	new FLOOD.baseTypes.InputPort( "A", [Number], 0 ),
+						new FLOOD.baseTypes.InputPort( "B", [Number], 0 ) ],
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "O", [Number] ) ],
 			typeName: "/" 
 		};
 
@@ -409,11 +380,11 @@ define(function() {
 
 	// Number
 
-	FLOOD.nodeTypes.Num = function() {
+	FLOOD.nodeTypes.Number = function() {
 
 		var typeData = {
-			outputs: [ 	new FLOOD.baseTypes.OutputPort( "O", "number" ) ],
-			typeName: "number" 
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "O", [Number] ) ],
+			typeName: "Number" 
 		};
 
 		this.value = 0;
@@ -449,8 +420,8 @@ define(function() {
 	FLOOD.nodeTypes.Watch = function() {
 
 		var typeData = {
-			inputs: [ 	new FLOOD.baseTypes.InputPort( "I", "any", 0 ) ],
-			outputs: [ 	new FLOOD.baseTypes.OutputPort( "O", "any" ) ],
+			inputs: [ 	new FLOOD.baseTypes.InputPort( "I", [AnyType], 0 ) ],
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "O", [AnyType] ) ],
 			typeName: "Watch" 
 		};
 
@@ -469,10 +440,10 @@ define(function() {
 	FLOOD.nodeTypes.Range = function() {
 
 		var typeData = {
-			inputs: [ 	new FLOOD.baseTypes.InputPort( "Min", "number", 0.0 ),
-									new FLOOD.baseTypes.InputPort( "Max", "number", 1.0 ),
-									new FLOOD.baseTypes.InputPort( "Steps", "number", 10 ) ],
-			outputs: [ 	new FLOOD.baseTypes.OutputPort( "O", "number" ) ],
+			inputs: [ 	new FLOOD.baseTypes.InputPort( "Min", [Number], 0.0 ),
+									new FLOOD.baseTypes.InputPort( "Max", [Number], 1.0 ),
+									new FLOOD.baseTypes.InputPort( "Steps", [Number], 10 ) ],
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "O", [QuotedArray, Number] ) ],
 			typeName: "Range" 
 		};
 
@@ -480,7 +451,7 @@ define(function() {
 
 		this.eval = function(min, max, steps) {
 
-			var range = [];
+			var range = new QuotedArray();
 
 			if (min > max || steps <= 0){
 				return range;
@@ -488,7 +459,7 @@ define(function() {
 			 
 			var stepSize = (max - min) / steps;
 			for (var i = 0; i < steps; i++){
-				range.push(i * stepSize);
+				range.push(min + i * stepSize);
 			}
 
 			return range;
@@ -500,9 +471,9 @@ define(function() {
 	FLOOD.nodeTypes.Sort = function() {
 
 		var typeData = {
-			inputs: [ 	new FLOOD.baseTypes.InputPort( "Func", "function", function(a){ return a; } ),
-						new FLOOD.baseTypes.InputPort( "List", "list:t", [] )],
-			outputs: [ 	new FLOOD.baseTypes.OutputPort( "O", "list:t" ) ],
+			inputs: [ 	new FLOOD.baseTypes.InputPort( "Func", [Function], function(a){ return a; } ),
+						new FLOOD.baseTypes.InputPort( "List", [QuotedArray, AnyType], [] )],
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "O", [QuotedArray, AnyType] ) ],
 			typeName: "Sort" 
 		};
 
@@ -519,9 +490,9 @@ define(function() {
 	FLOOD.nodeTypes.Map = function() {
 
 		var typeData = {
-			inputs: [ 	new FLOOD.baseTypes.InputPort( "Func", "function", function(a){ return a; } ),
-						new FLOOD.baseTypes.InputPort( "List", "list:t", [] ) ],
-			outputs: [ 	new FLOOD.baseTypes.OutputPort( "O", "list:t" ) ],
+			inputs: [ 	new FLOOD.baseTypes.InputPort( "Func", [Function], function(a){ return a; } ),
+						new FLOOD.baseTypes.InputPort( "List", [QuotedArray, AnyType], [] ) ],
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "O", [QuotedArray, AnyType] ) ],
 			typeName: "Map" 
 		};
 
@@ -538,10 +509,10 @@ define(function() {
 	FLOOD.nodeTypes.Reduce = function() {
 
 		var typeData = {
-			inputs: [ 	new FLOOD.baseTypes.InputPort( "Func", "function", function(a){ return a; } ),
-						new FLOOD.baseTypes.InputPort( "List", "list:t", [] ), 
-						new FLOOD.baseTypes.InputPort( "Acc", "t", [] ) ],
-			outputs: [ 	new FLOOD.baseTypes.OutputPort( "O", "t" ) ],
+			inputs: [ 	new FLOOD.baseTypes.InputPort( "Func", [Function], function(a){ return a; } ),
+						new FLOOD.baseTypes.InputPort( "List", [QuotedArray, AnyType], [] ), 
+						new FLOOD.baseTypes.InputPort( "Acc", [AnyType], [] ) ],
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "O", [AnyType] ) ],
 			typeName: "Reduce" 
 		};
 
@@ -558,9 +529,9 @@ define(function() {
 	FLOOD.nodeTypes.Filter = function() {
 
 		var typeData = {
-			inputs: [ 	new FLOOD.baseTypes.InputPort( "Func", "function", function(a){ return a; } ),
-									new FLOOD.baseTypes.InputPort( "List", "list:t", [] )],
-			outputs: [ 	new FLOOD.baseTypes.OutputPort( "O", "t" ) ],
+			inputs: [ 	new FLOOD.baseTypes.InputPort( "Func", [Function], function(a){ return a; } ),
+									new FLOOD.baseTypes.InputPort( "List", [QuotedArray, AnyType], [] )],
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "O", [AnyType] ) ],
 			typeName: "Filter" 
 		};
 
@@ -574,8 +545,159 @@ define(function() {
 
 	}.inherits( FLOOD.baseTypes.NodeType );
 
-	return FLOOD;
 
+	// represents any type
+	function AnyType() {};
+	FLOOD.AnyType = AnyType;
+
+	FLOOD.isObjectTypeMatch = isObjectTypeMatch;
+	FLOOD.isFastTypeMatch = isFastTypeMatch;
+	FLOOD.doAllTypesMatch = doAllTypesMatch;
+
+	function isObjectTypeMatch(arg, arg_type) {
+
+		if ( arg_type === undefined || arg_type === null){
+			return true;
+		}
+
+		if (arg_type === AnyType){
+			return true;
+		}
+
+		if ( arg === undefined || arg === null ){
+			return false;
+		}
+
+		if (arg_type === AnyType && arg.constructor === QuotedArray ){
+			return false;
+		}
+
+		return arg.constructor === arg_type || arg instanceof arg_type;
+
+		// NOTE: instanceof will return FALSE for numbers
+		// if they aren't created with new.  This behavior
+		// sucks, so we use the constructor.
+
+	};
+
+  function isFastTypeMatch( arg, arg_type ){
+	
+	  // wrap with an arg array
+		var wrap_arg = [ arg ];
+
+		for (var j = 0; j < arg_type.length; j++){
+
+			// "fast" means we only check the first element
+			wrap_arg = wrap_arg[0];
+
+			// check its type, return early on fail
+			if ( !isObjectTypeMatch( wrap_arg, arg_type[j] ) ){
+				return false;
+			}
+		}
+
+		// all arg types are matched
+		return true;
+
+  };
+
+  // first arg is the arguments to the node
+  // second is the expected types
+  function doAllTypesMatch( node_args, expected_arg_types ){
+
+  	// if no supplied, just use default js dispatch
+  	if ( !expected_arg_types ){
+  		return true;
+  	}
+
+  	// if the Number of args and expected types don't match, return false
+  	if (node_args.length != expected_arg_types.length){
+  		return false;
+  	}
+
+  	// for each arg type, check match with expected input types
+  	for (var i = 0; i < node_args.length; i++){
+  		// do a fast type match
+  		if ( !isFastTypeMatch(node_args[i], expected_arg_types[i]) ){
+  			return false;
+  		}
+  	}
+
+  	return true;
+  }
+
+  function allQuotedArrays( array ){
+
+  	for (var i = 0; i < array.length; i++){
+  		if ( !(array[i] instanceof QuotedArray) ){
+  			return false;
+  		}
+  	}
+
+  	return true;
+
+  }
+
+  Function.prototype.applyLongest = function( this_arg, args, options ){
+
+	  // longest 
+  	var length_array = args.map( function( a ){ 
+
+  		if (a instanceof Array) {
+  			return a.length;
+  		} else {
+  			return -1; // return -1 if arg is not an array
+  		}
+
+  	});
+
+  	// get the longest list array
+  	var max_length = Math.max.apply( Math, length_array );
+
+  	var result = new QuotedArray();
+  	for (var i = 0; i < max_length; i++){
+
+  		var this_node_args = [];
+  		for (var j = 0; j < args.length; j++){	
+  			
+  			var arg = args[j];
+  			if ( arg instanceof QuotedArray){
+
+  				// this may not be the longest, pick its length
+  				var arg_max_length = Math.min(max_length, arg.length ) - 1;
+  				this_node_args.push( args[j][ Math.min( i, arg_max_length )] );
+
+  			} else {
+
+  				this_node_args.push( arg );
+
+  			}
+  		}
+
+  		result.push( this.mapApply(this_arg, this_node_args, options) );
+  	}
+
+  	return result;
+
+  }
+
+  Function.prototype.mapApply = function( this_arg, args, options ){
+
+	  options = options || {};
+
+	  // check if args matches types expected for node inputs - if so, execute
+	  if ( doAllTypesMatch( args, options.expected_arg_types ) ){
+	  	return this.apply(this_arg, args);
+	  } 
+
+	  var replicationType = options.replication || "applyLongest";
+
+
+	  return this[ replicationType ](this_arg, args, options);
+
+  }
+
+	return FLOOD;
 
 });
 

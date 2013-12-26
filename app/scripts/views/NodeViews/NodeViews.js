@@ -4,7 +4,7 @@ define(['BaseNodeView', 'WatchNodeView', 'NumNodeView', 'CSGNodeView'], function
 
   nodeViewTypes.Base = BaseNodeView;
   nodeViewTypes.Watch = WatchNodeView;
-  nodeViewTypes.Num = NumNodeView;
+  nodeViewTypes.Number = NumNodeView;
 
   nodeViewTypes.Sphere = CSGNodeView;
   nodeViewTypes.Cyl = CSGNodeView;

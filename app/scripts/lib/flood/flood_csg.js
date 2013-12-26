@@ -1,18 +1,23 @@
+if (typeof define !== 'function') {
+    var define = require('amdefine')(module);
+}
+
 define(['FLOOD'], function(FLOOD) {
 
 	FLOOD.nodeTypes.Vec3 = function() {
 
 		var typeData = {
-			inputs: [ 	new FLOOD.baseTypes.InputPort( "X", "number", 0 ),
-						new FLOOD.baseTypes.InputPort( "Y", "number", 0 ),
-						new FLOOD.baseTypes.InputPort( "Z", "number", 0 ) ],
-			outputs: [ 	new FLOOD.baseTypes.OutputPort( "V", "vec3" ) ],
-			typeName: "Vec3" 
+			inputs: [ 	new FLOOD.baseTypes.InputPort( "X", [Number], 1 ),
+						new FLOOD.baseTypes.InputPort( "Y", [Number], 1 ),
+						new FLOOD.baseTypes.InputPort( "Z", [Number], 1 ) ],
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "V", [ CSG.Vector ] ) ],
+			typeName: "Vec3"
 		};
 
 		FLOOD.baseTypes.NodeType.call(this, typeData );
 
 		this.eval = function(x,y,z) {
+
 			return new CSG.Vector([x,y,z]);
 		};
 
@@ -22,11 +27,11 @@ define(['FLOOD'], function(FLOOD) {
 	FLOOD.nodeTypes.Sphere = function() {
 
 		var typeData = {
-			inputs: [ 	new FLOOD.baseTypes.InputPort( "C", "vec3", new CSG.Vector([0,0,0]) ),
-						new FLOOD.baseTypes.InputPort( "R", "number", 10 ),
-						new FLOOD.baseTypes.InputPort( "Xd", "number", 16 ),
-						new FLOOD.baseTypes.InputPort( "Yd", "number", 8 ) ],
-			outputs: [ 	new FLOOD.baseTypes.OutputPort( "S", "polygon" ) ],
+			inputs: [ 	new FLOOD.baseTypes.InputPort( "C", [ CSG.Vector ], new CSG.Vector([0,0,0]) ),
+						new FLOOD.baseTypes.InputPort( "R", [Number], 10 ),
+						new FLOOD.baseTypes.InputPort( "Xd", [Number], 16 ),
+						new FLOOD.baseTypes.InputPort( "Yd", [Number], 8 ) ],
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "S", [ CSG.Polygon ] ) ],
 			typeName: "Sphere" 
 		};
 
@@ -47,11 +52,11 @@ define(['FLOOD'], function(FLOOD) {
 	FLOOD.nodeTypes.Cyl = function() {
 
 		var typeData = {
-			inputs: [ 	new FLOOD.baseTypes.InputPort( "S", "vec3", new CSG.Vector([0,-5,0]) ),
-						new FLOOD.baseTypes.InputPort( "E", "vec3", new CSG.Vector([0,2,0]) ),
-						new FLOOD.baseTypes.InputPort( "R", "number", 5 ),
-						new FLOOD.baseTypes.InputPort( "Yd", "number", 16 ) ],
-			outputs: [ 	new FLOOD.baseTypes.OutputPort( "C", "polygon" ) ],
+			inputs: [ 	new FLOOD.baseTypes.InputPort( "S", [ CSG.Vector ], new CSG.Vector([0,-5,0]) ),
+						new FLOOD.baseTypes.InputPort( "E", [ CSG.Vector ], new CSG.Vector([0,2,0]) ),
+						new FLOOD.baseTypes.InputPort( "R", [Number], 5 ),
+						new FLOOD.baseTypes.InputPort( "Yd", [Number], 16 ) ],
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "C", [ CSG.Polygon ] ) ],
 			typeName: "Cyl" 
 		};
 
@@ -71,9 +76,9 @@ define(['FLOOD'], function(FLOOD) {
 	FLOOD.nodeTypes.Cube = function() {
 
 		var typeData = {
-			inputs: [ 	new FLOOD.baseTypes.InputPort( "C", "vec3", new CSG.Vector([0,-1,0]) ),
-						new FLOOD.baseTypes.InputPort( "R", "number", 10 ) ],
-			outputs: [ 	new FLOOD.baseTypes.OutputPort( "C", "polygon" ) ],
+			inputs: [ 	new FLOOD.baseTypes.InputPort( "C", [ CSG.Vector ], new CSG.Vector([0,-1,0]) ),
+						new FLOOD.baseTypes.InputPort( "R", [ Number ], 10 ) ],
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "C", [ CSG.Polygon ] ) ],
 			typeName: "Cube" 
 		};
 
@@ -93,9 +98,9 @@ define(['FLOOD'], function(FLOOD) {
 	FLOOD.nodeTypes.SolidInter = function() {
 
 		var typeData = {
-			inputs: [ 	new FLOOD.baseTypes.InputPort( "A", "polygon", null ),
-						new FLOOD.baseTypes.InputPort( "B", "polygon", null ) ],
-			outputs: [ 	new FLOOD.baseTypes.OutputPort( "O", "polygon" ) ],
+			inputs: [ 	new FLOOD.baseTypes.InputPort( "A", [ CSG.Polygon ], null ),
+						new FLOOD.baseTypes.InputPort( "B", [ CSG.Polygon ], null ) ],
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "O", [ CSG.Polygon ] ) ],
 			typeName: "SolidInter" 
 		};
 
@@ -114,9 +119,9 @@ define(['FLOOD'], function(FLOOD) {
 	FLOOD.nodeTypes.SolidUnion = function() {
 
 		var typeData = {
-			inputs: [ 	new FLOOD.baseTypes.InputPort( "A", "polygon", null ),
-						new FLOOD.baseTypes.InputPort( "B", "polygon", null ) ],
-			outputs: [ 	new FLOOD.baseTypes.OutputPort( "O", "polygon" ) ],
+			inputs: [ 	new FLOOD.baseTypes.InputPort( "A", [ CSG.Polygon ], null ),
+						new FLOOD.baseTypes.InputPort( "B", [ CSG.Polygon ], null ) ],
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "O", [ CSG.Polygon ] ) ],
 			typeName: "SolidUnion" 
 		};
 
@@ -135,9 +140,9 @@ define(['FLOOD'], function(FLOOD) {
 	FLOOD.nodeTypes.SolidDiff = function() {
 
 		var typeData = {
-			inputs: [ 	new FLOOD.baseTypes.InputPort( "A", "polygon", null ),
-						new FLOOD.baseTypes.InputPort( "B", "polygon", null ) ],
-			outputs: [ 	new FLOOD.baseTypes.OutputPort( "O", "polygon" ) ],
+			inputs: [ 	new FLOOD.baseTypes.InputPort( "A", [ CSG.Polygon ], null ),
+						new FLOOD.baseTypes.InputPort( "B", [ CSG.Polygon ], null ) ],
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "O", [ CSG.Polygon ] ) ],
 			typeName: "SolidDiff" 
 		};
 
