@@ -21,6 +21,19 @@ var FLOOD = new require('./flood.js')
 	arr1.push(3);	
 
 	var res = add.eval.mapApply(add.eval, [arr0, arr1], options);
+	assert.equal( 4, res.length );
+	assert.equal( "[ -8, -7, 4, 5 ]", res.toString() );
+
+	var res = add.eval.mapApply(add.eval, [arr0, 1], options);
+	assert.equal( 2, res.length );
+	assert.equal( "[ -9, 3 ]", res.toString() );
+
+	var res = add.eval.mapApply(add.eval, [1, 1], options);
+	assert.equal( "2", res.toString() );
+
+	var res = add.eval.mapApply(add.eval, [1, arr1], options);
+	assert.equal( 2, res.length );
+	assert.equal( "[ 3, 4 ]", res.toString() );
 
 })(scheme, FLOOD);
 

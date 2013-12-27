@@ -89,7 +89,7 @@ define(function() {
 
 		var that = this;
 		var options = options || {};
-		this.replication = "applyLongest";
+		this.replication = "applyCartesian";
 
 		// tell the inputs about their parent node & index
 		if (options.inputs) {
@@ -657,10 +657,10 @@ define(function() {
   	var argmap = [];
   	if (args[0] instanceof Array){
   		args[0].map(function(x){
-  			argmap.push([x]);
+  			argmap.push([ x ]);
   		})
   	} else {
-  		argmap.push( [args[0]] );
+  		argmap.push( [ args[0] ] );
   	}
 
   	// for every arg position after first
@@ -671,12 +671,16 @@ define(function() {
   		// for every element in argmap
   		for (var j = 0; j < argmap.length; j++){
 
+  			// if arg position is not an array, just push the element
+  			if ( !(args[i] instanceof Array) ){
+  				newmap.push( argmap[j].concat([ args[i] ]) );
+  				continue;
+  			}
+
   			// project each one of those previous elements as 
   			// many times as their are args in new position
   			for (var k = 0; k < args[i].length; k++){
-
   				newmap.push( argmap[j].concat( [ args[i][k] ] ) );
-
   			}
 
   		}
@@ -688,7 +692,7 @@ define(function() {
   	var results = new QuotedArray();
 
   	for (var i = 0; i < argmap.length; i++){
-  		results.push( this_arg.mapApply( this_arg, argmap[i], options ) );
+  		results.push( this.mapApply( this_arg, argmap[i], options ) );
   	}
 		
 		return results;
@@ -746,8 +750,7 @@ define(function() {
 	  	return this.apply(this_arg, args);
 	  } 
 
-	  var replicationType = options.replication || "applyLongest";
-
+	  var replicationType = options.replication || "applyCartesian";
 
 	  return this[ replicationType ](this_arg, args, options);
 
