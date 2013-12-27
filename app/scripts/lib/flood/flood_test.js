@@ -2,6 +2,27 @@ var FLOOD = new require('./flood.js')
 	, assert = require('assert')
 	, scheme = require('./scheme.js');
 
+// mapApply - applyCartesian without nesting
+(function(scheme, FLOOD) {
+
+	var add = new FLOOD.nodeTypes.Add();
+
+	// expected_arg_types
+	var options = {};
+	options.expected_arg_types = [[Number], [Number]];
+	options.replication = "applyCartesian";
+
+	var arr0 = new FLOOD.QuotedArray();
+	arr0.push(-10);
+	arr0.push(2);
+
+	var arr1 = new FLOOD.QuotedArray();
+	arr1.push(2);
+	arr1.push(3);	
+
+	var res = add.eval.mapApply(add.eval, [arr0, arr1], options);
+
+})(scheme, FLOOD);
 
 // mapApply - applyLongest with nesting
 (function(scheme, FLOOD) {
@@ -48,7 +69,6 @@ var FLOOD = new require('./flood.js')
 
 	assert.equal( 1, res.length );
 	assert.equal( "[ [ 2, 4 ] ]", res.toString() );
-
 
 })(scheme, FLOOD);
 

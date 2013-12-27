@@ -638,6 +638,62 @@ define(function() {
 
   }
 
+  function newNestedQuotedArrayByElements(eles){
+
+  	var a = new QuotedArray();
+  	for (var i = 0; i < eles.length; i++){
+  		var b = new QuotedArray();
+  		b.push(eles[i]);
+  		a.push(b);
+  	}
+
+  	return a;
+
+  }
+
+  Function.prototype.applyCartesian = function( this_arg, args, options ){
+
+  	// initialize the argument lists
+  	var argmap = [];
+  	if (args[0] instanceof Array){
+  		args[0].map(function(x){
+  			argmap.push([x]);
+  		})
+  	} else {
+  		argmap.push( [args[0]] );
+  	}
+
+  	// for every arg position after first
+  	for (var i = 1; i < args.length; i++){
+
+  		var newmap = new QuotedArray();
+
+  		// for every element in argmap
+  		for (var j = 0; j < argmap.length; j++){
+
+  			// project each one of those previous elements as 
+  			// many times as their are args in new position
+  			for (var k = 0; k < args[i].length; k++){
+
+  				newmap.push( argmap[j].concat( [ args[i][k] ] ) );
+
+  			}
+
+  		}
+
+  		argmap = newmap;
+
+  	}
+
+  	var results = new QuotedArray();
+
+  	for (var i = 0; i < argmap.length; i++){
+  		results.push( this_arg.mapApply( this_arg, argmap[i], options ) );
+  	}
+		
+		return results;
+  }
+
   Function.prototype.applyLongest = function( this_arg, args, options ){
 
 	  // longest 
