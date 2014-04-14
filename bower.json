@@ -2,11 +2,12 @@
   "name": "flood",
   "version": "0.0.0",
   "dependencies": {
-    "jquery": "~1.9.0",
+    "jquery": "1.9.1",
     "requirejs": "~2.1.5",
     "requirejs-text": "~2.0.5",
     "backbone-amd": "~1.0.0",
     "almond": "0.2.6",
+    "bootstrap": "3.0.3",
     "underscore-amd": "~1.4.4",
     "threejs": "r64",
     "jquery.ui": "1.10.3",
