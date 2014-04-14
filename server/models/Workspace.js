@@ -5,7 +5,7 @@ var sessionSchema = new Schema({
   name: { type: String, default: '' }
   , currentWorkspace: {type: Schema.ObjectId, ref: 'Workspace' }
   , workspaces: [ {type: Schema.ObjectId, ref: 'Workspace' } ]
-  , lastEdited: Date
+  , lastSave: Date
 });
 
 var workspaceSchema = new Schema({
@@ -14,7 +14,7 @@ var workspaceSchema = new Schema({
   , connections: [ Schema.Types.Mixed ]
   , selectedNodes: [ Schema.Types.Mixed ]
   , zoom: Number
-  , lastEdited: Date
+  , lastSave: Date
 });
 
 exports.SessionModel = mongoose.model('Session', sessionSchema);

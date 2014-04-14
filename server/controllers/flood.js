@@ -1,6 +1,6 @@
 var mongoose = require('mongoose')
-	, Session = require('../models/flood').SessionModel
-	, Workspace = require('./models/flood').WorkspaceModel;
+	, Session = require('../models/Workspace').SessionModel
+	, Workspace = require('../models/Workspace').WorkspaceModel;
 
 exports.getWorkspace = function(req, res) {
 
