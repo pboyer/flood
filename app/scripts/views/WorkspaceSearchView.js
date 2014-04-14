@@ -58,7 +58,21 @@ define(['backbone', 'List', 'SearchElementView'], function(Backbone, List, Searc
       }, 100);
     },
 
+//  showNodeSearch: function(e){
+//       this.app.set('showingSearch', true);
+//       this.app.newNodePosition = [e.offsetX, e.offsetY];
+//  },
+
+    // move this to workspace
+    getWorkspaceCenter: function(){
+
+      // can't get a click event
+      // we need to get the workspace_back center
+
+    },
+
     elementClick: function(e){
+
       this.model.app.addNodeToWorkspace( this.model.get('name'), [500,500] );
     },
 
@@ -66,6 +80,7 @@ define(['backbone', 'List', 'SearchElementView'], function(Backbone, List, Searc
 
       if ( event.keyCode === 13) { // enter key causes first result to be inserted
         var nodeName = this.$list.find('.search-element').first().find('.name').first().html();
+
         this.app.addNodeToWorkspace( nodeName );
       } 
 

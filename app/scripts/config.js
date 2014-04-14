@@ -74,6 +74,12 @@ require.config({
             ],
             exports: 'jqueryuiwidget'
         },
+        bootstrap: {
+            deps: [
+                'jquery'
+            ],
+            exports: 'bootstrap'
+        },
         almond: {
             deps: [
             ],
@@ -129,6 +135,7 @@ require.config({
 
         // bower
         almond: '../bower_components/almond/almond',
+        bootstrap: '../bower_components/bootstrap/dist/js/bootstrap',
         List: '../bower_components/listjs/dist/list.min',
         Three: '../bower_components/threejs/build/three.min',
         jqueryuidraggable: '../bower_components/jquery.ui/ui/jquery.ui.draggable',

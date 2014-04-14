@@ -415,8 +415,7 @@ body {
 	color:lightblue;
 }
 
-.toggle-vis {
-	display: none;
+.node-settings {
 	position: absolute;
 	bottom: 0;
 	right: 0;
@@ -424,21 +423,12 @@ body {
 	padding: 5px;
 }
 
-.toggle-vis:hover {
+.node-settings:hover {
 	opacity: 1;
 }
 
-.node-settings-button {
-	position: absolute;
-	bottom: 0;
-	right: 0;
-
-	opacity: 0.3;
-	padding: 1px
-}
-
-.node-settings-button:hover {
-	opacity: 1;
+.toggle-vis {
+	display: none;
 }
 
 .node-number-input {

@@ -11,6 +11,7 @@
         <meta name="viewport" content="width=device-width">
         <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300' rel='stylesheet' type='text/css'>
         <link rel="stylesheet" href="styles/main.css">
+        <link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.css">
     </head>
     
     <body>
@@ -77,14 +78,34 @@
           <% }); %>
         </ul>
 
-        <div class="toggle-vis" title="Toggle geometry visibility">
-          <img src="images/toggle_vis.png" style="width: 14px; height: 13px" />
+        <div class="dropdown node-settings" style="position:absolute">
+
+          <a data-toggle="dropdown" href="#">
+            <span class="caret" style="color:white; padding: 1px"></span>
+          </a>
+
+          <ul class="dropdown-menu" role="menu" style="padding: 5px;" aria-labelledby="dLabel">
+
+            <li role="presentation" class="toggle-vis">
+              <a role="menuitem" tabindex="-1" href="#">
+                <span class="glyphicon glyphicon-eye-open" style="margin-right: 5px"></span>Show geometry
+              </a>
+            </li>
+
+            <li role="presentation" class="dropdown-header">Replication type</li>
+
+            <li role="presentation">
+              <div class="btn-group btn-group-xs" style="padding: 10px">
+                <button type="button" class="btn btn-default">II</button>
+                <button type="button" class="btn btn-default">II\</button>
+                <button type="button" class="btn btn-default">XXX</button>
+              </div>
+            </li>
+
+          </ul>
         </div>
 
       </script>
-
-
-
 
       <script type="text/template" id="node-watch-template">
 
@@ -95,7 +116,7 @@
         </ul>
 
         <div class="node-data-container watch-data-container" >
-          <span class="name searchfield"><%= JSON.stringify(lastValue) %></span>
+          <span class="name searchfield"><%= lastValue ? lastValue.toString() : "Nothing" %></span>
         </div>
 
       </script>

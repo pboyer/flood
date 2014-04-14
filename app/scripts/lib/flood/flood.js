@@ -89,7 +89,7 @@ define(function() {
 
 		var that = this;
 		var options = options || {};
-		this.replication = "applyCartesian";
+		this.replication = "applyLongest";
 
 		// tell the inputs about their parent node & index
 		if (options.inputs) {
@@ -131,6 +131,10 @@ define(function() {
 			_isDirty = true;
 		};
 
+		this.inputTypes = function(){
+			return this.inputs.map(function(x){ return x.type; });
+		}
+
 		this.markDirty = function() {
 
 			_isDirty = this.inputs.reduce(function(m, n){ 
@@ -161,6 +165,7 @@ define(function() {
 		}
 
 		this.evalComplete = function() {};
+		this.evalFailed = function() {};
 
 		this.compile = function() { 
 			
@@ -184,12 +189,18 @@ define(function() {
 							if (noUndefinedArgs){ 
 								
 								// build replication options and types
-								var options = {};
-								options.replication = that.replication;
-								options.expected_arg_types = that.inputs.map(function(x){ return x.type; });
+								var options = {
+									replication: that.replication,
+									expected_arg_types: that.inputTypes()
+								};
 
-								// actually evaluate the function!
-								that.value = that.eval.mapApply(that, Array.prototype.slice.call(arguments, 0), options);
+								try {
+									// actually evaluate the function!
+									that.value = that.eval.mapApply(that, Array.prototype.slice.call(arguments, 0), options);
+								} catch (e) {
+									that.value = null;
+									that.evalFailed(that, arguments);
+								}
 
 							} else { 
 								// return a partial function application
@@ -750,7 +761,7 @@ define(function() {
 	  	return this.apply(this_arg, args);
 	  } 
 
-	  var replicationType = options.replication || "applyCartesian";
+	  var replicationType = options.replication || "applyLongest";
 
 	  return this[ replicationType ](this_arg, args, options);
 
