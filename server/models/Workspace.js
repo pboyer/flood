@@ -15,6 +15,7 @@ var workspaceSchema = new Schema({
   , selectedNodes: [ Schema.Types.Mixed ]
   , zoom: Number
   , lastSaved: Date
+  , maintainers: [{type: Schema.ObjectId, ref: 'User' }]
 });
 
 exports.SessionModel = mongoose.model('Session', sessionSchema);

@@ -92,8 +92,6 @@ exports.putMySession = function(req, res) {
 
 	if (!req.body || !req.body._id) return res.status(500).send('Malformed body');
 
-	console.log(req.body);
-	
   var ns = req.body;
   var sid = ns._id;
 
@@ -158,6 +156,33 @@ exports.putMySession = function(req, res) {
 
 };
 
+exports.getNewWorkspace = function(req, res){
+
+	var user = req.user;
+
+	if (!user) res.status(403).send("Must be logged in to create a new workspace")
+
+	var nws = new Workspace({name : "New workspace", maintainers : [ user._id ] });
+
+	nws.save(function(e){
+
+		if (e) return res.status(500).send("Failed to create new workspace");
+
+		user.workspaces.push(nws);
+		user.markModified('workspaces');
+
+		user.save(function(eu){
+
+			if (eu) return res.status(500).send("Failed to update user profile");
+			console.log(user)
+			return res.send(nws);
+
+		})
+
+	});
+
+};
+
 exports.getWorkspace = function(req, res) {
 
   var wid = req.params.id;
@@ -178,6 +203,8 @@ exports.saveWorkspace = function(req, res) {
 
   var wid = req.params.id;
 	var nws = JSON.parse( req.body.workspace );
+
+	// TODO: update user
 
 	Workspace.findById( wid , function(e, ws) {
 

@@ -26,7 +26,8 @@ var userSchema = new mongoose.Schema({
   resetPasswordToken: String,
   resetPasswordExpires: Date,
 
-  lastSession: {type: mongoose.Schema.ObjectId, ref: 'Session' }
+  lastSession: {type: mongoose.Schema.ObjectId, ref: 'Session' },
+  workspaces: [{type: mongoose.Schema.ObjectId, ref: 'Workspace' }]
 
 });
 

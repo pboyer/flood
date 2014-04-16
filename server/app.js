@@ -110,11 +110,12 @@ app.use(function(req, res, next) {
 
 // flood routes
 
-app.get('/my_session', floodController.getMySession);
-app.put('/my_session', floodController.putMySession);
+app.get('/mys', floodController.getMySession);
+app.put('/mys', floodController.putMySession);
+app.get('/nws', floodController.getNewWorkspace );
 
-app.get('/w/:id', floodController.getWorkspace);
-app.post('/w/:id', floodController.saveWorkspace);
+app.get('/ws/:id', floodController.getWorkspace);
+app.post('/ws/:id', floodController.saveWorkspace);
 
 app.get('/s/:id', floodController.getSession);
 app.post('/s/:id', floodController.saveSession);
