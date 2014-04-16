@@ -26,7 +26,7 @@ var userSchema = new mongoose.Schema({
   resetPasswordToken: String,
   resetPasswordExpires: Date,
 
-  session: {type: mongoose.Schema.ObjectId, ref: 'Session' }
+  lastSession: {type: mongoose.Schema.ObjectId, ref: 'Session' }
 
 });
 

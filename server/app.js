@@ -10,7 +10,7 @@ var bodyParser = require('body-parser');
 var favicon = require('static-favicon');
 var logger = require('morgan');
 var errorHandler = require('errorhandler');
-var csrf = require('csurf');
+// var csrf = require('csurf');
 var methodOverride = require('method-override');
 
 var MongoStore = require('connect-mongo')({ session: session });
@@ -84,12 +84,12 @@ app.use(session({
     auto_reconnect: true
   })
 }));
-app.use(csrf());
+// app.use(csrf());
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(function(req, res, next) {
   res.locals.user = req.user;
-  res.locals._csrf = req.csrfToken();
+  // res.locals._csrf = req.csrfToken();
   res.locals.secrets = secrets;
   next();
 });
@@ -109,6 +109,9 @@ app.use(function(req, res, next) {
  */
 
 // flood routes
+
+app.get('/my_session', floodController.getMySession);
+app.put('/my_session', floodController.putMySession);
 
 app.get('/w/:id', floodController.getWorkspace);
 app.post('/w/:id', floodController.saveWorkspace);
