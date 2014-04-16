@@ -5,7 +5,7 @@ define(['backbone', 'Workspaces', 'Node'], function(Backbone, Workspaces, Node){
     idAttribute: "_id",
 
     url: function() {
-      return '/my_session';
+      return '/mys';
     },
 
     toJSON : function() {
@@ -45,7 +45,7 @@ define(['backbone', 'Workspaces', 'Node'], function(Backbone, Workspaces, Node){
     parse : function(resp) {
 
       console.log(resp);
-      
+
       this.get('workspaces').add(resp.workspaces, {app: this});
       resp.workspaces = this.get('workspaces');
       return resp;

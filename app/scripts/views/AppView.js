@@ -131,16 +131,18 @@ define([  'backbone',
 
     newWorkspace: function(){
 
-      // only create workspace once that's been assigned
-      // drawback - somewhat slow
-      // means you can't create a workspace without being connected
+      var that = this;
 
-      // don't worry about this quite yet
+      $.get("/nws", function(data, status){
 
+        var newWorkspace = new Workspace(data, {app: that.model});
+        that.model.get('workspaces').add( newWorkspace );
 
-      var newWorkspace = new Workspace({ _id: this.model.makeId(), name: 'New Workspace ' + this.workspaceCounter++ }, {app: this.model});
-      this.model.get('workspaces').add( newWorkspace );
-      return newWorkspace;
+      }).fail(function(){
+
+        console.log("failed to get new workspace");
+
+      });
 
     },
 
