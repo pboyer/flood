@@ -18,6 +18,26 @@ define(['backbone', 'FLOOD'], function(Backbone, FLOOD) {
       , visible: true
     },
 
+    // called when saving the node to server
+    serialize : function() {
+
+      var vals = {
+        name: this.get("name")
+        , position: this.get('position')
+        , typeName: this.get('typeName')
+        , selected: this.get('selected')
+        , visible: this.get('visible')
+        , _id: this.get('_id')
+      };
+
+      if (typeof this.get('lastValue') === "string" || typeof this.get('lastValue') === "number" ){
+        vals.lastValue = this.get('lastValue');
+      }
+
+      return vals;
+
+    },
+
     initialize: function(atts, vals) {
 
       if ( atts.typeName != null && FLOOD.nodeTypes[atts.typeName] != undefined){

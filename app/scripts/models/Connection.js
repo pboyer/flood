@@ -56,10 +56,6 @@ define(['backbone'], function(Backbone) {
 
     onNodeRemoved: function(isStart){ 
       this.workspace.get('connections').remove(this);
-
-      // if (this.workspace.get('connections').contains(this)){
-        
-      // }
     },
 
     onRemove: function(model, collection, options){

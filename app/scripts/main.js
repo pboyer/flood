@@ -8,8 +8,8 @@ require(["config"], function() {
 
     app.fetch({
       error: function(result) {
-        console.error('error')
-        console.error(result)
+        console.error('error');
+        console.error(result);
       }
     });
 
@@ -17,6 +17,8 @@ require(["config"], function() {
     app.SearchElements.fetch();
 
     var appView = new AppView({model: app});
+
+
 
   });
 

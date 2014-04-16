@@ -29,6 +29,7 @@ define([  'backbone',
     },
 
     events: {
+      'click #save-button' : 'saveClick',
       'click .workspaces_curtain' : 'endSearch',
       'click #help-button': 'showHelp',
       'click #settings-button': 'showSettings',
@@ -36,6 +37,11 @@ define([  'backbone',
       'click #workspace_hide' : 'toggleViewer',
       'click #add-workspace-button': 'newWorkspace'
     },
+
+    saveClick: function(e){
+      console.log('save!');
+      this.model.sync("update", this.model );
+    },  
 
     endSearch: function() {
       this.model.set('showingSearch', false);
@@ -125,7 +131,14 @@ define([  'backbone',
 
     newWorkspace: function(){
 
-      var newWorkspace = new Workspace({_id: this.model.makeId(), name: 'New Workspace ' + this.workspaceCounter++ }, {app: this.model});
+      // only create workspace once that's been assigned
+      // drawback - somewhat slow
+      // means you can't create a workspace without being connected
+
+      // don't worry about this quite yet
+
+
+      var newWorkspace = new Workspace({ _id: this.model.makeId(), name: 'New Workspace ' + this.workspaceCounter++ }, {app: this.model});
       this.model.get('workspaces').add( newWorkspace );
       return newWorkspace;
 
@@ -212,7 +225,15 @@ define([  'backbone',
 
       var workspaces = this.model.get('workspaces')
       var currentWorkspaceId = this.model.get('currentWorkspace');
-      var currentWorkspace = workspaces.get(currentWorkspaceId);
+
+      if (!currentWorkspaceId){
+        var currentWorkspace = workspaces.first();
+        this.model.set('currentWorkspace', currentWorkspace.get('_id'));
+        console.log("Setting new workspace");
+      } else {
+        var currentWorkspace = workspaces.get(currentWorkspaceId);
+      }
+      
       currentWorkspace.set('current', true);
       this.model.updateCurrentWorkspace();
     

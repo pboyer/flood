@@ -27,6 +27,7 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView'], function(Backbone, 
       this.$el.find('.currentValue').html(val);
 
       this.model.get('type').value = val;
+      this.model.set('lastValue', val );
       this.model.get('type').setDirty();
       this.model.workspace.run();
 

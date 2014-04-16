@@ -5,7 +5,26 @@ define(['backbone', 'Workspaces', 'Node'], function(Backbone, Workspaces, Node){
     idAttribute: "_id",
 
     url: function() {
-      return 'session.json';
+      return '/my_session';
+    },
+
+    toJSON : function() {
+
+        if (this._isSerializing) {
+            return this.id || this.cid;
+        }
+
+        this._isSerializing = true;
+
+        var json = _.clone(this.attributes);
+
+        _.each(json, function(value, name) {
+            _.isFunction(value.toJSON) && (json[name] = value.toJSON());
+        });
+
+        this._isSerializing = false;
+
+        return json;
     },
 
     initialize: function(args, options){
@@ -16,7 +35,7 @@ define(['backbone', 'Workspaces', 'Node'], function(Backbone, Workspaces, Node){
     newNodePosition: [0,0],
 
     defaults: {
-      name: "DefaultWorkspace",
+      name: "DefaultSession",
       workspaces: new Workspaces(),
       currentWorkspace: null,
       showingSearch: false,
@@ -25,6 +44,8 @@ define(['backbone', 'Workspaces', 'Node'], function(Backbone, Workspaces, Node){
 
     parse : function(resp) {
 
+      console.log(resp);
+      
       this.get('workspaces').add(resp.workspaces, {app: this});
       resp.workspaces = this.get('workspaces');
       return resp;

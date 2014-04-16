@@ -6,6 +6,14 @@ define(['backbone', 'Node'], function(Backbone, Node) {
 
 		initialDragPositions: [],
 
+		toJSON: function(){
+
+			return this.models.map(function(x){
+				return x.serialize();
+			});
+
+		},
+
 		selectAll: function() {
 			this.where({selected: false}).forEach( function(e){ e.set({selected: true}) } );
 		},
