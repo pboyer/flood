@@ -102,6 +102,7 @@ require.config({
         SearchElement: 'models/SearchElement',
         Workspace: 'models/Workspace',
         Help: 'models/Help',
+        Login: 'models/Login',
 
         // backbone routers
         WorkspaceRouter: 'router/WorkspaceRouter',
@@ -115,6 +116,7 @@ require.config({
         WorkspaceView: 'views/WorkspaceView',
         WorkspaceTabView: 'views/WorkspaceTabView',
         HelpView: 'views/HelpView',
+        LoginView: 'views/LoginView',
         
 
         // node backbone views

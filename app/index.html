@@ -36,8 +36,8 @@
 
             <div id="more-menu">
               <div id="login-button" class="menu-element">Login</div>
-              <div id="settings-button" class="menu-element">Settings</div>
-              <div id="help-button" class="menu-element">Help</div>
+<!--               <div id="settings-button" class="menu-element">Settings</div>
+              <div id="help-button" class="menu-element">Help</div> -->
             </div>
   
           </div> 
@@ -52,8 +52,11 @@
 
           </div>
 
+          <div id="login" class="col">
+            
+          </div>
 
-          <div id="save" class="col">
+          <div id="help" class="col">
             
           </div>
 
@@ -134,8 +137,6 @@
 
       </script>
 
-
-
       <script type="text/template" id="node-num-template">
 
         <div class="node-data-container" >
@@ -182,6 +183,50 @@
 
       <script type="text/template" id="connection-template">
         M<%-aX%>,<%-aY%> C<%-bX%>,<%-bY%> <%-cX%>,<%-cY%> <%-dX%>,<%-dY%>
+      </script>
+
+      <script type="text/template" id="login-template">
+
+        <div class="login-container">
+
+          <button id="logout" class="btn btn-primary"><i class="fa fa-unlock-alt"></i>Logout</button>
+
+          <form id="login-form">
+
+            <legend>Sign In</legend>
+
+            <input type="hidden" name="_csrf">
+            <div class="col-sm-8 col-sm-offset-2">
+
+            <div class="form-group">
+              <label for="email" class="control-label">Email</label>
+              <input type="text" name="email" id="login-email" placeholder="Email" autofocus="" class="form-control">
+            </div>
+
+            <div class="form-group">
+              <label for="password" class="control-label">Password</label>
+              <input type="password" name="password" id="login-password" placeholder="Password" class="form-control">
+            </div>
+
+            <div class="form-group">
+              <button type="submit" id="submit-login" class="btn btn-primary"><i class="fa fa-unlock-alt"></i>Login</button>
+              <a href="/forgot" class="btn btn-link">Forgot your password?</a>
+            </div>
+
+            <hr>
+
+            <a href="/auth/facebook" class="btn btn-block btn-facebook btn-social"><i class="fa fa-facebook"></i>Sign in with Facebook</a>
+            <a href="/auth/twitter" class="btn btn-block btn-twitter btn-social"><i class="fa fa-twitter"></i>Sign in with Twitter</a>
+            <a href="/auth/google" class="btn btn-block btn-google-plus btn-social"><i class="fa fa-google-plus"></i>Sign in with Google</a>
+
+
+
+            </div>
+          </form>
+        </div>
+
+        <i class="icon-remove exit-login" />
+
       </script>
 
       <script type="text/template" id="help-template">

@@ -44,9 +44,10 @@ define(['backbone', 'Workspaces', 'Node'], function(Backbone, Workspaces, Node){
 
     parse : function(resp) {
 
-      console.log(resp);
-
+      var old = this.get('workspaces').slice();
       this.get('workspaces').add(resp.workspaces, {app: this});
+      this.get('workspaces').remove(old);
+
       resp.workspaces = this.get('workspaces');
       return resp;
 
@@ -83,10 +84,14 @@ define(['backbone', 'Workspaces', 'Node'], function(Backbone, Workspaces, Node){
         ele.set('current', false);
       });
 
-      if ( this.get('currentWorkspace') === null) {
+      if ( this.get('currentWorkspace') === null || !this.get('workspaces').get(this.get('currentWorkspace'))) {
         var ele = this.get('workspaces').at(0);
         this.set('currentWorkspace', ele.get('_id') );
       } 
+
+      console.log("currentWorkspaceId", this.get('currentWorkspace'));
+      console.log(this.get('workspaces'));
+      console.log( this.get('workspaces').get(this.get('currentWorkspace')) );
 
       this.get('workspaces').get(this.get('currentWorkspace')).set('current', true);
 

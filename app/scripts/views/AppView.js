@@ -7,8 +7,10 @@ define([  'backbone',
           'WorkspaceTabView', 
           'Workspace',
           'HelpView',
-          'Help' ], 
-          function(Backbone, App, WorkspaceView, Search, SearchView, WorkspaceSearchView, WorkspaceTabView, Workspace, HelpView, Help) {
+          'Help',
+          'LoginView',
+          'Login'], 
+          function(Backbone, App, WorkspaceView, Search, SearchView, WorkspaceSearchView, WorkspaceTabView, Workspace, HelpView, Help, LoginView, Login) {
 
   return Backbone.View.extend({
 
@@ -21,6 +23,7 @@ define([  'backbone',
 
       this.model.get('workspaces').on('add', this.addWorkspaceTab, this);
       this.model.get('workspaces').on('remove', this.removeWorkspaceTab, this);
+      this.model.get('workspaces').on('reset', this.resetWorkspaceTabs, this);
 
       this.model.on('change:showingSettings', this.viewSettings, this);
       this.model.on('change:showingLogin', this.viewLogin, this);
@@ -39,8 +42,7 @@ define([  'backbone',
     },
 
     saveClick: function(e){
-      console.log('save!');
-      this.model.sync("update", this.model );
+      this.model.sync("update", this.model);
     },  
 
     endSearch: function() {
@@ -62,6 +64,16 @@ define([  'backbone',
 
     viewLogin: function(){
 
+      if (!this.loginView){
+        this.loginView = new LoginView({model: new Login({}, { app: this.model }) }, { app: this.model });
+        this.loginView.render();
+      }
+
+      if (this.model.get('showingLogin') === true){
+        this.loginView.$el.show();  
+      } else {
+        this.loginView.$el.hide();
+      }
     },
 
     viewSettings: function(){
@@ -76,12 +88,12 @@ define([  'backbone',
       this.model.set('showingHelp', true);
     },
 
-    showSettings: function(){
-      this.model.showSettings();
+    showLogin: function(){
+      this.model.set('showingLogin', true);
     },
 
-    showLogin: function(){
-      this.model.showLogin();
+    showSettings: function(){
+      this.model.showSettings();
     },
 
     showSearch: function() {
@@ -146,6 +158,19 @@ define([  'backbone',
 
     },
 
+    // This callback is invoked when the app Workspaces collection is reset
+    resetWorkspaceTabs: function(workspace){
+
+      // var view = new WorkspaceTabView({ model: workspace });
+      // this.workspaceTabViews[workspace.get('_id')] = view;
+
+      // view.render();
+
+
+      this.$workspace_tabs.empty();
+
+    },
+
     // This callback is called when a Workspace is added to
     // the App's Workspace Collection
     addWorkspaceTab: function(workspace){
@@ -185,6 +210,8 @@ define([  'backbone',
     },
 
     getWorkspaceView: function(workspaceModel) {
+
+      if (!workspaceModel) return;
 
       var workspaceId = workspaceModel.get('_id');
 
@@ -230,13 +257,11 @@ define([  'backbone',
 
       if (!currentWorkspaceId){
         var currentWorkspace = workspaces.first();
-        this.model.set('currentWorkspace', currentWorkspace.get('_id'));
-        console.log("Setting new workspace");
+        // this.model.set('currentWorkspace', currentWorkspace.get('_id'));
       } else {
         var currentWorkspace = workspaces.get(currentWorkspaceId);
       }
       
-      currentWorkspace.set('current', true);
       this.model.updateCurrentWorkspace();
     
       // render search
@@ -257,12 +282,17 @@ define([  'backbone',
       // hide current workspace, show workspace
 
         if (this.model.changed.currentWorkspace){
-          this.hideWorkspace(this.currentWorkspaceView);
-          this.currentWorkspaceView = this.getWorkspaceView( currentWorkspace );
-          this.showWorkspace( this.currentWorkspaceView );
-          this.currentWorkspaceView.render();
-          this.currentWorkspaceId = currentWorkspaceId;
-          this.focusWorkspace();
+
+          if (currentWorkspace){
+            this.hideWorkspace(this.currentWorkspaceView);
+            this.currentWorkspaceView = this.getWorkspaceView( currentWorkspace );
+            this.showWorkspace( this.currentWorkspaceView );
+            this.currentWorkspaceView.render();
+            this.currentWorkspaceId = currentWorkspaceId;
+            this.focusWorkspace();
+          } else {
+            console.log('currentWorkspace is null')
+          }
         }
 
       // render search
