@@ -7,6 +7,16 @@ var User = require('../models/User');
 var secrets = require('../config/secrets');
 
 /**
+* GET /email
+* Get user email
+*/
+
+exports.getEmail = function(req, res ){
+  if (!req.user) return res.send("Not logged in");
+  return res.send({ email: req.user.email });
+}
+
+/**
  * GET /login
  * Login page.
  */
@@ -47,7 +57,6 @@ exports.postLogin = function(req, res, next) {
     req.logIn(user, function(err) {
       if (err) return next(err);
       return res.send({ msg: 'Success! You are logged in.' });
-      // res.redirect(req.session.returnTo || '/');
     });
   })(req, res, next);
 };
@@ -89,8 +98,7 @@ exports.postSignup = function(req, res, next) {
   var errors = req.validationErrors();
 
   if (errors) {
-    req.flash('errors', errors);
-    return res.redirect('/signup');
+    return res.send(errors);
   }
 
   var user = new User({
@@ -101,13 +109,13 @@ exports.postSignup = function(req, res, next) {
   user.save(function(err) {
     if (err) {
       if (err.code === 11000) {
-        req.flash('errors', { msg: 'User with that email already exists.' });
+        res.send({ msg: 'User with that email already exists.' });
       }
-      return res.redirect('/signup');
+      res.status(500).send({msg: 'Unknown error on signup'});
     }
     req.logIn(user, function(err) {
       if (err) return next(err);
-      res.redirect('/');
+      return res.send({ msg: 'Successful signup' });
     });
   });
 };

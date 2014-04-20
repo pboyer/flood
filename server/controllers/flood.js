@@ -160,7 +160,7 @@ exports.getNewWorkspace = function(req, res){
 
 	var user = req.user;
 
-	if (!user) res.status(403).send("Must be logged in to create a new workspace")
+	if (!user) return res.status(403).send("Must be logged in to create a new workspace")
 
 	var nws = new Workspace({name : "New workspace", maintainers : [ user._id ] });
 
