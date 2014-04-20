@@ -16,6 +16,8 @@ define(['backbone', 'FLOOD'], function(Backbone, FLOOD) {
       , selected: false
       , lastValue: null
       , visible: true
+      , replication: "applyLongest"
+      , extra: {}
     },
 
     // called when saving the node to server
@@ -28,6 +30,8 @@ define(['backbone', 'FLOOD'], function(Backbone, FLOOD) {
         , selected: this.get('selected')
         , visible: this.get('visible')
         , _id: this.get('_id')
+        , replication: this.get('replication')
+        , extra: this.get('extra')
       };
 
       if (typeof this.get('lastValue') === "string" || typeof this.get('lastValue') === "number" ){
@@ -51,10 +55,16 @@ define(['backbone', 'FLOOD'], function(Backbone, FLOOD) {
         this.get('type').value = atts.lastValue;
       }
 
+      if (atts.replication){
+        this.get('type').replication = atts.replication;
+      }
+      
       var that = this;
       this.get('type').evalComplete = function(a, b){
         return that.evalComplete(a,b);
       };
+
+      this.on('change:replication', this.onReplicationSet, this);
       this.on('connection', this.onConnectPort);
       this.on('disconnection', this.onDisconnectPort);
       this.workspace = vals.workspace;
@@ -63,6 +73,11 @@ define(['backbone', 'FLOOD'], function(Backbone, FLOOD) {
 
       this.initializePorts();
       
+    },
+
+    onReplicationSet: function(){ 
+      this.get('type').replication = this.get('replication');
+      this.get('type').setDirty();
     },
 
     // initialize all the ports as disconnected

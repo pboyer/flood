@@ -18,8 +18,6 @@ require(["config"], function() {
 
     var appView = new AppView({model: app});
 
-
-
   });
 
 });

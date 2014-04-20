@@ -23,7 +23,6 @@ define([  'backbone',
 
       this.model.get('workspaces').on('add', this.addWorkspaceTab, this);
       this.model.get('workspaces').on('remove', this.removeWorkspaceTab, this);
-      this.model.get('workspaces').on('reset', this.resetWorkspaceTabs, this);
 
       this.model.on('change:showingSettings', this.viewSettings, this);
       this.model.on('change:showingLogin', this.viewLogin, this);
@@ -36,7 +35,6 @@ define([  'backbone',
       'click .workspaces_curtain' : 'endSearch',
       'click #help-button': 'showHelp',
       'click #settings-button': 'showSettings',
-      'click #login-button': 'showLogin',
       'click #workspace_hide' : 'toggleViewer',
       'click #add-workspace-button': 'newWorkspace'
     },
@@ -59,20 +57,6 @@ define([  'backbone',
         this.helpView.$el.show();  
       } else {
         this.helpView.$el.hide();
-      }
-    },
-
-    viewLogin: function(){
-
-      if (!this.loginView){
-        this.loginView = new LoginView({model: new Login({}, { app: this.model }) }, { app: this.model });
-        this.loginView.render();
-      }
-
-      if (this.model.get('showingLogin') === true){
-        this.loginView.$el.show();  
-      } else {
-        this.loginView.$el.hide();
       }
     },
 
@@ -155,19 +139,6 @@ define([  'backbone',
         console.log("failed to get new workspace");
 
       });
-
-    },
-
-    // This callback is invoked when the app Workspaces collection is reset
-    resetWorkspaceTabs: function(workspace){
-
-      // var view = new WorkspaceTabView({ model: workspace });
-      // this.workspaceTabViews[workspace.get('_id')] = view;
-
-      // view.render();
-
-
-      this.$workspace_tabs.empty();
 
     },
 
@@ -281,25 +252,28 @@ define([  'backbone',
 
       // hide current workspace, show workspace
 
-        if (this.model.changed.currentWorkspace){
-
-          if (currentWorkspace){
+        if (this.model.changed.currentWorkspace && currentWorkspace){
             this.hideWorkspace(this.currentWorkspaceView);
             this.currentWorkspaceView = this.getWorkspaceView( currentWorkspace );
             this.showWorkspace( this.currentWorkspaceView );
             this.currentWorkspaceView.render();
             this.currentWorkspaceId = currentWorkspaceId;
             this.focusWorkspace();
-          } else {
-            console.log('currentWorkspace is null')
-          }
         }
 
-      // render search
       this.showSearch();
+      this.renderLogin();
+
+      return this;
 
     },
 
+    renderLogin: function(){
+      if (!this.loginView){
+        this.loginView = new LoginView({model: this.model.login }, { app: this.model });
+        this.loginView.render();
+      }
+    },
 
     lookingAtViewer: false,
 

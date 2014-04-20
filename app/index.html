@@ -35,7 +35,7 @@
             </div>
 
             <div id="more-menu">
-              <div id="login-button" class="menu-element">Login</div>
+              <div id="login-button" class="menu-element"></div>
 <!--               <div id="settings-button" class="menu-element">Settings</div>
               <div id="help-button" class="menu-element">Help</div> -->
             </div>
@@ -100,13 +100,12 @@
               </a>
             </li>
 
-            <li role="presentation" class="dropdown-header">Replication type</li>
+            <li role="presentation" class="dropdown-header">Replication</li>
 
             <li role="presentation">
               <div class="btn-group btn-group-xs" style="padding: 10px">
-                <button type="button" class="btn btn-default">II</button>
-                <button type="button" class="btn btn-default">II\</button>
-                <button type="button" class="btn btn-default">XXX</button>
+                <button type="button" class="rep-type btn btn-default" data-rep-type="applyLongest">Long</button>
+                <button type="button" class="rep-type btn btn-default" data-rep-type="applyCartesian">Cross</button>
               </div>
             </li>
 
@@ -132,7 +131,7 @@
       <script type="text/template" id="workspace-tab-template">
 
         <i class="icon-pencil icon-white dim-button edit-button" style="visibility: hidden; margin-left: 10px"></i>
-        <input class="workspace-name" disabled=”disabled” value="<%= name %>"></input>
+        <input class="workspace-name" disabled="disabled" value="<%= name %>"></input>
         <i class="icon-remove icon-white dim-button remove-button"></i>
 
       </script>
@@ -189,7 +188,26 @@
 
         <div class="login-container">
 
-          <button id="logout" class="btn btn-primary"><i class="fa fa-unlock-alt"></i>Logout</button>
+          <form id="signup-form">
+
+            <input type="hidden" name="_csrf">
+            <legend>Signup</legend>
+            <div class="form-group">
+              <label for="email" class="col-sm-3 control-label">Email</label>
+              <div class="col-sm-7"><input type="email" name="email" id="email" placeholder="Email" autofocus class="form-control"></div>
+            </div>
+            <div class="form-group">
+              <label for="password" class="col-sm-3 control-label">Password</label>
+              <div class="col-sm-7"><input type="password" name="password" id="password" placeholder="Password" class="form-control"></div>
+            </div>
+            <div class="form-group">
+              <label for="confirmPassword" class="col-sm-3 control-label">Confirm Password</label>
+              <div class="col-sm-7"><input type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirm Password" class="form-control"></div>
+            </div>
+            <div class="form-group">
+              <div class="col-sm-offset-3 col-sm-7"><button type="submit" class="btn btn-success"><i class="fa fa-check"></i>Signup</button></div>
+            </div>
+          </form>
 
           <form id="login-form">
 
@@ -219,13 +237,9 @@
             <a href="/auth/twitter" class="btn btn-block btn-twitter btn-social"><i class="fa fa-twitter"></i>Sign in with Twitter</a>
             <a href="/auth/google" class="btn btn-block btn-google-plus btn-social"><i class="fa fa-google-plus"></i>Sign in with Google</a>
 
-
-
             </div>
           </form>
         </div>
-
-        <i class="icon-remove exit-login" />
 
       </script>
 

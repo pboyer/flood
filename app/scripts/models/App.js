@@ -1,4 +1,4 @@
-define(['backbone', 'Workspaces', 'Node'], function(Backbone, Workspaces, Node){
+define(['backbone', 'Workspaces', 'Node', 'Login'], function(Backbone, Workspaces, Node, Login){
 
   return Backbone.Model.extend({
 
@@ -8,6 +8,44 @@ define(['backbone', 'Workspaces', 'Node'], function(Backbone, Workspaces, Node){
       return '/mys';
     },
 
+    initialize: function(args, options){
+      this.on('change:currentWorkspace', this.updateCurrentWorkspace, this);
+      this.updateCurrentWorkspace();
+
+      this.login = new Login({}, { app: this })
+    },
+
+    newNodePosition: [0,0],
+
+    defaults: {
+      name: "DefaultSession",
+      workspaces: new Workspaces(),
+      currentWorkspace: null,
+      showingSearch: false,
+      showingHelp: false
+    },
+
+    parse : function(resp) {
+
+      // TODO: don't leave user with no workspaces at anytime!
+      var old = this.get('workspaces').slice();
+      this.get('workspaces').add(resp.workspaces, {app: this});
+      this.get('workspaces').remove(old);
+
+      resp.workspaces = this.get('workspaces');
+      return resp;
+
+    },
+
+    fetch : function(options){
+
+      this.login.fetch();
+      Backbone.Model.prototype.fetch.apply(this, options);
+      
+    },
+
+    // override of toJSON to support recursive serialization 
+    // of child attributes
     toJSON : function() {
 
         if (this._isSerializing) {
@@ -25,32 +63,6 @@ define(['backbone', 'Workspaces', 'Node'], function(Backbone, Workspaces, Node){
         this._isSerializing = false;
 
         return json;
-    },
-
-    initialize: function(args, options){
-      this.on('change:currentWorkspace', this.updateCurrentWorkspace, this);
-      this.updateCurrentWorkspace();
-    },
-
-    newNodePosition: [0,0],
-
-    defaults: {
-      name: "DefaultSession",
-      workspaces: new Workspaces(),
-      currentWorkspace: null,
-      showingSearch: false,
-      showingHelp: false
-    },
-
-    parse : function(resp) {
-
-      var old = this.get('workspaces').slice();
-      this.get('workspaces').add(resp.workspaces, {app: this});
-      this.get('workspaces').remove(old);
-
-      resp.workspaces = this.get('workspaces');
-      return resp;
-
     },
 
     makeId: function(){
@@ -88,10 +100,6 @@ define(['backbone', 'Workspaces', 'Node'], function(Backbone, Workspaces, Node){
         var ele = this.get('workspaces').at(0);
         this.set('currentWorkspace', ele.get('_id') );
       } 
-
-      console.log("currentWorkspaceId", this.get('currentWorkspace'));
-      console.log(this.get('workspaces'));
-      console.log( this.get('workspaces').get(this.get('currentWorkspace')) );
 
       this.get('workspaces').get(this.get('currentWorkspace')).set('current', true);
 

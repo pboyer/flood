@@ -4,19 +4,50 @@ define(['backbone'], function(Backbone) {
 
 		  defaults: {
 		  	isLoggedIn : false,
-		  	loginFail : false
+		  	loginFail : false,
+		  	showing: false,
+		  	email : ''
 		  },
 
-  		  initialize: function(atts, vals) {
+  		initialize: function(atts, vals) {
   		  	this.app = vals.app;
 		  },
 
-		  signup: function(data){
+		  // determine login state
+		  fetch : function(){
+
 		  	var that = this;
-		  	$.get('/logout', data, function(e){
+		  	$.get('/email', function(e){
+		  		if (e.email) {
+		  			that.set('email', e.email);
+		  			that.set('isLoggedIn', true); 
+		  		} else {
+		  			that.set('isLoggedIn', false);
+		  		}
+		  	});
+
+		  },
+
+			toggle: function(){
+			  return this.get('showing') ? this.hide() : this.show();
+			},
+
+			show: function() {
+			  this.set('showing', true);
+			},
+
+			hide: function() {
+			  this.set('showing', false);
+			},
+
+		  signup: function(data){
+
+		  	var that = this;
+		  	$.post('/signup', data, function(e){
 		  		that.app.fetch();
 		  	});
-		  }
+
+		  },
 
 		  login: function(data){
 
@@ -27,15 +58,18 @@ define(['backbone'], function(Backbone) {
 
 		  },
 
-		  logout: function(data){
+		  logout: function(){
+
 		  	var that = this;
-		  	$.get('/logout', data, function(e){
+		  	$.get('/logout', {}, function(e){
 		  		that.app.fetch();
 		  	});
+
 		  }
 
 	});
 });
 
-
+// should not be able to access app when not logged in
+// try to delete last workspace but you need another
 

@@ -14,7 +14,8 @@ define(['backbone', 'jqueryuidraggable'], function(Backbone, jqueryuidraggable) 
       'mouseup .node-port-input': 'endPortConnection',
       'mousedown .node-port-input': 'beginPortDisconnection',
       'click':  'selectThis',
-      'click .toggle-vis': 'toggleGeomVis'
+      'click .toggle-vis': 'toggleGeomVis',
+      'click .rep-type': 'replicationClick'
     },
 
     initialize: function(args) {
@@ -31,6 +32,10 @@ define(['backbone', 'jqueryuidraggable'], function(Backbone, jqueryuidraggable) 
       this.$workspace_canvas = $('#workspace_canvas');
       this.position = this.model.get('position');
 
+    },
+
+    replicationClick : function(e){
+      this.model.set('replication', $(e.target).attr('data-rep-type'));
     },
 
     // should be part of nodeView subclass
