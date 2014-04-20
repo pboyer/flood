@@ -32,20 +32,22 @@ exports.postLogin = function(req, res, next) {
   var errors = req.validationErrors();
 
   if (errors) {
-    req.flash('errors', errors);
-    return res.redirect('/login');
+    // req.flash('errors', errors);
+    // return res.redirect('/login');
+    return res.send(errors);
   }
 
   passport.authenticate('local', function(err, user, info) {
     if (err) return next(err);
     if (!user) {
-      req.flash('errors', { msg: info.message });
-      return res.redirect('/login');
+      // req.flash('errors', { msg: info.message });
+      // return res.redirect('/login');
+      return res.send({ msg: info.message });
     }
     req.logIn(user, function(err) {
       if (err) return next(err);
-      req.flash('success', { msg: 'Success! You are logged in.' });
-      res.redirect(req.session.returnTo || '/');
+      return res.send({ msg: 'Success! You are logged in.' });
+      // res.redirect(req.session.returnTo || '/');
     });
   })(req, res, next);
 };
@@ -57,7 +59,7 @@ exports.postLogin = function(req, res, next) {
 
 exports.logout = function(req, res) {
   req.logout();
-  res.redirect('/');
+  res.send({ msg: 'Success! You are logged out.' });
 };
 
 /**
