@@ -94,7 +94,7 @@ app.use(function(req, res, next) {
   next();
 });
 app.use(flash());
-app.use(express.static(path.join(__dirname, '../app'), { maxAge: week }));
+app.use(express.static(path.join(__dirname, '../app')));
 app.use(function(req, res, next) {
   // Keep track of previous URL
   if (req.method !== 'GET') return next();

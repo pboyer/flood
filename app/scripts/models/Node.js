@@ -60,8 +60,8 @@ define(['backbone', 'FLOOD'], function(Backbone, FLOOD) {
       }
       
       var that = this;
-      this.get('type').evalComplete = function(a, b){
-        return that.evalComplete(a,b);
+      this.get('type').evalComplete = function(a, b, c){
+        return that.evalComplete(a,b,c);
       };
 
       this.on('change:replication', this.onReplicationSet, this);

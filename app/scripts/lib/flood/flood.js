@@ -175,7 +175,10 @@ define(function() {
 
 					// if we have enough args, eval, otherwise return function
 					return function() {
-						if ( that.isDirty() ){
+
+						var dirty = that.isDirty();
+
+						if ( dirty ){
 
 							// if any argument is undefined, perform partial function application
 							var noUndefinedArgs = true;
@@ -216,7 +219,7 @@ define(function() {
 							that.markClean();
 						}
 						// tell listeners that the evalation is complete
-						that.evalComplete(that, arguments);
+						that.evalComplete(that, arguments, dirty);
 
 						// yield the value
 						return that.value;

@@ -19,7 +19,6 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView'], function(Backbone, 
     selectGeom: function(){
 
       if ( this.threeGeom && this.model.get('visible') ){
-
         if (this.model.get('selected')) {
           this.threeGeom.traverse(function(ele) {
             ele.material = new THREE.MeshPhongMaterial({color: 0x00FFFF, specular: 0xFFFFFF, opacity: 0.7, transparent: true});
@@ -29,7 +28,6 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView'], function(Backbone, 
             ele.material = new THREE.MeshPhongMaterial({color: 0xDDDDDD, specular: 0xFFFFFF, opacity: 0.7, transparent: true});
           });
         }
-
       }
 
     }, 
@@ -40,13 +38,18 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView'], function(Backbone, 
       scene.remove(this.threeGeom); 
     }, 
 
-    evalCompleted: function(){
+    evaluated: false,
+
+    evalCompleted: function(a, b, newValue ){
+
+      if (!newValue && this.evaluated) return;
+
+      this.evaluated = true;
 
       var lastValue = this.model.get('lastValue');
       var temp;
 
-      if ( !lastValue )
-        return;
+      if ( !lastValue ) return;
 
       if ( lastValue.polygons ){ 
         temp = [];
