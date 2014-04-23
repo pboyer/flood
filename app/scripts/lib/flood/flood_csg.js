@@ -2,6 +2,12 @@ if (typeof define !== 'function') {
     var define = require('amdefine')(module);
 }
 
+if (typeof FLOOD === "object") { 
+
+	var FLOODcore = FLOOD;
+
+}
+
 define(['FLOOD'], function(FLOOD) {
 
 	FLOOD.nodeTypes.Vec3 = function() {

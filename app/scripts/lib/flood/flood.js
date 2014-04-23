@@ -2,6 +2,12 @@ if (typeof define !== 'function') {
     var define = require('amdefine')(module);
 }
 
+if (typeof require != 'function' && typeof window != "object") { 
+
+	var FLOOD = {};
+
+}
+
 define(function() {
 
 	// initialize core types

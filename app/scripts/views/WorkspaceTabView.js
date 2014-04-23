@@ -27,6 +27,8 @@ define(['backbone'], function(Backbone) {
 
     render: function() {
 
+      console.log('yo')
+
       this.$el.html( this.template( this.model.toJSON() ) );
 
       if (this.model.get('current') === true){
@@ -57,9 +59,7 @@ define(['backbone'], function(Backbone) {
     },
 
     click: function(e) {
-
       this.model.app.set('currentWorkspace', this.model.get('_id'));
-
     },
 
     remove: function(e){

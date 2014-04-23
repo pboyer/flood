@@ -1,18 +1,6 @@
-if (typeof define !== 'function' && typeof require === 'function') {
-    var define = require('amdefine')(module);
-} 
+var scheme = {};
 
-if (typeof require != 'function' && typeof window != "object") { 
-
-	var scheme = {};
-	var define = function(x, y){
-		if (typeof x === "function") x();
-		if (typeof y === "function") y();
-	};
-
-}
-	
-define(function() {
+(function() {
 
 	// Env
 	// A dictionary of symbol-value pairs
@@ -160,7 +148,7 @@ define(function() {
 
 	if ( typeof exports != 'object' || exports === undefined )  // browser context
 	{
-		if (!scheme) var scheme = {};
+
 		scheme.Interpreter = Interpreter;
 		scheme.Env = Env;
 		return scheme;
@@ -174,7 +162,7 @@ define(function() {
 
 	}
 
-});
+})();
 
 
 
