@@ -1,14 +1,32 @@
-importScripts( 'scheme.js', 'flood.js', 'csg.js' ); 
+importScripts( 'scheme.js', 'flood.js', 'csg.js', 'flood_csg.js' ); 
 
 // Routing
-
 var that = this;
 
 onmessage = function (m) {
 
+	if (!checkCommandData(m.data)) return;
+	commands.push(m.data);
 	that[ "on_" + m.data.kind ](m.data);
 
 };
+
+checkCommandData = function(data){
+
+	if (!data.kind) {
+		fail({kind: "noCommand", msg: "No command given"});
+		return false;
+	}
+
+	var handler = "on_" + data.kind;
+
+	if (!that[handler]) {
+		fail({kind: data.kind, msg: "No such command"});
+		return false;
+	}
+
+	return true;
+}
 
 success = function(m, silent){
 	if (silent) return;
@@ -29,6 +47,7 @@ fail = function(m, silent){
 };
 
 workspaces = {};
+commands = [];
 
 // Receive
 
@@ -39,10 +58,10 @@ on_currentState = function(){
 
 };
 
-on_clearAllWorkspaces = function(){
+on_removeAll = function(){
 
 	workspaces = {};
-	success({kind: "clearAllWorkspaces"});
+	success({kind: "removeAll"});
 
 };
 
@@ -197,7 +216,18 @@ on_removeNode = function(data){
 	var i = lookupNodeIndex(ws, data.id);
 	if (i < 0) return fail({ kind: "removeNode", msg: "A node with the given id does not exist." }, data.silent);
 
+	// remove node from the workspace
 	ws.nodes.splice(i, 1);
+
+	// delete all connections from the deleted node - effective removing
+	// any references to the node
+	ws.nodes.forEach(function(n){
+		n.inputs.forEach(function(p){
+			if ( p.oppNode && p.oppNode.id === data.id ){
+				p.disconnect();
+			}
+		});
+	});
 
 	return success({ kind: "removeNode", id : data.id, workspace_id: data.workspace_id }, data.silent);
 

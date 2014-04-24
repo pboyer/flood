@@ -178,8 +178,6 @@ define(['backbone', 'FLOOD'], function(Backbone, FLOOD) {
       })());
 
       this.trigger('connection', portIndex, isOutput, connection);
-
-      // the times they are a changin, let everyone know
       this.trigger('change');
 
       return this;
@@ -232,7 +230,7 @@ define(['backbone', 'FLOOD'], function(Backbone, FLOOD) {
 
     },
 
-    onDisconnectPort: function( portIndex, isOutput, connection){
+    onDisconnectPort: function( portIndex, isOutput, connection ){
       
       if (isOutput){
         return;

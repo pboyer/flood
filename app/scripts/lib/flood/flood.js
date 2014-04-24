@@ -185,6 +185,7 @@ define(function() {
 
 		this.evalComplete = function() {};
 		this.evalFailed = function() {};
+		this.evalBegin = function() {};
 
 		this.compile = function() { 
 			
@@ -197,48 +198,58 @@ define(function() {
 
 						var dirty = that.isDirty();
 
-						if ( dirty ){
+						try {
 
-							// if any argument is undefined, perform partial function application
-							var noUndefinedArgs = true;
-							for (var i = 0; i < arguments.length; i++){
-								if ( arguments[i] === undefined ){
-									noUndefinedArgs = false;
-									break;
-								}
-							}
+							that.evalBegin(that, arguments, dirty, that.value);
 
-							if (noUndefinedArgs){ 
-								
-								// build replication options and types
-								var options = {
-									replication: that.replication,
-									expected_arg_types: that.inputTypes()
-								};
+							if ( dirty ){
 
-								try {
-									// actually evaluate the function!
-									that.value = that.eval.mapApply(that, Array.prototype.slice.call(arguments, 0), options);
-								} catch (e) {
-									that.value = null;
-									that.evalFailed(that, arguments);
-								}
-
-							} else { 
-								// return a partial function application
-								var originalArgs = arguments;
-								that.value = (function(){
-									// return a closure
-									return function(){
-										return that.eval.partial.apply(that.eval, originalArgs).apply(that, arguments);
+								// if any argument is undefined, perform partial function application
+								var noUndefinedArgs = true;
+								for (var i = 0; i < arguments.length; i++){
+									if ( arguments[i] === undefined ){
+										noUndefinedArgs = false;
+										break;
 									}
-								})();
+								}
+
+								if (noUndefinedArgs){ 
+									
+									// build replication options and types
+									var options = {
+										replication: that.replication,
+										expected_arg_types: that.inputTypes()
+									};
+
+									try {
+										// actually evaluate the function!
+										that.value = that.eval.mapApply(that, Array.prototype.slice.call(arguments, 0), options);
+									} catch (e) {
+										that.value = null;
+										that.evalFailed(that, arguments);
+									}
+
+								} else { 
+									// return a partial function application
+									var originalArgs = arguments;
+									that.value = (function(){
+										// return a closure
+										return function(){
+											return that.eval.partial.apply(that.eval, originalArgs).apply(that, arguments);
+										}
+									})();
+								}
+								
+								that.markClean();
 							}
-							
-							that.markClean();
+
+							// tell listeners that the evalation is complete
+							that.evalComplete(that, arguments, dirty, that.value);
+
+						} catch (e) {
+							that.evalFailed(that, arguments, dirty, e);
+							return null;
 						}
-						// tell listeners that the evalation is complete
-						that.evalComplete(that, arguments, dirty, that.value);
 
 						// yield the value
 						return that.value;

@@ -2,9 +2,12 @@ if (typeof define !== 'function') {
     var define = require('amdefine')(module);
 }
 
-if (typeof FLOOD === "object") { 
+if (typeof require != 'function' && typeof window != "object") { 
 
-	var FLOODcore = FLOOD;
+	var define = function(x, y){
+		if (typeof x === "function") x(FLOOD);
+		if (typeof y === "function") y(FLOOD);
+	};
 
 }
 

@@ -15,9 +15,16 @@
                             connections: [{ start_id: 0, start_port_index: 0, end_id: 5, end_port_index: 0 },
                                           { start_id: 1, start_port_index: 0, end_id: 5, end_port_index: 1 }],
                             nodes: [{ typeName: "Number", id: 0, lastValue: 0, extensions: { value : 5 } }, 
-                                    { typeName: "Number", id: 1, lastValue: 2, extensions: { value : 2 } }, 
+                                    { typeName: "Number", id: 1, lastValue: 2, extensions: { value : 11 } }, 
                                     { typeName: "Add", id: 5, lastValue: 4 }] });
-  worker.postMessage({ kind: "run", workspace_id: 0, bottom_ids: [5] })
+  worker.postMessage({ kind: "run", workspace_id: 0, bottom_ids: [5] });
+  worker.postMessage({ kind: "removeConnection", workspace_id: 0, id: 5, port_index: 0 })
+  worker.postMessage({ kind: "run", workspace_id: 0, bottom_ids: [5] });
+  worker.postMessage({ kind: "removeNode", workspace_id: 0, id: 1 });
+  worker.postMessage({ kind: "run", workspace_id: 0, bottom_ids: [5] });
+  worker.postMessage({ kind: "currentState" });
+  worker.postMessage({ kind: "removeAll" });
+  worker.postMessage({ kind: "currentState" });
 
 </script>
 
