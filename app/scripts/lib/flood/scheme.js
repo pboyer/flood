@@ -6,8 +6,8 @@ if (typeof require != 'function' && typeof window != "object") {
 
 	var scheme = {};
 	var define = function(x, y){
-		if (typeof x === "function") x();
-		if (typeof y === "function") y();
+		if (typeof x === "function") scheme = x();
+		if (typeof y === "function") scheme = y();
 	};
 
 }

@@ -5,13 +5,17 @@ if (typeof define !== 'function') {
 if (typeof require != 'function' && typeof window != "object") { 
 
 	var FLOOD = {};
+	var define = function(x, y){
+		if (typeof x === "function") FLOOD = x();
+		if (typeof y === "function") FLOOD = y();
+	};
 
 }
 
 define(function() {
 
 	// initialize core types
-	var FLOOD = FLOOD || {};
+	if (!FLOOD) var FLOOD = {};
 
 	FLOOD.baseTypes = {};
 	FLOOD.nodeTypes = {};
@@ -125,6 +129,15 @@ define(function() {
 
 		var _isDirty = true;
 
+		this.extend = function(ex){
+
+			if (!ex) return;
+			for (var k in ex){
+				this[k] = ex[k];
+			}
+
+		}
+
 		this.isDirty = function() {
 			return _isDirty;
 		};
@@ -225,7 +238,7 @@ define(function() {
 							that.markClean();
 						}
 						// tell listeners that the evalation is complete
-						that.evalComplete(that, arguments, dirty);
+						that.evalComplete(that, arguments, dirty, that.value);
 
 						// yield the value
 						return that.value;
@@ -321,6 +334,24 @@ define(function() {
 
 	}.inherits( FLOOD.baseTypes.NodePort );
 
+	// Number
+
+	FLOOD.nodeTypes.Number = function() {
+
+		var typeData = {
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "O", [Number] ) ],
+			typeName: "Number" 
+		};
+
+		this.value = 0;
+
+		FLOOD.baseTypes.NodeType.call(this, typeData);
+
+		this.compile = this.printExpression = function(){
+			return this.value;
+		}
+
+	}.inherits( FLOOD.baseTypes.NodeType );
 
 	// Add
 
@@ -398,24 +429,6 @@ define(function() {
 
 	}.inherits( FLOOD.baseTypes.NodeType );
 
-	// Number
-
-	FLOOD.nodeTypes.Number = function() {
-
-		var typeData = {
-			outputs: [ 	new FLOOD.baseTypes.OutputPort( "O", [Number] ) ],
-			typeName: "Number" 
-		};
-
-		this.value = 0;
-
-		FLOOD.baseTypes.NodeType.call(this, typeData );
-
-		this.compile = this.printExpression = function(){
-			return this.value;
-		}
-
-	}.inherits( FLOOD.baseTypes.NodeType );
 
 	// Begin
 
@@ -779,6 +792,7 @@ define(function() {
 	return FLOOD;
 
 });
+
 
 
 

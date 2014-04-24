@@ -1,0 +1,23 @@
+<script>
+  var worker = new Worker('flood_runner.js');
+
+  worker.addEventListener('message', function(e) {
+    console.log(e.data);
+  }, false);
+
+  worker.postMessage({kind: "currentState"});
+  worker.postMessage({kind: "addWorkspace", workspace_id: 0, connections: [], nodes: [{ typeName: "Add", id: 5, lastValue: 2 }] });
+  worker.postMessage({kind: "currentState"});
+  worker.postMessage({kind: "removeNode", workspace_id: 0, id: 5 });
+  worker.postMessage({kind: "currentState"});
+  worker.postMessage({kind: "setWorkspaceContents", 
+                            workspace_id: 0, 
+                            connections: [{ start_id: 0, start_port_index: 0, end_id: 5, end_port_index: 0 },
+                                          { start_id: 1, start_port_index: 0, end_id: 5, end_port_index: 1 }],
+                            nodes: [{ typeName: "Number", id: 0, lastValue: 0, extensions: { value : 5 } }, 
+                                    { typeName: "Number", id: 1, lastValue: 2, extensions: { value : 2 } }, 
+                                    { typeName: "Add", id: 5, lastValue: 4 }] });
+  worker.postMessage({ kind: "run", workspace_id: 0, bottom_ids: [5] })
+
+</script>
+
