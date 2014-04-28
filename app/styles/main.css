@@ -11,7 +11,6 @@ body {
 .scroll-x { overflow-x: auto; }
 .scroll-y { overflow-y: auto; }
 
-
 .workspace-search {
 	bottom: 30px;
 	left: 30px;
@@ -58,25 +57,66 @@ body {
 	stroke:#333;
 }
 
+.tab-button {
+	display: inline-block;
+	padding: 10px;
+	padding-bottom: 30px;
+	padding-top: 40px;
+	size: 20px;
+}
+
+.tab-button a {
+	color: grey;
+}
+
+.tab-button:hover a {
+	color: #DDD;
+}
+
+.tab-button-hilite a {
+	color: white;
+}
+
+#tab-button-container {
+	margin-left: auto;
+	margin-right: auto;
+	width: 150px;
+}
+
 #login {
-	display: none;
+
+	text-align: center;
 	z-index: 100;
 	right: 0;
-	width: 300px;
+	left: 0;
+	top: 0;
 	bottom: 0;
-	top: 40px;
+	padding: 100px;
 
-	background-color: #EFEFEF;
+	background-color: #444;
+
+}
+
+#login h1 {
+	font-size: 110px;
+}
+
+.form-group {
+	padding: 5px;
+}
+
+.form-group label {
+	color: #AAA;
 }
 
 .login-container {
-	margin: 30px;
+	width: 300px;
+	margin-left: auto;
+	margin-right: auto;
 }
 
-.exit-login {
-	position: absolute;
-	top: 15px;
-	right: 15px;
+.login-container a {
+	color: #DDD;
 }
 
 #help {

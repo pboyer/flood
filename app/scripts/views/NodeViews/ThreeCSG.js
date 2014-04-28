@@ -58,6 +58,7 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView'], function(Backbone, 
       three_geometry.computeBoundingBox();
       
       return three_geometry;
+      
     },
 
     onEvalComplete: function(a, b, newValue){
@@ -68,8 +69,6 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView'], function(Backbone, 
 
       var lastValue = this.model.get('prettyLastValue');
       var temp;
-
-      console.log('redraw')
 
       if ( !lastValue ) return;
 

@@ -9,7 +9,9 @@ define(['backbone'], function(Backbone) {
     events: { 'submit #login-form' : 'login',
               'submit #signup-form' : 'signup',
               'click #logout' : 'logout',
-              "click .exit-login": 'hide' },
+              "click .exit-login": 'hide', 
+              'click #signup-tab-button': 'focusSignup',
+              'click #login-tab-button': 'focusLogin'},
 
     initialize: function( args, atts ) {
 
@@ -41,6 +43,25 @@ define(['backbone'], function(Backbone) {
       return this;
     },
 
+    focusSignup: function(e){
+      
+
+      this.$el.find('#login-tab-button').removeClass('tab-button-hilite');
+      this.$el.find('#signup-tab-button').addClass('tab-button-hilite');
+      this.$el.find('#login-form').hide();
+      this.$el.find('#signup-form').show();
+
+    },
+
+    focusLogin: function(e){
+
+      this.$el.find('#signup-tab-button').removeClass('tab-button-hilite');
+      this.$el.find('#login-tab-button').addClass('tab-button-hilite');
+
+      this.$el.find('#signup-form').hide();
+      this.$el.find('#login-form').show();
+    },
+
     renderLoginState: function(){
 
       if( this.model.get('isLoggedIn') ){
@@ -48,6 +69,7 @@ define(['backbone'], function(Backbone) {
         this.model.hide();
       } else {
         $('#login-button').html("Login");
+        this.$el.show();
       }
 
       return this;

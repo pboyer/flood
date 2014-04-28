@@ -50,7 +50,7 @@
 
           </div>
 
-          <div id="login" class="col">
+          <div id="login" class="row col">
             
           </div>
 
@@ -186,33 +186,43 @@
 
         <div class="login-container">
 
-          <form id="signup-form">
+          <h1>flood</h1>
+
+          <h4>visual programming on the web</h4>
+
+          <div id="tab-button-container">
+            <div id="login-tab-button" class="tab-button tab-button-hilite"><a href="#">Login</a></div>
+            <div id="signup-tab-button" class="tab-button"><a href="#">Signup</a></div>
+          </div>
+
+          <form id="signup-form" style="display:none">
 
             <input type="hidden" name="_csrf">
-            <legend>Signup</legend>
+
             <div class="form-group">
-              <label for="email" class="col-sm-3 control-label">Email</label>
-              <div class="col-sm-7"><input type="email" name="email" id="email" placeholder="Email" autofocus class="form-control"></div>
+              <label for="email" class="control-label">Email</label>
+              <input type="email" name="email" id="email" placeholder="Email" autofocus class="form-control">
             </div>
+
             <div class="form-group">
-              <label for="password" class="col-sm-3 control-label">Password</label>
-              <div class="col-sm-7"><input type="password" name="password" id="password" placeholder="Password" class="form-control"></div>
+              <label for="password" class="control-label">Password</label>
+              <input type="password" name="password" id="password" placeholder="Password" class="form-control">
             </div>
+
             <div class="form-group">
-              <label for="confirmPassword" class="col-sm-3 control-label">Confirm Password</label>
-              <div class="col-sm-7"><input type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirm Password" class="form-control"></div>
+              <label for="confirmPassword" class="control-label">Confirm Password</label>
+              <input type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirm Password" class="form-control">
             </div>
+
             <div class="form-group">
-              <div class="col-sm-offset-3 col-sm-7"><button type="submit" class="btn btn-success"><i class="fa fa-check"></i>Signup</button></div>
+              <button type="submit" class="btn btn-success"><i class="fa fa-check"></i>Signup</button>
             </div>
+
           </form>
 
-          <form id="login-form">
-
-            <legend>Sign In</legend>
+          <form id="login-form" style="display:none">
 
             <input type="hidden" name="_csrf">
-            <div class="col-sm-8 col-sm-offset-2">
 
             <div class="form-group">
               <label for="email" class="control-label">Email</label>
@@ -235,7 +245,6 @@
             <a href="/auth/twitter" class="btn btn-block btn-twitter btn-social"><i class="fa fa-twitter"></i>Sign in with Twitter</a>
             <a href="/auth/google" class="btn btn-block btn-google-plus btn-social"><i class="fa fa-google-plus"></i>Sign in with Google</a>
 
-            </div>
           </form>
         </div>
 

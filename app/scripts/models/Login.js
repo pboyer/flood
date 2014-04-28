@@ -2,74 +2,77 @@ define(['backbone'], function(Backbone) {
 
 	return Backbone.Model.extend({
 
-		  defaults: {
-		  	isLoggedIn : false,
-		  	loginFail : false,
-		  	showing: false,
-		  	email : ''
-		  },
+	  defaults: {
+	  	isLoggedIn : false,
+	  	loginFail : false,
+	  	showing: false,
+	  	email : ''
+	  },
 
-  		initialize: function(atts, vals) {
-  		  	this.app = vals.app;
-		  },
+		initialize: function(atts, vals) {
 
-		  // determine login state
-		  fetch : function(){
+	  	this.app = vals.app;
+	  	
+	  },
 
-		  	var that = this;
-		  	$.get('/email', function(e){
-		  		if (e.email) {
-		  			that.set('email', e.email);
-		  			that.set('isLoggedIn', true); 
-		  		} else {
-		  			that.set('isLoggedIn', false);
-		  		}
-		  	});
+	  fetch : function(){
 
-		  },
+	  	var that = this;
+	  	$.get('/email', function(e){
+	  		if (e.email) {
+	  			that.set('email', e.email);
+	  			that.set('isLoggedIn', true); 
+	  		} else {
+	  			that.set('isLoggedIn', false);
+	  		}
+	  	});
 
-			toggle: function(){
-			  return this.get('showing') ? this.hide() : this.show();
-			},
+	  },
 
-			show: function() {
-			  this.set('showing', true);
-			},
+		toggle: function(){
 
-			hide: function() {
-			  this.set('showing', false);
-			},
+		  return this.get('showing') ? this.hide() : this.show();
 
-		  signup: function(data){
+		},
 
-		  	var that = this;
-		  	$.post('/signup', data, function(e){
-		  		that.app.fetch();
-		  	});
+		show: function() {
 
-		  },
+		  this.set('showing', true);
 
-		  login: function(data){
+		},
 
-		  	var that = this;
-		  	$.post('/login', data, function(e){
-		  		that.app.fetch();
-		  	});
+		hide: function() {
 
-		  },
+		  this.set('showing', false);
 
-		  logout: function(){
+		},
 
-		  	var that = this;
-		  	$.get('/logout', {}, function(e){
-		  		that.app.fetch();
-		  	});
+	  signup: function(data){
 
-		  }
+	  	var that = this;
+	  	$.post('/signup', data, function(e){
+	  		that.app.fetch();
+	  	});
+
+	  },
+
+	  login: function(data){
+
+	  	var that = this;
+	  	$.post('/login', data, function(e){
+	  		that.app.fetch();
+	  	});
+
+	  },
+
+	  logout: function(){
+
+	  	var that = this;
+	  	$.get('/logout', {}, function(e){
+	  		that.app.fetch();
+	  	});
+
+	  }
 
 	});
 });
-
-// should not be able to access app when not logged in
-// try to delete last workspace but you need another
-
