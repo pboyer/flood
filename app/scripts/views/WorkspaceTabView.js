@@ -27,8 +27,6 @@ define(['backbone'], function(Backbone) {
 
     render: function() {
 
-      console.log('yo')
-
       this.$el.html( this.template( this.model.toJSON() ) );
 
       if (this.model.get('current') === true){

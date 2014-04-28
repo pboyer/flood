@@ -9,10 +9,10 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView'], function(Backbone, 
       this.model.on('change:selected', this.selectGeom, this);
       this.model.on('change:visible', this.changeVisibility, this);
       this.model.on('remove', this.onRemove, this);
-      this.model.on('change:lastValue', this.evalCompleted, this );
+      this.model.on('change:prettyLastValue', this.onEvalComplete, this );
       this.model.workspace.on('change:current', this.changeVisibility, this);
 
-      this.evalCompleted();
+      this.onEvalComplete();
 
     },
 
@@ -40,18 +40,40 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView'], function(Backbone, 
 
     evaluated: false,
 
-    evalCompleted: function(a, b, newValue ){
+    toThreeMesh: function( mesh ) {
+
+      var three_geometry = new THREE.Geometry( ), face;
+
+      for ( var i = 0; i < mesh.vertices.length; i++ ) {
+        var v = mesh.vertices[i];
+        three_geometry.vertices.push( new THREE.Vector3( v[0], v[1], v[2] ) );
+      }
+
+      for ( var i = 0; i < mesh.faces.length; i++ ) {
+        var f = mesh.faces[i];
+        face = new THREE.Face3( f[0], f[1], f[2], new THREE.Vector3( f[3][0], f[3][1], f[3][2] ) );
+        three_geometry.faces.push( face );
+      }
+      
+      three_geometry.computeBoundingBox();
+      
+      return three_geometry;
+    },
+
+    onEvalComplete: function(a, b, newValue){
 
       if (!newValue && this.evaluated) return;
 
       this.evaluated = true;
 
-      var lastValue = this.model.get('lastValue');
+      var lastValue = this.model.get('prettyLastValue');
       var temp;
+
+      console.log('redraw')
 
       if ( !lastValue ) return;
 
-      if ( lastValue.polygons ){ 
+      if ( lastValue.vertices ){ 
         temp = [];
         temp.push(lastValue);
       } else {
@@ -68,7 +90,7 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView'], function(Backbone, 
 
       temp.map(function(ele){
 
-        var g3  = THREE.CSG.fromCSG( ele );
+        var g3  = that.toThreeMesh( ele );
         
         if (that.model.get('selected')){
           var color = 0x00FFFF;

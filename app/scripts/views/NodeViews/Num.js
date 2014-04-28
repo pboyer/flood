@@ -12,11 +12,11 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView'], function(Backbone, 
       this.events = _.extend( {}, this.events, this.watchEvents );
     },
 
-    inputFocused: function(e) {
+    inputFocused: function(e) { 
       this.workspace.get('nodes').deselectAll();
       this.$el.find('.node-number-input').focus();
       e.stopPropagation();
-    },
+    }, 
 
     inputChanged: function(e) {
 
@@ -26,9 +26,10 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView'], function(Backbone, 
 
       this.$el.find('.currentValue').html(val);
 
-      this.model.get('type').value = val;
+      this.model.set('extra', { value: val });
       this.model.set('lastValue', val );
-      this.model.get('type').setDirty();
+      this.model.trigger('updateRunner');
+
       this.model.workspace.run();
 
     }

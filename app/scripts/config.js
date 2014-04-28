@@ -101,6 +101,7 @@ require.config({
         Search: 'models/Search',
         SearchElement: 'models/SearchElement',
         Workspace: 'models/Workspace',
+        Runner: 'models/Runner',
         Help: 'models/Help',
         Login: 'models/Login',
 

@@ -9,58 +9,6 @@
 */
 
 THREE.CSG = {
-	toCSG: function ( three_model, offset, rotation ) {
-		var i, geometry, offset, polygons, vertices, rotation_matrix;
-		
-		if ( !CSG ) {
-			throw 'CSG library not loaded. Please get a copy from https://github.com/evanw/csg.js';
-		}
-		
-		if ( three_model instanceof THREE.Mesh ) {
-			geometry = three_model.geometry;
-			offset = offset || three_model.position;
-			rotation = rotation || three_model.rotation;
-		} else if ( three_model instanceof THREE.Geometry ) {
-			geometry = three_model;
-			offset = offset || new THREE.Vector3( 0, 0, 0 );
-			rotation = rotation || new THREE.Vector3( 0, 0, 0 );
-		} else {
-			throw 'Model type not supported.';
-		}
-		rotation_matrix = new THREE.Matrix4( ).setRotationFromEuler( rotation );
-		
-		var polygons = [];
-		for ( i = 0; i < geometry.faces.length; i++ ) {
-			if ( geometry.faces[i] instanceof THREE.Face3 ) {
-				
-				
-				vertices = [];
-				vertices.push( new CSG.Vertex( rotation_matrix.multiplyVector3( geometry.vertices[geometry.faces[i].a].position.clone( ).addSelf( offset ) ), [ geometry.faces[i].normal.x, geometry.faces[i].normal.y, geometry.faces[i].normal.z ] ) );
-				vertices.push( new CSG.Vertex( rotation_matrix.multiplyVector3( geometry.vertices[geometry.faces[i].b].position.clone( ).addSelf( offset ) ), [ geometry.faces[i].normal.x, geometry.faces[i].normal.y, geometry.faces[i].normal.z ] ) );
-				vertices.push( new CSG.Vertex( rotation_matrix.multiplyVector3( geometry.vertices[geometry.faces[i].c].position.clone( ).addSelf( offset ) ), [ geometry.faces[i].normal.x, geometry.faces[i].normal.y, geometry.faces[i].normal.z ] ) );
-				polygons.push( new CSG.Polygon( vertices ) );
-				
-			} else if ( geometry.faces[i] instanceof THREE.Face4 ) {
-				
-				vertices = [];
-				vertices.push( new CSG.Vertex( rotation_matrix.multiplyVector3( geometry.vertices[geometry.faces[i].a].position.clone( ).addSelf( offset ) ), [ geometry.faces[i].normal.x, geometry.faces[i].normal.y, geometry.faces[i].normal.z ] ) );
-				vertices.push( new CSG.Vertex( rotation_matrix.multiplyVector3( geometry.vertices[geometry.faces[i].b].position.clone( ).addSelf( offset ) ), [ geometry.faces[i].normal.x, geometry.faces[i].normal.y, geometry.faces[i].normal.z ] ) );
-				vertices.push( new CSG.Vertex( rotation_matrix.multiplyVector3( geometry.vertices[geometry.faces[i].d].position.clone( ).addSelf( offset ) ), [ geometry.faces[i].normal.x, geometry.faces[i].normal.y, geometry.faces[i].normal.z ] ) );
-				polygons.push( new CSG.Polygon( vertices ) );
-				
-				vertices = [];
-				vertices.push( new CSG.Vertex( rotation_matrix.multiplyVector3( geometry.vertices[geometry.faces[i].b].position.clone( ).addSelf( offset ) ), [ geometry.faces[i].normal.x, geometry.faces[i].normal.y, geometry.faces[i].normal.z ] ) );
-				vertices.push( new CSG.Vertex( rotation_matrix.multiplyVector3( geometry.vertices[geometry.faces[i].c].position.clone( ).addSelf( offset ) ), [ geometry.faces[i].normal.x, geometry.faces[i].normal.y, geometry.faces[i].normal.z ] ) );
-				vertices.push( new CSG.Vertex( rotation_matrix.multiplyVector3( geometry.vertices[geometry.faces[i].d].position.clone( ).addSelf( offset ) ), [ geometry.faces[i].normal.x, geometry.faces[i].normal.y, geometry.faces[i].normal.z ] ) );
-				polygons.push( new CSG.Polygon( vertices ) );
-				
-			} else {
-				throw 'Model contains unsupported face.';
-			}
-		}
-		
-		return CSG.fromPolygons( polygons );
-	},
 	
 	fromCSG: function( csg_model ) {
 		var i, j, vertices, face,

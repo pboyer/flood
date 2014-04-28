@@ -1,4 +1,5 @@
-define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD'], function(Backbone, Nodes, Connection, Connections, scheme, FLOOD) {
+define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Runner'], 
+    function(Backbone, Nodes, Connection, Connections, scheme, FLOOD, Runner) {
 
   return Backbone.Model.extend({
 
@@ -50,6 +51,8 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD'], fu
         this.get('nodes').get(ele.get('startNodeId')).connectPort( ele.get('startPortIndex'), true, ele);
         this.get('nodes').get(ele.get('endNodeId')).connectPort(ele.get('endPortIndex'), false, ele);
       }, this);
+
+      this.runner = new Runner({id : this.get('_id') }, { workspace: this });
 
       // updates to connections and nodes are emitted to listeners
       var that = this;
@@ -126,36 +129,45 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD'], fu
       if (!this.runAllowed || this.get('nodes').length === 0)
         return;
 
-      // get all nodes with output ports
-      var S = new scheme.Interpreter()
-        , baseNode = null
-        , bottomNodes = this.get('nodes')
+      var bottomNodes = this.get('nodes')
                             .filter(function(ele){
                               return ele.isOutputNode();
                             }).map(function(ele){
-                              return ele.get('type');
-                            }).map(function(type){
-                              return type.outputs[0];
+                              return ele.get('_id');
                             });
 
-      // if more than one output in the workspace, make a begin node
-      if ( bottomNodes.length > 1) {
-        baseNode = new FLOOD.nodeTypes.Begin();
-        var count = 0;
-        bottomNodes.forEach( function(output){ 
-          baseNode.inputs.push( output.asInputPort(baseNode, count++) ); 
-          baseNode.inputs[baseNode.inputs.length-1].connect( output.parentNode );
-        });
-      } else if (bottomNodes.length == 1) {
-        baseNode = bottomNodes[0].parentNode;
-      }
+      this.runner.run( bottomNodes );
 
-      console.log( baseNode.printExpression() );
+      // // get all nodes with output ports
+      // var S = new scheme.Interpreter()
+      //   , baseNode = null
+      //   , bottomNodes = this.get('nodes')
+      //                       .filter(function(ele){
+      //                         return ele.isOutputNode();
+      //                       }).map(function(ele){
+      //                         return ele.get('type');
+      //                       }).map(function(type){
+      //                         return type.outputs[0];
+      //                       });
 
-      if (baseNode){
-        baseNode.markDirty();
-        S.eval( baseNode.compile() );
-      }
+      // // if more than one output in the workspace, make a begin node
+      // if ( bottomNodes.length > 1) {
+      //   baseNode = new FLOOD.nodeTypes.Begin();
+      //   var count = 0;
+      //   bottomNodes.forEach( function(output){ 
+      //     baseNode.inputs.push( output.asInputPort(baseNode, count++) ); 
+      //     baseNode.inputs[baseNode.inputs.length-1].connect( output.parentNode );
+      //   });
+      // } else if (bottomNodes.length == 1) {
+      //   baseNode = bottomNodes[0].parentNode;
+      // }
+
+      // console.log( baseNode.printExpression() );
+
+      // if (baseNode){
+      //   baseNode.markDirty();
+      //   S.eval( baseNode.compile() );
+      // }
 
     },
 

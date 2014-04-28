@@ -20,8 +20,13 @@ define(['backbone', 'FLOOD'], function(Backbone, FLOOD) {
       , extra: {}
     },
 
+    serialized : {},
+    dirtySerialization: true,
+
     // called when saving the node to server
     serialize : function() {
+
+      if (!this.dirtySerialization) return this.serialized;
 
       var vals = {
         name: this.get("name")
@@ -38,12 +43,16 @@ define(['backbone', 'FLOOD'], function(Backbone, FLOOD) {
         vals.lastValue = this.get('lastValue');
       }
 
+      this.serialized = vals;
+      this.dirtySerialization = false;
+
       return vals;
 
     },
 
     initialize: function(atts, vals) {
 
+      // we need to know the type in order to create the node
       if ( atts.typeName != null && FLOOD.nodeTypes[atts.typeName] != undefined){
         this.set( 'type', new FLOOD.nodeTypes[ atts.typeName ]() );
       } else {
@@ -54,17 +63,9 @@ define(['backbone', 'FLOOD'], function(Backbone, FLOOD) {
       if (atts.lastValue){
         this.get('type').value = atts.lastValue;
       }
-
-      if (atts.replication){
-        this.get('type').replication = atts.replication;
-      }
       
       var that = this;
-      this.get('type').evalComplete = function(a, b, c){
-        return that.evalComplete(a,b,c);
-      };
-
-      this.on('change:replication', this.onReplicationSet, this);
+      this.on('change', function(){ that.dirtySerialization = true; }, this);
       this.on('connection', this.onConnectPort);
       this.on('disconnection', this.onDisconnectPort);
       this.workspace = vals.workspace;
@@ -73,11 +74,6 @@ define(['backbone', 'FLOOD'], function(Backbone, FLOOD) {
 
       this.initializePorts();
       
-    },
-
-    onReplicationSet: function(){ 
-      this.get('type').replication = this.get('replication');
-      this.get('type').setDirty();
     },
 
     // initialize all the ports as disconnected
@@ -94,9 +90,12 @@ define(['backbone', 'FLOOD'], function(Backbone, FLOOD) {
       this.trigger('removed');
     },
 
-    evalComplete: function(type){
-      this.set('lastValue', type.value);
-      this.trigger('evalCompleted');
+    onEvalComplete: function(value, prettyValue){
+
+      this.set('lastValue', value);
+      this.set('prettyLastValue', prettyValue);
+      this.trigger('evalComplete');
+
     },
 
     select: function() {

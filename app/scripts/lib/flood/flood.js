@@ -99,7 +99,7 @@ define(function() {
 
 		var that = this;
 		var options = options || {};
-		this.replication = "applyLongest";
+		this.replication = options.replication || "applyLongest";
 
 		// tell the inputs about their parent node & index
 		if (options.inputs) {
@@ -129,14 +129,11 @@ define(function() {
 
 		var _isDirty = true;
 
-		this.extend = function(ex){
-
-			if (!ex) return;
-			for (var k in ex){
-				this[k] = ex[k];
-			}
+		this.extend = function(args){
 
 		}
+
+		this.doPostProcess = true;
 
 		this.isDirty = function() {
 			return _isDirty;
@@ -241,10 +238,14 @@ define(function() {
 								}
 								
 								that.markClean();
+
+								if ( that.doPostProcess && that.postProcess ){
+									that.prettyValue = that.postProcess( that.value );
+								}
 							}
 
 							// tell listeners that the evalation is complete
-							that.evalComplete(that, arguments, dirty, that.value);
+							that.evalComplete( that, arguments, dirty, that.value, that.prettyValue );
 
 						} catch (e) {
 							that.evalFailed(that, arguments, dirty, e);
@@ -354,12 +355,12 @@ define(function() {
 			typeName: "Number" 
 		};
 
-		this.value = 0;
+		this.lastValue = 0;
 
 		FLOOD.baseTypes.NodeType.call(this, typeData);
 
 		this.compile = this.printExpression = function(){
-			return this.value;
+			return this.lastValue;
 		}
 
 	}.inherits( FLOOD.baseTypes.NodeType );

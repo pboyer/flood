@@ -1,4 +1,4 @@
-importScripts( 'scheme.js', 'flood.js', 'csg.js', 'flood_csg.js' ); 
+importScripts( 'scheme.js', 'flood.js', 'csg.js', 'flood_csg.js'); 
 
 // Routing
 var that = this;
@@ -70,6 +70,8 @@ on_run = function(data){
 	var workspace = lookupWorkspace(data.workspace_id);
 	if (!workspace) return fail({ kind: "run", msg: "The workspace id given is not valid" }, data.silent);
 
+	var ts = Date.now();
+
 	// get all nodes with output ports
 	var S = new scheme.Interpreter()
 	  , baseNode = null
@@ -81,7 +83,6 @@ on_run = function(data){
 	                      });
 
 	if ( bottomNodes.length > 1) {
-
 	  baseNode = new FLOOD.nodeTypes.Begin();
 	  var count = 0;
 	  bottomNodes.forEach( function(output){ 
@@ -98,7 +99,15 @@ on_run = function(data){
 	  S.eval( baseNode.compile() );
 	}	
 
-	return success({ kind: "run", workspace_id: workspace.id }, data.silent);
+	var te = Date.now();
+
+	var msg = { kind: "run", workspace_id: workspace.id, elapsed: te - ts, expression: "" };
+
+	if (baseNode){
+		msg.expression = baseNode.printExpression();
+	}
+
+	return success(msg, data.silent);
 
 };
 
@@ -147,14 +156,14 @@ on_addConnection = function(data){
 	var ws = lookupWorkspace(data.workspace_id);
 	if (!ws) return fail({ kind: "run", msg: "The workspace id given is not valid" }, data.silent);
 
-	var sn = lookupNode(ws, data.start_id);
-	if (!sn) return fail({ kind: "addConnection", msg: "Start node with given id does not exist", workspace_id: data.workspace_id, start_id: data.start_id });
+	var sn = lookupNode(ws, data.startNodeId );
+	if (!sn) return fail({ kind: "addConnection", msg: "Start node with given id does not exist", workspace_id: data.workspace_id, startNodeId : data.startNodeId  });
 
-	var en = lookupNode(ws, data.end_id);
-	if (!en) return fail({ kind: "addConnection", msg: "End node with given id does not exist", workspace_id: data.workspace_id, end_id: data.end_id });
+	var en = lookupNode(ws, data.endNodeId);
+	if (!en) return fail({ kind: "addConnection", msg: "End node with given id does not exist", workspace_id: data.workspace_id, endNodeId: data.endNodeId });
 
-	var si = data.start_port_index;
-	var ei = data.end_port_index;
+	var si = data.startPortIndex;
+	var ei = data.endPortIndex;
 
 	if (si < 0 || si >= sn.outputs.length ) 
 		return fail({ kind: "addConnection", msg: "Start port index too high" });
@@ -164,7 +173,7 @@ on_addConnection = function(data){
 
 	en.inputs[ei].connect( sn, si );
 
-	return success({ kind: "addConnection" });
+	return success({ kind: "addConnection" }, data.silent);
 
 };
 
@@ -173,15 +182,36 @@ on_removeConnection = function(data){
 	var ws = lookupWorkspace( data.workspace_id );
 	if (!ws) return fail({ kind: "removeConnection", msg: "The workspace does not exist" }, data.silent);
 
-	var end = lookupNode( ws, data.id );
+	var end = lookupNode( ws, data._id );
 	if (!end) return fail({ kind: "removeConnection", msg: "The node does not exist" }, data.silent);
 
-	if (data.port_index < 0 || data.port_index >= end.inputs.length) 
+	if (data.portIndex < 0 || data.portIndex >= end.inputs.length) 
 		return fail({ kind: "removeConnection", msg: "The port index does not exist" }, data.silent);
 
-	end.inputs[data.port_index].disconnect();
+	end.inputs[data.portIndex].disconnect();
 
-  return success({ kind: "removeConnection" }, data.silent);
+  return success({ kind: "removeConnection", _id: data._id }, data.silent);
+
+};
+
+on_updateNode = function(data){
+
+	var ws = lookupWorkspace(data.workspace_id);
+	if (!ws) return fail({ kind: "updateNode", msg: "The workspace does not exist" }, data.silent);
+
+	var node = lookupNode(ws, data._id);
+	if (!node) return fail({ kind: "updateNode", msg: "Node with given id does not exist", workspace_id: data.workspace_id, _id: data._id });
+
+	if ( node.typeName != data.typeName ) 
+		return fail({ kind: "updateNode", msg: "Cannot change the type of a node", workspace_id: data.workspace_id, _id: data._id, 
+			current_type_name: node.typeName, requested_type_name: data.typeName });
+
+	node.replication = data.replication;
+	if ( data.lastValue != undefined ) node.lastValue = data.lastValue;
+	node.extend( data.extra );
+	node.setDirty();
+
+	return success({ kind: "updateNode", workspace_id: data.workspace_id, _id: data._id }, data.silent);
 
 };
 
@@ -190,21 +220,21 @@ on_addNode = function(data){
 	var ws = lookupWorkspace(data.workspace_id);
 	if (!ws) return fail({ kind: "addNode", msg: "The workspace does not exist" }, data.silent);
 
-	var id = lookupNodeIndex(ws, data.id);
-	if (!(id < 0)) return fail({ kind: "addNode", msg: "Node with given id already exists", workspace_id: data.workspace_id, id: data.id });
+	var id = lookupNodeIndex(ws, data._id);
+	if (!(id < 0)) return fail({ kind: "addNode", msg: "Node with given id already exists", workspace_id: data.workspace_id, _id: data._id });
 
 	var node = new FLOOD.nodeTypes[ data.typeName ]();
 
-	node.id = data.id;
+	node.id = data._id;
 	node.replication = data.replication;
 	node.lastValue = data.lastValue;
 	node.evalComplete = post_nodeEvalComplete;
 	if ( data.isClean ) node.setClean();
-	node.extend(data.extensions);
+	node.extend( data.extra );
 
 	ws.nodes.push(node);
 
-	return success({ kind: "addNode", workspace_id: data.workspace_id, id: data.id }, data.silent);
+	return success({ kind: "addNode", workspace_id: data.workspace_id, _id: data._id }, data.silent);
 
 };
 
@@ -213,7 +243,7 @@ on_removeNode = function(data){
 	var ws = lookupWorkspace(data.workspace_id);
 	if (!ws) return fail({ kind: "removeNode", msg: "The workspace does not exist" }, data.silent);
 
-	var i = lookupNodeIndex(ws, data.id);
+	var i = lookupNodeIndex(ws, data._id );
 	if (i < 0) return fail({ kind: "removeNode", msg: "A node with the given id does not exist." }, data.silent);
 
 	// remove node from the workspace
@@ -223,13 +253,13 @@ on_removeNode = function(data){
 	// any references to the node
 	ws.nodes.forEach(function(n){
 		n.inputs.forEach(function(p){
-			if ( p.oppNode && p.oppNode.id === data.id ){
+			if ( p.oppNode && p.oppNode.id === data._id ){
 				p.disconnect();
 			}
 		});
 	});
 
-	return success({ kind: "removeNode", id : data.id, workspace_id: data.workspace_id }, data.silent);
+	return success({ kind: "removeNode", _id : data._id, workspace_id: data.workspace_id }, data.silent);
 
 };
 
@@ -291,11 +321,9 @@ post_nodeEvalStart = function(id, value){
 
 };
 
-post_nodeEvalComplete = function(node, args, isNew, value){
+post_nodeEvalComplete = function(node, args, isNew, value, prettyValue ){
 
-	// that.evalComplete(that, arguments, dirty, that.value);
-
-	return success({ kind: "nodeEvalComplete", value : value, args: args });
+	return success({ kind: "nodeEvalComplete", id: node.id, value : value, prettyValue: prettyValue, args: args });
 
 };
 
