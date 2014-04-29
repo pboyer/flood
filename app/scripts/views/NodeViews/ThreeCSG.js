@@ -58,7 +58,7 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView'], function(Backbone, 
       three_geometry.computeBoundingBox();
       
       return three_geometry;
-      
+
     },
 
     onEvalComplete: function(a, b, newValue){
@@ -79,37 +79,61 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView'], function(Backbone, 
         temp = lastValue; // extract the list
       } 
 
-      if ( this.threeGeom ){
-        scene.remove(this.threeGeom);
-      }
+      var threeTemp = new THREE.Object3D();
+      this.drawChunked( threeTemp, temp, function() { 
 
-      this.threeGeom = new THREE.Object3D();
-
-      var that = this;
-
-      temp.map(function(ele){
-
-        var g3  = that.toThreeMesh( ele );
-        
-        if (that.model.get('selected')){
-          var color = 0x00FFFF;
-        } else {
-          var color = 0xDDDDDD;
+        if ( this.threeGeom ){
+          scene.remove( this.threeGeom );
         }
 
-        var mesh = new THREE.Mesh(g3, new THREE.MeshPhongMaterial({color: color, specular: 0xFFFFFF, opacity: 0.7, transparent: true}));
-        that.threeGeom.add( mesh );
+        this.threeGeom = threeTemp;
 
-      });
+        scene.add( this.threeGeom );
 
-      this.changeVisibility();
+        this.changeVisibility();
+
+      }, this );
 
     }, 
+
+    // creating this data may be quite slow, we'll need to be careful
+    drawChunked: function(geom, list, callback, that){
+
+      var i = 0;
+      var tick = function() {
+
+        var start = new Date().getTime();
+        for (; i < list.length && (new Date().getTime()) - start < 50; i++) {
+        
+          var g3  = that.toThreeMesh( list[i] );
+
+          if (that.model.get('selected')){
+            var color = 0x00FFFF;
+          } else {
+            var color = 0xDDDDDD;
+          }
+
+          var mesh = new THREE.Mesh(g3, new THREE.MeshPhongMaterial({color: color, specular: 0xFFFFFF, opacity: 0.85, transparent: true}));
+          geom.add( mesh );
+
+        }
+
+        if (i < list.length) {
+          setTimeout(tick, 25);
+        } else {
+          callback.call(that);
+        }
+
+      };
+
+      setTimeout(tick, 25);
+
+    },
 
     changeVisibility: function(){
 
       if ( !this.threeGeom ){
-        return
+        return;
       }
         
       if (!this.model.get('visible') || !this.model.workspace.get('current') )

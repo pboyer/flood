@@ -223,12 +223,16 @@ on_addNode = function(data){
 	var id = lookupNodeIndex(ws, data._id);
 	if (!(id < 0)) return fail({ kind: "addNode", msg: "Node with given id already exists", workspace_id: data.workspace_id, _id: data._id });
 
+	if ( !FLOOD.nodeTypes[data.typeName] ) 
+		return fail({ kind: "addNode", msg: "Node with that name does not exist", typeName: data.typeName, workspace_id: data.workspace_id, _id: data._id });
+
 	var node = new FLOOD.nodeTypes[ data.typeName ]();
 
 	node.id = data._id;
 	node.replication = data.replication;
 	node.lastValue = data.lastValue;
 	node.evalComplete = post_nodeEvalComplete;
+	node.evalFailed = post_nodeEvalFailed;
 	if ( data.isClean ) node.setClean();
 	node.extend( data.extra );
 
@@ -311,21 +315,28 @@ on_setReplication = function(data){
 
 post_nodeDirtied = function(id, value){
 
-	return success({ kind: "nodeDirty", id: id });
+	return success({ kind: "nodeDirty", _id: id });
 
 };
 
 post_nodeEvalStart = function(id, value){
 
-	return success({ kind: "nodeEvalStart", id: id });
+	return success({ kind: "nodeEvalStart", _id: id });
 
 };
 
 post_nodeEvalComplete = function(node, args, isNew, value, prettyValue ){
 
-	return success({ kind: "nodeEvalComplete", id: node.id, value : value, prettyValue: prettyValue, args: args });
+	return success({ kind: "nodeEvalComplete", _id: node.id, value : value, prettyValue: prettyValue  });
 
 };
+
+post_nodeEvalFailed = function(node, args, isNew, exception){
+
+	return fail({ kind: "nodeEvalFailed", _id: node.id, value : value, prettyValue: prettyValue });
+
+};
+
 
 
 // Helpers

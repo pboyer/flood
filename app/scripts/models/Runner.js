@@ -73,7 +73,7 @@ define(['backbone'], function(Backbone) {
 
 	  on_nodeEvalComplete: function(data){
 
-	  	this.workspace.get('nodes').get( data.id ).onEvalComplete( data.value, data.prettyValue );
+	  	this.workspace.get('nodes').get( data._id ).onEvalComplete( data.value, data.prettyValue );
 
 	  },
 
@@ -81,6 +81,12 @@ define(['backbone'], function(Backbone) {
 
 	  	this.set('isRunning', false);
 	  	this.runCount++;
+
+	  },
+
+	  on_addNode: function(data){
+
+		  console.warn( data );
 
 	  },
 
