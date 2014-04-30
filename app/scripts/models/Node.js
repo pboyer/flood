@@ -18,15 +18,16 @@ define(['backbone', 'FLOOD'], function(Backbone, FLOOD) {
       , visible: true
       , replication: "applyLongest"
       , extra: {}
+      , ignoreDefaults: []
     },
 
-    serialized : {},
+    cachedSerialization : {},
     dirtySerialization: true,
 
     // called when saving the node to server
     serialize : function() {
 
-      if (!this.dirtySerialization) return this.serialized;
+      if (!this.dirtySerialization) return this.cachedSerialization;
 
       var vals = {
         name: this.get("name")
@@ -34,6 +35,7 @@ define(['backbone', 'FLOOD'], function(Backbone, FLOOD) {
         , typeName: this.get('typeName')
         , selected: this.get('selected')
         , visible: this.get('visible')
+        , ignoreDefaults: this.get('ignoreDefaults')
         , _id: this.get('_id')
         , replication: this.get('replication')
         , extra: this.get('extra')
@@ -43,7 +45,7 @@ define(['backbone', 'FLOOD'], function(Backbone, FLOOD) {
         vals.lastValue = this.get('lastValue');
       }
 
-      this.serialized = vals;
+      this.cachedSerialization = vals;
       this.dirtySerialization = false;
 
       return vals;
@@ -59,9 +61,22 @@ define(['backbone', 'FLOOD'], function(Backbone, FLOOD) {
         this.set( 'type', new FLOOD.nodeTypes.Add() );
       }
 
-      // set the current value from the last stored value
       if (atts.lastValue){
         this.get('type').value = atts.lastValue;
+      }
+
+      if (atts.ignoreDefaults && atts.ignoreDefaults.length > 0){
+
+        for (var i = 0; i < atts.ignoreDefaults.length; i++){
+
+          this.get('type').inputs[i].useDefault = !atts.ignoreDefaults[i];
+
+        }
+        
+      } else {
+
+        atts.ignoreDefaults = this.get('type').inputs.map(function(x){ return !x.useDefault; });
+
       }
       
       var that = this;

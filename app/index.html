@@ -12,6 +12,7 @@
         <!-- <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300' rel='stylesheet' type='text/css'> -->
         <link rel="stylesheet" href="styles/main.css">
         <link rel="stylesheet" href="styles/bootstrap.css">
+        <link rel="stylesheet" href="bower_components/jquery.ui/themes/base/jquery.ui.all.css">
     </head>
     
     <body>
@@ -70,7 +71,30 @@
 
         <ul class="node-inputs">
           <% _.each(type.inputs, function(ele, index) { %> 
-            <li class="node-port node-port-input" data-index=" <%= index %> "> <span class="node-port-name"> <%= ele.name %> </span>  </li> 
+            <li class="node-port node-port-input" data-index=" <%= index %> "> 
+              <span class="node-port-name"><%= ele.name %></span>
+            </li>
+          <% }); %>
+        </ul>
+
+        <ul class="node-inputs-extra">
+          <% _.each(type.inputs, function(ele, index) { %> 
+            <li class="node-port-extra" data-index=" <%= index %> "> 
+              
+              <div class="dropdown">
+
+                <a data-toggle="dropdown" href="#">&#8942;</a>
+
+                <ul class="dropdown-menu" role="menu" style="padding: 5px;" aria-labelledby="dLabel">
+
+                  <li role="presentation" style="color: black">
+                      <input type="checkbox" id="use-default-checkbox" data-index="<%= index %>" checked="<%= !ignoreDefaults[index] %>">Use default : <%= ele.defaultVal.toString() %>
+                  </li>
+
+                </ul>
+              </div>
+
+            </li>
           <% }); %>
         </ul>
 
@@ -137,7 +161,7 @@
       <script type="text/template" id="node-num-template">
 
         <div class="node-data-container" >
-          <input class="node-number-input" min="-150" max="150" step ="0.05" type="range" value="<%= type.value %>"></input> 
+          <div class="slider" style="width: 140px; margin-top: 8px; margin-bottom: 8px"></div>
         </div>
 
         <div class="node-data-container num-data-container" style="margin-right: 10px; margin-left: 5px">
@@ -149,6 +173,23 @@
             <li class="node-port node-port-output" data-index=" <%= index %> "> <span class="node-port-name"> <%= ele.name %> </span> </li> 
           <% }); %>
         </ul>
+
+         <div class="dropdown keep-open node-settings" style="position:absolute">
+
+          <a data-toggle="dropdown" href="#">
+            <span class="caret" style="color:white; padding: 1px"></span>
+          </a>
+
+          <ul class="dropdown-menu" role="menu" style="padding: 5px;" aria-labelledby="dLabel">
+
+            <li role="presentation">
+                <input type="number" class="num-min">
+                <input type="number" class="num-max">
+                <input type="number" class="num-step">
+            </li>
+
+          </ul>
+        </div>
 
       </script>
 

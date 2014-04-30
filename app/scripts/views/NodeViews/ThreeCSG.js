@@ -126,7 +126,7 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView'], function(Backbone, 
 
       };
 
-      setTimeout(tick, 25);
+      setTimeout(tick, 0);
 
     },
 

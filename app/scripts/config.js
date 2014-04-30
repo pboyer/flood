@@ -46,6 +46,15 @@ require.config({
             ],
             exports: 'TrackballControls'
         },
+        jqueryuislider: {
+            deps: [
+                'jquery',
+                'jqueryuimouse',
+                'jqueryuicore',
+                'jqueryuiwidget'
+            ],
+            exports: 'jqueryuislider'
+        },
         jqueryuidraggable: {
             deps: [
                 'jquery',
@@ -141,6 +150,7 @@ require.config({
         bootstrap: '../bower_components/bootstrap/dist/js/bootstrap',
         List: '../bower_components/listjs/dist/list.min',
         Three: '../bower_components/threejs/build/three.min',
+        jqueryuislider: '../bower_components/jquery.ui/ui/jquery.ui.slider',
         jqueryuidraggable: '../bower_components/jquery.ui/ui/jquery.ui.draggable',
         jqueryuicore: '../bower_components/jquery.ui/ui/jquery.ui.core',
         jqueryuimouse: '../bower_components/jquery.ui/ui/jquery.ui.mouse',
