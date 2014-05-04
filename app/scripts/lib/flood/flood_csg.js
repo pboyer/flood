@@ -16,9 +16,9 @@ define(['FLOOD'], function(FLOOD) {
 	FLOOD.nodeTypes.Vector = function() {
 
 		var typeData = {
-			inputs: [ 	new FLOOD.baseTypes.InputPort( "X", [Number], 1 ),
-						new FLOOD.baseTypes.InputPort( "Y", [Number], 1 ),
-						new FLOOD.baseTypes.InputPort( "Z", [Number], 1 ) ],
+			inputs: [ 	new FLOOD.baseTypes.InputPort( "X", [Number], 0 ),
+						new FLOOD.baseTypes.InputPort( "Y", [Number], 0 ),
+						new FLOOD.baseTypes.InputPort( "Z", [Number], 0 ) ],
 			outputs: [ 	new FLOOD.baseTypes.OutputPort( ">", [ CSG.Vector ] ) ],
 			typeName: "Vector"
 		};

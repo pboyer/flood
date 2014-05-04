@@ -11,7 +11,9 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
       connections: null,
       selectedNodes: new Nodes(),
       zoom: 1,
-      current: false
+      current: false,
+      isPublic: false,
+      lastSaved: Date.now()
     },
 
     draggingProxy: false,
@@ -137,37 +139,6 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
                             });
 
       this.runner.run( bottomNodes );
-
-      // // get all nodes with output ports
-      // var S = new scheme.Interpreter()
-      //   , baseNode = null
-      //   , bottomNodes = this.get('nodes')
-      //                       .filter(function(ele){
-      //                         return ele.isOutputNode();
-      //                       }).map(function(ele){
-      //                         return ele.get('type');
-      //                       }).map(function(type){
-      //                         return type.outputs[0];
-      //                       });
-
-      // // if more than one output in the workspace, make a begin node
-      // if ( bottomNodes.length > 1) {
-      //   baseNode = new FLOOD.nodeTypes.Begin();
-      //   var count = 0;
-      //   bottomNodes.forEach( function(output){ 
-      //     baseNode.inputs.push( output.asInputPort(baseNode, count++) ); 
-      //     baseNode.inputs[baseNode.inputs.length-1].connect( output.parentNode );
-      //   });
-      // } else if (bottomNodes.length == 1) {
-      //   baseNode = bottomNodes[0].parentNode;
-      // }
-
-      // console.log( baseNode.printExpression() );
-
-      // if (baseNode){
-      //   baseNode.markDirty();
-      //   S.eval( baseNode.compile() );
-      // }
 
     },
 

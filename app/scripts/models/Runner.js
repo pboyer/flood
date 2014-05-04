@@ -110,7 +110,8 @@ define(['backbone'], function(Backbone) {
 
 	  	var u = function(){ this.updateNode( node ); };
 	  	node.on('change:replication', u, this );
-  		node.on('updateRunner', u, this )
+      node.on('change:ignoreDefaults', u, this);
+  		node.on('updateRunner', u, this );
 
 	  },
 

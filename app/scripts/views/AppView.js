@@ -6,11 +6,13 @@ define([  'backbone',
           'WorkspaceSearchView', 
           'WorkspaceTabView', 
           'Workspace',
+          'WorkspaceBrowser',
+          'WorkspaceBrowserView',
           'HelpView',
           'Help',
           'LoginView',
           'Login'], 
-          function(Backbone, App, WorkspaceView, Search, SearchView, WorkspaceSearchView, WorkspaceTabView, Workspace, HelpView, Help, LoginView, Login) {
+          function(Backbone, App, WorkspaceView, Search, SearchView, WorkspaceSearchView, WorkspaceTabView, Workspace, WorkspaceBrowser, WorkspaceBrowserView, HelpView, Help, LoginView, Login) {
 
   return Backbone.View.extend({
 
@@ -27,6 +29,7 @@ define([  'backbone',
       this.model.on('change:showingSettings', this.viewSettings, this);
       this.model.on('change:showingLogin', this.viewLogin, this);
       this.model.on('change:showingHelp', this.viewHelp, this);
+      this.model.on('change:showingBrowser', this.viewBrowser, this);
 
     },
 
@@ -36,7 +39,8 @@ define([  'backbone',
       'click #help-button': 'showHelp',
       'click #settings-button': 'showSettings',
       'click #workspace_hide' : 'toggleViewer',
-      'click #add-workspace-button': 'newWorkspace'
+      'click #add-workspace-button': 'newWorkspace',
+      'click #workspace-browser-button': 'toggleBrowser'
     },
 
     saveClick: function(e){
@@ -45,6 +49,29 @@ define([  'backbone',
 
     endSearch: function() {
       this.model.set('showingSearch', false);
+    },
+
+    toggleBrowser: function(){
+
+      if (this.model.get('showingBrowser') === true){
+        this.model.set('showingBrowser', false);
+      } else {
+        this.model.set('showingBrowser', true);
+      }
+
+    },
+
+    viewBrowser: function(){
+      if (!this.browserView){
+        this.browserView = new WorkspaceBrowserView({model: new WorkspaceBrowser() }, { app: this.model });
+        this.browserView.render();
+      }
+
+      if (this.model.get('showingBrowser') === true){
+        this.browserView.$el.show();  
+      } else {
+        this.browserView.$el.hide();
+      }
     },
 
     viewHelp: function(){
@@ -58,10 +85,6 @@ define([  'backbone',
       } else {
         this.helpView.$el.hide();
       }
-    },
-
-    viewSettings: function(){
-
     },
 
     showHelp: function(){
@@ -114,6 +137,7 @@ define([  'backbone',
     },
 
     showingHelp: false,
+    showingBrowser: false,
     showingSettings: false,
     showingSearch: false,
     showingLogin: false,
@@ -126,20 +150,7 @@ define([  'backbone',
     workspaceCounter: 1,
 
     newWorkspace: function(){
-
-      var that = this;
-
-      $.get("/nws", function(data, status){
-
-        var newWorkspace = new Workspace(data, {app: that.model});
-        that.model.get('workspaces').add( newWorkspace );
-
-      }).fail(function(){
-
-        console.log("failed to get new workspace");
-
-      });
-
+      this.model.newWorkspace();
     },
 
     // This callback is called when a Workspace is added to
@@ -170,8 +181,8 @@ define([  'backbone',
 
         // if we're out of workspaces, just add a new one
         } else {
-          var newWorkspace = this.newWorkspace();
-          this.model.set('currentWorkspace', newWorkspace.get('_id') );
+          var that = this;
+          this.newWorkspace();
         }
       }
 

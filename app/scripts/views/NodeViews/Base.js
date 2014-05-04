@@ -14,6 +14,7 @@ define(['backbone', 'jqueryuidraggable'], function(Backbone, jqueryuidraggable) 
       'mouseup .node-port-input': 'endPortConnection',
       'mousedown .node-port-input': 'beginPortDisconnection',
       'click':  'selectThis',
+      'click .use-default-checkbox': 'useDefaultClick',
       'click .toggle-vis': 'toggleGeomVis',
       'click .rep-type': 'replicationClick'
     },
@@ -31,6 +32,18 @@ define(['backbone', 'jqueryuidraggable'], function(Backbone, jqueryuidraggable) 
       this.makeDraggable();
       this.$workspace_canvas = $('#workspace_canvas');
       this.position = this.model.get('position');
+
+    },
+
+    useDefaultClick : function(e){
+
+      var index = parseInt( $(e.currentTarget).attr('data-index') );
+
+      var ign = this.model.get('ignoreDefaults');
+      ign[index] = !$(e.target).is(':checked');
+
+      this.model.set('ignoreDefaults', ign);
+      this.model.trigger('updateRunner');
 
     },
 

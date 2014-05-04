@@ -102,6 +102,7 @@ require.config({
         SearchElements: 'collections/SearchElements',
         Nodes: 'collections/Nodes',
         Workspaces: 'collections/Workspaces',
+        WorkspaceBrowserElements: 'collections/WorkspaceBrowserElements',
 
         // backbone models
         App: 'models/App',
@@ -113,6 +114,8 @@ require.config({
         Runner: 'models/Runner',
         Help: 'models/Help',
         Login: 'models/Login',
+        WorkspaceBrowserElement: 'models/WorkspaceBrowserElement',
+        WorkspaceBrowser: 'models/WorkspaceBrowser',
 
         // backbone routers
         WorkspaceRouter: 'router/WorkspaceRouter',
@@ -127,8 +130,9 @@ require.config({
         WorkspaceTabView: 'views/WorkspaceTabView',
         HelpView: 'views/HelpView',
         LoginView: 'views/LoginView',
+        WorkspaceBrowserElementView: 'views/WorkspaceBrowserElementView',
+        WorkspaceBrowserView: 'views/WorkspaceBrowserView',
         
-
         // node backbone views
         NodeViewTypes: 'views/NodeViews/NodeViews',
         BaseNodeView: 'views/NodeViews/Base',

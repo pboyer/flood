@@ -7,11 +7,11 @@ define(['BaseNodeView', 'WatchNodeView', 'NumNodeView', 'CSGNodeView'], function
   nodeViewTypes.Number = NumNodeView;
 
   nodeViewTypes.Sphere = CSGNodeView;
-  nodeViewTypes.Cyl = CSGNodeView;
+  nodeViewTypes.Cylinder = CSGNodeView;
   nodeViewTypes.Cube = CSGNodeView;
-  nodeViewTypes.SolidInter = CSGNodeView;
-  nodeViewTypes.SolidUnion = CSGNodeView;
-  nodeViewTypes.SolidDiff = CSGNodeView;
+  nodeViewTypes.UnionSolids = CSGNodeView;
+  nodeViewTypes.IntersectSolids = CSGNodeView;
+  nodeViewTypes.SubtractSolid = CSGNodeView;
 
   return nodeViewTypes;
 

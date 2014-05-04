@@ -78,10 +78,13 @@ define(['backbone', 'FLOOD'], function(Backbone, FLOOD) {
         atts.ignoreDefaults = this.get('type').inputs.map(function(x){ return !x.useDefault; });
 
       }
+
+      this.set('ignoreDefaults', atts.ignoreDefaults );
       
       var that = this;
       this.on('change', function(){ that.dirtySerialization = true; }, this);
       this.on('connection', this.onConnectPort);
+      
       this.on('disconnection', this.onDisconnectPort);
       this.workspace = vals.workspace;
 

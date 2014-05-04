@@ -209,6 +209,11 @@ on_updateNode = function(data){
 	node.replication = data.replication;
 	if ( data.lastValue != undefined ) node.lastValue = data.lastValue;
 	node.extend( data.extra );
+
+	for (var i = 0; i < node.inputs.length; i++){
+		node.inputs[i].useDefault = data.ignoreDefaults[i] != undefined ? !data.ignoreDefaults[i] : true;
+	}
+
 	node.setDirty();
 
 	return success({ kind: "updateNode", workspace_id: data.workspace_id, _id: data._id }, data.silent);
@@ -232,9 +237,14 @@ on_addNode = function(data){
 	node.replication = data.replication;
 	node.lastValue = data.lastValue;
 	node.evalComplete = post_nodeEvalComplete;
+	node.evalBegin = post_nodeEvalBegin;
 	node.evalFailed = post_nodeEvalFailed;
 	if ( data.isClean ) node.setClean();
 	node.extend( data.extra );
+
+	for (var i = 0; i < node.inputs.length; i++){
+		node.inputs[i].useDefault = data.ignoreDefaults[i] != undefined ? !data.ignoreDefaults[i] : true;
+	}
 
 	ws.nodes.push(node);
 
@@ -319,13 +329,23 @@ post_nodeDirtied = function(id, value){
 
 };
 
-post_nodeEvalStart = function(id, value){
+post_nodeEvalBegin = function(node){
 
-	return success({ kind: "nodeEvalStart", _id: id });
+	return success({ kind: "nodeEvalBegin", _id: node.id });
 
 };
 
 post_nodeEvalComplete = function(node, args, isNew, value, prettyValue ){
+
+	if (typeof value === "function") {
+		value = value.toString();
+		prettyValue = value.toString();
+	}
+	
+	// if (typeof value === "object") {
+	// 	value = clone(value);
+	// 	prettyValue = clone(prettyValue);
+	// }
 
 	return success({ kind: "nodeEvalComplete", _id: node.id, value : value, prettyValue: prettyValue  });
 
@@ -333,13 +353,33 @@ post_nodeEvalComplete = function(node, args, isNew, value, prettyValue ){
 
 post_nodeEvalFailed = function(node, args, isNew, exception){
 
-	return fail({ kind: "nodeEvalFailed", _id: node.id, value : value, prettyValue: prettyValue });
+	return fail({ kind: "nodeEvalFailed", _id: node.id, exception: exception });
 
 };
 
 
-
 // Helpers
+
+function clone (oToBeCloned) {
+  if (oToBeCloned === null || !(oToBeCloned instanceof Object)) { return oToBeCloned; }
+  var oClone, fConstr = oToBeCloned.constructor;
+  switch (fConstr) {
+    // implement other special objects here!
+    case RegExp:
+      oClone = new fConstr(oToBeCloned.source, "g".substr(0, Number(oToBeCloned.global)) + "i".substr(0, Number(oToBeCloned.ignoreCase)) + "m".substr(0, Number(oToBeCloned.multiline)));
+      break;
+    case Function:
+      return oToBeCloned.toString();
+    case Date:
+      oClone = new fConstr(oToBeCloned.getTime());
+      break;
+    // etc.
+    default:
+      oClone = new fConstr();
+  }
+  for (var sProp in oToBeCloned) { oClone[sProp] = clone(oToBeCloned[sProp]); }
+  return oClone;
+}
 
 function objectLength( object ) {
     var length = 0;

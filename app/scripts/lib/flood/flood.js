@@ -197,7 +197,7 @@ define(function() {
 
 						try {
 
-							that.evalBegin(that, arguments, dirty, that.value);
+							that.evalBegin(that);
 
 							if ( dirty ){
 
@@ -351,7 +351,7 @@ define(function() {
 	FLOOD.nodeTypes.Number = function() {
 
 		var typeData = {
-			outputs: [ 	new FLOOD.baseTypes.OutputPort( ">", [Number] ) ],
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [Number] ) ],
 			typeName: "Number" 
 		};
 
@@ -372,8 +372,8 @@ define(function() {
 		var typeData = {
 			inputs: [ 	new FLOOD.baseTypes.InputPort( "A", [Number], 0 ),
 						new FLOOD.baseTypes.InputPort( "B", [Number], 0 ) ],
-			outputs: [ 	new FLOOD.baseTypes.OutputPort( ">", [Number] ) ],
-			typeName: "+" 
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [Number] ) ],
+			typeName: "Add" 
 		};
 
 		FLOOD.baseTypes.NodeType.call(this, typeData );
@@ -384,6 +384,7 @@ define(function() {
 
 	}.inherits( FLOOD.baseTypes.NodeType );
 
+
 	// Subtract
 
 	FLOOD.nodeTypes.Subtract = function() {
@@ -391,8 +392,8 @@ define(function() {
 		var typeData = {
 			inputs: [ 	new FLOOD.baseTypes.InputPort( "A", [Number], 0 ),
 						new FLOOD.baseTypes.InputPort( "B", [Number], 0 ) ],
-			outputs: [ 	new FLOOD.baseTypes.OutputPort( ">", [Number] ) ],
-			typeName: "-" 
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [Number] ) ],
+			typeName: "Subtract" 
 		};
 
 		FLOOD.baseTypes.NodeType.call(this, typeData );
@@ -410,8 +411,8 @@ define(function() {
 		var typeData = {
 			inputs: [ 	new FLOOD.baseTypes.InputPort( "A", [Number], 0 ),
 						new FLOOD.baseTypes.InputPort( "B", [Number], 0 ) ],
-			outputs: [ 	new FLOOD.baseTypes.OutputPort( ">", [Number] ) ],
-			typeName: "*" 
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [Number] ) ],
+			typeName: "Multiply" 
 		};
 
 		FLOOD.baseTypes.NodeType.call(this, typeData );
@@ -429,8 +430,8 @@ define(function() {
 		var typeData = {
 			inputs: [ 	new FLOOD.baseTypes.InputPort( "A", [Number], 0 ),
 						new FLOOD.baseTypes.InputPort( "B", [Number], 0 ) ],
-			outputs: [ 	new FLOOD.baseTypes.OutputPort( ">", [Number] ) ],
-			typeName: "/" 
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [Number] ) ],
+			typeName: "Divide" 
 		};
 
 		FLOOD.baseTypes.NodeType.call(this, typeData );
@@ -441,6 +442,91 @@ define(function() {
 
 	}.inherits( FLOOD.baseTypes.NodeType );
 
+	FLOOD.nodeTypes.GreaterThan = function() {
+
+		var typeData = {
+			inputs: [ 	new FLOOD.baseTypes.InputPort( "A", [Number], 0 ),
+									new FLOOD.baseTypes.InputPort( "B", [Number], 0 ) ],
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [Boolean] ) ],
+			typeName: "GreaterThan" 
+		};
+
+		FLOOD.baseTypes.NodeType.call(this, typeData );
+
+		this.eval = function(a, b) {
+			return a > b;
+		};
+
+	}.inherits( FLOOD.baseTypes.NodeType );
+
+	FLOOD.nodeTypes.LessThan = function() {
+
+		var typeData = {
+			inputs: [ 	new FLOOD.baseTypes.InputPort( "A", [Number], 0 ),
+									new FLOOD.baseTypes.InputPort( "B", [Number], 0 ) ],
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [Boolean] ) ],
+			typeName: "LessThan" 
+		};
+
+		FLOOD.baseTypes.NodeType.call(this, typeData );
+
+		this.eval = function(a, b) {
+			return a < b;
+		};
+
+	}.inherits( FLOOD.baseTypes.NodeType );
+
+	FLOOD.nodeTypes.LessThanOrEqual = function() {
+
+		var typeData = {
+			inputs: [ 	new FLOOD.baseTypes.InputPort( "A", [Number], 0 ),
+									new FLOOD.baseTypes.InputPort( "B", [Number], 0 ) ],
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [Boolean] ) ],
+			typeName: "LessThanOrEqual" 
+		};
+
+		FLOOD.baseTypes.NodeType.call(this, typeData );
+
+		this.eval = function(a, b) {
+			return a <= b;
+		};
+
+	}.inherits( FLOOD.baseTypes.NodeType );
+
+	FLOOD.nodeTypes.GreaterThanOrEqual = function() {
+
+		var typeData = {
+			inputs: [ 	new FLOOD.baseTypes.InputPort( "A", [Number], 0 ),
+									new FLOOD.baseTypes.InputPort( "B", [Number], 0 ) ],
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [Boolean] ) ],
+			typeName: "GreaterThanOrEqual" 
+		};
+
+		FLOOD.baseTypes.NodeType.call(this, typeData );
+
+		this.eval = function(a, b) {
+			return a >= b;
+		};
+
+	}.inherits( FLOOD.baseTypes.NodeType );
+
+
+	FLOOD.nodeTypes.Equal = function() {
+
+		var typeData = {
+			inputs: [ 	new FLOOD.baseTypes.InputPort( "A", [AnyType], 0 ),
+									new FLOOD.baseTypes.InputPort( "B", [AnyType], 0 ) ],
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [Boolean] ) ],
+			typeName: "Equal" 
+		};
+
+		FLOOD.baseTypes.NodeType.call(this, typeData );
+
+		this.eval = function(a, b) {
+			return a === b;
+		};
+
+	}.inherits( FLOOD.baseTypes.NodeType );
 
 	// Begin
 
@@ -466,7 +552,7 @@ define(function() {
 
 		var typeData = {
 			inputs: [ 	new FLOOD.baseTypes.InputPort( "Anything", [AnyType], 0 ) ],
-			outputs: [ 	new FLOOD.baseTypes.OutputPort( ">", [AnyType] ) ],
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [AnyType] ) ],
 			typeName: "Watch" 
 		};
 
@@ -488,7 +574,7 @@ define(function() {
 			inputs: [ 	new FLOOD.baseTypes.InputPort( "Min", [Number], 0.0 ),
 									new FLOOD.baseTypes.InputPort( "Max", [Number], 1.0 ),
 									new FLOOD.baseTypes.InputPort( "Steps", [Number], 10 ) ],
-			outputs: [ 	new FLOOD.baseTypes.OutputPort( ">", [QuotedArray, Number] ) ],
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [QuotedArray, Number] ) ],
 			typeName: "Range" 
 		};
 
@@ -518,7 +604,7 @@ define(function() {
 		var typeData = {
 			inputs: [ 	new FLOOD.baseTypes.InputPort( "Function", [Function], function(a){ return a; } ),
 						new FLOOD.baseTypes.InputPort( "List", [QuotedArray, AnyType], [] )],
-			outputs: [ 	new FLOOD.baseTypes.OutputPort( ">", [QuotedArray, AnyType] ) ],
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [QuotedArray, AnyType] ) ],
 			typeName: "Sort" 
 		};
 
@@ -537,7 +623,7 @@ define(function() {
 		var typeData = {
 			inputs: [ 	new FLOOD.baseTypes.InputPort( "Function", [Function], function(a){ return a; } ),
 						new FLOOD.baseTypes.InputPort( "List", [QuotedArray, AnyType], [] ) ],
-			outputs: [ 	new FLOOD.baseTypes.OutputPort( ">", [QuotedArray, AnyType] ) ],
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [QuotedArray, AnyType] ) ],
 			typeName: "Map" 
 		};
 
@@ -557,7 +643,7 @@ define(function() {
 			inputs: [ 	new FLOOD.baseTypes.InputPort( "Function", [Function], function(a){ return a; } ),
 						new FLOOD.baseTypes.InputPort( "List", [QuotedArray, AnyType], [] ), 
 						new FLOOD.baseTypes.InputPort( "Base", [AnyType], [] ) ],
-			outputs: [ 	new FLOOD.baseTypes.OutputPort( ">", [AnyType] ) ],
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [AnyType] ) ],
 			typeName: "Reduce" 
 		};
 
@@ -576,7 +662,7 @@ define(function() {
 		var typeData = {
 			inputs: [ 	new FLOOD.baseTypes.InputPort( "Function", [Function], function(a){ return a; } ),
 									new FLOOD.baseTypes.InputPort( "List", [QuotedArray, AnyType], [] )],
-			outputs: [ 	new FLOOD.baseTypes.OutputPort( ">", [AnyType] ) ],
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [AnyType] ) ],
 			typeName: "Filter" 
 		};
 

@@ -1,4 +1,4 @@
-define(['backbone', 'Workspaces', 'Node', 'Login'], function(Backbone, Workspaces, Node, Login){
+define(['backbone', 'Workspaces', 'Node', 'Login', 'Workspace'], function(Backbone, Workspaces, Node, Login, Workspace){
 
   return Backbone.Model.extend({
 
@@ -21,6 +21,7 @@ define(['backbone', 'Workspaces', 'Node', 'Login'], function(Backbone, Workspace
       name: "DefaultSession",
       workspaces: new Workspaces(),
       currentWorkspace: null,
+      showingBrowser: false,
       showingSearch: false,
       showingHelp: false
     },
@@ -84,6 +85,49 @@ define(['backbone', 'Workspaces', 'Node', 'Login'], function(Backbone, Workspace
 
       currWS.get('nodes').add( newNode );
       this.set('showingSearch', false);
+
+    },
+
+    newWorkspace: function( callback ){
+
+      var that = this;
+
+      $.get("/nws", function(data, status){
+
+        var ws = new Workspace(data, {app: that });
+        that.get('workspaces').add( ws );
+        that.set('currentWorkspace', ws.get('_id') );
+        if (callback) callback( ws );
+
+      }).fail(function(){
+
+        console.error("failed to get new workspace");
+
+      });
+
+    },
+
+    openWorkspace: function( id, callback ){
+
+      var ws = this.get('workspaces').get(id);
+      if ( ws ){
+        this.set('currentWorkspace', id);
+      }
+
+      var that = this;
+
+      $.get("/ws/" + id, function(data, status){
+
+        var ws = new Workspace(data, {app: that});
+        that.get('workspaces').add( ws );
+        that.set('currentWorkspace', ws.get('_id') );
+        if (callback) callback( ws );
+
+      }).fail(function(){
+
+        console.error("failed to get workspace with id: " + id);
+
+      });
 
     },
 

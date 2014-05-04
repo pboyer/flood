@@ -37,6 +37,7 @@
 
             <div id="more-menu">
               <div id="login-button" class="menu-element"></div>
+              <div id="workspace-browser-button" class="menu-element">Workspaces</div>
             </div>
   
           </div> 
@@ -56,6 +57,10 @@
           </div>
 
           <div id="help" class="col">
+            
+          </div>
+
+          <div id="workspace-browser" class="col">
             
           </div>
 
@@ -88,7 +93,7 @@
                 <ul class="dropdown-menu" role="menu" style="padding: 5px;" aria-labelledby="dLabel">
 
                   <li role="presentation" style="color: black">
-                      <input type="checkbox" id="use-default-checkbox" data-index="<%= index %>" checked="<%= !ignoreDefaults[index] %>">Use default : <%= ele.defaultVal.toString() %>
+                      <input type="checkbox" class="use-default-checkbox" data-index="<%= index %>" checked="<%= !ignoreDefaults[index] %>">Use default : <%= ele.defaultVal != undefined ? ele.defaultVal.toString() : "None" %>
                   </li>
 
                 </ul>
@@ -144,8 +149,8 @@
           <% }); %>
         </ul>
 
-        <div class="node-data-container watch-data-container" >
-          <span class="name searchfield"><%= lastValue ? lastValue.toString() : "Nothing" %></span>
+        <div class="node-data-container watch-data-container">
+          <span class="name searchfield"><%= lastValue != undefined ? lastValue.toString() : "Nothing" %></span>
         </div>
 
       </script>
@@ -183,9 +188,9 @@
           <ul class="dropdown-menu" role="menu" style="padding: 5px;" aria-labelledby="dLabel">
 
             <li role="presentation">
-                <input type="number" class="num-min">
-                <input type="number" class="num-max">
-                <input type="number" class="num-step">
+                Min: <input type="number" class="num-min">
+                Max: <input type="number" class="num-max">
+                Step: <input type="number" class="num-step">
             </li>
 
           </ul>
@@ -199,6 +204,41 @@
         </div>
         <ul class="list search-list">
         </ul>
+      </script>
+
+      <script type="text/template" id="workspace-browser-template">
+        <h5 style="padding: 5px;">My Workspaces</h5>
+        <ul id="workspace-browser-contents">
+        </ul>
+      </script>
+
+      <script type="text/template" id="workspace-browser-element-template">
+
+        <div style="display: inline-block;" class="workspace-browser-element-data">
+          <%= name %>
+          <br>
+          <span style="font-size: 10px"><%= prettyDate %></span>
+        </div>
+        
+        <div style="display: inline-block; visibility: hidden" class="dropdown workspace-browser-element-ellipsis" >
+
+          <a data-toggle="dropdown" href="#">&#8230;</a>
+
+          <ul class="dropdown-menu" role="menu" style="padding: 5px;" aria-labelledby="dLabel">
+
+            <li role="presentation" class="deleteWorkspace">
+              <a role="menuitem" tabindex="-1" href="#">
+                Delete...
+              </a>
+            </li>
+
+          </ul>
+        </div>
+
+        <div style="float: right; visibility: hidden" class="workspace-browser-element-open">
+          Open
+        </div>
+
       </script>
 
       <script type="text/template" id="workspace-search-template">

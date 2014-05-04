@@ -7,4 +7,3 @@ define(['backbone', 'Connection'], function(Backbone, Connection) {
 	});
 
 });
-
