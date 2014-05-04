@@ -114,6 +114,8 @@ app.get('/mys', floodController.getMySession);
 app.put('/mys', floodController.putMySession);
 app.get('/nws', floodController.getNewWorkspace );
 
+app.get('/ws', floodController.getWorkspaces);
+
 app.get('/ws/:id', floodController.getWorkspace);
 app.post('/ws/:id', floodController.saveWorkspace);
 

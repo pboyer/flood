@@ -1,7 +1,7 @@
 var mongoose = require('mongoose')
 	, Session = require('../models/Workspace').SessionModel
 	, Workspace = require('../models/Workspace').WorkspaceModel
-	, UserModel = require('../models/User')
+	, User = require('../models/User')
 	, async = require('async')
 	, _ = require('underscore');
 
@@ -180,6 +180,42 @@ exports.getNewWorkspace = function(req, res){
 		})
 
 	});
+
+};
+
+var dateSort = function(a, b){
+
+	if (a.lastSaved && !b.lastSaved){
+		return -1;
+	}
+
+	if (b.lastSaved && !a.lastSaved){
+		return 1;
+	}
+
+	if ( !b.lastSaved && !a.lastSaved )
+		return 0;
+
+	if ( a.lastSaved > b.lastSaved )
+     return -1;
+
+  if ( a.lastSaved < b.lastSaved )
+     return 1;
+
+  return 0;
+}
+
+exports.getWorkspaces = function(req, res) {
+
+	var user = req.user;
+
+	if (!user) return res.status(403).send("Must be logged in to list your workspaces")
+
+	User.findById( user._id )
+		.populate('workspaces', 'name lastSaved isPublic maintainers')
+		.exec(function(e, u) {
+			return res.send( u.workspaces.sort(dateSort) );
+	}); 
 
 };
 

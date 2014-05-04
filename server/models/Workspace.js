@@ -13,7 +13,8 @@ var workspaceSchema = new Schema({
   , nodes: [ Schema.Types.Mixed ]
   , connections: [ Schema.Types.Mixed ]
   , selectedNodes: [ Schema.Types.Mixed ]
-  , zoom: Number
+  , isPublic: { type: String, default: false }
+  , zoom: { type: Number, default: 1 }
   , lastSaved: Date
   , maintainers: [{type: Schema.ObjectId, ref: 'User' }]
 });
