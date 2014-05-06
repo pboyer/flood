@@ -45,7 +45,6 @@ define(['backbone'], function(Backbone) {
 
     focusSignup: function(e){
       
-
       this.$el.find('#login-tab-button').removeClass('tab-button-hilite');
       this.$el.find('#signup-tab-button').addClass('tab-button-hilite');
       this.$el.find('#login-form').hide();

@@ -116,7 +116,15 @@ define(['backbone', 'jqueryuidraggable'], function(Backbone, jqueryuidraggable) 
       this.model.set('selected', true );
     },
 
+    selectable: true,
+
     selectThis: function(event) {
+
+      console.log('selectThis');
+
+      if (!this.selectable) return;
+
+      console.log('selectThis continue');
 
       if ( !this.model.get('selected') ){
         if (!event.shiftKey)

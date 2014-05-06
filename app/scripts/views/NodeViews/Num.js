@@ -31,29 +31,33 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView', 'jqueryuislider'], f
 
       this.minInput = this.$el.find('.num-min');
       this.minInput.val(min);
-      this.minInput.change( function(e){ that.minChanged.call(that, e); });
+      this.minInput.change( function(e){ that.minChanged.call(that, e); e.stopPropagation(); });
 
       this.maxInput = this.$el.find('.num-max');
       this.maxInput.val(max);
-      this.maxInput.change( function(e){ that.maxChanged.call(that, e); });
+      this.maxInput.change( function(e){ that.maxChanged.call(that, e); e.stopPropagation(); });
 
       this.stepInput = this.$el.find('.num-step');
       this.stepInput.val(step);
-      this.stepInput.change( function(e){ that.stepChanged.call(that, e); });
+      this.stepInput.change( function(e){ that.stepChanged.call(that, e); e.stopPropagation(); });
 
       // adjust settings dropdown so that it stays open while editing
+      // doesn't select the node when you're editing
       $('.dropdown.keep-open').on({
         "shown.bs.dropdown": function() {
-            $(this).data('closable', false);
+          that.selectable = false;
+          that.model.set('selected', false);
+          $(this).data('closable', false);
         },
         "mouseleave": function() {
-           $(this).data('closable', true);
+          $(this).data('closable', true);
         },
         "click": function() {
-            $(this).data('closable', false);
+          $(this).data('closable', false);
         },
         "hide.bs.dropdown": function() {
-            return $(this).data('closable');
+          if ( $(this).data('closable') ) that.selectable = true;
+          return $(this).data('closable');
         }
       });
 
