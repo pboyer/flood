@@ -19,7 +19,7 @@ define(['FLOOD'], function(FLOOD) {
 			inputs: [ 	new FLOOD.baseTypes.InputPort( "X", [Number], 0 ),
 						new FLOOD.baseTypes.InputPort( "Y", [Number], 0 ),
 						new FLOOD.baseTypes.InputPort( "Z", [Number], 0 ) ],
-			outputs: [ 	new FLOOD.baseTypes.OutputPort( ">", [ CSG.Vector ] ) ],
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [ CSG.Vector ] ) ],
 			typeName: "Vector"
 		};
 
@@ -99,7 +99,7 @@ define(['FLOOD'], function(FLOOD) {
 						new FLOOD.baseTypes.InputPort( "Radius", [Number], 10 ),
 						new FLOOD.baseTypes.InputPort( "Slices", [Number], 12 ),
 						new FLOOD.baseTypes.InputPort( "Stacks", [Number], 6 ) ],
-			outputs: [ 	new FLOOD.baseTypes.OutputPort( ">", [ CSG.Polygon ] ) ],
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [ CSG.Polygon ] ) ],
 			typeName: "Sphere" 
 		};
 
@@ -124,7 +124,7 @@ define(['FLOOD'], function(FLOOD) {
 						new FLOOD.baseTypes.InputPort( "EndPoint", [ CSG.Vector ], new CSG.Vector([0,2,0]) ),
 						new FLOOD.baseTypes.InputPort( "Radius", [Number], 5 ),
 						new FLOOD.baseTypes.InputPort( "Slices", [Number], 20 ) ],
-			outputs: [ 	new FLOOD.baseTypes.OutputPort( ">", [ CSG.Polygon ] ) ],
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [ CSG.Polygon ] ) ],
 			typeName: "Cylinder" 
 		};
 
@@ -146,7 +146,7 @@ define(['FLOOD'], function(FLOOD) {
 		var typeData = {
 			inputs: [ 	new FLOOD.baseTypes.InputPort( "Center", [ CSG.Vector ], new CSG.Vector([0,-1,0]) ),
 						new FLOOD.baseTypes.InputPort( "Radius", [ Number ], 10 ) ],
-			outputs: [ 	new FLOOD.baseTypes.OutputPort( ">", [ CSG.Polygon ] ) ],
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [ CSG.Polygon ] ) ],
 			typeName: "Cube" 
 		};
 
@@ -168,7 +168,7 @@ define(['FLOOD'], function(FLOOD) {
 		var typeData = {
 			inputs: [ 	new FLOOD.baseTypes.InputPort( "A", [ CSG.Polygon ], null ),
 						new FLOOD.baseTypes.InputPort( "B", [ CSG.Polygon ], null ) ],
-			outputs: [ 	new FLOOD.baseTypes.OutputPort( ">", [ CSG.Polygon ] ) ],
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [ CSG.Polygon ] ) ],
 			typeName: "IntersectSolids" 
 		};
 
@@ -188,7 +188,7 @@ define(['FLOOD'], function(FLOOD) {
 		var typeData = {
 			inputs: [ 	new FLOOD.baseTypes.InputPort( "A", [ CSG.Polygon ], null ),
 						new FLOOD.baseTypes.InputPort( "B", [ CSG.Polygon ], null ) ],
-			outputs: [ 	new FLOOD.baseTypes.OutputPort( ">", [ CSG.Polygon ] ) ],
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [ CSG.Polygon ] ) ],
 			typeName: "UnionSolids" 
 		};
 
@@ -209,7 +209,7 @@ define(['FLOOD'], function(FLOOD) {
 		var typeData = {
 			inputs: [ 	new FLOOD.baseTypes.InputPort( "A", [ CSG.Polygon ], null ),
 									new FLOOD.baseTypes.InputPort( "B", [ CSG.Polygon ], null ) ],
-			outputs: [ 	new FLOOD.baseTypes.OutputPort( "O", [ CSG.Polygon ] ) ],
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [ CSG.Polygon ] ) ],
 			typeName: "SubtractSolid" 
 		};
 

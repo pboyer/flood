@@ -71,7 +71,6 @@
       </body>
 
 
-
       <script type="text/template" id="node-template">
 
         <ul class="node-inputs">
@@ -141,6 +140,13 @@
 
       </script>
 
+      <script type="text/template" id="node-formula-template">
+
+        <input type="text" class="formula-text-input" placeholder="Custom formula" value="<%= extra.script %>">
+
+      </script>
+
+
       <script type="text/template" id="node-watch-template">
 
         <ul class="node-inputs">
@@ -150,7 +156,7 @@
         </ul>
 
         <div class="node-data-container watch-data-container">
-          <span class="name searchfield"><%= lastValue != undefined ? lastValue.toString() : "Nothing" %></span>
+          <span class="name searchfield"><%= lastValue != undefined ? (lastValue.length ? _.map(lastValue, function(x){return x.toString();}).join() : lastValue.toString() ) : "Nothing" %></span>
         </div>
 
       </script>
@@ -185,12 +191,18 @@
             <span class="caret" style="color:white; padding: 1px"></span>
           </a>
 
-          <ul class="dropdown-menu" role="menu" style="padding: 5px;" aria-labelledby="dLabel">
+          <ul class="dropdown-menu" role="menu" style="padding: 5px; color: black" aria-labelledby="dLabel">
 
             <li role="presentation">
-                Min: <input type="number" class="num-min">
-                Max: <input type="number" class="num-max">
-                Step: <input type="number" class="num-step">
+               Min:<input type="number" class="num-min">
+            </li>
+
+            <li role="presentation">
+               Max: <input type="number" class="num-max">
+            </li>
+
+            <li role="presentation">
+               Step: <input type="number" class="num-step">
             </li>
 
           </ul>

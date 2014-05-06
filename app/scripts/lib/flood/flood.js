@@ -88,6 +88,7 @@ define(function() {
 		}
 		return "[ " + eles.join(", ") + " ]"
 	};
+
 	QuotedArray.prototype.constructor = QuotedArray;
 
 	FLOOD.QuotedArray = QuotedArray;
@@ -456,6 +457,31 @@ define(function() {
 		this.eval = function(a, b) {
 			return a > b;
 		};
+
+	}.inherits( FLOOD.baseTypes.NodeType );
+
+	FLOOD.nodeTypes.Formula = function() {
+
+		var typeData = {
+			inputs: [ 	new FLOOD.baseTypes.InputPort( "A", [Number], 0 ) ],
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [Number] ) ],
+			typeName: "Formula" 
+		};
+
+		this.script = "2 * a;";
+
+		FLOOD.baseTypes.NodeType.call(this, typeData);
+
+		this.eval = function(a) {
+
+			return eval('(function(a) { return ' + this.script + '}(a))');
+
+		};
+
+		this.extend = function(args){
+			if (args.script && typeof args.script === "string") 
+				this.script = args.script;
+		}
 
 	}.inherits( FLOOD.baseTypes.NodeType );
 

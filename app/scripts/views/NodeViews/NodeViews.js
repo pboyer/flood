@@ -1,4 +1,4 @@
-define(['BaseNodeView', 'WatchNodeView', 'NumNodeView', 'CSGNodeView'], function(BaseNodeView, WatchNodeView, NumNodeView, CSGNodeView){
+define(['BaseNodeView', 'WatchNodeView', 'NumNodeView', 'CSGNodeView', 'FormulaView'], function(BaseNodeView, WatchNodeView, NumNodeView, CSGNodeView, FormulaView){
 
   var nodeViewTypes = {};
 
@@ -6,6 +6,7 @@ define(['BaseNodeView', 'WatchNodeView', 'NumNodeView', 'CSGNodeView'], function
   nodeViewTypes.Watch = WatchNodeView;
   nodeViewTypes.Number = NumNodeView;
 
+  nodeViewTypes.Formula = FormulaView;
   nodeViewTypes.Sphere = CSGNodeView;
   nodeViewTypes.Cylinder = CSGNodeView;
   nodeViewTypes.Cube = CSGNodeView;
