@@ -342,12 +342,13 @@ post_nodeEvalComplete = function(node, args, isNew, value, prettyValue ){
 		prettyValue = value.toString();
 	}
 	
-	// if (typeof value === "object") {
-	// 	value = clone(value);
-	// 	prettyValue = clone(prettyValue);
-	// }
-
-	return success({ kind: "nodeEvalComplete", _id: node.id, value : value, prettyValue: prettyValue  });
+	if ( isNew ){
+		// console.log('copying value', node.typeName );
+		return success({ kind: "nodeEvalComplete", isNew : isNew, _id: node.id, value : value, prettyValue: prettyValue  });
+	} else {
+		// console.log('not copying value', node.typeName );
+		return success({ kind: "nodeEvalComplete", isNew : isNew, _id: node.id });
+	}
 
 };
 

@@ -13,6 +13,7 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
       zoom: 1,
       current: false,
       isPublic: false,
+      isRunning: false,
       lastSaved: Date.now()
     },
 
@@ -56,8 +57,13 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
 
       this.runner = new Runner({id : this.get('_id') }, { workspace: this });
 
+
       // updates to connections and nodes are emitted to listeners
       var that = this;
+      this.runner.on('change:isRunning', function(v){
+        that.set('isRunning', v.get('isRunning'));
+      });
+
       this.get('connections').on('add remove', function(){ 
         that.trigger('change:connections'); 
         that.run();

@@ -23,6 +23,8 @@ define(['backbone', 'Workspace', 'ConnectionView', 'NodeViewTypes'], function(Ba
         that.cleanup().renderConnections();
       });
 
+      this.model.on('change:isRunning', this.renderRunnerStatus, this);
+
       this.listenTo(this.model, 'change:nodes', function() {
         that.cleanup().renderNodes();
       });
@@ -33,6 +35,8 @@ define(['backbone', 'Workspace', 'ConnectionView', 'NodeViewTypes'], function(Ba
       this.listenTo(this.model, 'endProxyDrag', this.endProxyDrag);
 
       this.renderProxyConnection();
+
+      this.renderRunnerStatus();
       
     },
 
@@ -50,12 +54,29 @@ define(['backbone', 'Workspace', 'ConnectionView', 'NodeViewTypes'], function(Ba
 
     render: function() {
 
-      this
-      .cleanup()
-      .renderNodes()
-      .renderConnections();
+      return this
+              .cleanup()
+              .renderNodes()
+              .renderConnections()
+              .renderRunnerStatus();
 
-      return this;
+    },
+
+    $runnerStatus : undefined,
+    runnerTemplate : _.template( $('#workspace-runner-status-template').html() ),
+    renderRunnerStatus: function(){
+
+      if ( !this.$runnerStatus ){
+        this.$runnerStatus = $('<div/>', {class: 'workspace-runner-status'});
+        this.$runnerStatus.html( this.runnerTemplate({}) );
+        this.$el.append( this.$runnerStatus );
+      }
+
+      if ( this.model.get('isRunning') ){
+        this.$runnerStatus.show();
+      } else {
+        this.$runnerStatus.hide();
+      }
 
     },
 

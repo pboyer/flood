@@ -108,8 +108,10 @@ define(['backbone', 'FLOOD'], function(Backbone, FLOOD) {
       this.trigger('removed');
     },
 
-    onEvalComplete: function(value, prettyValue){
+    onEvalComplete: function(isNew, value, prettyValue){
 
+      if (!isNew) return;
+      
       this.set('lastValue', value);
       this.set('prettyLastValue', prettyValue);
       this.trigger('evalComplete');

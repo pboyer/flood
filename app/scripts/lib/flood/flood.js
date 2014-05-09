@@ -165,6 +165,8 @@ define(function() {
 
 			}, false) || _isDirty;
 
+			// if (_isDirty) console.log(this.typeName + " is Dirty")
+
 			return _isDirty;
 
 		};
@@ -360,7 +362,12 @@ define(function() {
 
 		FLOOD.baseTypes.NodeType.call(this, typeData);
 
-		this.compile = this.printExpression = function(){
+		this.printExpression = function(){
+			return this.lastValue;
+		};
+
+		this.compile = function(){
+			this.markClean();
 			return this.lastValue;
 		}
 

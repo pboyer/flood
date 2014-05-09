@@ -37,6 +37,8 @@ define(['backbone'], function(Backbone) {
 
     },
 
+
+
     showEditButton: function() {
       this.$('.edit-button').css('visibility', 'visible');
     },

@@ -7,12 +7,14 @@ define(['BaseNodeView', 'WatchNodeView', 'NumNodeView', 'CSGNodeView', 'FormulaV
   nodeViewTypes.Number = NumNodeView;
 
   nodeViewTypes.Formula = FormulaView;
+  
   nodeViewTypes.Sphere = CSGNodeView;
   nodeViewTypes.Cylinder = CSGNodeView;
   nodeViewTypes.Cube = CSGNodeView;
-  nodeViewTypes.UnionSolids = CSGNodeView;
-  nodeViewTypes.IntersectSolids = CSGNodeView;
-  nodeViewTypes.SubtractSolid = CSGNodeView;
+
+  nodeViewTypes.SolidUnion = CSGNodeView;
+  nodeViewTypes.SolidIntersect = CSGNodeView;
+  nodeViewTypes.SolidSubtract = CSGNodeView;
 
   return nodeViewTypes;
 
