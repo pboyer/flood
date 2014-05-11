@@ -83,7 +83,7 @@ on_run = function(data){
 	                      });
 
 	if ( bottomNodes.length > 1) {
-	  baseNode = new FLOOD.nodeTypes.Begin();
+	  baseNode = new FLOOD.internalNodeTypes.Begin();
 	  var count = 0;
 	  bottomNodes.forEach( function(output){ 
 	    baseNode.inputs.push( output.asInputPort(baseNode, count++) ); 
@@ -329,9 +329,9 @@ post_nodeDirtied = function(id, value){
 
 };
 
-post_nodeEvalBegin = function(node){
+post_nodeEvalBegin = function(node, isNew){
 
-	return success({ kind: "nodeEvalBegin", _id: node.id });
+	return success({ kind: "nodeEvalBegin", isNew: isNew, _id: node.id });
 
 };
 

@@ -520,6 +520,7 @@ CSG.Node = function(polygons) {
 };
 
 CSG.Node.prototype = {
+
   clone: function() {
     var node = new CSG.Node();
     node.plane = this.plane && this.plane.clone();

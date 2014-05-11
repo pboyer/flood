@@ -21,11 +21,11 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView'], function(Backbone, 
       if ( this.threeGeom && this.model.get('visible') ){
         if (this.model.get('selected')) {
           this.threeGeom.traverse(function(ele) {
-            ele.material = new THREE.MeshPhongMaterial({color: 0x00FFFF, specular: 0xFFFFFF, opacity: 0.7, transparent: true});
+            ele.material = new THREE.MeshPhongMaterial({color: 0x00FFFF});
           });
         } else {
           this.threeGeom.traverse(function(ele) {
-            ele.material = new THREE.MeshPhongMaterial({color: 0xDDDDDD, specular: 0xFFFFFF, opacity: 0.7, transparent: true});
+            ele.material = new THREE.MeshPhongMaterial({color: 0x999999});
           });
         }
       }
@@ -110,10 +110,10 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView'], function(Backbone, 
           if (that.model.get('selected')){
             var color = 0x00FFFF;
           } else {
-            var color = 0xDDDDDD;
+            var color = 0x999999;
           }
 
-          var mesh = new THREE.Mesh(g3, new THREE.MeshPhongMaterial({color: color, specular: 0xFFFFFF, opacity: 0.85, transparent: true}));
+          var mesh = new THREE.Mesh(g3, new THREE.MeshPhongMaterial({color: color}));
           geom.add( mesh );
 
         }

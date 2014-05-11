@@ -19,6 +19,7 @@ define(['backbone', 'FLOOD'], function(Backbone, FLOOD) {
       , replication: "applyLongest"
       , extra: {}
       , ignoreDefaults: []
+      , isEvaluating: false
     },
 
     cachedSerialization : {},
@@ -105,15 +106,26 @@ define(['backbone', 'FLOOD'], function(Backbone, FLOOD) {
     },
 
     onRemove: function(){
+
       this.trigger('removed');
+
+    },
+
+    onEvalBegin: function(isNew){
+
+      if (!isNew) return;
+      this.trigger('evalBegin');
+      this.set('isEvaluating', true);
+
     },
 
     onEvalComplete: function(isNew, value, prettyValue){
 
       if (!isNew) return;
-      
+
       this.set('lastValue', value);
       this.set('prettyLastValue', prettyValue);
+      this.set('isEvaluating', false);
       this.trigger('evalComplete');
 
     },

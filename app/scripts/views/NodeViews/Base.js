@@ -28,6 +28,7 @@ define(['backbone', 'jqueryuidraggable'], function(Backbone, jqueryuidraggable) 
       this.listenTo(this.model, 'disconnection', this.colorPorts);
       this.listenTo(this.model, 'change:selected', this.colorSelected);
       this.listenTo(this.model, 'change:visible', this.render);
+      this.listenTo(this.model, 'change:isEvaluating', this.colorEvaluating);
 
       this.makeDraggable();
       this.$workspace_canvas = $('#workspace_canvas');
@@ -137,6 +138,7 @@ define(['backbone', 'jqueryuidraggable'], function(Backbone, jqueryuidraggable) 
       this
       .renderNode()
       .colorSelected()
+      .colorEvaluating()
       .moveNode()
       .renderPorts();
 
@@ -147,6 +149,23 @@ define(['backbone', 'jqueryuidraggable'], function(Backbone, jqueryuidraggable) 
     renderNode: function() {
 
       this.$el.html( this.template( this.model.toJSON() ) );
+
+      if (this.getCustomContents){
+        this.$el.find('.node-data-container').html( this.getCustomContents() );
+      }
+      
+      return this;
+
+    },
+
+    colorEvaluating: function() {
+
+      if ( this.model.get('isEvaluating') ){
+        this.$el.addClass('node-evaluating');
+      } else {
+        this.$el.removeClass('node-evaluating');
+      }
+
       return this;
 
     },
@@ -265,10 +284,10 @@ define(['backbone', 'jqueryuidraggable'], function(Backbone, jqueryuidraggable) 
         var nodeCircle = document.createElementNS('http://www.w3.org/2000/svg','circle');
         
         // assign default appearance
-        nodeCircle.setAttribute('r',5);
+        nodeCircle.setAttribute('r',3);
         nodeCircle.setAttribute('stroke','black');
         nodeCircle.setAttribute('fill','white');
-        nodeCircle.setAttribute('stroke-width','3');
+        nodeCircle.setAttribute('stroke-width','1.5');
 
         // position input ports on left side, output ports on right side
         if ( $(ele).hasClass('node-port-input') ) {
@@ -277,7 +296,7 @@ define(['backbone', 'jqueryuidraggable'], function(Backbone, jqueryuidraggable) 
           that.inputPorts.push(nodeCircle);
           inIndex++;
         } else {
-          nodeCircle.setAttribute('cx', that.$el.width() );
+          nodeCircle.setAttribute('cx', that.$el.width() + 3 );
           nodeCircle.setAttribute('cy', that.portHeight / 2 + $(ele).position().top); 
           that.outputPorts.push(nodeCircle);
           outIndex++;

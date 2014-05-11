@@ -19,6 +19,7 @@ define(function() {
 
 	FLOOD.baseTypes = {};
 	FLOOD.nodeTypes = {};
+	FLOOD.internalNodeTypes = {};
 
 	if (typeof Object.create !== 'function') {
 	    Object.create = function (o) {
@@ -90,7 +91,6 @@ define(function() {
 	};
 
 	QuotedArray.prototype.constructor = QuotedArray;
-
 	FLOOD.QuotedArray = QuotedArray;
 
 	// NodeType
@@ -125,7 +125,7 @@ define(function() {
 		} else {
 			this.outputs = [];
 		}
-		
+
 		this.typeName = options.typeName || "noTypeName";
 
 		var _isDirty = true;
@@ -200,7 +200,7 @@ define(function() {
 
 						try {
 
-							that.evalBegin(that);
+							that.evalBegin(that, dirty);
 
 							if ( dirty ){
 
@@ -563,10 +563,11 @@ define(function() {
 
 	// Begin
 
-	FLOOD.nodeTypes.Begin = function() {
+	FLOOD.internalNodeTypes.Begin = function() {
 
 		var typeData = {
-			typeName: "begin" 
+			typeName: "begin",
+			isVisibleInLibrary: false
 		};
 
 		FLOOD.baseTypes.NodeType.call(this, typeData );
@@ -584,7 +585,7 @@ define(function() {
 	FLOOD.nodeTypes.Watch = function() {
 
 		var typeData = {
-			inputs: [ 	new FLOOD.baseTypes.InputPort( "Anything", [AnyType], 0 ) ],
+			inputs: [ 	new FLOOD.baseTypes.InputPort( "Anything", [AnyType], null ) ],
 			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [AnyType] ) ],
 			typeName: "Watch" 
 		};
@@ -632,13 +633,85 @@ define(function() {
 
 	}.inherits( FLOOD.baseTypes.NodeType )
 
-	FLOOD.nodeTypes.Sort = function() {
+
+	FLOOD.nodeTypes.ListLast = function() {
+
+		var typeData = {
+			inputs: [ 	new FLOOD.baseTypes.InputPort( "List", [QuotedArray, AnyType] )],
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [AnyType] ) ],
+			typeName: "ListLast" 
+		};
+
+		FLOOD.baseTypes.NodeType.call( this, typeData );
+
+		this.eval = function(l) {
+			return l[l.length-1];
+		};
+
+	}.inherits( FLOOD.baseTypes.NodeType );
+
+	FLOOD.nodeTypes.ListFirst = function() {
+
+		var typeData = {
+			inputs: [ 	new FLOOD.baseTypes.InputPort( "List", [QuotedArray, AnyType] )],
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [AnyType] ) ],
+			typeName: "ListFirst" 
+		};
+
+		FLOOD.baseTypes.NodeType.call( this, typeData );
+
+		this.eval = function(l) {
+			return l[0];
+		};
+
+	}.inherits( FLOOD.baseTypes.NodeType );
+
+	FLOOD.nodeTypes.ListItemAtIndex = function() {
+
+		var typeData = {
+			inputs: [ 	new FLOOD.baseTypes.InputPort( "List", [QuotedArray, AnyType] ),
+									new FLOOD.baseTypes.InputPort( "Index", [Number] )],
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [AnyType] ) ],
+			typeName: "ListItemAtIndex" 
+		};
+
+		FLOOD.baseTypes.NodeType.call( this, typeData );
+
+		this.eval = function(l, i) {
+			return l[i];
+		};
+
+	}.inherits( FLOOD.baseTypes.NodeType );
+
+	FLOOD.nodeTypes.ListByRepeat = function() {
+
+		var typeData = {
+			inputs: [ 	new FLOOD.baseTypes.InputPort( "Value", [AnyType], 0 ),
+									new FLOOD.baseTypes.InputPort( "Count", [Number], 0 )],
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [QuotedArray, AnyType] ) ],
+			typeName: "ListRepeat" 
+		};
+
+		FLOOD.baseTypes.NodeType.call( this, typeData );
+
+		this.eval = function(v, t) {
+
+			var a = new QuotedArray();
+
+			if ( t > 0 ) for (var i = 0; i < t; i++) a.push(v);
+			return a;
+
+		};
+
+	}.inherits( FLOOD.baseTypes.NodeType );
+
+	FLOOD.nodeTypes.ListSort = function() {
 
 		var typeData = {
 			inputs: [ 	new FLOOD.baseTypes.InputPort( "Function", [Function], function(a){ return a; } ),
 						new FLOOD.baseTypes.InputPort( "List", [QuotedArray, AnyType], [] )],
 			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [QuotedArray, AnyType] ) ],
-			typeName: "Sort" 
+			typeName: "ListSort" 
 		};
 
 		FLOOD.baseTypes.NodeType.call( this, typeData );
@@ -651,13 +724,13 @@ define(function() {
 
 	}.inherits( FLOOD.baseTypes.NodeType );
 
-	FLOOD.nodeTypes.Map = function() {
+	FLOOD.nodeTypes.ListMap = function() {
 
 		var typeData = {
 			inputs: [ 	new FLOOD.baseTypes.InputPort( "Function", [Function], function(a){ return a; } ),
 						new FLOOD.baseTypes.InputPort( "List", [QuotedArray, AnyType], [] ) ],
 			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [QuotedArray, AnyType] ) ],
-			typeName: "Map" 
+			typeName: "ListMap" 
 		};
 
 		FLOOD.baseTypes.NodeType.call( this, typeData );
@@ -670,14 +743,14 @@ define(function() {
 
 	}.inherits( FLOOD.baseTypes.NodeType );
 
-	FLOOD.nodeTypes.Reduce = function() {
+	FLOOD.nodeTypes.ListReduce = function() {
 
 		var typeData = {
 			inputs: [ 	new FLOOD.baseTypes.InputPort( "Function", [Function], function(a){ return a; } ),
 						new FLOOD.baseTypes.InputPort( "List", [QuotedArray, AnyType], [] ), 
 						new FLOOD.baseTypes.InputPort( "Base", [AnyType], [] ) ],
 			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [AnyType] ) ],
-			typeName: "Reduce" 
+			typeName: "ListReduce" 
 		};
 
 		FLOOD.baseTypes.NodeType.call( this, typeData );
@@ -690,7 +763,7 @@ define(function() {
 
 	}.inherits( FLOOD.baseTypes.NodeType );
 
-	FLOOD.nodeTypes.Filter = function() {
+	FLOOD.nodeTypes.ListFilter = function() {
 
 		var typeData = {
 			inputs: [ 	new FLOOD.baseTypes.InputPort( "Function", [Function], function(a){ return a; } ),

@@ -192,8 +192,6 @@ define(['FLOOD'], function(FLOOD) {
 
 		this.postProcess = function(value){
 
-			// console.log('doing CSG post process');
-
 			if ( value.map ) {
 
 				var d = [];
@@ -303,7 +301,7 @@ define(['FLOOD'], function(FLOOD) {
 		var typeData = {
 			inputs: [ 	new FLOOD.baseTypes.InputPort( "Center", [ CSG.Vector ], new CSG.Vector([0,-1,0]) ),
 						new FLOOD.baseTypes.InputPort( "Radius", [ Number ], 10 ) ],
-			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [ CSG.Polygon ] ) ],
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [ CSG ] ) ],
 			typeName: "Cube" 
 		};
 
@@ -323,9 +321,9 @@ define(['FLOOD'], function(FLOOD) {
 	FLOOD.nodeTypes.SolidIntersect = function() {
 
 		var typeData = {
-			inputs: [ 	new FLOOD.baseTypes.InputPort( "A", [ CSG.Polygon ], null ),
-						new FLOOD.baseTypes.InputPort( "B", [ CSG.Polygon ], null ) ],
-			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [ CSG.Polygon ] ) ],
+			inputs: [ 	new FLOOD.baseTypes.InputPort( "A", [ CSG ], null ),
+						new FLOOD.baseTypes.InputPort( "B", [ CSG ], null ) ],
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [ CSG ] ) ],
 			typeName: "SolidIntersect" 
 		};
 
@@ -340,12 +338,35 @@ define(['FLOOD'], function(FLOOD) {
 
 	}.inherits( FLOOD.baseTypes.CSG );
 
+	FLOOD.nodeTypes.SolidUnionAll = function() {
+
+		var typeData = {
+			inputs: [ 	new FLOOD.baseTypes.InputPort( "Solids", [ FLOOD.QuotedArray, CSG ], null ) ],
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [ CSG ] ) ],
+			typeName: "SolidUnionAll" 
+		};
+
+		FLOOD.baseTypes.NodeType.call(this, typeData );
+
+		this.eval = function(s) {
+
+			if (!s || s.length == 0) return null;
+
+
+			var acc = s.pop();
+			return s.reduce(function(a, b){ return a.union(b); }, acc)
+
+		};
+
+	}.inherits( FLOOD.baseTypes.CSG );
+
+
 	FLOOD.nodeTypes.SolidUnion = function() {
 
 		var typeData = {
-			inputs: [ 	new FLOOD.baseTypes.InputPort( "A", [ CSG.Polygon ], null ),
-						new FLOOD.baseTypes.InputPort( "B", [ CSG.Polygon ], null ) ],
-			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [ CSG.Polygon ] ) ],
+			inputs: [ 	new FLOOD.baseTypes.InputPort( "A", [ CSG ], null ),
+						new FLOOD.baseTypes.InputPort( "B", [ CSG ], null ) ],
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [ CSG ] ) ],
 			typeName: "SolidUnion" 
 		};
 
@@ -364,9 +385,9 @@ define(['FLOOD'], function(FLOOD) {
 	FLOOD.nodeTypes.SolidSubtract = function() {
 
 		var typeData = {
-			inputs: [ 	new FLOOD.baseTypes.InputPort( "A", [ CSG.Polygon ], null ),
-									new FLOOD.baseTypes.InputPort( "B", [ CSG.Polygon ], null ) ],
-			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [ CSG.Polygon ] ) ],
+			inputs: [ 	new FLOOD.baseTypes.InputPort( "A", [ CSG ], null ),
+									new FLOOD.baseTypes.InputPort( "B", [ CSG ], null ) ],
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [ CSG ] ) ],
 			typeName: "SolidSubtract" 
 		};
 

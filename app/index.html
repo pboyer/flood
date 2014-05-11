@@ -24,20 +24,16 @@
             <div id="workspace-tabs"></div>
 
             <div id="add-workspace-button" class="menu-element" style="float: left">
-              <i class="icon-file icon-white dim-button"></i>
-            </div>
-
-            <div id ="help-button" class="menu-element"> 
-              <i class="icon-question-sign icon-white dim-button"></i>
-            </div>
-            
-            <div id="save-button" class="menu-element"> 
-              <i class="icon-upload icon-white dim-button"></i>
+              <i class="icon-file dim-button"></i>
             </div>
 
             <div id="more-menu">
               <div id="login-button" class="menu-element"></div>
-              <div id="workspace-browser-button" class="menu-element">Workspaces</div>
+              <div id="workspace-browser-button" class="menu-element">My Workspaces</div>
+            </div>
+
+            <div id="save-button" class="menu-element"> 
+              Save all
             </div>
   
           </div> 
@@ -115,7 +111,7 @@
         <div class="dropdown node-settings" style="position:absolute">
 
           <a data-toggle="dropdown" href="#">
-            <span class="caret" style="color:white; padding: 1px"></span>
+            <span style="color:black; padding: 1px">...</span>
           </a>
 
           <ul class="dropdown-menu" role="menu" style="padding: 5px;" aria-labelledby="dLabel">
@@ -142,6 +138,8 @@
 
       <script type="text/template" id="node-formula-template">
 
+        <a href="#" class="add-input"> + </a> 
+        <a href="#" class="remove-input" style="padding-left: 10px; padding-right: 10px"> - </a>
         <input type="text" class="formula-text-input" placeholder="Custom formula" value="<%= extra.script %>">
 
       </script>
@@ -163,20 +161,22 @@
 
       <script type="text/template" id="workspace-tab-template">
 
-        <i class="icon-pencil icon-white dim-button edit-button" style="visibility: hidden; margin-left: 10px"></i>
+        <i class="icon-pencil dim-button edit-button" style="visibility: hidden; margin-left: 10px"></i>
         <input class="workspace-name" disabled="disabled" value="<%= name %>"></input>
-        <i class="icon-remove icon-white dim-button remove-button"></i>
+        <i class="icon-remove dim-button remove-button"></i>
 
       </script>
 
       <script type="text/template" id="node-num-template">
 
-        <div class="node-data-container" >
-          <div class="slider" style="width: 140px; margin-top: 8px; margin-bottom: 8px"></div>
-        </div>
+        <div class="node-data-container">
 
-        <div class="node-data-container num-data-container" style="margin-right: 10px; margin-left: 5px">
-          <span class="currentValue" style="font-size: 12px;"><%= type.value %></span>
+          <div class="slider" style="display: inline-block; width: 140px; height: 8px; margin: 0; padding: 0"></div>
+
+          <div class="num-data-container" style="display: inline-block;">
+            <span class="currentValue"><%= type.value %></span>
+          </div>
+
         </div>
 
         <ul class="node-outputs" >
@@ -187,8 +187,8 @@
 
          <div class="dropdown keep-open node-settings" style="position:absolute">
 
-          <a data-toggle="dropdown" href="#">
-            <span class="caret" style="color:white; padding: 1px"></span>
+          <a href="#" data-toggle="dropdown" href="#">
+            <span style="color:black; padding: 1px">...</span>
           </a>
 
           <ul class="dropdown-menu" role="menu" style="padding: 5px; color: black" aria-labelledby="dLabel">
@@ -254,16 +254,43 @@
       </script>
 
       <script type="text/template" id="workspace-search-template">
-            
-        <ul class="list search-list" style="display:none;">
-        </ul>
+        
+        <div class="workspace-search-container" id="workspace-search-input-container">
 
-        <div class="search-bottom-container">
+          <ul class="list search-list" style="display:none;">
+          </ul>
 
-          <i style="display:inline-block;" class="icon-search icon-white dim-button" ></i>
-          <input placeholder="Add a node..." class="library-search-input search"></input>
+          <div class="search-bottom-container">
+
+            <i style="display:inline-block;" class="icon-search icon-white dim-button" ></i>
+            <input placeholder="Add a node..." class="library-search-input search"></input>
+
+          </div>
 
         </div>
+
+        <div class="workspace-search-container">
+
+          <div id="cancel-button" class="workspace-search-button">
+
+            Cancel
+
+          </div>
+
+          <div id="undo-button" class="workspace-search-button">
+
+            Undo
+
+          </div>
+
+          <div id="redo-button" class="workspace-search-button" style="border-right: none">
+
+            Redo
+
+          </div>
+
+        </div>
+
 
       </script>
 

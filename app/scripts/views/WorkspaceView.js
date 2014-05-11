@@ -58,6 +58,7 @@ define(['backbone', 'Workspace', 'ConnectionView', 'NodeViewTypes'], function(Ba
               .cleanup()
               .renderNodes()
               .renderConnections()
+              .renderNodes()
               .renderRunnerStatus();
 
     },

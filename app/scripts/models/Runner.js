@@ -14,8 +14,7 @@ define(['backbone'], function(Backbone) {
 
 		  	this.set('id', ws.get('_id') );
 
-		  	this.initWorker();
-		  	this.initWorkspace();
+		  	this.reset();
 
 			  vals.workspace.get('connections').on('add', this.addConnection, this );
 			  vals.workspace.get('connections').on('remove', this.removeConnection, this );
@@ -73,27 +72,33 @@ define(['backbone'], function(Backbone) {
 
 	  on_nodeEvalComplete: function(data){
 
-	  	this.workspace.get('nodes').get( data._id ).onEvalComplete( data.isNew, data.value, data.prettyValue );
+	  	var node = this.workspace.get('nodes').get( data._id );
+	  	if (node)
+	  		node.onEvalComplete( data.isNew, data.value, data.prettyValue );
+
+	  },
+
+	 	on_nodeEvalBegin: function(data){
+
+	 		var node = this.workspace.get('nodes').get( data._id );
+	  	if (node)
+	  		this.workspace.get('nodes').get( data._id ).onEvalBegin( data.isNew );
 
 	  },
 
 	  on_run: function(data){
 
+	  	console.log( data );
 	  	this.set('isRunning', false);
 	  	this.runCount++;
 
 	  },
 
-	  on_addNode: function(data){
-
-		  console.warn( data );
-
-	  },
-
 	  cancel: function(){
 
+	  	this.set('isRunning', false);
 	  	this.worker.terminate();
-	  	// TODO: restart with workspace contents
+	  	this.reset();
 
 	  },
 
@@ -104,7 +109,7 @@ define(['backbone'], function(Backbone) {
 	  	this.post({ kind: "run", bottom_ids: bottomIds });
 	  	this.set('isRunning', true);
 
-	  }, 180),
+	  }, 70),
 
 	  watchNodeEvents: function( node ){
 
@@ -156,6 +161,8 @@ define(['backbone'], function(Backbone) {
 
 	  reset: function(){
 
+	  	this.initWorker();
+	  	this.initWorkspace();
 
 	  }
 
