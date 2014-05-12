@@ -531,6 +531,10 @@ body {
 	color: #444;
 }
 
+.node-failed {
+	background-color: #FF7A7A;
+}
+
 .node-selected {
 	z-index: 99;
 	border: 1px solid #0BB;
@@ -582,7 +586,7 @@ body {
 	margin: 0;
 	padding: 0;
 	display: inline-block;
-	border-bottom: 1px solid #c7bbb1;
+	border-bottom: 1px solid rgba(0,0,0,0.2);
 	float: left;
 }
 
@@ -610,7 +614,7 @@ body {
 	padding: 5px;
 	margin: 0;
 
-	border: 1px solid #c7bbb1;
+	border: 1px solid rgba(0,0,0,0.2);
 	border-bottom: none;
 }
 

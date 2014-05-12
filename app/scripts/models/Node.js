@@ -114,6 +114,12 @@ define(['backbone', 'FLOOD'], function(Backbone, FLOOD) {
 
     },
 
+    onEvalFailed: function(ex){
+
+      this.trigger('evalFailed', ex);
+
+    },
+
     onEvalBegin: function(isNew){
 
       if (!isNew) return;

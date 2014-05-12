@@ -352,9 +352,10 @@ post_nodeEvalComplete = function(node, args, isNew, value, prettyValue ){
 
 };
 
-post_nodeEvalFailed = function(node, args, isNew, exception){
+post_nodeEvalFailed = function(node, exception){
 
-	return fail({ kind: "nodeEvalFailed", _id: node.id, exception: exception });
+	console.log( exception.toString() )
+	return fail({ kind: "nodeEvalFailed", _id: node.id, exception: exception.toString() });
 
 };
 

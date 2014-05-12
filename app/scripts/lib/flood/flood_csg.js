@@ -310,7 +310,6 @@ define(['FLOOD'], function(FLOOD) {
 
 		this.eval = function(center, radius) {
 
-			console.log( center );
 			return CSG.cube({
 					  center: center,
 					  radius: radius

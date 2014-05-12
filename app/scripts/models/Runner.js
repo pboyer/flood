@@ -78,6 +78,16 @@ define(['backbone'], function(Backbone) {
 
 	  },
 
+	 	on_nodeEvalFailed: function(data){
+
+	 		console.log('receive node failure')
+
+	 		var node = this.workspace.get('nodes').get( data._id );
+	  	if (node)
+	  		this.workspace.get('nodes').get( data._id ).onEvalFailed(data.exception);
+
+	  },
+
 	 	on_nodeEvalBegin: function(data){
 
 	 		var node = this.workspace.get('nodes').get( data._id );

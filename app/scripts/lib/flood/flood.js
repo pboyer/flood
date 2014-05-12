@@ -251,7 +251,7 @@ define(function() {
 							that.evalComplete( that, arguments, dirty, that.value, that.prettyValue );
 
 						} catch (e) {
-							that.evalFailed(that, arguments, dirty, e);
+							that.evalFailed(that, e);
 							return null;
 						}
 

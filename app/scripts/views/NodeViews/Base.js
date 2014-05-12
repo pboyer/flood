@@ -30,10 +30,21 @@ define(['backbone', 'jqueryuidraggable'], function(Backbone, jqueryuidraggable) 
       this.listenTo(this.model, 'change:visible', this.render);
       this.listenTo(this.model, 'change:isEvaluating', this.colorEvaluating);
 
+      this.model.on('evalFailed', this.onEvalFailed, this );
+      this.model.on('evalBegin', this.onEvalBegin, this );
+
       this.makeDraggable();
       this.$workspace_canvas = $('#workspace_canvas');
       this.position = this.model.get('position');
 
+    },
+
+    onEvalFailed: function(){
+      this.$el.addClass('node-failed');
+    },
+
+    onEvalBegin: function(){
+      this.$el.removeClass('node-failed');
     },
 
     useDefaultClick : function(e){
