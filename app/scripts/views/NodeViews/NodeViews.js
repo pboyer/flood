@@ -8,9 +8,9 @@ define(['BaseNodeView', 'WatchNodeView', 'NumNodeView', 'CSGNodeView', 'FormulaV
 
   nodeViewTypes.Formula = FormulaView;
 
-  nodeViewTypes.Sphere = CSGNodeView;
-  nodeViewTypes.Cylinder = CSGNodeView;
-  nodeViewTypes.Cube = CSGNodeView;
+  nodeViewTypes.SolidSphere = CSGNodeView;
+  nodeViewTypes.SolidCylinder = CSGNodeView;
+  nodeViewTypes.SolidCube = CSGNodeView;
 
   nodeViewTypes.SolidUnion = CSGNodeView;
   nodeViewTypes.SolidUnionAll = CSGNodeView;

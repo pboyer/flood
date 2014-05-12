@@ -109,7 +109,7 @@ define(['backbone'], function(Backbone) {
 	  	this.post({ kind: "run", bottom_ids: bottomIds });
 	  	this.set('isRunning', true);
 
-	  }, 70),
+	  }, 120),
 
 	  watchNodeEvents: function( node ){
 

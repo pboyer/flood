@@ -475,20 +475,76 @@ define(function() {
 			typeName: "Formula" 
 		};
 
-		this.script = "2 * a;";
-
 		FLOOD.baseTypes.NodeType.call(this, typeData);
 
-		this.eval = function(a) {
-
-			return eval('(function(a) { return ' + this.script + '}(a))');
-
+		this.eval = function() {
+			var _fa = Array.prototype.slice.call(arguments, 0);
+			return eval( this.expression )
 		};
 
+		this.script = "A;";
+		this.portNames = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
 		this.extend = function(args){
-			if (args.script && typeof args.script === "string") 
+			if (args.script && typeof args.script === "string")
 				this.script = args.script;
+
+			if (args.numInputs && typeof numInputs != "number" ){
+				this.setNumInputs(args.numInputs);
+			}
+
 		}
+
+		this.setNumInputs = function( numInputs ){
+
+			if (typeof numInputs != "number" || numInputs < 0 || this.inputs.length === numInputs) {
+				return compileExpression();
+			}
+
+			if (this.inputs.length < numInputs) addFormulaInput();
+			if (this.inputs.length > numInputs) removeFormulaInput();
+
+			this.setNumInputs( numInputs );
+		}
+
+		var that = this;
+
+		var prefix = function(){
+
+			var inputNames = that.inputs.map(function(x){
+				return x.name;
+			}).join(',');
+
+			return '(function('+ inputNames + ') { return ';
+		};
+
+		var suffix = function(){
+
+			var argNames = that.inputs.map(function(x,i){
+				return "_fa[" + i + "]";
+			}).join(',');
+
+			return '}(' + argNames + '))';
+		};
+
+		var compileExpression = function(){
+			that.expression = prefix() + that.script + suffix();
+			return that.expression;
+		};
+
+		var addFormulaInput = function(){
+			var port = new FLOOD.baseTypes.InputPort( that.portNames[ that.inputs.length ], [Number], 0 );
+			port.parentNode = that;
+			port.parentIndex = that.inputs.length;
+			that.inputs.push( port );
+		};
+
+		var removeFormulaInput = function(){
+			if (that.inputs.length === 0) return;
+			that.inputs.pop();
+		};
+
+		compileExpression();
 
 	}.inherits( FLOOD.baseTypes.NodeType );
 

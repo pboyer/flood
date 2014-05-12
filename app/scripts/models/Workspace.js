@@ -9,7 +9,6 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
       name: "Unnamed Workspace",
       nodes: null,
       connections: null,
-      selectedNodes: new Nodes(),
       zoom: 1,
       current: false,
       isPublic: false,
@@ -57,7 +56,6 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
 
       this.runner = new Runner({id : this.get('_id') }, { workspace: this });
 
-
       // updates to connections and nodes are emitted to listeners
       var that = this;
       this.runner.on('change:isRunning', function(v){
@@ -100,6 +98,40 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
       console.log(this.toJSON());
     },
 
+
+    removeSelectedNodes: function(){
+
+      var that = this;
+      var toDelete = [];
+
+      this.get('nodes')
+          .each(function(x){ 
+            if ( x.get('selected') ){
+              console.log('to delete')
+              toDelete.push(x);
+            }
+          });
+
+      this.get('nodes').remove(toDelete);
+
+    },
+
+    run: function() {
+
+      if (!this.runAllowed || this.get('nodes').length === 0)
+        return;
+
+      var bottomNodes = this.get('nodes')
+                            .filter(function(ele){
+                              return ele.isOutputNode();
+                            }).map(function(ele){
+                              return ele.get('_id');
+                            });
+
+      this.runner.run( bottomNodes );
+
+    },
+
     startProxyConnection: function(startNodeId, nodePort, startPosition) {
 
       // set the initial properties for a dragging proxy
@@ -130,22 +162,6 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
       this.makeConnection(startNodeId, startPort, endNode, endPort);
       
       return this;
-    },
-
-    run: function() {
-
-      if (!this.runAllowed || this.get('nodes').length === 0)
-        return;
-
-      var bottomNodes = this.get('nodes')
-                            .filter(function(ele){
-                              return ele.isOutputNode();
-                            }).map(function(ele){
-                              return ele.get('_id');
-                            });
-
-      this.runner.run( bottomNodes );
-
     },
 
     endProxyConnection: function() {

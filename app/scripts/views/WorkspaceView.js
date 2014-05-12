@@ -155,6 +155,15 @@ define(['backbone', 'Workspace', 'ConnectionView', 'NodeViewTypes'], function(Ba
 
     },
 
+    deleteKey: function(e) {
+      e.preventDefault();
+
+      if ( e.keyCode === 8 && e.ctrlKey ) {
+        this.workspace.get('nodes').remove(this.model);
+      }
+
+    },
+
     renderConnections: function() {
 
       var that = this;

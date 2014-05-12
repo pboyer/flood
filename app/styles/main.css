@@ -54,12 +54,24 @@ body {
 	display:inline-block; 
 }
 
+.workspace-search-button-active {
+	color: #BBB;
+}
+
+.workspace-search-button-active:hover {
+	color: white;
+	background-color: #333;
+}
+
+.workspace-search-button-inactive {
+	color: #444;
+}
+
 .workspace-search-button {
 	height: 32px;
 	padding: 8px;
 	border-right: 1px solid #333;
 	display:inline-block;
-	color: #444;
 }
 
 .workspace-search-container {

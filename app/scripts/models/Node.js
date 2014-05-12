@@ -62,6 +62,10 @@ define(['backbone', 'FLOOD'], function(Backbone, FLOOD) {
         this.set( 'type', new FLOOD.nodeTypes.Add() );
       }
 
+      if (atts.extra){
+        this.get('type').extend( atts.extra );
+      }
+
       if (atts.lastValue){
         this.get('type').value = atts.lastValue;
       }
@@ -95,7 +99,6 @@ define(['backbone', 'FLOOD'], function(Backbone, FLOOD) {
       
     },
 
-    // initialize all the ports as disconnected
     initializePorts: function() {
 
       var type = this.get('type');
@@ -232,11 +235,22 @@ define(['backbone', 'FLOOD'], function(Backbone, FLOOD) {
       if (port == null)
         return;
 
-      var index = port.indexOf(connection);
+      var index = -1;
+      if ( connection ){
 
-      if (index === -1){
-        return;
+        var index = port.indexOf(connection);
+
+      } else if (!isOutput && port.length > 0) {
+
+        index = 0;
+        connection = port[0];
+        isOutput = false;
+        this.workspace.get('connections').remove( connection );
+        console.log( portIndex, isOutput, connection );
+
       }
+        
+      if (index === -1) return;
         
       // remove the requested connection on the port
       port.remove(index);

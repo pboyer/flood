@@ -14,7 +14,8 @@ define(['backbone', 'List', 'SearchElementView'], function(Backbone, List, Searc
     events: {
       'keyup .library-search-input': 'searchKeyup',
       'focus .library-search-input': 'focus',
-      'blur .library-search-input': 'blur'
+      'blur .library-search-input': 'blur',
+      'click #delete-button': 'deleteClick'
     },
 
     render: function(arg) {
@@ -58,10 +59,9 @@ define(['backbone', 'List', 'SearchElementView'], function(Backbone, List, Searc
       }, 100);
     },
 
-//  showNodeSearch: function(e){
-//       this.app.set('showingSearch', true);
-//       this.app.newNodePosition = [e.offsetX, e.offsetY];
-//  },
+    deleteClick: function(){
+      this.app.get('workspaces').get( this.app.get('currentWorkspace') ).removeSelectedNodes();
+    },
 
     // move this to workspace
     getWorkspaceCenter: function(){

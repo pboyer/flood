@@ -114,7 +114,7 @@ define(['backbone', 'jqueryuidraggable'], function(Backbone, jqueryuidraggable) 
     },
 
     select: function() {
-      this.model.set('selected', true );
+      this.model.set( 'selected', true );
     },
 
     selectable: true,
@@ -185,10 +185,12 @@ define(['backbone', 'jqueryuidraggable'], function(Backbone, jqueryuidraggable) 
     },
 
     handleKeyDownWhenSelected: function(e) {
+
       e.preventDefault();
 
-      if (e.keyCode === 8)
+      if (e.keyCode === 8 && e.ctrlKey) {
         this.workspace.get('nodes').remove(this.model);
+      }
 
     },
 
@@ -265,11 +267,18 @@ define(['backbone', 'jqueryuidraggable'], function(Backbone, jqueryuidraggable) 
 
     renderPorts: function() {
 
-      if (this.portGroup) return this.movePorts().colorPorts();
+      if (this.portGroup 
+          && this.inputPorts.length === this.model.get('type').inputs.length 
+          && this.outputPorts.length === this.model.get('type').outputs.length ) return this.movePorts().colorPorts();
 
-      // create an svg group to hold the port circles
-      this.portGroup = document.createElementNS('http://www.w3.org/2000/svg','g');
-      this.portGroup.setAttribute( 'transform', this.svgTransform() );
+      if ( this.portGroup ) {
+        // we need to redraw the ports
+        $(this.portGroup).empty();
+      } else {
+        // create an svg group to hold the port circles
+        this.portGroup = document.createElementNS('http://www.w3.org/2000/svg','g');
+        this.portGroup.setAttribute( 'transform', this.svgTransform() );
+      }
 
       // create data structures to store the input ports
       this.inputPorts = [];
@@ -306,6 +315,8 @@ define(['backbone', 'jqueryuidraggable'], function(Backbone, jqueryuidraggable) 
         that.portGroup.appendChild(nodeCircle);
 
       });
+
+      this.colorPorts();
 
       return this;
 
