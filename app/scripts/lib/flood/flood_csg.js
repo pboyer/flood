@@ -46,6 +46,7 @@ define(['FLOOD'], function(FLOOD) {
 		FLOOD.baseTypes.NodeType.call(this, typeData );
 
 		this.eval = function(x,y,z) {
+
 			return new CSG.Vector([x,y,z]);
 		};
 
@@ -63,7 +64,7 @@ define(['FLOOD'], function(FLOOD) {
 		FLOOD.baseTypes.NodeType.call(this, typeData );
 
 		this.eval = function(a, b) {
-			return a.add(b);
+			return a.plus(b);
 		};
 
 	}.inherits( FLOOD.baseTypes.VectorResult );
@@ -309,6 +310,7 @@ define(['FLOOD'], function(FLOOD) {
 
 		this.eval = function(center, radius) {
 
+			console.log( center );
 			return CSG.cube({
 					  center: center,
 					  radius: radius

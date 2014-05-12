@@ -62,6 +62,7 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView', 'FLOOD'], function(B
 
     	type.setNumInputs( ex.numInputs );
     	this.render();  
+    	this.workspace.run();
 
     },
 
@@ -86,6 +87,7 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView', 'FLOOD'], function(B
 
     	type.setNumInputs( ex.numInputs );
     	this.render();
+    	this.workspace.run();
 
     }
 

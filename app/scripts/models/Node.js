@@ -246,7 +246,6 @@ define(['backbone', 'FLOOD'], function(Backbone, FLOOD) {
         connection = port[0];
         isOutput = false;
         this.workspace.get('connections').remove( connection );
-        console.log( portIndex, isOutput, connection );
 
       }
         
