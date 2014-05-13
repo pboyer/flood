@@ -13,31 +13,16 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
       current: false,
       isPublic: false,
       isRunning: false,
-      lastSaved: Date.now()
+      lastSaved: Date.now(),
+
+      // undo/redo stack
+      pastCommands: [],
+      futureCommands: []
     },
 
     draggingProxy: false,
     proxyConnection: null,
     runAllowed: false,
-
-    toJSON : function() {
-
-        if (this._isSerializing) {
-            return this.id || this.cid;
-        }
-
-        this._isSerializing = true;
-
-        var json = _.clone(this.attributes);
-
-        _.each(json, function(value, name) {
-            _.isFunction(value.toJSON) && (json[name] = value.toJSON());
-        });
-
-        this._isSerializing = false;
-
-        return json;
-    },
 
     initialize: function(atts, arr) {
 
@@ -55,6 +40,7 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
       }, this);
 
       this.runner = new Runner({id : this.get('_id') }, { workspace: this });
+      
 
       // updates to connections and nodes are emitted to listeners
       var that = this;
@@ -86,6 +72,61 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
       // run the workspace for the first time
       this.run();
 
+      this.runner.on('post', this.recordCommand, this);
+
+    },
+
+    // TODO: capture node move
+    recordCommand: function(data){
+
+      if (data.kind != "run"){
+        // console.log('RECORD!', data);
+
+        this.get('pastCommands').push(data);
+        this.get('futureCommands').length = 0;
+
+      }
+
+    },
+
+    undo: function(){
+
+      var c = this.get('pastCommands').pop();
+      var uc = this.invertCommand( c );
+      this.runner.post(uc);
+
+    },
+
+    invertCommand: function(){
+
+      return {};
+
+    },
+
+    redo: function(){
+
+      var c = this.get('futureCommands').pop();
+      this.runner.post(c);
+
+    },
+
+    toJSON : function() {
+
+        if (this._isSerializing) {
+            return this.id || this.cid;
+        }
+
+        this._isSerializing = true;
+
+        var json = _.clone(this.attributes);
+
+        _.each(json, function(value, name) {
+            _.isFunction(value.toJSON) && (json[name] = value.toJSON());
+        });
+
+        this._isSerializing = false;
+
+        return json;
     },
 
     parse : function(resp) {
@@ -98,7 +139,6 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
       console.log(this.toJSON());
     },
 
-
     removeSelectedNodes: function(){
 
       var that = this;
@@ -107,7 +147,6 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
       this.get('nodes')
           .each(function(x){ 
             if ( x.get('selected') ){
-              console.log('to delete')
               toDelete.push(x);
             }
           });

@@ -32,6 +32,8 @@ define(['backbone'], function(Backbone) {
 	  	data.workspace_id = this.workspace.get('_id');
 	  	this.worker.postMessage(data);
 
+	  	this.trigger('post', data);
+
 	  },
 
 	  onWorkerMessage: function(data){
@@ -134,6 +136,7 @@ define(['backbone'], function(Backbone) {
 
 	  	var n = node.serialize();
 	  	n.kind = "updateNode";
+
 	  	this.post(n);
 
 	  },
@@ -143,6 +146,7 @@ define(['backbone'], function(Backbone) {
 	  	var n = node.serialize();
 	  	n.kind = "addNode";
 	  	this.watchNodeEvents( node );
+
 	  	this.post(n);
 
 	  },
