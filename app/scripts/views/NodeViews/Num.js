@@ -6,6 +6,13 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView', 'jqueryuislider'], f
 
     initialize: function(args) {
       BaseNodeView.prototype.initialize.apply(this, arguments);
+
+      this.model.on('change:lastValue', function() { 
+        this.setSliderValue(this.model.get('lastValue'));
+        this.model.trigger('updateRunner'); 
+        this.model.workspace.run();
+      }, this);
+
     },
 
     render: function() {
@@ -110,7 +117,11 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView', 'jqueryuislider'], f
                                   step: this.slider.slider("option", "step"), 
                                   max: this.slider.slider("option", "max") });
 
-      this.model.set('lastValue', val );
+
+      if (val === this.model.get('lastValue')) return;
+
+      this.model.workspace.setNodeProperty({ property: 'lastValue', _id: this.model.get('_id'), 
+        newValue: val, oldValue: this.model.get('lastValue') });
       this.model.trigger('updateRunner');
 
       this.model.workspace.run();

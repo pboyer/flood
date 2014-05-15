@@ -689,6 +689,21 @@ define(function() {
 
 	}.inherits( FLOOD.baseTypes.NodeType )
 
+	FLOOD.nodeTypes.ListLength = function() {
+
+		var typeData = {
+			inputs: [ 	new FLOOD.baseTypes.InputPort( "List", [QuotedArray, AnyType] )],
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [Number] ) ],
+			typeName: "ListLength" 
+		};
+
+		FLOOD.baseTypes.NodeType.call( this, typeData );
+
+		this.eval = function(l) {
+			return l.length;
+		};
+
+	}.inherits( FLOOD.baseTypes.NodeType );
 
 	FLOOD.nodeTypes.ListLast = function() {
 
@@ -701,6 +716,7 @@ define(function() {
 		FLOOD.baseTypes.NodeType.call( this, typeData );
 
 		this.eval = function(l) {
+			if (l.length === 0) return null;
 			return l[l.length-1];
 		};
 

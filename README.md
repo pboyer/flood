@@ -17,7 +17,6 @@ flood is a work-in-progress [dataflow](http://en.wikipedia.org/wiki/Dataflow_pro
 * Formula node - evaluate javascript in a node
 * Constructive solid geometry - Cube, cylinder, sphere, union, intersect, subtract
 * Continuous execution
-* Feedback on node evaluation state
 
 flood, like early versions of Dynamo, is based on Scheme and thus has many of the features of that language.  It uses a [lightweight scheme interpreter](http://github.com/pboyer/scheme.js) I wrote called scheme.js.
 

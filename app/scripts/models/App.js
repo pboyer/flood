@@ -74,16 +74,16 @@ define(['backbone', 'Workspaces', 'Node', 'Login', 'Workspace'], function(Backbo
 
       if (workspaceId === undefined ){
         workspaceId = this.get('currentWorkspace');
+        console.log(workspaceId);
       }
 
       if (position === undefined) {
         position = this.newNodePosition;
       }
       
-      var currWS = this.get('workspaces').get( workspaceId );
-      var newNode = new Node({ typeName: name, position: position, _id: this.makeId() }, {workspace: currWS});
+      var ws = this.get('workspaces').get( workspaceId );
+      ws.addNode({ typeName: name, position: position, _id: this.makeId() });
 
-      currWS.get('nodes').add( newNode );
       this.set('showingSearch', false);
 
     },

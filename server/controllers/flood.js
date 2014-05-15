@@ -111,6 +111,8 @@ exports.putMySession = function(req, res) {
 				w.selectedNodes = x.selectedNodes || w.selectedNodes;
 				w.zoom = x.zoom || w.zoom;
 				w.lastSaved = Date.now();
+				w.redoStack = x.redoStack || w.redoStack;
+				w.undoStack = x.undoStack || w.undoStack;
 
 				w.markModified("name nodes connections currentWorkspace selectedNodes zoom lastSaved");
 

@@ -15,7 +15,9 @@ define(['backbone', 'List', 'SearchElementView'], function(Backbone, List, Searc
       'keyup .library-search-input': 'searchKeyup',
       'focus .library-search-input': 'focus',
       'blur .library-search-input': 'blur',
-      'click #delete-button': 'deleteClick'
+      'click #delete-button': 'deleteClick',
+      'click #undo-button': 'undoClick',
+      'click #redo-button': 'redoClick'
     },
 
     render: function(arg) {
@@ -61,6 +63,14 @@ define(['backbone', 'List', 'SearchElementView'], function(Backbone, List, Searc
 
     deleteClick: function(){
       this.app.get('workspaces').get( this.app.get('currentWorkspace') ).removeSelectedNodes();
+    },
+
+    undoClick: function(){
+      this.app.get('workspaces').get( this.app.get('currentWorkspace') ).undo();
+    },
+
+    redoClick: function(){
+      this.app.get('workspaces').get( this.app.get('currentWorkspace') ).redo();
     },
 
     // move this to workspace

@@ -195,6 +195,7 @@ define(['backbone', 'Workspace', 'ConnectionView', 'NodeViewTypes'], function(Ba
       for (var key in this.nodeViews){
         if (this.model.get('nodes').get(key) === undefined){
           this.nodeViews[key].remove();
+          delete this.nodeViews[key];
         }
       }
 
@@ -210,6 +211,7 @@ define(['backbone', 'Workspace', 'ConnectionView', 'NodeViewTypes'], function(Ba
       for (var key in this.connectionViews){
         if (this.model.get('connections').get(key) === undefined){
           this.connectionViews[key].remove();
+          delete this.connectionViews[key];
         }
       }
     },

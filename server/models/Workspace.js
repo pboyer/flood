@@ -17,6 +17,8 @@ var workspaceSchema = new Schema({
   , zoom: { type: Number, default: 1 }
   , lastSaved: Date
   , maintainers: [{type: Schema.ObjectId, ref: 'User' }]
+  , undoStack: [ Schema.Types.Mixed ]
+  , redoStack: [ Schema.Types.Mixed ]
 });
 
 exports.SessionModel = mongoose.model('Session', sessionSchema);

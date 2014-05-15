@@ -1,5 +1,5 @@
-define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Runner'], 
-    function(Backbone, Nodes, Connection, Connections, scheme, FLOOD, Runner) {
+define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Runner', 'Node'], 
+    function(Backbone, Nodes, Connection, Connections, scheme, FLOOD, Runner, Node) {
 
   return Backbone.Model.extend({
 
@@ -16,8 +16,8 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
       lastSaved: Date.now(),
 
       // undo/redo stack
-      pastCommands: [],
-      futureCommands: []
+      undoStack: [],
+      redoStack: []
     },
 
     draggingProxy: false,
@@ -25,6 +25,17 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
     runAllowed: false,
 
     initialize: function(atts, arr) {
+
+      console.log(atts)
+
+      // event to ask user about leaving
+
+      // var closeEditorWarning = function (){
+      //     return 'It looks like you have been editing something -- if you leave before submitting your changes will be lost.'
+      // }
+
+      // window.onbeforeunload = closeEditorWarning
+
 
       atts = atts || {};
 
@@ -40,7 +51,6 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
       }, this);
 
       this.runner = new Runner({id : this.get('_id') }, { workspace: this });
-      
 
       // updates to connections and nodes are emitted to listeners
       var that = this;
@@ -65,50 +75,208 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
         startProxyPosition: [0,0], 
         endProxyPosition: [0,0],
         hidden: true }, 
-      {workspace: this});
+      { workspace: this });
 
       this.runAllowed = true;
 
       // run the workspace for the first time
       this.run();
 
-      this.runner.on('post', this.recordCommand, this);
+    },
+
+    addToUndoAndClearRedo: function(cmd){
+
+      this.get('undoStack').push(cmd);
+      this.get('redoStack').length = 0;
+
+    },  
+
+    addNode: function(data){
+
+      this.internalCommands.addNode.call(this, data);
+      var datac = JSON.parse( JSON.stringify( data ) );
+      datac.kind = "addNode";
+      this.addToUndoAndClearRedo( datac );
 
     },
 
-    // TODO: capture node move
-    recordCommand: function(data){
+    removeNode: function(data){
 
-      if (data.kind != "run"){
-        // console.log('RECORD!', data);
+      this.internalCommands.removeNode.call(this, data);
+      var datac = JSON.parse( JSON.stringify( data ) );
+      datac.kind = "removeNode";
+      this.addToUndoAndClearRedo( datac );
 
-        this.get('pastCommands').push(data);
-        this.get('futureCommands').length = 0;
+    },
+
+    addConnection: function(data){
+
+      this.internalCommands.addConnection.call(this, data);
+      var datac = JSON.parse( JSON.stringify( data ) );
+      datac.kind = "addConnection";
+      this.addToUndoAndClearRedo( datac );
+
+    },
+
+    removeConnection: function(data){
+
+      this.internalCommands.removeConnection.call(this, data);
+      var datac = JSON.parse( JSON.stringify( data ) );
+      datac.kind = "removeConnection";
+      this.addToUndoAndClearRedo( datac );
+
+    }, 
+
+    setNodeProperty: function(data){
+
+      this.internalCommands.setNodeProperty.call(this, data);
+      var datac = JSON.parse( JSON.stringify( data ) );
+      datac.kind = "setNodeProperty";
+      this.addToUndoAndClearRedo( datac );
+
+    },
+
+    internalCommands: {
+
+      addNode: function(data){
+
+        var node = new Node( data, { workspace: this });
+        this.get('nodes').add( node );
+
+      },
+
+      removeNode: function(data){
+
+        var node = this.get('nodes').get(data._id);
+        this.get('nodes').remove( node );
+
+      }, 
+
+      addConnection: function(data){
+
+        var conn = new Connection(data, { workspace: this });
+        this.get('connections').add( conn );
+        this.get('nodes').get(conn.get('startNodeId')).connectPort( conn.get('startPortIndex'), true, conn);
+        this.get('nodes').get(conn.get('endNodeId')).connectPort(conn.get('endPortIndex'), false, conn);
+
+      }, 
+
+      removeConnection: function(data){
+
+        var conn = this.get('connections').get(data._id);
+        this.get('connections').remove( conn );
+
+      }, 
+
+      setNodeProperty: function(data){
+
+        var node = this.get('nodes').get( data._id );
+        var prop = data.property;
+        if (!data.oldValue) data.oldValue = JSON.parse( JSON.stringify( node.get(prop) ) ); 
+        node.set( prop, data.newValue );
 
       }
 
     },
 
-    undo: function(){
+    runInternalCommand: function(commandData){
 
-      var c = this.get('pastCommands').pop();
-      var uc = this.invertCommand( c );
-      this.runner.post(uc);
-
-    },
-
-    invertCommand: function(){
-
-      return {};
+      var cmd = this.internalCommands[ commandData.kind ];
+      if (cmd){
+        return cmd.call(this, commandData);
+      } else {
+        console.warn('Could not find the command: ' + cmd.kind);
+      }
 
     },
 
     redo: function(){
 
-      var c = this.get('futureCommands').pop();
-      this.runner.post(c);
+      var rs = this.get('redoStack');
+
+      if (rs.length === 0) {
+        return console.warn("Nothing to redo!");
+      }
+
+      var data = rs.pop();
+      this.runInternalCommand(data);
+      this.get('undoStack').push(data);
+      
+    },
+
+    undo: function(){
+
+      var us = this.get('undoStack');
+      if (us.length === 0) {
+        return;
+      }
+
+      var command = us.pop();
+      var undoCommand = this.invertCommand( command );
+      this.get('redoStack').push( command );
+
+      this.runInternalCommand(undoCommand);
 
     },
+
+    invertCommand: function(cmd){
+
+      var inverter = this.commandInversions[cmd.kind];
+      if ( inverter ){
+        return inverter( cmd );
+      }
+
+      return {};
+
+    },
+
+    commandInversions: {
+
+      addNode: function( cmd ){
+
+        var cmdcop = JSON.parse( JSON.stringify( cmd ) );
+        cmdcop.kind = "removeNode";
+        return cmdcop;
+
+      },
+
+      removeNode: function( cmd ){
+
+        var cmdcop = JSON.parse( JSON.stringify( cmd ) );
+        cmdcop.kind = "addNode";
+        return cmdcop;
+
+      },
+
+      addConnection: function(cmd){
+
+        var cmdcop = JSON.parse( JSON.stringify( cmd ) );
+        cmdcop.kind = "removeConnection";
+        return cmdcop;
+
+      },
+
+      removeConnection: function(cmd){
+
+        var cmdcop = JSON.parse( JSON.stringify( cmd ) );
+        cmdcop.kind = "addConnection";
+        return cmdcop;
+
+      },
+
+      setNodeProperty: function(cmd){
+
+        var cmdcop = JSON.parse( JSON.stringify( cmd) ); 
+
+        var temp = cmdcop.oldValue;
+        cmdcop.oldValue = cmdcop.newValue;
+        cmdcop.newValue = temp;
+        return cmdcop; 
+
+      }
+
+    },
+
 
     toJSON : function() {
 
@@ -125,6 +293,7 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
         });
 
         this._isSerializing = false;
+
 
         return json;
     },
@@ -151,7 +320,9 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
             }
           });
 
-      this.get('nodes').remove(toDelete);
+      toDelete.forEach(function(x){
+        that.removeNode( x.serialize() );
+      })
 
     },
 
@@ -209,37 +380,21 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
       return this;
     },
 
-    makeNode : function(type, name, position) {
-      var node = new Node({name: name, type: type, position: position})
-      this.get('nodes').add( node );
-      return this;
-    },
-
-    removeConnection : function(connection){
-      this.get('connections').remove(connection);
-    },
-
     makeConnection : function(startNodeId, startPort, endNodeId, endPort) {
       
       if (!this.validateConnection(startNodeId, startPort, endNodeId, endPort)){
         return;
       }
 
-      // one could perform a type comparison here
-      
-      var newCon = new Connection({
+      var newCon = {
           startNodeId: startNodeId,
           startPortIndex: startPort,
           endNodeId: endNodeId,
           endPortIndex: endPort,
           _id: this.app.makeId()
-        }, {workspace: this});
+        };  
 
-      // update the start and end nodes
-      this.get('connections').add(newCon);
-
-      this.get('nodes').get(newCon.get('startNodeId')).connectPort( newCon.get('startPortIndex'), true, newCon);
-      this.get('nodes').get(newCon.get('endNodeId')).connectPort(newCon.get('endPortIndex'), false, newCon);
+      this.addConnection( newCon );
 
       return this;
     },

@@ -527,7 +527,7 @@ body {
 }
 
 .node-evaluating {
-	border: 1px solid cyan;
+	border: 1px solid yellow;
 	color: #444;
 }
 

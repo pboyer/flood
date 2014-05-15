@@ -27,12 +27,14 @@ define(['backbone'], function(Backbone) {
 
 	  },
 
-	  post: function(data){
+	  post: function(data, quiet){
 
 	  	data.workspace_id = this.workspace.get('_id');
 	  	this.worker.postMessage(data);
 
-	  	this.trigger('post', data);
+	  	if (quiet) return;
+
+	  	this.trigger('post', data );
 
 	  },
 
@@ -82,8 +84,6 @@ define(['backbone'], function(Backbone) {
 
 	 	on_nodeEvalFailed: function(data){
 
-	 		console.log('receive node failure')
-
 	 		var node = this.workspace.get('nodes').get( data._id );
 	  	if (node)
 	  		this.workspace.get('nodes').get( data._id ).onEvalFailed(data.exception);
@@ -132,12 +132,12 @@ define(['backbone'], function(Backbone) {
 
 	  },
 
-	  updateNode: function(node){
+	  updateNode: function( node ){
 
 	  	var n = node.serialize();
 	  	n.kind = "updateNode";
 
-	  	this.post(n);
+	  	this.post( n );
 
 	  },
 
@@ -151,6 +151,14 @@ define(['backbone'], function(Backbone) {
 
 	  },
 
+	  removeNode: function(node){
+
+	  	var n = node.serialize();
+	  	n.kind = "removeNode";
+	  	this.post( n );
+
+	  },
+
 	  addConnection: function(connection){
 
 	  	var c = connection.toJSON();
@@ -161,15 +169,14 @@ define(['backbone'], function(Backbone) {
 
 	  },
 
-	  removeNode: function(node){
-
-	  	this.post( { kind: "removeNode", _id: node.get('_id') });
-
-	  },
-
 	  removeConnection: function(connection){
 
-	  	this.post( { kind: "removeConnection", _id: connection.get('endNodeId'), portIndex: connection.get('endPortIndex') });
+	  	var c = connection.toJSON();
+	  	c.kind = "removeConnection";
+	  	c.id = connection.get('endNodeId');
+	  	c.portIndex = connection.get('endPortIndex');
+
+	  	this.post( c );
 
 	  },	
 

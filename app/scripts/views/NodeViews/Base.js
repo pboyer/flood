@@ -22,6 +22,7 @@ define(['backbone', 'jqueryuidraggable'], function(Backbone, jqueryuidraggable) 
     initialize: function(args) {
 
       this.workspace = args.workspace;
+      this.workspaceView = args.workspaceView;
 
       this.listenTo(this.model, 'change:position', this.move );
       this.listenTo(this.model, 'connection', this.colorPorts);
@@ -74,16 +75,25 @@ define(['backbone', 'jqueryuidraggable'], function(Backbone, jqueryuidraggable) 
       var that = this;
       this.initPos = [];
       this.$el.draggable( {
-        'drag' : function(e, ui) {
+        drag : function(e, ui) {
           that.workspace.get('nodes').moveSelected([ui.position.left - that.initPos[0], ui.position.top- that.initPos[1] ], that);
           that.model.set('position', [ui.position.left, ui.position.top]);
         },
-        'start' : function(startEvent) {
+        start : function(startEvent) {
           if (!startEvent.shiftKey)
             that.workspace.get('nodes').deselectAll();
           that.model.set('selected', true );
           that.workspace.get('nodes').startDragging(that);
           that.initPos = that.model.get('position');
+        },
+        stop : function() {
+          var start = [ that.initPos[0], that.initPos[1] ];
+          var pos = that.model.get('position');
+          var end = [ pos[0], pos[1] ];
+
+          var cmd = { property: 'position', _id: that.model.get('_id'), 
+            oldValue: start, newValue : end };
+          that.model.workspace.setNodeProperty( cmd );
         }
       });  
       this.$el.css('position', 'absolute');
@@ -200,7 +210,7 @@ define(['backbone', 'jqueryuidraggable'], function(Backbone, jqueryuidraggable) 
       e.preventDefault();
 
       if (e.keyCode === 8 && e.ctrlKey) {
-        this.workspace.get('nodes').remove(this.model);
+        this.workspace.removeNode( this.model.serialize() );
       }
 
     },
