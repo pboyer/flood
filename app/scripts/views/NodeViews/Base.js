@@ -52,10 +52,13 @@ define(['backbone', 'jqueryuidraggable'], function(Backbone, jqueryuidraggable) 
 
       var index = parseInt( $(e.currentTarget).attr('data-index') );
 
-      var ign = this.model.get('ignoreDefaults');
+      var ign = JSON.parse( JSON.stringify( this.model.get('ignoreDefaults') ) );
       ign[index] = !$(e.target).is(':checked');
 
-      this.model.set('ignoreDefaults', ign);
+      var cmd = { property: 'ignoreDefaults', _id: this.model.get('_id'), 
+            newValue : ign };
+
+      this.model.workspace.setNodeProperty(cmd);
       this.model.trigger('updateRunner');
 
     },

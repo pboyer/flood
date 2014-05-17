@@ -1,10 +1,10 @@
-/* http://blog.stevensanderson.com/2011/10/05/full-height-app-layouts-a-css-trick-to-make-it-easier/ */
 body { 
 	width:  100%;
   	height: 100%;
   	margin: 0px;
   	margin: 0;
   }
+
 .row, .col { overflow: hidden; position: absolute; }
 .row { left: 0; right: 0; }
 .col { top: 0; bottom: 0; }
@@ -56,6 +56,7 @@ body {
 
 .workspace-search-button-active {
 	color: #BBB;
+	background-color: #222;
 }
 
 .workspace-search-button-active:hover {
@@ -72,10 +73,6 @@ body {
 	padding: 8px;
 	border-right: 1px solid #333;
 	display:inline-block;
-}
-
-.workspace-search-container {
-	display: inline-block;
 }
 
 .workspace-search input:focus {
@@ -289,7 +286,7 @@ body {
 }
 
 .library-search-input {
-	color: lightblue;
+	color: whitesmoke;
 	padding: 10px;
 	width: 200px;
 	background: #222;
@@ -419,25 +416,19 @@ body {
 #workspace_hide {
 	font-size: 11px;
 	bottom: 0px;
-	padding-right: 10px;
 	background: #222;
 	position: absolute;
 	z-index: 100;
 	height: 32px;
-}
-
-#workspace_hide span {
 	padding: 10px;
 	display:inline-block; 
-	font-weight: bold; 
 	line-height: 12px;
-	font-size: 12px; 
-	margin: 3px; 
 	color: #AAA;
 }
 
-#workspace_hide i {
-	margin: 0px 0 0 0;
+#workspace_hide:hover {
+	background: #333;
+	color: white;
 }
 
 .rightside {
@@ -447,7 +438,6 @@ body {
 .leftside {
 	right: 0;
 }
-
 
 .remove-button {
 	margin: 0 10px 0 0;
@@ -527,8 +517,8 @@ body {
 }
 
 .node-evaluating {
-	border: 1px solid yellow;
 	color: #444;
+	background-color: #C6c6c6;
 }
 
 .node-failed {
@@ -556,16 +546,21 @@ body {
 }
 
 .watch-data-container{
-	max-width: 400px;
-	max-height: 400px;
+	max-width: 300px;
+	max-height: 200px;
 	margin: 0px 5px 0px 10px;
 	padding: 2px;
 	color: black;
 	overflow-y: scroll;
-	overflow-x: hidden;
-	text-overflow: ellipsis;
+	overflow-x: scroll;
 	background: #f6f6f6;
 	border: 1px solid #BBB;
+}
+
+.watch-data-container pre {
+	padding: none;
+	margin: none;
+	text-align: left;
 }
 
 .num-data-container{

@@ -13,26 +13,6 @@ if (typeof require != 'function' && typeof window != "object") {
 
 define(['FLOOD'], function(FLOOD) {
 
-	FLOOD.baseTypes.VectorResult = function(typeData){
-
-		FLOOD.baseTypes.NodeType.call(this, typeData );
-
-		this.postProcess = function(v){
-			if ( v.map ) {
-
-				var d = [];
-				for (var i = 0; i < v.length; i++){
-					d.push( [v.x, v.y, v.z ]);
-				}
-
-				return d;
-			}
-
-			return [ v.x, v.y, v.z ]
-		};
-
-	}
-
 	FLOOD.nodeTypes.Vector = function() {
 
 		var typeData = {
@@ -50,7 +30,7 @@ define(['FLOOD'], function(FLOOD) {
 			return new CSG.Vector([x,y,z]);
 		};
 
-	}.inherits( FLOOD.baseTypes.VectorResult );
+	}.inherits( FLOOD.baseTypes.NodeType );
 
 	FLOOD.nodeTypes.VectorAdd = function() {
 
@@ -67,7 +47,7 @@ define(['FLOOD'], function(FLOOD) {
 			return a.plus(b);
 		};
 
-	}.inherits( FLOOD.baseTypes.VectorResult );
+	}.inherits( FLOOD.baseTypes.NodeType );
 
 	FLOOD.nodeTypes.VectorMultiply = function() {
 
@@ -84,7 +64,7 @@ define(['FLOOD'], function(FLOOD) {
 			return a.times(b);
 		};
 
-	}.inherits( FLOOD.baseTypes.VectorResult );
+	}.inherits( FLOOD.baseTypes.NodeType );
 
 	FLOOD.nodeTypes.VectorSubtract = function() {
 
@@ -101,7 +81,7 @@ define(['FLOOD'], function(FLOOD) {
 			return a.minus(b);
 		};
 
-	}.inherits( FLOOD.baseTypes.VectorResult );
+	}.inherits( FLOOD.baseTypes.NodeType );
 
 	FLOOD.nodeTypes.VectorDot = function() {
 
@@ -135,7 +115,7 @@ define(['FLOOD'], function(FLOOD) {
 			return a.cross(b);
 		};
 
-	}.inherits( FLOOD.baseTypes.VectorResult );
+	}.inherits( FLOOD.baseTypes.NodeType );
 
 	FLOOD.nodeTypes.VectorNormalized = function() {
 
@@ -151,7 +131,7 @@ define(['FLOOD'], function(FLOOD) {
 			return a.unit();
 		};
 
-	}.inherits( FLOOD.baseTypes.VectorResult );
+	}.inherits( FLOOD.baseTypes.NodeType );
 
 	FLOOD.nodeTypes.VectorLength = function() {
 
@@ -185,7 +165,7 @@ define(['FLOOD'], function(FLOOD) {
 			return a.lerp(b, t);
 		};
 
-	}.inherits( FLOOD.baseTypes.VectorResult);
+	}.inherits( FLOOD.baseTypes.NodeType);
 
 	FLOOD.baseTypes.CSG = function(typeData) {
 
@@ -272,7 +252,6 @@ define(['FLOOD'], function(FLOOD) {
 
 	}.inherits( FLOOD.baseTypes.CSG );
 
-
 	FLOOD.nodeTypes.SolidCylinder = function() {
 
 		var typeData = {
@@ -296,7 +275,6 @@ define(['FLOOD'], function(FLOOD) {
 
 	}.inherits( FLOOD.baseTypes.CSG );
 
-
 	FLOOD.nodeTypes.SolidCube = function() {
 
 		var typeData = {
@@ -317,7 +295,6 @@ define(['FLOOD'], function(FLOOD) {
 		};
 
 	}.inherits( FLOOD.baseTypes.CSG );
-
 
 	FLOOD.nodeTypes.SolidIntersect = function() {
 
@@ -361,7 +338,6 @@ define(['FLOOD'], function(FLOOD) {
 
 	}.inherits( FLOOD.baseTypes.CSG );
 
-
 	FLOOD.nodeTypes.SolidUnion = function() {
 
 		var typeData = {
@@ -381,7 +357,6 @@ define(['FLOOD'], function(FLOOD) {
 		};
 
 	}.inherits( FLOOD.baseTypes.CSG );
-
 
 	FLOOD.nodeTypes.SolidSubtract = function() {
 
