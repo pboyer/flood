@@ -7,14 +7,19 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView', 'jqueryuislider'], f
     initialize: function(args) {
       BaseNodeView.prototype.initialize.apply(this, arguments);
 
-      this.model.on('change:lastValue', function() { 
-        this.setSliderValue(this.model.get('lastValue'));
+      this.model.on('change:extra', function() { 
+        
+        var ex = this.model.get('extra') ;
+
+        this.silentSyncUI( ex );
+
         this.model.trigger('updateRunner'); 
-        this.model.workspace.run();
+        this.model.workspace.run(); 
+
       }, this);
 
     },
-
+ 
     render: function() {
       
       BaseNodeView.prototype.render.apply(this, arguments);
@@ -22,19 +27,25 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView', 'jqueryuislider'], f
       // make the slider
       this.slider = this.$el.find('.slider');
 
-      var min = this.model.get('extra').min != undefined ? this.model.get('extra').min : -150;
-      var max = this.model.get('extra').max != undefined ? this.model.get('extra').max : 150;
-      var step = this.model.get('extra').step != undefined ? this.model.get('extra').step : 0.1;
+      var extra = this.model.get('extra');
+      var min = extra.min != undefined ? extra.min : -150;
+      var max = extra.max != undefined ? extra.max : 150;
+      var step = extra.step != undefined ? extra.step : 0.1;
+      var value = extra.value != undefined ? extra.value : 0;
+      if (value === undefined ) value = this.model.get('lastValue');
 
       var that = this;
       this.slider.slider(
         { min: min, 
           max: max, 
           step: step, 
-          value: this.model.get('lastValue'),
-          change: function(e, ui){ that.inputSet.call(that, e, ui); },
+          value: value,
+          change: function(e, ui){  that.inputSet.call(that, e, ui); },
           slide: function(e, ui){ that.inputChanged.call(that, e, ui); } 
         });
+
+      this.currentValueInput = this.$el.find('.currentValue');
+      this.currentValueInput.html( value );
 
       this.minInput = this.$el.find('.num-min');
       this.minInput.val(min);
@@ -69,6 +80,18 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView', 'jqueryuislider'], f
       });
 
       return this;
+
+    },
+
+    silentSyncUI: function(data){
+
+      this.silent = true;
+      this.$el.find('.currentValue').html( data.value );
+      this.setSliderValue( data.value );
+      this.minInput.html( data.min );
+      this.maxInput.html( data.max );
+      this.stepInput.html( data.step );
+      this.silent = false;
 
     },
 
@@ -109,22 +132,12 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView', 'jqueryuislider'], f
 
     inputSet: function(e,ui) {
 
-      var val = ui.value;
+      if ( this.silent ) return;
 
-      this.$el.find('.currentValue').html(val);
+      var newValue = {   value: this.slider.slider("option", "value"), min: this.slider.slider("option", "min"), 
+        step: this.slider.slider("option", "step"), max: this.slider.slider("option", "max") };
 
-      this.model.set('extra', {   min: this.slider.slider("option", "min"), 
-                                  step: this.slider.slider("option", "step"), 
-                                  max: this.slider.slider("option", "max") });
-
-
-      if (val === this.model.get('lastValue')) return;
-
-      this.model.workspace.setNodeProperty({ property: 'lastValue', _id: this.model.get('_id'), 
-        newValue: val, oldValue: this.model.get('lastValue') });
-      this.model.trigger('updateRunner');
-
-      this.model.workspace.run();
+      this.model.workspace.setNodeProperty({property: 'extra', _id: this.model.get('_id'), newValue: newValue });      
 
     }
 

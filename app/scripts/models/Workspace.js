@@ -26,8 +26,6 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
 
     initialize: function(atts, arr) {
 
-      console.log(atts)
-
       // event to ask user about leaving
 
       // var closeEditorWarning = function (){
@@ -35,7 +33,6 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
       // }
 
       // window.onbeforeunload = closeEditorWarning
-
 
       atts = atts || {};
 
@@ -91,6 +88,57 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
 
     },  
 
+    removeSelected: function(){
+
+      // get all selected nodes
+      var that = this;
+      var nodeFound = false;
+      var nodesToRemove = {};
+      this.get('nodes')
+          .each(function(x){ 
+            if ( x.get('selected') ){
+              nodeFound = true;
+              nodesToRemove[ x.get('_id') ] = x.serialize();
+            }
+          });
+
+      if (!nodeFound) return;
+
+      // get all relevant connections
+      var connsToRemove = {};
+      this.get('connections')
+        .each(function(x){
+          if ( nodesToRemove[ x.get('startNodeId') ] || nodesToRemove[ x.get('endNodeId') ] ){
+            if ( !connsToRemove[ x.get('_id')  ] ){
+              connsToRemove[ x.get('_id') ] = x.toJSON();
+            } 
+          }
+        });
+
+      // construct composite command
+      var multipleCmd = { kind: "multiple", commands: [] };
+
+      // first remove all connections
+      for (var connId in connsToRemove){
+        var connToRemove = connsToRemove[connId];
+        connToRemove.kind = "removeConnection";
+        multipleCmd.commands.push( connToRemove );
+      }
+
+      // then remove all nodes
+      for (var nodeId in nodesToRemove){
+        var nodeToRemove = nodesToRemove[nodeId];
+        nodeToRemove.kind = "removeNode";
+        multipleCmd.commands.push( nodeToRemove );
+      }
+
+      console.log( "Running multiple", multipleCmd );
+
+      this.runInternalCommand( multipleCmd );
+      this.addToUndoAndClearRedo( multipleCmd );
+
+    },
+
     addNode: function(data){
 
       this.internalCommands.addNode.call(this, data);
@@ -120,6 +168,7 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
 
     removeConnection: function(data){
 
+      console.log('removeConn', data);
       this.internalCommands.removeConnection.call(this, data);
       var datac = JSON.parse( JSON.stringify( data ) );
       datac.kind = "removeConnection";
@@ -137,6 +186,24 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
     },
 
     internalCommands: {
+
+      multiple: function(data){
+
+        // we prevent runs until all of the changes have been committed
+        var previousRunAllowedState = this.runAllowed;
+        this.runAllowed = false;
+
+        // run all of the commands
+        var that = this;
+        data.commands.forEach(function(x){
+          that.runInternalCommand.call(that, x);
+        });
+
+        // restore previous runAllowed state and, if necessary, do run
+        this.runAllowed = previousRunAllowedState;
+        if (this.runRejected) this.run();
+
+      },
 
       addNode: function(data){
 
@@ -173,6 +240,7 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
         var node = this.get('nodes').get( data._id );
         var prop = data.property;
         if (!data.oldValue) data.oldValue = JSON.parse( JSON.stringify( node.get(prop) ) ); 
+
         node.set( prop, data.newValue );
 
       }
@@ -223,7 +291,7 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
 
       var inverter = this.commandInversions[cmd.kind];
       if ( inverter ){
-        return inverter( cmd );
+        return inverter.call(this, cmd);
       }
 
       return {};
@@ -236,6 +304,20 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
 
         var cmdcop = JSON.parse( JSON.stringify( cmd ) );
         cmdcop.kind = "removeNode";
+        return cmdcop;
+
+      },
+
+      multiple: function( cmd ){
+
+        var cmdcop = JSON.parse( JSON.stringify( cmd ) );
+
+        var that = this;
+        cmdcop.commands = cmdcop.commands.map(function(x){
+          return that.invertCommand.call(that, x);
+        });
+        cmdcop.commands.reverse();
+        
         return cmdcop;
 
       },
@@ -277,7 +359,6 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
 
     },
 
-
     toJSON : function() {
 
         if (this._isSerializing) {
@@ -308,29 +389,19 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
       console.log(this.toJSON());
     },
 
-    removeSelectedNodes: function(){
-
-      var that = this;
-      var toDelete = [];
-
-      this.get('nodes')
-          .each(function(x){ 
-            if ( x.get('selected') ){
-              toDelete.push(x);
-            }
-          });
-
-      toDelete.forEach(function(x){
-        that.removeNode( x.serialize() );
-      })
-
-    },
-
     run: function() {
 
-      if (!this.runAllowed || this.get('nodes').length === 0)
+      if (!this.runAllowed){
+        this.runRejected = true;
         return;
+      }
 
+      this.runReject = false;
+
+      if (this.get('nodes').length === 0){
+        return;
+      }
+        
       var bottomNodes = this.get('nodes')
                             .filter(function(ele){
                               return ele.isOutputNode();

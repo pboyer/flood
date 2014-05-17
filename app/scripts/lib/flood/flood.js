@@ -371,6 +371,16 @@ define(function() {
 			return this.lastValue;
 		}
 
+		this.extend = function(args){
+
+			if (args.value && typeof args.value === "number"){
+				this.lastValue = args.value;
+			} else if (args.value === undefined){
+				this.lastValue = 0;
+			}
+	
+		}
+
 	}.inherits( FLOOD.baseTypes.NodeType );
 
 	// Add

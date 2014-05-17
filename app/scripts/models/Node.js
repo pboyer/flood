@@ -22,13 +22,8 @@ define(['backbone', 'FLOOD'], function(Backbone, FLOOD) {
       , isEvaluating: false
     },
 
-    cachedSerialization : {},
-    dirtySerialization: true,
-
     // called when saving the node to server
     serialize : function() {
-
-      if (!this.dirtySerialization) return this.cachedSerialization;
 
       var vals = {
         name: this.get("name")
@@ -45,9 +40,6 @@ define(['backbone', 'FLOOD'], function(Backbone, FLOOD) {
       if (typeof this.get('lastValue') === "string" || typeof this.get('lastValue') === "number" ){
         vals.lastValue = this.get('lastValue');
       }
-
-      this.cachedSerialization = vals;
-      this.dirtySerialization = false;
 
       return vals;
 

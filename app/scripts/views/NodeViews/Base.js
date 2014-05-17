@@ -102,6 +102,8 @@ define(['backbone', 'jqueryuidraggable'], function(Backbone, jqueryuidraggable) 
 
     beginPortDisconnection: function(e){
 
+      console.log('begin port disconnection')
+
       var index = parseInt( $(e.currentTarget).attr('data-index') );
 
       if ( !this.model.isPortConnected(index, false) )
@@ -112,7 +114,7 @@ define(['backbone', 'jqueryuidraggable'], function(Backbone, jqueryuidraggable) 
         , oppos = connection.getOpposite( this.model );
 
       this.workspace.startProxyConnection( oppos.node.get('_id'), oppos.portIndex, this.getPortPosition(index, false));
-      this.workspace.removeConnection( connection );
+      this.workspace.removeConnection( connection.toJSON() );
 
       e.stopPropagation();
     },
@@ -210,7 +212,7 @@ define(['backbone', 'jqueryuidraggable'], function(Backbone, jqueryuidraggable) 
       e.preventDefault();
 
       if (e.keyCode === 8 && e.ctrlKey) {
-        this.workspace.removeNode( this.model.serialize() );
+        this.workspace.removeSelected();
       }
 
     },

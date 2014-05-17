@@ -61,29 +61,26 @@ define(['backbone', 'List', 'SearchElementView'], function(Backbone, List, Searc
       }, 100);
     },
 
+    currentWorkspace: function(){
+      return this.app.get('workspaces').get( this.app.get('currentWorkspace') );
+    },
+
     deleteClick: function(){
-      this.app.get('workspaces').get( this.app.get('currentWorkspace') ).removeSelectedNodes();
+      this.currentWorkspace().removeSelected();
     },
 
     undoClick: function(){
-      this.app.get('workspaces').get( this.app.get('currentWorkspace') ).undo();
+      this.currentWorkspace().undo();
     },
 
     redoClick: function(){
-      this.app.get('workspaces').get( this.app.get('currentWorkspace') ).redo();
-    },
-
-    // move this to workspace
-    getWorkspaceCenter: function(){
-
-      // can't get a click event
-      // we need to get the workspace_back center
-
+      this.currentWorkspace().redo();
     },
 
     elementClick: function(e){
 
       this.model.app.addNodeToWorkspace( this.model.get('name'), [500,500] );
+
     },
 
     searchKeyup: function(event) {
