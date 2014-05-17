@@ -6,7 +6,7 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView'], function(Backbone, 
 
       BaseNodeView.prototype.initialize.apply(this, arguments);
 
-      this.model.on('change:selected', this.selectGeom, this);
+      this.model.on('change:selected', this.colorSelected, this);
       this.model.on('change:visible', this.changeVisibility, this);
       this.model.on('remove', this.onRemove, this);
       this.model.on('change:prettyLastValue', this.onEvalComplete, this );
@@ -16,19 +16,39 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView'], function(Backbone, 
 
     },
 
-    selectGeom: function(){
+    setMaterials: function(partMat, meshMat){
 
-      if ( this.threeGeom && this.model.get('visible') ){
-        if (this.model.get('selected')) {
-          this.threeGeom.traverse(function(ele) {
-            ele.material = new THREE.MeshPhongMaterial({color: 0x00FFFF});
-          });
+      this.threeGeom.traverse(function(ele) {
+        if (ele.faces) {
+          ele.material = meshMat;
         } else {
-          this.threeGeom.traverse(function(ele) {
-            ele.material = new THREE.MeshPhongMaterial({color: 0x999999});
-          });
+          ele.material = partMat;
         }
+      });
+
+    },
+
+    colorSelected: function(){
+
+      BaseNodeView.prototype.colorSelected.apply(this, arguments);
+
+      if ( !( this.threeGeom && this.model.get('visible')) ) return this;
+
+      if (this.model.get('selected')) {
+
+        var meshMat = new THREE.MeshPhongMaterial({color: 0x00FFFF});
+        var partMat = new THREE.ParticleBasicMaterial({color: 0x00FFFF});
+
+      } else {
+
+        var meshMat = new THREE.MeshPhongMaterial({color: 0x999999});
+        var partMat = new THREE.ParticleBasicMaterial({color: 0x999999});
+
       }
+
+      this.setMaterials(partMat, meshMat);
+
+      return this;
 
     }, 
 
@@ -40,22 +60,24 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView'], function(Backbone, 
 
     evaluated: false,
 
-    toThreeMesh: function( mesh ) {
+    toThreeGeom: function( rawGeom ) {
 
       var three_geometry = new THREE.Geometry( ), face;
 
-      for ( var i = 0; i < mesh.vertices.length; i++ ) {
-        var v = mesh.vertices[i];
+      for ( var i = 0; i < rawGeom.vertices.length; i++ ) {
+        var v = rawGeom.vertices[i];
         three_geometry.vertices.push( new THREE.Vector3( v[0], v[1], v[2] ) );
       }
 
-      for ( var i = 0; i < mesh.faces.length; i++ ) {
-        var f = mesh.faces[i];
+      if (!rawGeom.faces) return three_geometry;
+
+      for ( var i = 0; i < rawGeom.faces.length; i++ ) {
+        var f = rawGeom.faces[i];
         face = new THREE.Face3( f[0], f[1], f[2], new THREE.Vector3( f[3][0], f[3][1], f[3][2] ) );
         three_geometry.faces.push( face );
       }
-      
-      three_geometry.computeBoundingBox();
+
+      // three_geometry.computeBoundingBox();
       
       return three_geometry;
 
@@ -105,7 +127,7 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView'], function(Backbone, 
         var start = new Date().getTime();
         for (; i < list.length && (new Date().getTime()) - start < 50; i++) {
         
-          var g3  = that.toThreeMesh( list[i] );
+          var g3  = that.toThreeGeom( list[i] );
 
           if (that.model.get('selected')){
             var color = 0x00FFFF;
@@ -113,9 +135,12 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView'], function(Backbone, 
             var color = 0x999999;
           }
 
-          var mesh = new THREE.Mesh(g3, new THREE.MeshPhongMaterial({color: color}));
-          geom.add( mesh );
-
+          if ( g3.faces.length > 0){
+            geom.add( new THREE.Mesh(g3, new THREE.MeshPhongMaterial({color: color})) );
+          } else if ( g3.faces.length === 0 && g3.vertices.length > 0){
+            geom.add( new THREE.ParticleSystem(g3, new THREE.ParticleBasicMaterial({color: color}) ));
+          }
+          
         }
 
         if (i < list.length) {

@@ -167,6 +167,38 @@ define(['FLOOD'], function(FLOOD) {
 
 	}.inherits( FLOOD.baseTypes.NodeType);
 
+	FLOOD.nodeTypes.Point = function() {
+
+		var typeData = {
+			inputs: [ 	new FLOOD.baseTypes.InputPort( "Vector", [ CSG.Vector ], new CSG.Vector([0,0,0]) ) ],
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [ CSG.Vector ] ) ],
+			typeName: "Point" 
+		};
+
+		FLOOD.baseTypes.NodeType.call(this, typeData );
+
+		this.eval = function(a) {
+			return a;
+		};
+
+		this.postProcess = function(value){
+
+			var p = { vertices: [] };
+
+			if ( value.map ) {
+				for (var i = 0; i < value.length; i++){
+					var v = value[i];
+					p.vertices.push( [ v.x, v.y, v.z ]);
+				}
+			}
+
+			p.vertices.push( [ value.x, value.y, value.z ] );
+
+			return p;
+		};
+
+	}.inherits( FLOOD.baseTypes.NodeType );
+
 	FLOOD.baseTypes.CSG = function(typeData) {
 
 		FLOOD.baseTypes.NodeType.call(this, typeData );
