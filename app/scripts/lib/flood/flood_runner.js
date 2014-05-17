@@ -183,6 +183,8 @@ on_removeConnection = function(data){
 	if (!ws) return fail({ kind: "removeConnection", msg: "The workspace does not exist" }, data.silent);
 
 	var end = lookupNode( ws, data._id );
+	if (!end) end = lookupNode( ws, data.endNodeId );
+
 	if (!end) return fail({ kind: "removeConnection", msg: "The node does not exist" }, data.silent);
 
 	if (data.portIndex < 0 || data.portIndex >= end.inputs.length) 

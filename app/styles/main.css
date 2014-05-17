@@ -11,6 +11,10 @@ body {
 .scroll-x { overflow-x: auto; }
 .scroll-y { overflow-y: auto; }
 
+.dropdown-menu {
+	font-size: 10px;
+}
+
 .workspace-runner-status {
 	top: 90px;
 	right: 60px;

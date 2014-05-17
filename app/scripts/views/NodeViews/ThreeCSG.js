@@ -19,7 +19,7 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView'], function(Backbone, 
     setMaterials: function(partMat, meshMat){
 
       this.threeGeom.traverse(function(ele) {
-        if (ele.faces) {
+        if (ele instanceof THREE.Mesh) {
           ele.material = meshMat;
         } else {
           ele.material = partMat;
@@ -37,12 +37,12 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView'], function(Backbone, 
       if (this.model.get('selected')) {
 
         var meshMat = new THREE.MeshPhongMaterial({color: 0x00FFFF});
-        var partMat = new THREE.ParticleBasicMaterial({color: 0x00FFFF});
+        var partMat = new THREE.ParticleBasicMaterial({color: 0x00FFFF, size: 2});
 
       } else {
 
         var meshMat = new THREE.MeshPhongMaterial({color: 0x999999});
-        var partMat = new THREE.ParticleBasicMaterial({color: 0x999999});
+        var partMat = new THREE.ParticleBasicMaterial({color: 0x999999, size: 2});
 
       }
 
@@ -138,7 +138,7 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView'], function(Backbone, 
           if ( g3.faces.length > 0){
             geom.add( new THREE.Mesh(g3, new THREE.MeshPhongMaterial({color: color})) );
           } else if ( g3.faces.length === 0 && g3.vertices.length > 0){
-            geom.add( new THREE.ParticleSystem(g3, new THREE.ParticleBasicMaterial({color: color}) ));
+            geom.add( new THREE.ParticleSystem(g3, new THREE.ParticleBasicMaterial({color: color, size: 2}) ));
           }
           
         }

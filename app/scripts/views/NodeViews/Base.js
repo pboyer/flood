@@ -14,7 +14,7 @@ define(['backbone', 'jqueryuidraggable'], function(Backbone, jqueryuidraggable) 
       'mouseup .node-port-input': 'endPortConnection',
       'mousedown .node-port-input': 'beginPortDisconnection',
       'click':  'selectThis',
-      'click .use-default-checkbox': 'useDefaultClick',
+      'change .use-default-checkbox': 'useDefaultClick',
       'click .toggle-vis': 'toggleGeomVis',
       'click .rep-type': 'replicationClick'
     },
@@ -59,12 +59,17 @@ define(['backbone', 'jqueryuidraggable'], function(Backbone, jqueryuidraggable) 
             newValue : ign };
 
       this.model.workspace.setNodeProperty(cmd);
-      this.model.trigger('updateRunner');
+      this.model.workspace.run();
 
     },
 
     replicationClick : function(e){
-      this.model.set('replication', $(e.target).attr('data-rep-type'));
+
+      var cmd = { property: 'replication', _id: this.model.get('_id'), 
+            newValue : $(e.target).attr('data-rep-type') };
+      this.model.workspace.setNodeProperty(cmd);
+      this.model.workspace.run();
+
     },
 
     // should be part of nodeView subclass
@@ -174,7 +179,9 @@ define(['backbone', 'jqueryuidraggable'], function(Backbone, jqueryuidraggable) 
 
     renderNode: function() {
 
-      this.$el.html( this.template( this.model.toJSON() ) );
+      var json = this.model.toJSON();
+
+      this.$el.html( this.template( json ) );
 
       if (this.getCustomContents){
         this.$el.find('.node-data-container').html( this.getCustomContents() );

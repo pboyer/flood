@@ -1,4 +1,5 @@
-define(['backbone', 'Workspaces', 'Node', 'Login', 'Workspace'], function(Backbone, Workspaces, Node, Login, Workspace){
+define(['backbone', 'Workspaces', 'Node', 'Login', 'Workspace', 'SearchElements'], 
+    function(Backbone, Workspaces, Node, Login, Workspace, SearchElements){
 
   return Backbone.Model.extend({
 
@@ -12,7 +13,10 @@ define(['backbone', 'Workspaces', 'Node', 'Login', 'Workspace'], function(Backbo
       this.on('change:currentWorkspace', this.updateCurrentWorkspace, this);
       this.updateCurrentWorkspace();
 
-      this.login = new Login({}, { app: this })
+      this.login = new Login({}, { app: this });
+
+      this.SearchElements = new SearchElements({app:this});
+      this.SearchElements.fetch();
     },
 
     newNodePosition: [0,0],

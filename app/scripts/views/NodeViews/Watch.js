@@ -14,10 +14,10 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView'], function(Backbone, 
 
     renderNode: function(){
 
-    	console.log('watch render')
     	var pretty = JSON.stringify(this.model.get('lastValue'), this.prettyPrint, 2);
     	pretty = pretty.slice(1, pretty.length-2);
     	this.model.set('prettyValue', pretty );
+
     	return BaseNodeView.prototype.renderNode.apply(this, arguments);
 
     },

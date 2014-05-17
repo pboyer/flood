@@ -132,8 +132,6 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
         multipleCmd.commands.push( nodeToRemove );
       }
 
-      console.log( "Running multiple", multipleCmd );
-
       this.runInternalCommand( multipleCmd );
       this.addToUndoAndClearRedo( multipleCmd );
 
@@ -168,7 +166,6 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
 
     removeConnection: function(data){
 
-      console.log('removeConn', data);
       this.internalCommands.removeConnection.call(this, data);
       var datac = JSON.parse( JSON.stringify( data ) );
       datac.kind = "removeConnection";
@@ -230,6 +227,7 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
 
       removeConnection: function(data){
 
+        console.log('removing the connection')
         var conn = this.get('connections').get(data._id);
         this.get('connections').remove( conn );
 

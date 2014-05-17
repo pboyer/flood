@@ -10,8 +10,8 @@
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width">
         <!-- <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300' rel='stylesheet' type='text/css'> -->
-        <link rel="stylesheet" href="styles/main.css">
         <link rel="stylesheet" href="styles/bootstrap.css">
+        <link rel="stylesheet" href="styles/main.css">
         <link rel="stylesheet" href="bower_components/jquery.ui/themes/base/jquery.ui.all.css">
     </head>
     
@@ -41,7 +41,7 @@
           <div id="workspaces">
 
             <div id="workspace_hide" class="rightside workspace-search-button-active">
-              Toggle Focus
+              Switch Focus
             </div>
             <div class="workspaces_curtain row"></div>
 
@@ -87,7 +87,7 @@
                 <ul class="dropdown-menu" role="menu" style="padding: 5px;" aria-labelledby="dLabel">
 
                   <li role="presentation" style="color: black">
-                      <input type="checkbox" class="use-default-checkbox" data-index="<%= index %>" checked="<%= !ignoreDefaults[index] %>">Use default : <%= ele.defaultVal != undefined ? ele.defaultVal.toString() : "None" %>
+                      <input type="checkbox" class="use-default-checkbox" data-index="<%= index %>" <%= !ignoreDefaults[index] ? "checked" : ""%>> Use default : <%= ele.defaultVal != undefined ? JSON.stringify( ele.defaultVal ) : "None" %>
                   </li>
 
                 </ul>
@@ -285,9 +285,32 @@
 
         <div class="workspace-search-container">
 
+          <div id="copy-button" class="workspace-search-button workspace-search-button-inactive" style="border-right: none">
+
+            Copy
+
+          </div>
+
+          <div id="paste-button" class="workspace-search-button workspace-search-button-inactive" style="border-right: none">
+
+            Paste
+
+          </div>
+
           <div id="delete-button" class="workspace-search-button workspace-search-button-active" style="border-right: none">
 
             Delete
+
+          </div>
+
+        </div>
+
+
+        <div class="workspace-search-container">
+
+          <div id="save-button" class="workspace-search-button workspace-search-button-inactive" style="border-right: none">
+
+            Save
 
           </div>
 
