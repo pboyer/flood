@@ -17,7 +17,9 @@ define(['backbone', 'List', 'SearchElementView'], function(Backbone, List, Searc
       'blur .library-search-input': 'blur',
       'click #delete-button': 'deleteClick',
       'click #undo-button': 'undoClick',
-      'click #redo-button': 'redoClick'
+      'click #redo-button': 'redoClick',
+      'click #copy-button': 'copyClick',
+      'click #paste-button': 'pasteClick'
     },
 
     render: function(arg) {
@@ -67,6 +69,14 @@ define(['backbone', 'List', 'SearchElementView'], function(Backbone, List, Searc
 
     deleteClick: function(){
       this.currentWorkspace().removeSelected();
+    },
+
+    copyClick: function(){
+      this.currentWorkspace().copy();
+    },
+
+    pasteClick: function(){
+      this.currentWorkspace().paste();
     },
 
     undoClick: function(){

@@ -78,7 +78,6 @@ define(['backbone', 'Workspaces', 'Node', 'Login', 'Workspace', 'SearchElements'
 
       if (workspaceId === undefined ){
         workspaceId = this.get('currentWorkspace');
-        console.log(workspaceId);
       }
 
       if (position === undefined) {

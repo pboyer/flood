@@ -17,7 +17,8 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
 
       // undo/redo stack
       undoStack: [],
-      redoStack: []
+      redoStack: [],
+      clipBoard: []
     },
 
     draggingProxy: false,
@@ -81,6 +82,37 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
 
     },
 
+    toJSON : function() {
+
+        if (this._isSerializing) {
+            return this.id || this.cid;
+        }
+
+        this._isSerializing = true;
+
+        var json = _.clone(this.attributes);
+
+        _.each(json, function(value, name) {
+            _.isFunction(value.toJSON) && (json[name] = value.toJSON());
+        });
+
+        this._isSerializing = false;
+
+
+        return json;
+    },
+
+    parse : function(resp) {
+      resp.nodes = new Nodes( resp.nodes );
+      resp.connections = new Connections( resp.connections )
+      return resp;
+    },
+
+    printModel: function(){
+      console.log(this.toJSON());
+    },
+
+
     addToUndoAndClearRedo: function(cmd){
 
       this.get('undoStack').push(cmd);
@@ -135,6 +167,14 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
       this.runInternalCommand( multipleCmd );
       this.addToUndoAndClearRedo( multipleCmd );
 
+    },
+
+    copy: function(){
+      console.log('copy!');
+    },
+
+    paste: function(){
+      console.log('paste!');
     },
 
     addNode: function(data){
@@ -355,36 +395,6 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
 
       }
 
-    },
-
-    toJSON : function() {
-
-        if (this._isSerializing) {
-            return this.id || this.cid;
-        }
-
-        this._isSerializing = true;
-
-        var json = _.clone(this.attributes);
-
-        _.each(json, function(value, name) {
-            _.isFunction(value.toJSON) && (json[name] = value.toJSON());
-        });
-
-        this._isSerializing = false;
-
-
-        return json;
-    },
-
-    parse : function(resp) {
-      resp.nodes = new Nodes( resp.nodes );
-      resp.connections = new Connections( resp.connections )
-      return resp;
-    },
-
-    printModel: function(){
-      console.log(this.toJSON());
     },
 
     run: function() {
