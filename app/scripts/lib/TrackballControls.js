@@ -25,7 +25,7 @@ THREE.TrackballControls = function ( object, domElement ) {
 	this.noZoom = false;
 	this.noPan = false;
 
-	this.staticMoving = false;
+	this.staticMoving = true;
 	this.dynamicDampingFactor = 0.4;
 
 	this.minDistance = 0;
@@ -317,6 +317,8 @@ THREE.TrackballControls = function ( object, domElement ) {
 
 	function mousedown( event ) {
 
+		
+
 		if ( _this.enabled === false ) return;
 
 		if (event.toElement.getAttribute("id") != "renderer_canvas")
@@ -348,6 +350,8 @@ THREE.TrackballControls = function ( object, domElement ) {
 		document.addEventListener( 'mousemove', mousemove, false );
 		document.addEventListener( 'mouseup', mouseup, false );
 
+		render();
+
 	}
 
 	function mousemove( event ) {
@@ -371,6 +375,8 @@ THREE.TrackballControls = function ( object, domElement ) {
 
 		}
 
+		render();
+
 	}
 
 	function mouseup( event ) {
@@ -384,6 +390,8 @@ THREE.TrackballControls = function ( object, domElement ) {
 
 		document.removeEventListener( 'mousemove', mousemove );
 		document.removeEventListener( 'mouseup', mouseup );
+
+		render();
 
 	}
 
@@ -407,6 +415,8 @@ THREE.TrackballControls = function ( object, domElement ) {
 		}
 
 		_zoomStart.y += ( 1 / delta ) * 0.05;
+
+		render();
 
 	}
 
@@ -438,6 +448,8 @@ THREE.TrackballControls = function ( object, domElement ) {
 
 		}
 
+		render();
+
 	}
 
 	function touchmove( event ) {
@@ -468,6 +480,8 @@ THREE.TrackballControls = function ( object, domElement ) {
 
 		}
 
+		render();
+
 	}
 
 	function touchend( event ) {
@@ -491,6 +505,8 @@ THREE.TrackballControls = function ( object, domElement ) {
 		}
 
 		_state = STATE.NONE;
+
+		render();
 
 	}
 

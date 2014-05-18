@@ -37,8 +37,6 @@ define(['backbone'], function(Backbone) {
 
     },
 
-
-
     showEditButton: function() {
       this.$('.edit-button').css('visibility', 'visible');
     },
@@ -63,10 +61,8 @@ define(['backbone'], function(Backbone) {
     },
 
     remove: function(e){
-
       this.model.app.get('workspaces').remove(this.model);
       e.stopPropagation();
-
     }
 
   });

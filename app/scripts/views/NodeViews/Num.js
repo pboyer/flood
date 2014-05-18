@@ -5,7 +5,9 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView', 'jqueryuislider'], f
     template: _.template( $('#node-num-template').html() ),
 
     initialize: function(args) {
+
       BaseNodeView.prototype.initialize.apply(this, arguments);
+      this.rendered = false;
 
       this.model.on('change:extra', function() { 
         
@@ -24,8 +26,11 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView', 'jqueryuislider'], f
       
       BaseNodeView.prototype.render.apply(this, arguments);
 
+      if (this.rendered) return this;
+
       // make the slider
       this.slider = this.$el.find('.slider');
+      if (!this.slider) return;
 
       var extra = this.model.get('extra');
       var min = extra.min != undefined ? extra.min : -150;
@@ -78,6 +83,8 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView', 'jqueryuislider'], f
           return $(this).data('closable');
         }
       });
+
+      // this.rendered = true;
 
       return this;
 

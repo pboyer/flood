@@ -26,6 +26,8 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView'], function(Backbone, 
         }
       });
 
+      render();
+
     },
 
     colorSelected: function(){
@@ -37,12 +39,12 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView'], function(Backbone, 
       if (this.model.get('selected')) {
 
         var meshMat = new THREE.MeshPhongMaterial({color: 0x00FFFF});
-        var partMat = new THREE.ParticleBasicMaterial({color: 0x00FFFF, size: 2});
+        var partMat = new THREE.ParticleBasicMaterial({color: 0x00FFFF, size: 3, sizeAttenuation: false});
 
       } else {
 
         var meshMat = new THREE.MeshPhongMaterial({color: 0x999999});
-        var partMat = new THREE.ParticleBasicMaterial({color: 0x999999, size: 2});
+        var partMat = new THREE.ParticleBasicMaterial({color: 0x999999, size: 3, sizeAttenuation: false});
 
       }
 
@@ -56,6 +58,7 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView'], function(Backbone, 
     onRemove: function(){
       this.model.workspace.off('change:current', this.changeVisibility, this);
       scene.remove(this.threeGeom); 
+      render();
     }, 
 
     evaluated: false,
@@ -76,8 +79,6 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView'], function(Backbone, 
         face = new THREE.Face3( f[0], f[1], f[2], new THREE.Vector3( f[3][0], f[3][1], f[3][2] ) );
         three_geometry.faces.push( face );
       }
-
-      // three_geometry.computeBoundingBox();
       
       return three_geometry;
 
@@ -138,7 +139,7 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView'], function(Backbone, 
           if ( g3.faces.length > 0){
             geom.add( new THREE.Mesh(g3, new THREE.MeshPhongMaterial({color: color})) );
           } else if ( g3.faces.length === 0 && g3.vertices.length > 0){
-            geom.add( new THREE.ParticleSystem(g3, new THREE.ParticleBasicMaterial({color: color, size: 2}) ));
+            geom.add( new THREE.ParticleSystem(g3, new THREE.ParticleBasicMaterial({color: color, size: 3, sizeAttenuation: false}) ));
           }
           
         }
@@ -168,6 +169,8 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView'], function(Backbone, 
       {
         scene.add(this.threeGeom);
       }
+
+      render();
 
     },
 

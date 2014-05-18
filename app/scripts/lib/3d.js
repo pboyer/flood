@@ -4,6 +4,8 @@ var camera, controls, scene, renderer;
 
 var geometry, group;
 
+
+
 var mouse = new THREE.Vector2(),
 offset = new THREE.Vector3(),
 INTERSECTED, SELECTED;
@@ -16,7 +18,7 @@ var windowHalfX = window.innerWidth / 2;
 var windowHalfY = window.innerHeight / 2;
 
 init();
-animate();
+render();
 
 function init() {
 
@@ -68,7 +70,6 @@ function init() {
 
 function onWindowResize() {
 
-
 	windowHalfX = $container.width() / 2;
 	windowHalfY = $container.height() / 2;
 
@@ -77,19 +78,11 @@ function onWindowResize() {
 
 	renderer.setSize( 2*windowHalfX, 2*windowHalfY );
 
-}
-
-
-function animate() {
-
-	requestAnimationFrame( animate );
 	render();
 
 }
 
 function render() {
-
 	controls.update();
 	renderer.render( scene, camera );
-
 }

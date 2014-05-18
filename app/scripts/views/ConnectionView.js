@@ -73,6 +73,7 @@ define(['backbone'], function(Backbone) {
     // construct the control points for a bezier curve
     getControlPoints: function() {
 
+
       if (!this.model.get('startProxy') || !this.model.get('endProxy')) {
 
         var nodeViews = this.workspaceView.nodeViews
@@ -83,7 +84,12 @@ define(['backbone'], function(Backbone) {
       }    
 
       if (!this.model.get('startProxy')) {
-        startPos = nodeViews[startId].getPortPosition(startPortIndex, true);
+        if (!this.workspaceView.nodeViews[startId] ){
+          startId = this.model.workspace.get('proxyStartId');
+          startPortIndex = this.model.workspace.get('proxyStartPortIndex');
+        }
+
+        startPos = this.workspaceView.nodeViews[startId].getPortPosition(startPortIndex, true);
       } else {
         startPos = this.model.get('startProxyPosition');
       }

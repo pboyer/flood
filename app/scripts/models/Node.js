@@ -65,15 +65,11 @@ define(['backbone', 'FLOOD'], function(Backbone, FLOOD) {
       if (atts.ignoreDefaults && atts.ignoreDefaults.length > 0){
 
         for (var i = 0; i < atts.ignoreDefaults.length; i++){
-
           this.get('type').inputs[i].useDefault = !atts.ignoreDefaults[i];
-
         }
         
       } else {
-
         atts.ignoreDefaults = this.get('type').inputs.map(function(x){ return !x.useDefault; });
-
       }
 
       this.set('ignoreDefaults', atts.ignoreDefaults );

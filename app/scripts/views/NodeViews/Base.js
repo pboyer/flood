@@ -110,8 +110,6 @@ define(['backbone', 'jqueryuidraggable'], function(Backbone, jqueryuidraggable) 
 
     beginPortDisconnection: function(e){
 
-      console.log('begin port disconnection')
-
       var index = parseInt( $(e.currentTarget).attr('data-index') );
 
       if ( !this.model.isPortConnected(index, false) )

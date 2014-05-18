@@ -7,6 +7,9 @@ define(['backbone', 'Workspace', 'ConnectionView', 'NodeViewTypes'], function(Ba
 
     initialize: function(atts) { 
 
+      this.nodeViews = {};
+      this.connectionViews = {};
+
       this.app = this.model.app;
 
       this.$workspace = $('<div/>', {class: 'workspace'});
@@ -48,9 +51,6 @@ define(['backbone', 'Workspace', 'ConnectionView', 'NodeViewTypes'], function(Ba
       'click .workspace_back':  'deselectAll',
       'dblclick .workspace_back':  'showNodeSearch'
     },
-
-    nodeViews: {},
-    connectionViews: {},
 
     render: function() {
 
@@ -125,11 +125,11 @@ define(['backbone', 'Workspace', 'ConnectionView', 'NodeViewTypes'], function(Ba
 
     renderNodes: function() {
 
-      var that = this;
+      var this_ = this;
 
-      this.model.get('nodes').forEach(function(nodeModel) {
+      this.model.get('nodes').each(function(nodeModel) {
 
-        var nodeView = that.nodeViews[nodeModel.get('_id')];
+        var nodeView = this_.nodeViews[nodeModel.get('_id')];
 
         if ( nodeView === undefined){
 
@@ -138,16 +138,17 @@ define(['backbone', 'Workspace', 'ConnectionView', 'NodeViewTypes'], function(Ba
           {
             NodeView = NodeViewTypes[ nodeModel.get('typeName') ];
           }
-          nodeView = new NodeView({ model: nodeModel, workspaceView: that, workspace: that.model });
-        
+          nodeView = new NodeView({ model: nodeModel, workspaceView: this_, workspace: this_.model });
+          this_.nodeViews[ nodeView.model.get('_id') ] = nodeView;
+
         }
 
-        that.$workspace.prepend( nodeView.$el );
+        this_.$workspace.prepend( nodeView.$el );
         nodeView.render();
         nodeView.makeDraggable();
         nodeView.delegateEvents();
-        that.nodeViews[ nodeView.model.get('_id') ] = nodeView;
-        that.$workspace_canvas.append( nodeView.portGroup );
+        
+        this_.$workspace_canvas.append( nodeView.portGroup );
 
       });
 
@@ -155,34 +156,25 @@ define(['backbone', 'Workspace', 'ConnectionView', 'NodeViewTypes'], function(Ba
 
     },
 
-    deleteKey: function(e) {
-      e.preventDefault();
-
-      if ( e.keyCode === 8 && e.ctrlKey ) {
-        this.workspace.get('nodes').remove(this.model);
-      }
-
-    },
-
     renderConnections: function() {
 
-      var that = this;
+      var this_ = this;
 
       this.model.get('connections').forEach( function( cntn ) {
 
-        var view = that.connectionViews[cntn.get('_id')]
+        var view = this_.connectionViews[cntn.get('_id')]
 
-        if ( that.connectionViews[cntn.get('_id')] === undefined){
-          view = new ConnectionView({ model: cntn, workspaceView: that, workspace: that.model });
+        if ( this_.connectionViews[cntn.get('_id')] === undefined){
+          view = new ConnectionView({ model: cntn, workspaceView: this_, workspace: this_.model });
         }
 
         view.delegateEvents();
 
         if (!view.el.parentNode){
           view.render();
-          that.$workspace_canvas.prepend( view.el );
+          this_.$workspace_canvas.prepend( view.el );
 
-          that.connectionViews[ view.model.get('_id') ] = view;
+          this_.connectionViews[ view.model.get('_id') ] = view;
         }
 
       });
@@ -192,6 +184,7 @@ define(['backbone', 'Workspace', 'ConnectionView', 'NodeViewTypes'], function(Ba
     },
 
     clearDeadNodes: function() {
+
       for (var key in this.nodeViews){
         if (this.model.get('nodes').get(key) === undefined){
           this.nodeViews[key].remove();
@@ -201,12 +194,6 @@ define(['backbone', 'Workspace', 'ConnectionView', 'NodeViewTypes'], function(Ba
 
     },
 
-    onRemove: function(){
-      this.get('nodes').forEach(function(n){
-        if (n.onRemove) n.onRemove();
-      })
-    },
-
     clearDeadConnections: function() {
       for (var key in this.connectionViews){
         if (this.model.get('connections').get(key) === undefined){
@@ -214,6 +201,12 @@ define(['backbone', 'Workspace', 'ConnectionView', 'NodeViewTypes'], function(Ba
           delete this.connectionViews[key];
         }
       }
+    },
+
+    onRemove: function(){
+      this.get('nodes').forEach(function(n){
+        if (n.onRemove) n.onRemove();
+      })
     },
 
     deselectAll: function() {

@@ -90,6 +90,13 @@ define(function() {
 		return "[ " + eles.join(", ") + " ]"
 	};
 
+	Array.prototype.toQuotedArray = function(){
+		var qa = new QuotedArray();
+		for (var i = 0; i < this.length; i++){
+			qa.push( this[i] );
+		}
+		return qa;
+	}
 	QuotedArray.prototype.constructor = QuotedArray;
 	FLOOD.QuotedArray = QuotedArray;
 
@@ -496,10 +503,13 @@ define(function() {
 		this.portNames = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 
 		this.extend = function(args){
-			if (args.script && typeof args.script === "string")
-				this.script = args.script;
 
-			if (args.numInputs && typeof numInputs != "number" ){
+			if (args.script && typeof args.script === "string"){
+				this.script = args.script;
+				compileExpression();
+			}
+
+			if (args.numInputs && typeof args.numInputs === "number" ){
 				this.setNumInputs(args.numInputs);
 			}
 
@@ -800,7 +810,7 @@ define(function() {
 
 		this.eval = function(F, L) {
 
-			return L.sort(F);
+			return L.sort(F).toQuotedArray();
 
 		};
 
@@ -819,7 +829,7 @@ define(function() {
 
 		this.eval = function(F, L) {
 
-			return L.map(F);
+			return L.map(F).toQuotedArray();
 
 		};
 
@@ -839,7 +849,7 @@ define(function() {
 
 		this.eval = function(F, L, A) {
 
-			return L.reduce(F, A);
+			return L.reduce(F, A).toQuotedArray();
 
 		};
 
@@ -858,7 +868,7 @@ define(function() {
 
 		this.eval = function(F, L) {
 
-			return L.filter(F);
+			return L.filter(F).toQuotedArray();
 
 		};
 

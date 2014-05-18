@@ -36,17 +36,17 @@ define(['backbone'], function(Backbone) {
         var that = this;
 
         // watch the start and end node for removal
-        this.startNode.on('removed', (function(){
-          return function() {
-            that.onNodeRemoved(true);
-          };
-        })());
+        // this.startNode.on('removed', (function(){
+        //   return function() {
+        //     that.onNodeRemoved(true);
+        //   };
+        // })());
 
-        this.endNode.on('removed', (function(){
-          return function() {
-            that.onNodeRemoved(false);
-          };
-        })());
+        // this.endNode.on('removed', (function(){
+        //   return function() {
+        //     that.onNodeRemoved(false);
+        //   };
+        // })());
 
       }
       
@@ -55,6 +55,7 @@ define(['backbone'], function(Backbone) {
     },
 
     onNodeRemoved: function(isStart){ 
+      console.log('removing connection!')
       this.workspace.get('connections').remove(this);
     },
 

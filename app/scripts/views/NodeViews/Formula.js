@@ -5,6 +5,7 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView', 'FLOOD'], function(B
     initialize: function(args) {
 
       BaseNodeView.prototype.initialize.apply(this, arguments);
+      this.model.on('change:extra', this.updateChangedScript, this);
 
     },
 
@@ -19,9 +20,19 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView', 'FLOOD'], function(B
 
     },
 
+    updateChangedScript: function(){
+    	this.render();
+    	this.model.trigger('updateRunner');
+		  this.model.workspace.run();
+    },
+
+    rendered: false,
+
     render: function() {
 
     	BaseNodeView.prototype.render.apply(this, arguments);
+
+    	if (this.silentRender) return;
 
       this.input = this.$el.find('.formula-text-input');
 
@@ -33,13 +44,14 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView', 'FLOOD'], function(B
       });
 
       this.input.blur(function(){ 
-      	var ex = that.model.get('extra');
+
+      	var ex = JSON.parse( JSON.stringify( that.model.get('extra') ) );
       	if ( ex.script === that.input.val() ) return;
+
       	ex.script = that.input.val();
-      	that.model.set('extra', ex);
+
+      	that.model.workspace.setNodeProperty({property: "extra", _id: that.model.get('_id'), newValue: ex });
       	that.selectable = true; 
-		    that.model.trigger('updateRunner');
-		    that.model.workspace.run();
       });
 
       this.$el.find('.add-input').click(function(){ that.addInput.call(that); });
@@ -53,8 +65,12 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView', 'FLOOD'], function(B
     	var type = this.model.get('type');
   	  var ex = this.model.get('extra');
 
+  	  if (ex.numInputs === undefined) ex.numInputs = 1;
+
   	  // sorry - no more letters!  hehe
   	  if (type.inputs.length === 26) return;
+
+  	  this.model.get('inputConnections').push([]);
 
     	ex.numInputs = (ex.numInputs || 1) + 1;
     	this.model.set('extra', ex);
@@ -72,18 +88,22 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView', 'FLOOD'], function(B
     	var type = this.model.get('type');
   	  var ex = this.model.get('extra');
 
+  	  if (ex.numInputs === undefined) ex.numInputs = 1;
+
   	  if (type.inputs.length === 0) return;
 
   	  // update runner
     	ex.numInputs = (ex.numInputs || 1) - 1;
-    	this.model.set('extra', ex);
-    	this.model.trigger('updateRunner');
 
     	// update ui
-
     	if ( this.model.isPortConnected( this.model.get('inputConnections').length - 1 ) ){
     		this.model.disconnectPort( this.model.get('inputConnections').length - 1 );
     	}
+
+    	this.model.get('inputConnections').pop();
+
+    	this.model.set('extra', ex);
+    	this.model.trigger('updateRunner');
 
     	type.setNumInputs( ex.numInputs );
     	this.render();

@@ -1,11 +1,10 @@
 CURRENT
 
-ignoreDefaults doesn't seem to be correct at workspace open
+make sure that setting ignoreDefaults, editingScript, replication can be undone/redone
 
 POLISH
 
-
-
+copy/paste
 node ports with defaults should be black
 set exact number
 missing image on ThreeCSG nodes  

@@ -134,7 +134,6 @@ define(['backbone'], function(Backbone) {
 
 	  updateNode: function( node ){
 
-	  	console.log('UPDATING NODE')
 	  	var n = node.serialize();
 	  	n.kind = "updateNode";
 

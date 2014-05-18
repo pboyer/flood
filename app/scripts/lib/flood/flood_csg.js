@@ -133,6 +133,23 @@ define(['FLOOD'], function(FLOOD) {
 
 	}.inherits( FLOOD.baseTypes.NodeType );
 
+	FLOOD.nodeTypes.VectorDistance = function() {
+
+		var typeData = {
+			inputs: [ 	new FLOOD.baseTypes.InputPort( "A", [ CSG.Vector ], new CSG.Vector([0,0,0]) ),
+									new FLOOD.baseTypes.InputPort( "B", [ CSG.Vector ], new CSG.Vector([0,0,0]) )],
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [ CSG.Vector ] ) ],
+			typeName: "VectorDistance" 
+		};
+
+		FLOOD.baseTypes.NodeType.call(this, typeData );
+
+		this.eval = function(a,b) {
+			return a.minus(b).length();
+		};
+
+	}.inherits( FLOOD.baseTypes.NodeType );
+
 	FLOOD.nodeTypes.VectorLength = function() {
 
 		var typeData = {

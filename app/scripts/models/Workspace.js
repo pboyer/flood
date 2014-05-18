@@ -84,6 +84,9 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
 
     toJSON : function() {
 
+        this.set('undoStack', _.last( this.get('undoStack'), 10) );
+        this.set('redoStack', _.last( this.get('redoStack'), 10) );
+
         if (this._isSerializing) {
             return this.id || this.cid;
         }
@@ -169,12 +172,99 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
 
     },
 
+    makeId: function(){
+      return this.app.makeId();
+    },
+
     copy: function(){
-      console.log('copy!');
+
+      // get all selected nodes
+      var that = this;
+      var nodeFound = false;
+      var copyNodes = {};
+      this.get('nodes')
+          .each(function(x){ 
+            if ( x.get('selected') ){
+              nodeFound = true;
+              copyNodes[ x.get('_id') ] = x.serialize();
+            }
+          });
+
+      // TODO: clear the clipboard!
+      if (!nodeFound) return;
+
+      // get all relevant connections
+      var copyConns = {};
+      this.get('connections')
+        .each(function(x){
+
+          if (x.get('_id') === -1 || x.get('startProxy') || x.get('endProxy')) return;
+
+          if ( ( copyNodes[ x.get('startNodeId') ] && copyNodes[ x.get('endNodeId') ] )
+               || copyNodes[ x.get('endNodeId') ]  ){
+
+            if ( !copyConns[ x.get('_id')  ] ){
+              copyConns[ x.get('_id') ] = x.toJSON();
+            } 
+          }
+        });
+
+      this.app.set('clipboard', { nodes: copyNodes, connections: copyConns });
+
     },
 
     paste: function(){
-      console.log('paste!');
+
+      // build the command
+      var cb = JSON.parse( JSON.stringify( this.app.get('clipboard') ) );
+
+      var that = this;
+
+      var nodes = {};
+      var nodeOffset = Math.min( 20, Math.abs( 40 * Math.random() ) );
+
+      _.each(cb.nodes, function(x){
+
+        // give new id for building the paste
+        nodes[x._id] = x;
+        nodes[x._id].position = [ x.position[0] + nodeOffset, x.position[1] + nodeOffset ];
+        nodes[x._id]._id = that.makeId();
+
+      });
+
+      var connections = {};
+
+      _.each(cb.connections, function(x){
+
+        if ( nodes[ x.endNodeId ] ){
+          x.endNodeId = nodes[ x.endNodeId ]._id;
+        }
+
+        connections[x._id] = x;
+        connections[x._id]._id = that.makeId();
+
+      });
+
+      // build the command
+      var multipleCmd = { kind: "multiple", commands: [] };
+
+      // build all of the nodes
+      for (var id in nodes){
+        var cpnode = cb.nodes[id];
+        cpnode.kind = "addNode";
+        multipleCmd.commands.push( cpnode );
+      }
+
+      // then builds the connections
+      for (var id in connections){
+        var cpConn = connections[id];
+        cpConn.kind = "addConnection";
+        multipleCmd.commands.push( cpConn );
+      }
+
+      this.runInternalCommand( multipleCmd );
+      this.addToUndoAndClearRedo( multipleCmd );
+
     },
 
     addNode: function(data){
@@ -258,6 +348,9 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
 
       addConnection: function(data){
 
+        var nodes = this.get('nodes');
+        if ( !nodes.get( data.startNodeId ) || !nodes.get( data.endNodeId ) ) return;
+
         var conn = new Connection(data, { workspace: this });
         this.get('connections').add( conn );
         this.get('nodes').get(conn.get('startNodeId')).connectPort( conn.get('startPortIndex'), true, conn);
@@ -267,9 +360,8 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
 
       removeConnection: function(data){
 
-        console.log('removing the connection')
         var conn = this.get('connections').get(data._id);
-        this.get('connections').remove( conn );
+        if (conn) this.get('connections').remove( conn );
 
       }, 
 
@@ -423,9 +515,14 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
 
     startProxyConnection: function(startNodeId, nodePort, startPosition) {
 
+      // Note: this is a quick fix for when the proxy connection
+      this.set('proxyStartId', startNodeId);
+      this.set('proxyStartPortIndex', nodePort);
+
       // set the initial properties for a dragging proxy
       this.proxyConnection.set('hidden', false);
       this.proxyConnection.set('startNodeId', startNodeId);
+
       this.proxyConnection.set('startPortIndex', nodePort );
 
       this.proxyConnection.set('startProxy', false );

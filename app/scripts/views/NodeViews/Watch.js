@@ -14,8 +14,7 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView'], function(Backbone, 
 
     renderNode: function(){
 
-    	var pretty = JSON.stringify(this.model.get('lastValue'), this.prettyPrint, 2);
-    	pretty = pretty.slice(1, pretty.length-2);
+    	var pretty = this.model.get('lastValue') != undefined ? JSON.stringify(this.model.get('lastValue'), this.prettyPrint, 2) : this.model.get('lastValue');
     	this.model.set('prettyValue', pretty );
 
     	return BaseNodeView.prototype.renderNode.apply(this, arguments);

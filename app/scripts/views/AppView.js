@@ -264,12 +264,14 @@ define([  'backbone',
       // hide current workspace, show workspace
 
         if (this.model.changed.currentWorkspace && currentWorkspace){
-            this.hideWorkspace(this.currentWorkspaceView);
-            this.currentWorkspaceView = this.getWorkspaceView( currentWorkspace );
-            this.showWorkspace( this.currentWorkspaceView );
-            this.currentWorkspaceView.render();
-            this.currentWorkspaceId = currentWorkspaceId;
-            this.focusWorkspace();
+
+          this.hideWorkspace(this.currentWorkspaceView);
+          this.currentWorkspaceView = this.getWorkspaceView( currentWorkspace );
+
+          this.showWorkspace( this.currentWorkspaceView );
+          this.currentWorkspaceView.render();
+          this.currentWorkspaceId = currentWorkspaceId;
+          this.focusWorkspace();
         }
 
       this.showSearch();

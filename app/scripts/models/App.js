@@ -27,7 +27,8 @@ define(['backbone', 'Workspaces', 'Node', 'Login', 'Workspace', 'SearchElements'
       currentWorkspace: null,
       showingBrowser: false,
       showingSearch: false,
-      showingHelp: false
+      showingHelp: false,
+      clipBoard: {}
     },
 
     parse : function(resp) {
