@@ -156,12 +156,12 @@ body {
 }
 
 #workspace-browser {
-	background: #333;
+	background: #e0e0e0;
 	color: #666;
 	display: none;
 	z-index: 105;
 	right: 0;
-	width: 252px;
+	width: 200px;
 	bottom: 0;
 	top: 30px;
 	overflow-y: scroll;
@@ -187,6 +187,14 @@ body {
 }
 
 .workspace-browser-element {
+	font-size: 12px;
+}
+
+.workspace-browser-element-date {
+	font-size: 10px;
+}
+
+.workspace-browser-element {
 	margin: 0;
 	border-top: 1px solid #333;
 	padding: 5px;
@@ -206,7 +214,6 @@ body {
 	width: 300px;
 	bottom: 0;
 	top: 26px;
-
 	background-color: #EFEFEF;
 }
 
@@ -341,6 +348,11 @@ body {
 #add-workspace-button {
 	border-right: 1px solid #c7bbb1;
 	padding: 5px;
+}
+
+.workspace-browser-button-active {
+	color: black;
+	background: #C6c6c6;
 }
 
 .dim-button {

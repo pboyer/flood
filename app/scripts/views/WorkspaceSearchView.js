@@ -7,6 +7,7 @@ define(['backbone', 'List', 'SearchElementView'], function(Backbone, List, Searc
 
     initialize: function(atts, arr) {
       this.app = arr.app;
+      this.appView = arr.appView;
     },
 
     template: _.template( $('#workspace-search-template').html() ),
@@ -35,7 +36,7 @@ define(['backbone', 'List', 'SearchElementView'], function(Backbone, List, Searc
 
       this.app.SearchElements.forEach(function(ele) {
 
-        var eleView = new SearchElementView({ model: ele });
+        var eleView = new SearchElementView({ model: ele }, { appView: that.appView, app: that.app });
         eleView.elementClick = that.elementClick;
 
         eleView.render();
@@ -89,7 +90,12 @@ define(['backbone', 'List', 'SearchElementView'], function(Backbone, List, Searc
 
     elementClick: function(e){
 
-      this.model.app.addNodeToWorkspace( this.model.get('name'), [500,500] );
+      var w = this.appView.currentWorkspaceView.$el.width();
+      var h = this.appView.currentWorkspaceView.$el.height();
+      var ho = this.appView.currentWorkspaceView.$el.scrollTop();
+      var wo = this.appView.currentWorkspaceView.$el.scrollLeft();
+
+      this.model.app.addNodeToWorkspace( this.model.get('name'), [wo + w / 2, ho + h / 2] );
 
     },
 

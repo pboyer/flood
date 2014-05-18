@@ -8,7 +8,7 @@ define(['backbone'], function(Backbone) {
     template: _.template( $('#workspace-browser-element-template').html() ),
 
     events: {
-      'click .workspace-browser-element-open':  'clickOpen',
+      'click':  'clickOpen',
       'click .delete-workspace':  'clickDelete',
       'mouseenter': 'mouseenter',
       'mouseleave': 'mouseleave'
@@ -53,18 +53,8 @@ define(['backbone'], function(Backbone) {
         day_diff < 31 && Math.ceil( day_diff / 7 ) + " weeks ago";
     },
 
-    mouseenter: function(e){
-      this.$open.css('visibility', 'visible');
-    },
-
-    mouseleave: function(e){
-      this.$open.css('visibility', 'hidden');
-    },
-
     clickOpen: function(e) {
-
       this.app.openWorkspace( this.model.get('_id') );
-
     },
 
     clickDelete: function(e){

@@ -8,7 +8,7 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView'], function(Backbone, 
 
       BaseNodeView.prototype.initialize.apply(this, arguments);
       this.model.on( 'change:lastValue', this.renderNode, this );
-      this.model.on('disconnection', this.renderNode, this);
+      this.model.on( 'disconnection', this.renderNode, this );
 
     },
 
@@ -22,9 +22,15 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView'], function(Backbone, 
     },
 
     prettyPrint: function(key, val){
+
     	if (typeof val === "number"){
     		return val.toPrecision(4);
     	}
+
+    	if (typeof val === "string"){
+    		return val.replace(new RegExp("\t", 'g'), "").replace(new RegExp("\n", 'g'), "")
+    	}
+
     	return val;
     }
 

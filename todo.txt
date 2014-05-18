@@ -1,16 +1,17 @@
 CURRENT
 
-make sure that setting ignoreDefaults, editingScript, replication can be undone/redone
+need to place node correctly in bottom right node search
 
 POLISH
 
-copy/paste
+sticky inputs on formula, workspace tabs
+closing my workspaces sucks
+autosave all the time
 node ports with defaults should be black
 set exact number
 missing image on ThreeCSG nodes  
 missing halflings  http://localhost:3000/fonts/glyphicons-halflings-regular.woff
-copy-paste
-curves - whats the minimum requirement?
+curves - whats the minimum requirement - line - polyline?
 transforms?
 disable node lacing
 can't tell why node failed execution
@@ -24,7 +25,8 @@ workspace execution icon in weird location
 
 FEATURE
 
-arbitrary javascript node
+canvas selection
+arbitrary javascript node - better than formula
 zoom
 STL
 promise-based execution

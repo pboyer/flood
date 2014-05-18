@@ -11,10 +11,13 @@ define(['backbone'], function(Backbone) {
       'click':  'click'
     },
 
+    initialize: function(a, arr){
+      this.app = arr.app;
+      this.appView = arr.appView;
+    },
+
     render: function() {
-
       this.$el.html( this.template( this.model.toJSON() ) );
-
     },
 
     click: function(e) {

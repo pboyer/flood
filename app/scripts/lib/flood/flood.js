@@ -93,7 +93,7 @@ define(function() {
 	Array.prototype.toQuotedArray = function(){
 		var qa = new QuotedArray();
 		for (var i = 0; i < this.length; i++){
-			qa.push( this[i] );
+			qa.push( this[i].toQuotedArray ? this[i].toQuotedArray() : this[i] );
 		}
 		return qa;
 	}
@@ -494,9 +494,18 @@ define(function() {
 
 		FLOOD.baseTypes.NodeType.call(this, typeData);
 
+		// for formula implementers convenience
+		var Sin = Math.sin, Cos = Math.cos, Abs = Math.abs, Tan = Math.tan, Random = Math.random,
+			Asin = Math.asin, Atan = Math.atan, Acos = Math.acos, Exp = Math.exp, Sqrt = Math.sqrt,
+			Pow = Math.pow;
+
 		this.eval = function() {
 			var _fa = Array.prototype.slice.call(arguments, 0);
-			return eval( this.expression )
+			var val = eval( this.expression );
+
+			// if array value, quote it
+			if (val instanceof Array) return val.toQuotedArray();
+			return val;
 		};
 
 		this.script = "A;";

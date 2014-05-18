@@ -28,7 +28,7 @@ define(['backbone', 'List', 'SearchElementView'], function(Backbone, List, Searc
 
       this.app.SearchElements.forEach(function(ele) {
 
-        var eleView = new SearchElementView({ model: ele });
+        var eleView = new SearchElementView({ model: ele }, { app: that.app });
         eleView.elementClick = that.elementClick;
 
         eleView.render();

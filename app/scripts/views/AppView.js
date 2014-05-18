@@ -51,11 +51,13 @@ define([  'backbone',
       this.model.set('showingSearch', false);
     },
 
-    toggleBrowser: function(){
+    toggleBrowser: function(e){
 
       if (this.model.get('showingBrowser') === true){
+        $(e.currentTarget).removeClass('workspace-browser-button-active');
         this.model.set('showingBrowser', false);
       } else {
+        $(e.currentTarget).addClass('workspace-browser-button-active');
         this.model.set('showingBrowser', true);
       }
 
@@ -249,7 +251,7 @@ define([  'backbone',
       // render search
         if (!this.workspaceSearchView){
 
-          this.workspaceSearchView = new WorkspaceSearchView( { model: new Search() }, {app: this.model } );
+          this.workspaceSearchView = new WorkspaceSearchView( { model: new Search() }, {app: this.model, appView : this } );
           this.workspaceSearchView.render();
           this.$el.find('#workspaces').prepend(this.workspaceSearchView.$el);
 
