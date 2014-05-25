@@ -37,10 +37,6 @@ define(['backbone', 'FLOOD'], function(Backbone, FLOOD) {
         , extra: this.get('extra')
       };
 
-      if (typeof this.get('lastValue') === "string" || typeof this.get('lastValue') === "number" ){
-        vals.lastValue = this.get('lastValue');
-      }
-
       return vals;
 
     },

@@ -69,6 +69,21 @@ define(function() {
 	    return this;
 	});
 
+
+	// MultiOutResult
+	// ===========
+	//
+
+	function MultiOutResult(object){
+		for (var i in object){
+			this[i] = object[i];
+		}
+	};
+	QuotedArray.prototype = new Object();
+
+	MultiOutResult.prototype.constructor = MultiOutResult;
+	FLOOD.MultiOutResult = MultiOutResult;
+
 	// QuotedArray
 	// ===========
 	// QuotedArray is a slight modification of Array.  It makes it 
@@ -88,6 +103,17 @@ define(function() {
 			eles.push( this[i] );
 		}
 		return "[ " + eles.join(", ") + " ]"
+	};
+
+	Array.prototype.flatten = function(){
+
+		if (this.length === 0) return [];
+
+		if ( isObjectTypeMatch( this[0], Array) ){
+			return this[0].flatten().concat( this.slice(1).flatten() );
+		} 
+
+		return [ this[0] ].concat( this.slice(1).flatten() );
 	};
 
 	Array.prototype.toQuotedArray = function(){
@@ -171,9 +197,6 @@ define(function() {
 				return n.oppNode.markDirty() || m; 
 
 			}, false) || _isDirty;
-
-			// if (_isDirty) console.log(this.typeName + " is Dirty")
-
 			return _isDirty;
 
 		};
@@ -314,24 +337,35 @@ define(function() {
 		this.useDefault = defaultVal === undefined ? false : true;
 
 		this.printExpression = function() {
-			if (this.oppNode && this.oppIndex === 0)
+			if (this.oppNode && this.oppIndex === 0 && this.oppNode.outputs.length === 1)
 				return this.oppNode.printExpression();
-			if (this.oppNode && this.oppIndex != 0)
+			if (this.oppNode)
 				return '(pick ' + this.oppIndex + ' ' + this.oppNode.printExpression() + ')';
 			if (this.useDefault === true )
 				return this.defaultVal;
 			return "_";
 		}
 
+		var autoPick = function(name, x){
+
+			if ( isObjectTypeMatch(x, QuotedArray) ){
+				return x.map( autoPick.curry( name ) );
+			} else if ( isObjectTypeMatch(x, MultiOutResult ) ){
+				return x[name] != undefined ? x[name] : null;
+			}
+
+			return null;
+		};
+
 		this.compile = function() {
 
 			var val = null;
 
-			if (this.oppNode && this.oppIndex === 0){
+			if (this.oppNode && this.oppIndex === 0 && this.oppNode.outputs.length === 1){
 				val = this.oppNode.compile();
 				return val;
-			} else if (this.oppNode && this.oppIndex != 0){
-				val = ['pick', this.oppIndex, this.oppNode.compile()];
+			} else if (this.oppNode){
+				val = [ autoPick, this.oppIndex, this.oppNode.compile() ];
 				return val;
 			} else if (this.useDefault === true) {
 				val = this.defaultVal;
@@ -390,100 +424,6 @@ define(function() {
 
 	}.inherits( FLOOD.baseTypes.NodeType );
 
-	// Add
-
-	FLOOD.nodeTypes.Add = function() {
-
-		var typeData = {
-			inputs: [ 	new FLOOD.baseTypes.InputPort( "A", [Number], 0 ),
-						new FLOOD.baseTypes.InputPort( "B", [Number], 0 ) ],
-			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [Number] ) ],
-			typeName: "Add" 
-		};
-
-		FLOOD.baseTypes.NodeType.call(this, typeData );
-
-		this.eval = function(a, b) {
-			return a + b;
-		};
-
-	}.inherits( FLOOD.baseTypes.NodeType );
-
-
-	// Subtract
-
-	FLOOD.nodeTypes.Subtract = function() {
-
-		var typeData = {
-			inputs: [ 	new FLOOD.baseTypes.InputPort( "A", [Number], 0 ),
-						new FLOOD.baseTypes.InputPort( "B", [Number], 0 ) ],
-			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [Number] ) ],
-			typeName: "Subtract" 
-		};
-
-		FLOOD.baseTypes.NodeType.call(this, typeData );
-
-		this.eval = function(a, b) {
-			return a - b;
-		};
-
-	}.inherits( FLOOD.baseTypes.NodeType );
-
-	// Multiply
-
-	FLOOD.nodeTypes.Multiply = function() {
-
-		var typeData = {
-			inputs: [ 	new FLOOD.baseTypes.InputPort( "A", [Number], 0 ),
-						new FLOOD.baseTypes.InputPort( "B", [Number], 0 ) ],
-			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [Number] ) ],
-			typeName: "Multiply" 
-		};
-
-		FLOOD.baseTypes.NodeType.call(this, typeData );
-
-		this.eval = function(a, b) {
-			return a * b;
-		};
-
-	}.inherits( FLOOD.baseTypes.NodeType );
-
-	// Divide
-
-	FLOOD.nodeTypes.Divide = function() {
-
-		var typeData = {
-			inputs: [ 	new FLOOD.baseTypes.InputPort( "A", [Number], 0 ),
-						new FLOOD.baseTypes.InputPort( "B", [Number], 0 ) ],
-			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [Number] ) ],
-			typeName: "Divide" 
-		};
-
-		FLOOD.baseTypes.NodeType.call(this, typeData );
-
-		this.eval = function(a, b) {
-			return a / b;
-		};
-
-	}.inherits( FLOOD.baseTypes.NodeType );
-
-	FLOOD.nodeTypes.GreaterThan = function() {
-
-		var typeData = {
-			inputs: [ 	new FLOOD.baseTypes.InputPort( "A", [Number], 0 ),
-									new FLOOD.baseTypes.InputPort( "B", [Number], 0 ) ],
-			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [Boolean] ) ],
-			typeName: "GreaterThan" 
-		};
-
-		FLOOD.baseTypes.NodeType.call(this, typeData );
-
-		this.eval = function(a, b) {
-			return a > b;
-		};
-
-	}.inherits( FLOOD.baseTypes.NodeType );
-
 	FLOOD.nodeTypes.Formula = function() {
 
 		var typeData = {
@@ -497,7 +437,14 @@ define(function() {
 		// for formula implementers convenience
 		var Sin = Math.sin, Cos = Math.cos, Abs = Math.abs, Tan = Math.tan, Random = Math.random,
 			Asin = Math.asin, Atan = Math.atan, Acos = Math.acos, Exp = Math.exp, Sqrt = Math.sqrt,
-			Pow = Math.pow;
+			Pow = Math.pow, Pi = Math.PI, Eval = eval;
+
+		var Get = function(url){
+			var xhr = new XMLHttpRequest();
+	    xhr.open("GET", url, false);  // synchronous request
+	    xhr.send(null);
+	    return xhr.responseText;
+	  }
 
 		this.eval = function() {
 			var _fa = Array.prototype.slice.call(arguments, 0);
@@ -577,6 +524,191 @@ define(function() {
 
 	}.inherits( FLOOD.baseTypes.NodeType );
 
+	FLOOD.nodeTypes.Pi = function() {
+
+		var typeData = {
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [Number] ) ],
+			typeName: "Pi" 
+		};
+
+		FLOOD.baseTypes.NodeType.call(this, typeData);
+
+		this.compile = function(){
+			this.markClean();
+			return Math.PI;
+		}
+
+	}.inherits( FLOOD.baseTypes.NodeType );
+
+	FLOOD.nodeTypes.TwoPi = function() {
+
+		var typeData = {
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [Number] ) ],
+			typeName: "TwoPi" 
+		};
+
+		FLOOD.baseTypes.NodeType.call(this, typeData);
+
+		this.compile = function(){
+			this.markClean();
+			return 2 * Math.PI;
+		}
+
+	}.inherits( FLOOD.baseTypes.NodeType );
+
+	FLOOD.nodeTypes.E = function() {
+
+		var typeData = {
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [Number] ) ],
+			typeName: "E" 
+		};
+
+		FLOOD.baseTypes.NodeType.call(this, typeData);
+
+		this.compile = function(){
+			this.markClean();
+			return Math.E;
+		}
+
+	}.inherits( FLOOD.baseTypes.NodeType );
+
+	FLOOD.nodeTypes.Add = function() {
+
+		var typeData = {
+			inputs: [ 	new FLOOD.baseTypes.InputPort( "A", [Number], 0 ),
+						new FLOOD.baseTypes.InputPort( "B", [Number], 0 ) ],
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [Number] ) ],
+			typeName: "Add" 
+		};
+
+		FLOOD.baseTypes.NodeType.call(this, typeData );
+
+		this.eval = function(a, b) {
+			return a + b;
+		};
+
+	}.inherits( FLOOD.baseTypes.NodeType );
+
+	FLOOD.nodeTypes.Subtract = function() {
+
+		var typeData = {
+			inputs: [ 	new FLOOD.baseTypes.InputPort( "A", [Number], 0 ),
+						new FLOOD.baseTypes.InputPort( "B", [Number], 0 ) ],
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [Number] ) ],
+			typeName: "Subtract" 
+		};
+
+		FLOOD.baseTypes.NodeType.call(this, typeData );
+
+		this.eval = function(a, b) {
+			return a - b;
+		};
+
+	}.inherits( FLOOD.baseTypes.NodeType );
+
+	FLOOD.nodeTypes.Multiply = function() {
+
+		var typeData = {
+			inputs: [ 	new FLOOD.baseTypes.InputPort( "A", [Number], 0 ),
+						new FLOOD.baseTypes.InputPort( "B", [Number], 0 ) ],
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [Number] ) ],
+			typeName: "Multiply" 
+		};
+
+		FLOOD.baseTypes.NodeType.call(this, typeData );
+
+		this.eval = function(a, b) {
+			return a * b;
+		};
+
+	}.inherits( FLOOD.baseTypes.NodeType );
+
+	FLOOD.nodeTypes.Divide = function() {
+
+		var typeData = {
+			inputs: [ 	new FLOOD.baseTypes.InputPort( "A", [Number], 0 ),
+						new FLOOD.baseTypes.InputPort( "B", [Number], 0 ) ],
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [Number] ) ],
+			typeName: "Divide" 
+		};
+
+		FLOOD.baseTypes.NodeType.call(this, typeData );
+
+		this.eval = function(a, b) {
+			return a / b;
+		};
+
+	}.inherits( FLOOD.baseTypes.NodeType );
+
+	FLOOD.nodeTypes.GreaterThan = function() {
+
+		var typeData = {
+			inputs: [ 	new FLOOD.baseTypes.InputPort( "A", [Number], 0 ),
+									new FLOOD.baseTypes.InputPort( "B", [Number], 0 ) ],
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [Boolean] ) ],
+			typeName: "GreaterThan" 
+		};
+
+		FLOOD.baseTypes.NodeType.call(this, typeData );
+
+		this.eval = function(a, b) {
+			return a > b;
+		};
+
+	}.inherits( FLOOD.baseTypes.NodeType );
+
+	FLOOD.nodeTypes.Eval = function() {
+
+		var typeData = {
+			inputs: [ 	new FLOOD.baseTypes.InputPort( "Code", [String], 0 ) ],
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [AnyType] ) ],
+			typeName: "Eval" 
+		};
+
+		FLOOD.baseTypes.NodeType.call(this, typeData );
+
+		this.eval = function(a) {
+			return eval( a );
+		};
+
+	}.inherits( FLOOD.baseTypes.NodeType );
+
+	FLOOD.nodeTypes.Apply = function() {
+
+		var typeData = {
+			inputs: [ 	new FLOOD.baseTypes.InputPort( "Function", [Function] ),
+									new FLOOD.baseTypes.InputPort( "Arguments", [QuotedArray, AnyType] ) ],
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [AnyType] ) ],
+			typeName: "Apply" 
+		};
+
+		FLOOD.baseTypes.NodeType.call( this, typeData );
+
+		this.eval = function(f, a) {
+			return f.apply(this, a);
+		};
+
+	}.inherits( FLOOD.baseTypes.NodeType );
+
+	FLOOD.nodeTypes.ApplyToLeaves = function() {
+
+		var typeData = {
+			inputs: [ 	new FLOOD.baseTypes.InputPort( "Function", [Function] ),
+									new FLOOD.baseTypes.InputPort( "Arguments", [QuotedArray, AnyTypeButQuotedArray] ) ],
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [AnyType] ) ],
+			typeName: "ApplyToLeaves" 
+		};
+
+		FLOOD.baseTypes.NodeType.call( this, typeData );
+
+		this.eval = function(f, a) {
+
+			return f.apply(this, a);
+
+		};
+
+	}.inherits( FLOOD.baseTypes.NodeType );
+
 	FLOOD.nodeTypes.LessThan = function() {
 
 		var typeData = {
@@ -628,7 +760,6 @@ define(function() {
 
 	}.inherits( FLOOD.baseTypes.NodeType );
 
-
 	FLOOD.nodeTypes.Equal = function() {
 
 		var typeData = {
@@ -645,8 +776,6 @@ define(function() {
 		};
 
 	}.inherits( FLOOD.baseTypes.NodeType );
-
-	// Begin
 
 	FLOOD.internalNodeTypes.Begin = function() {
 
@@ -665,8 +794,6 @@ define(function() {
 
 	}.inherits( FLOOD.baseTypes.NodeType );
 
-	// Watch
-
 	FLOOD.nodeTypes.Watch = function() {
 
 		var typeData = {
@@ -684,8 +811,6 @@ define(function() {
 		};
 
 	}.inherits( FLOOD.baseTypes.NodeType );
-
-	// Range
 
 	FLOOD.nodeTypes.Range = function() {
 
@@ -718,6 +843,28 @@ define(function() {
 
 	}.inherits( FLOOD.baseTypes.NodeType )
 
+	FLOOD.nodeTypes.ListByRepeat = function() {
+
+		var typeData = {
+			inputs: [ 	new FLOOD.baseTypes.InputPort( "Value", [AnyType], 0 ),
+									new FLOOD.baseTypes.InputPort( "Count", [Number], 0 )],
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [QuotedArray, AnyType] ) ],
+			typeName: "ListRepeat" 
+		};
+
+		FLOOD.baseTypes.NodeType.call( this, typeData );
+
+		this.eval = function(v, t) {
+
+			var a = new QuotedArray();
+
+			if ( t > 0 ) for (var i = 0; i < t; i++) a.push(v);
+			return a;
+
+		};
+
+	}.inherits( FLOOD.baseTypes.NodeType );
+
 	FLOOD.nodeTypes.ListLength = function() {
 
 		var typeData = {
@@ -730,6 +877,22 @@ define(function() {
 
 		this.eval = function(l) {
 			return l.length;
+		};
+
+	}.inherits( FLOOD.baseTypes.NodeType );
+
+	FLOOD.nodeTypes.ListFirst = function() {
+
+		var typeData = {
+			inputs: [ 	new FLOOD.baseTypes.InputPort( "List", [QuotedArray, AnyType] )],
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [AnyType] ) ],
+			typeName: "ListFirst" 
+		};
+
+		FLOOD.baseTypes.NodeType.call( this, typeData );
+
+		this.eval = function(l) {
+			return l[0];
 		};
 
 	}.inherits( FLOOD.baseTypes.NodeType );
@@ -751,18 +914,19 @@ define(function() {
 
 	}.inherits( FLOOD.baseTypes.NodeType );
 
-	FLOOD.nodeTypes.ListFirst = function() {
+	FLOOD.nodeTypes.ListRest = function() {
 
 		var typeData = {
 			inputs: [ 	new FLOOD.baseTypes.InputPort( "List", [QuotedArray, AnyType] )],
 			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [AnyType] ) ],
-			typeName: "ListFirst" 
+			typeName: "ListRest" 
 		};
 
 		FLOOD.baseTypes.NodeType.call( this, typeData );
 
 		this.eval = function(l) {
-			return l[0];
+			if (l.length <= 1) return [];
+			return l.slice(1);
 		};
 
 	}.inherits( FLOOD.baseTypes.NodeType );
@@ -780,28 +944,6 @@ define(function() {
 
 		this.eval = function(l, i) {
 			return l[i];
-		};
-
-	}.inherits( FLOOD.baseTypes.NodeType );
-
-	FLOOD.nodeTypes.ListByRepeat = function() {
-
-		var typeData = {
-			inputs: [ 	new FLOOD.baseTypes.InputPort( "Value", [AnyType], 0 ),
-									new FLOOD.baseTypes.InputPort( "Count", [Number], 0 )],
-			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [QuotedArray, AnyType] ) ],
-			typeName: "ListRepeat" 
-		};
-
-		FLOOD.baseTypes.NodeType.call( this, typeData );
-
-		this.eval = function(v, t) {
-
-			var a = new QuotedArray();
-
-			if ( t > 0 ) for (var i = 0; i < t; i++) a.push(v);
-			return a;
-
 		};
 
 	}.inherits( FLOOD.baseTypes.NodeType );
@@ -844,6 +986,37 @@ define(function() {
 
 	}.inherits( FLOOD.baseTypes.NodeType );
 
+	FLOOD.nodeTypes.ListDivide = function() {
+
+		var typeData = {
+			inputs: [ 	new FLOOD.baseTypes.InputPort( "List", [QuotedArray, AnyType] ),
+									new FLOOD.baseTypes.InputPort( "Length", [Number], 1 ) ],
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [QuotedArray, AnyType] ) ],
+			typeName: "ListDivide" 
+		};
+
+		FLOOD.baseTypes.NodeType.call( this, typeData );
+
+		this.eval = function(l, d) {
+
+			if (l.length === 0) return l;
+			if (l.length <= d) return l;
+			if (d < 1) return l;
+
+			var acc = new QuotedArray();
+
+			for (var i = 0; i < l.length; i+=d){
+				if (i+d > l.length) break;
+				acc.push( l.slice(i, i + d ).toQuotedArray() );
+			}
+
+			return acc;
+
+		};
+
+	}.inherits( FLOOD.baseTypes.NodeType );
+
+
 	FLOOD.nodeTypes.ListReduce = function() {
 
 		var typeData = {
@@ -883,10 +1056,87 @@ define(function() {
 
 	}.inherits( FLOOD.baseTypes.NodeType );
 
+	FLOOD.nodeTypes.ListFlatten = function() {
+
+		var typeData = {
+			inputs: [ 	new FLOOD.baseTypes.InputPort( "Function", [QuotedArray, AnyType] )],
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [QuotedArray, AnyType] ) ],
+			typeName: "ListFlatten" 
+		};
+
+		FLOOD.baseTypes.NodeType.call(this, typeData );
+
+		this.eval = function(a) {
+
+			return a.flatten().toQuotedArray();
+
+		};
+
+	}.inherits( FLOOD.baseTypes.NodeType );
+
+	FLOOD.nodeTypes.StringToNumber = function() {
+
+		var typeData = {
+			inputs: [ 	new FLOOD.baseTypes.InputPort( "String", [String] )] ,
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [Number] ) ],
+			typeName: "StringToNumber" 
+		};
+
+		FLOOD.baseTypes.NodeType.call( this, typeData );
+
+		this.eval = function(s) {
+			return parseFloat(s);
+		};
+
+	}.inherits( FLOOD.baseTypes.NodeType );
+
+	FLOOD.nodeTypes.StringSplit = function() {
+
+		var typeData = {
+			inputs: [ 	new FLOOD.baseTypes.InputPort( "String", [String], " " ),
+									new FLOOD.baseTypes.InputPort( "Delimiter", [String], ",") ],
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [QuotedArray, String] ) ],
+			typeName: "StringSplit" 
+		};
+
+		FLOOD.baseTypes.NodeType.call( this, typeData );
+
+		this.eval = function(s, d) {
+
+			return s.split(d).toQuotedArray();
+
+		};
+
+	}.inherits( FLOOD.baseTypes.NodeType );
+
+	FLOOD.nodeTypes.StringSubString = function() {
+
+		var typeData = {
+			inputs: [ 	new FLOOD.baseTypes.InputPort( "String", [String], "" ),
+									new FLOOD.baseTypes.InputPort( "Start", [Number], 0),
+									new FLOOD.baseTypes.InputPort( "Length", [Number], -1) ],
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [String] ) ],
+			typeName: "StringSubString" 
+		};
+
+		FLOOD.baseTypes.NodeType.call( this, typeData );
+
+		this.eval = function(s, st, l) {
+
+			if (l < 0) 
+				l = undefined;
+			return s.substring(st, l);
+
+		};
+
+	}.inherits( FLOOD.baseTypes.NodeType );
 
 	// represents any type
 	function AnyType() {};
 	FLOOD.AnyType = AnyType;
+
+	function AnyTypeButQuotedArray() {};
+	FLOOD.AnyTypeButQuotedArray = AnyTypeButQuotedArray;
 
 	FLOOD.isObjectTypeMatch = isObjectTypeMatch;
 	FLOOD.isFastTypeMatch = isFastTypeMatch;
@@ -904,6 +1154,10 @@ define(function() {
 
 		if ( arg === undefined || arg === null ){
 			return false;
+		}
+
+		if (arg_type === AnyTypeButQuotedArray && arg.constructor != QuotedArray){
+			return true;
 		}
 
 		if (arg_type === AnyType && arg.constructor === QuotedArray ){

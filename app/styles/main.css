@@ -15,6 +15,10 @@ body {
 	font-size: 10px;
 }
 
+.formula-text-input {
+	min-width: 200px;
+}
+
 .workspace-runner-status {
 	top: 90px;
 	right: 60px;
@@ -599,6 +603,10 @@ body {
 	display: inline-block;
 	border-bottom: 1px solid rgba(0,0,0,0.2);
 	float: left;
+}
+
+.node-outputs {
+	margin-bottom: 8px; /* particularly useful for node output collections */
 }
 
 .node-inputs-extra {

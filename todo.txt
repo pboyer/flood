@@ -1,10 +1,21 @@
+get ms office, camtasia on home pc
+
+fix FloorByOutline issues
+
+presentation, incorporate critiques
+record presentation, upload
+
+
 CURRENT
 
-need to place node correctly in bottom right node search
+multi out connection fails when you connect output, then disconnect connection somewhere else in the graph
+removing all connections from formula leaves hanging connection
+sticky inputs on formula, workspace tabs
+
 
 POLISH
 
-sticky inputs on formula, workspace tabs
+turn off live execution
 closing my workspaces sucks
 autosave all the time
 node ports with defaults should be black
@@ -22,6 +33,7 @@ ask user if they're sure they want to leave before leaving page
 should remember the old 3d 
 save is too sporadic
 workspace execution icon in weird location
+
 
 FEATURE
 

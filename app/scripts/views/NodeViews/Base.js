@@ -217,9 +217,8 @@ define(['backbone', 'jqueryuidraggable'], function(Backbone, jqueryuidraggable) 
 
     handleKeyDownWhenSelected: function(e) {
 
-      e.preventDefault();
-
       if (e.keyCode === 8 && e.ctrlKey) {
+        e.preventDefault();
         this.workspace.removeSelected();
       }
 
@@ -237,8 +236,13 @@ define(['backbone', 'jqueryuidraggable'], function(Backbone, jqueryuidraggable) 
         , y = this.position[1];
 
       if (isOutputPort) {
-        x += parseInt( this.outputPorts[index].getAttribute('cx')) + 5;
-        y += parseInt( this.outputPorts[index].getAttribute('cy'));        
+        try {
+          x += parseInt( this.outputPorts[index].getAttribute('cx')) + 5;
+          y += parseInt( this.outputPorts[index].getAttribute('cy'));      
+        } catch (e){
+          console.error("GAH GAH GAH", this)
+        }
+  
       } else {
         x += parseInt( this.inputPorts[index].getAttribute('cx'))- 5;
         y += parseInt( this.inputPorts[index].getAttribute('cy'));   

@@ -61,7 +61,9 @@ define(function() {
 		'list?': function(e) { return e instanceof Array; },
 		'null?': function(e) { return e === []; },
 		'symbol?': function(e) { return typeof e === "string"; },
-		'pick': function(i, l) { return l[i]; },
+		'pick': function(i, l) { 
+			return l[i]; 
+		},
 		'map': function(f, l) { return l.map(f); },
 		'reduce': function(f, a, l) { return l.reduce(f, a); },
 		'filter': function(f, l) { return l.filter(f); },

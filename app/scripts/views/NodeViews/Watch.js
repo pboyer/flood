@@ -28,7 +28,7 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView'], function(Backbone, 
     	}
 
     	if (typeof val === "string"){
-    		return val.replace(new RegExp("\t", 'g'), "").replace(new RegExp("\n", 'g'), "")
+    		return val.replace(new RegExp("\t", 'g'), "").replace(new RegExp("\n", 'g'), "<br>")
     	}
 
     	return val;

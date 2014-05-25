@@ -65,7 +65,7 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView', 'FLOOD'], function(B
     	var type = this.model.get('type');
   	  var ex = this.model.get('extra');
 
-  	  if (ex.numInputs === undefined) ex.numInputs = 1;
+  	  if (ex.numInputs === undefined) ex.numInputs = 0;
 
   	  // sorry - no more letters!  hehe
   	  if (type.inputs.length === 26) return;

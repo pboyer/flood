@@ -102,6 +102,8 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
         this._isSerializing = false;
 
 
+        console.log(json)
+
         return json;
     },
 
