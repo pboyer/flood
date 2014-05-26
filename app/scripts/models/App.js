@@ -19,6 +19,13 @@ define(['backbone', 'Workspaces', 'Node', 'Login', 'Workspace', 'SearchElements'
       this.SearchElements.fetch();
     },
 
+    enableAutosave: function(){
+
+      this.get('workspaces').on('add remove', function(){ this.sync("update", this); }, this );
+      this.on('change:currentWorkspace', function(){ this.sync("update", this); }, this);
+
+    },
+
     newNodePosition: [0,0],
 
     defaults: {
@@ -46,7 +53,7 @@ define(['backbone', 'Workspaces', 'Node', 'Login', 'Workspace', 'SearchElements'
     fetch : function(options){
 
       this.login.fetch();
-      Backbone.Model.prototype.fetch.apply(this, options);
+      Backbone.Model.prototype.fetch.call(this, options);
       
     },
 

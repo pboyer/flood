@@ -8,6 +8,9 @@ require(["config"], function() {
       error: function(result) {
         console.error('error');
         console.error(result);
+      },
+      success: function(){
+        app.enableAutosave();
       }
     });
 

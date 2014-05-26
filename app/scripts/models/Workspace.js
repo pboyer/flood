@@ -5,6 +5,10 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
 
     idAttribute: "_id",
 
+    url: function(){
+      return '/ws/' + this.get('_id');
+    },
+
     defaults: {
       name: "Unnamed Workspace",
       nodes: null,
@@ -72,13 +76,17 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
         endProxy: true, 
         startProxyPosition: [0,0], 
         endProxyPosition: [0,0],
-        hidden: true }, 
-      { workspace: this });
+        hidden: true }, { workspace: this });
 
       this.runAllowed = true;
 
       // run the workspace for the first time
       this.run();
+
+      // save on every change
+      var throttledSync = _.throttle(function(){ this.sync('update', this); }, 2000);
+      this.on('runCommand', throttledSync, this);
+      this.on('change:name', throttledSync, this);
 
     },
 
@@ -101,9 +109,6 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
 
         this._isSerializing = false;
 
-
-        console.log(json)
-
         return json;
     },
 
@@ -116,7 +121,6 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
     printModel: function(){
       console.log(this.toJSON());
     },
-
 
     addToUndoAndClearRedo: function(cmd){
 
@@ -271,45 +275,45 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
 
     addNode: function(data){
 
-      this.internalCommands.addNode.call(this, data);
       var datac = JSON.parse( JSON.stringify( data ) );
       datac.kind = "addNode";
+      this.runInternalCommand(datac);
       this.addToUndoAndClearRedo( datac );
 
     },
 
     removeNode: function(data){
 
-      this.internalCommands.removeNode.call(this, data);
       var datac = JSON.parse( JSON.stringify( data ) );
       datac.kind = "removeNode";
+      this.runInternalCommand(datac);
       this.addToUndoAndClearRedo( datac );
 
     },
 
     addConnection: function(data){
 
-      this.internalCommands.addConnection.call(this, data);
       var datac = JSON.parse( JSON.stringify( data ) );
       datac.kind = "addConnection";
+      this.runInternalCommand(datac);
       this.addToUndoAndClearRedo( datac );
 
     },
 
     removeConnection: function(data){
 
-      this.internalCommands.removeConnection.call(this, data);
       var datac = JSON.parse( JSON.stringify( data ) );
       datac.kind = "removeConnection";
+      this.runInternalCommand(datac);
       this.addToUndoAndClearRedo( datac );
 
     }, 
 
     setNodeProperty: function(data){
 
-      this.internalCommands.setNodeProperty.call(this, data);
       var datac = JSON.parse( JSON.stringify( data ) );
       datac.kind = "setNodeProperty";
+      this.runInternalCommand(datac);
       this.addToUndoAndClearRedo( datac );
 
     },
@@ -383,10 +387,12 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
 
       var cmd = this.internalCommands[ commandData.kind ];
       if (cmd){
-        return cmd.call(this, commandData);
-      } else {
-        console.warn('Could not find the command: ' + cmd.kind);
-      }
+        cmd.call(this, commandData);
+        this.trigger('runCommand');
+        return;
+      } 
+
+      console.warn('Could not find the command: ' + cmd.kind);
 
     },
 
@@ -399,8 +405,8 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
       }
 
       var data = rs.pop();
-      this.runInternalCommand(data);
       this.get('undoStack').push(data);
+      this.runInternalCommand(data);
       
     },
 

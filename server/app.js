@@ -117,10 +117,11 @@ app.get('/nws', floodController.getNewWorkspace );
 app.get('/ws', floodController.getWorkspaces);
 
 app.get('/ws/:id', floodController.getWorkspace);
-app.post('/ws/:id', floodController.saveWorkspace);
+app.put('/ws/:id', floodController.putWorkspace);
 
-app.get('/s/:id', floodController.getSession);
-app.post('/s/:id', floodController.saveSession);
+// app.post('/ws/:id', floodController.saveWorkspace);
+// app.get('/s/:id', floodController.getSession);
+// app.post('/s/:id', floodController.saveSession);
 
 app.get('/', homeController.index);
 

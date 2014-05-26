@@ -114,7 +114,7 @@ exports.putMySession = function(req, res) {
 				w.redoStack = x.redoStack || w.redoStack;
 				w.undoStack = x.undoStack || w.undoStack;
 
-				w.markModified("name nodes connections currentWorkspace selectedNodes zoom lastSaved");
+				w.markModified("name nodes connections currentWorkspace selectedNodes zoom lastSaved undoStack redoStack");
 
 				w.save(function(se){
 					if (se) return callback(se);
@@ -176,7 +176,6 @@ exports.getNewWorkspace = function(req, res){
 		user.save(function(eu){
 
 			if (eu) return res.status(500).send("Failed to update user profile");
-			console.log(user)
 			return res.send(nws);
 
 		})
@@ -237,31 +236,33 @@ exports.getWorkspace = function(req, res) {
 
 };
 
-exports.saveWorkspace = function(req, res) {
+exports.putWorkspace = function(req, res) {
 
   var wid = req.params.id;
-	var nws = JSON.parse( req.body.workspace );
+	var x = req.body;
 
-	// TODO: update user
-
-	Workspace.findById( wid , function(e, ws) {
+	Workspace.findById( wid , function(e, w) {
 
 		if (e) {
 	  	return res.status(404).send('Workspace not found');
 		}
 
-		ws.name = nws.name || ws.name;
-		ws.connections = nws.connections;
-		ws.nodes = nws.nodes;
+		w.name = x.name || w.name;
+		w.nodes = x.nodes || w.nodes;
+		w.connections = x.connections || w.connections;
+		w.currentWorkspace = x.currentWorkspace || w.currentWorkspace;
+		w.selectedNodes = x.selectedNodes || w.selectedNodes;
+		w.zoom = x.zoom || w.zoom;
+		w.lastSaved = Date.now();
+		w.redoStack = x.redoStack || w.redoStack;
+		w.undoStack = x.undoStack || w.undoStack;
 
-		ws.selectedNodes = nws.selectedNodes;
-		ws.zoom = nws.zoom;
-		ws.lastSave = Date.now();
+		w.markModified("name nodes connections currentWorkspace selectedNodes zoom lastSaved undoStack redoStack");
 
-		ws.save(function(e){
-			if (e) return res.status(500).send("Failed to save workspace")
-			return res.send("Success");
-		});
+		w.save(function(se){
+			if (se) return res.status(500).send('Could not save the workspace');
+			return res.status(200).send('Saved workspace');
+		});	
 		
 	}); 
 
