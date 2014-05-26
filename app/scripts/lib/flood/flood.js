@@ -117,6 +117,7 @@ define(function() {
 	};
 
 	Array.prototype.toQuotedArray = function(){
+
 		var qa = new QuotedArray();
 		for (var i = 0; i < this.length; i++){
 			qa.push( this[i].toQuotedArray ? this[i].toQuotedArray() : this[i] );
@@ -1021,8 +1022,8 @@ define(function() {
 
 		var typeData = {
 			inputs: [ 	new FLOOD.baseTypes.InputPort( "Function", [Function], function(a){ return a; } ),
-						new FLOOD.baseTypes.InputPort( "List", [QuotedArray, AnyType], [] ), 
-						new FLOOD.baseTypes.InputPort( "Base", [AnyType], [] ) ],
+									new FLOOD.baseTypes.InputPort( "List", [QuotedArray, AnyType], [] ), 
+									new FLOOD.baseTypes.InputPort( "Base", [AnyType], [] ) ],
 			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [AnyType] ) ],
 			typeName: "ListReduce" 
 		};
@@ -1031,7 +1032,7 @@ define(function() {
 
 		this.eval = function(F, L, A) {
 
-			return L.reduce(F, A).toQuotedArray();
+			return L.reduce(F, A);
 
 		};
 

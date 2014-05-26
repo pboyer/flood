@@ -1,35 +1,27 @@
-get ms office, camtasia on home pc
-
-fix FloorByOutline issues
-
-presentation, incorporate critiques
-record presentation, upload
-
-
 CURRENT
 
-multi out connection fails when you connect output, then disconnect connection somewhere else in the graph
-removing all connections from formula leaves hanging connection
-sticky inputs on formula, workspace tabs
+copy-paste doesn't copy interior connectors
+missing image on ThreeCSG nodes  
+darken input with defaults
+make sure new workspaces end up in workspace collection
+missing halflings  http://localhost:3000/fonts/glyphicons-halflings-regular.woff
 
 
 POLISH
 
-turn off live execution
-closing my workspaces sucks
-autosave all the time
-node ports with defaults should be black
 set exact number
-missing image on ThreeCSG nodes  
-missing halflings  http://localhost:3000/fonts/glyphicons-halflings-regular.woff
+login/signup sucks should work with oauth - initially
+editing formula, number values doesn't get updated with undo/redo
+removing all connections from formula leaves hanging connection
+sticky text inputs on formula, workspace tabs
+node ports with defaults should be black
 curves - whats the minimum requirement - line - polyline?
 transforms?
+ability to turn off live execution
 disable node lacing
 can't tell why node failed execution
 node context menus are too big
 don't keep workspaces that haven't been saved at least once
-login/signup sucks should work with oauth - initially
-ask user if they're sure they want to leave before leaving page
 should remember the old 3d 
 save is too sporadic
 workspace execution icon in weird location

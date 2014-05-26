@@ -201,19 +201,22 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
 
       // get all relevant connections
       var copyConns = {};
+      var connCount = 0;
       this.get('connections')
         .each(function(x){
 
           if (x.get('_id') === -1 || x.get('startProxy') || x.get('endProxy')) return;
 
-          if ( ( copyNodes[ x.get('startNodeId') ] && copyNodes[ x.get('endNodeId') ] )
-               || copyNodes[ x.get('endNodeId') ]  ){
+          if ( ( copyNodes[ x.get('startNodeId') ] && copyNodes[ x.get('endNodeId') ] ) || copyNodes[ x.get('endNodeId') ]  ){
 
             if ( !copyConns[ x.get('_id')  ] ){
+              connCount++;
               copyConns[ x.get('_id') ] = x.toJSON();
             } 
           }
         });
+
+        console.log(connCount, " connections copied")
 
       this.app.set('clipboard', { nodes: copyNodes, connections: copyConns });
 
@@ -244,6 +247,10 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
 
         if ( nodes[ x.endNodeId ] ){
           x.endNodeId = nodes[ x.endNodeId ]._id;
+        }
+
+        if ( nodes[x.startNodeId]){
+          x.startNodeId = nodes[ x.startNodeId ]._id;
         }
 
         connections[x._id] = x;
