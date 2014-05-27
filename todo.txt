@@ -1,6 +1,6 @@
 CURRENT
 
-copy-paste doesn't copy interior connectors
+desktop zoom is really slow
 missing image on ThreeCSG nodes  
 darken input with defaults
 make sure new workspaces end up in workspace collection
