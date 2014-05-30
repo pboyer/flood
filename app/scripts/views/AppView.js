@@ -31,6 +31,8 @@ define([  'backbone',
       this.model.on('change:showingHelp', this.viewHelp, this);
       this.model.on('change:showingBrowser', this.viewBrowser, this);
 
+      $(document).bind('keydown', $.proxy( this.keydownHandler, this) );
+
     },
 
     events: {
@@ -41,6 +43,12 @@ define([  'backbone',
       'click #workspace_hide' : 'toggleViewer',
       'click #add-workspace-button': 'newWorkspace',
       'click #workspace-browser-button': 'toggleBrowser'
+    },
+
+    keydownHandler: function(e){
+      
+      this.currentWorkspaceView.keydownHandler(e);
+
     },
 
     saveClick: function(e){
@@ -320,6 +328,10 @@ define([  'backbone',
 
       $('#viewer').removeClass('blur');
 
+    },
+
+    getCurrentWorkspace: function(){
+      return this.get('workspaces').get(this.get('currentWorkspace'));
     },
 
     toggleViewer: function(event) {

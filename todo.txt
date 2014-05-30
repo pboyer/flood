@@ -1,25 +1,22 @@
 CURRENT
 
-copy-paste doesn't copy interior connectors
-missing image on ThreeCSG nodes  
-darken input with defaults
-make sure new workspaces end up in workspace collection
-missing halflings  http://localhost:3000/fonts/glyphicons-halflings-regular.woff
-
+do not require drag 
 
 POLISH
 
 set exact number
-login/signup sucks should work with oauth - initially
+show old-value, failure message on nodes
 editing formula, number values doesn't get updated with undo/redo
+logging in seems to kill your past session
+login/signup sucks should work with oauth - initially
 removing all connections from formula leaves hanging connection
 sticky text inputs on formula, workspace tabs
-node ports with defaults should be black
 curves - whats the minimum requirement - line - polyline?
 transforms?
-ability to turn off live execution
+hide slider on number
+ability to turn off live execution!
 disable node lacing
-can't tell why node failed execution
+can't tell why node failed execution - show result
 node context menus are too big
 don't keep workspaces that haven't been saved at least once
 should remember the old 3d 
@@ -29,8 +26,15 @@ workspace execution icon in weird location
 
 FEATURE
 
-canvas selection
+canvas marquee selection
 arbitrary javascript node - better than formula
 zoom
 STL
 promise-based execution
+
+
+
+// missing image on ThreeCSG nodes  
+// darken input with defaults
+// ctrl-c, ctrl-v, ctrl-z, ctrl-y -> copy, paste, undo, redo
+// scroll in search

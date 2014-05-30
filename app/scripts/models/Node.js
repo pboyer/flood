@@ -148,6 +148,30 @@ define(['backbone', 'FLOOD'], function(Backbone, FLOOD) {
 
     },
 
+    isPartialFunctionApplication: function(){
+
+      var numInPorts = this.get('inputConnections').length;
+
+      for (var i = 0; i < numInPorts; i++){
+        if (!this.isPortConnected(i, false) && !this.isInputPortUsingDefault(i) ){
+          return true;
+        } 
+      }
+
+      return false;
+
+    },
+
+    isInputPortUsingDefault: function(index){
+
+      if ( !this.isValidPort(index, false) ) {
+        return false;
+      }
+
+      return !this.get('ignoreDefaults')[index];
+
+    },
+
     // get the type of a given node port
     getPortType: function(index, isOutput){
       
@@ -180,6 +204,12 @@ define(['backbone', 'FLOOD'], function(Backbone, FLOOD) {
       return this.getPorts(isOutput)[index];
     },
 
+    isOutputNode: function(){
+      return this.get('outputConnections').reduce(function(memo, ele){
+        return memo && (ele.length === 0);
+      }, true);
+    },
+
     connectPort: function( portIndex, isOutput, connection ) {
 
       if ( !this.isValidPort(portIndex, isOutput) ) {
@@ -206,12 +236,6 @@ define(['backbone', 'FLOOD'], function(Backbone, FLOOD) {
 
       return this;
 
-    },
-
-    isOutputNode: function(){
-      return this.get('outputConnections').reduce(function(memo, ele){
-        return memo && (ele.length === 0);
-      }, true);
     },
 
     disconnectPort: function( portIndex, connection, isOutput ){

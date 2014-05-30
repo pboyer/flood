@@ -71,10 +71,12 @@ exports.getMySession = function(req, res) {
 	var user = req.user;
 
 	if (!user) {
+		console.log('init non user')
 		return initializeNonUserSession(req,res);
 	}
 
 	if (!user.lastSession){
+		console.log('init new user')
 		return initializeUserSession(req, res);
 	}	
 
@@ -82,7 +84,10 @@ exports.getMySession = function(req, res) {
 	.findById(user.lastSession )
 	.populate('workspaces')
 	.exec( function(err, sesh){
-		if (err || !sesh || !sesh.workspaces || sesh.workspaces.length == 0 ) return initializeUserSession(req, res);
+		if (err || !sesh || !sesh.workspaces || sesh.workspaces.length == 0 ) {
+			console.log('fail new sesh')
+			return initializeUserSession(req, res);
+		}
 		return res.send(sesh);
 	});
 
@@ -152,7 +157,6 @@ exports.putMySession = function(req, res) {
 			});
 
 		}); 
-
 
 	});
 

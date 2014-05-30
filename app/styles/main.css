@@ -98,6 +98,12 @@ body {
 	stroke:#777;
 }
 
+.partial-function-connection {
+	fill:none; 
+	stroke-width: 2.6;
+	stroke: white;
+}
+
 .tab-button {
 	display: inline-block;
 	padding: 10px;
@@ -277,7 +283,8 @@ body {
 }
 
 .search-list {
-	overflow-y: hidden;
+	max-height:  300px;
+	overflow-y: scroll;
 	overflow-x: hidden;
 	list-style: none;
 	padding: 0;
@@ -678,10 +685,6 @@ body {
 .nav-list > .active > a > [class*=" icon-"],
 .navbar-inverse .nav > .active > a > [class^="icon-"],
 .navbar-inverse .nav > .active > a > [class*=" icon-"],
-.dropdown-menu > li > a:hover > [class^="icon-"],
-.dropdown-menu > li > a:focus > [class^="icon-"],
-.dropdown-menu > li > a:hover > [class*=" icon-"],
-.dropdown-menu > li > a:focus > [class*=" icon-"],
 .dropdown-menu > .active > a > [class^="icon-"],
 .dropdown-menu > .active > a > [class*=" icon-"],
 .dropdown-submenu:hover > a > [class^="icon-"],

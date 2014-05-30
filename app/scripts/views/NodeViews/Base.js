@@ -25,6 +25,7 @@ define(['backbone', 'jqueryuidraggable'], function(Backbone, jqueryuidraggable) 
       this.workspaceView = args.workspaceView;
 
       this.listenTo(this.model, 'change:position', this.move );
+      this.listenTo(this.model, 'change:ignoreDefaults', this.colorPorts );
       this.listenTo(this.model, 'connection', this.colorPorts);
       this.listenTo(this.model, 'disconnection', this.colorPorts);
       this.listenTo(this.model, 'change:selected', this.colorSelected);
@@ -205,22 +206,11 @@ define(['backbone', 'jqueryuidraggable'], function(Backbone, jqueryuidraggable) 
 
       if ( this.model.get('selected') ){
         this.$el.addClass('node-selected');
-        $(document).bind('keydown', $.proxy( this.handleKeyDownWhenSelected, this) );
       } else {
         this.$el.removeClass('node-selected');
-        $(document).unbind('keydown', this.handleKeyDownWhenSelected);
       }
 
       return this;
-
-    },
-
-    handleKeyDownWhenSelected: function(e) {
-
-      if (e.keyCode === 8 && e.ctrlKey) {
-        e.preventDefault();
-        this.workspace.removeSelected();
-      }
 
     },
 
@@ -240,7 +230,7 @@ define(['backbone', 'jqueryuidraggable'], function(Backbone, jqueryuidraggable) 
           x += parseInt( this.outputPorts[index].getAttribute('cx')) + 5;
           y += parseInt( this.outputPorts[index].getAttribute('cy'));      
         } catch (e){
-          console.error("GAH GAH GAH", this)
+          
         }
   
       } else {
@@ -256,19 +246,33 @@ define(['backbone', 'jqueryuidraggable'], function(Backbone, jqueryuidraggable) 
 
       // update port colors
       var that = this;
+      var isPartial = false;
+
       this.inputPorts.forEach(function(ele, ind){
 
-        if (that.model.isPortConnected(ind, false)){
+        ele.setAttribute('stroke','black');
+
+        if (that.model.isPortConnected(ind, false) ){
           ele.setAttribute('fill','black');
-        } else {
+        } else if (that.model.isInputPortUsingDefault(ind)){
           ele.setAttribute('fill','white');
+        } else {
+          isPartial = true;
+          ele.setAttribute('fill','grey');
+          ele.setAttribute('stroke','white');
         }
           
       });
 
       this.outputPorts.forEach(function(ele, ind){
+
+        ele.setAttribute('stroke','black');
+
         if (that.model.isPortConnected(ind, true)){
           ele.setAttribute('fill','black');
+        } else if (isPartial) {
+          ele.setAttribute('fill','grey');
+          ele.setAttribute('stroke','white');
         } else {
           ele.setAttribute('fill','white');
         }
@@ -359,7 +363,6 @@ define(['backbone', 'jqueryuidraggable'], function(Backbone, jqueryuidraggable) 
 
     remove: function() {
       this.$el.remove();
-      $(document).unbind('keydown', this.handleKeyDownWhenSelected);
       if (this.portGroup.parentNode)
         this.portGroup.parentNode.removeChild(this.portGroup);
     }

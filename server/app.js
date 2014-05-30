@@ -26,7 +26,6 @@ var connectAssets = require('connect-assets');
  */
 
 var floodController = require('./controllers/flood');
-
 var homeController = require('./controllers/home');
 var userController = require('./controllers/user');
 var apiController = require('./controllers/api');

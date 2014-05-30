@@ -156,6 +156,38 @@ define(['backbone', 'Workspace', 'ConnectionView', 'NodeViewTypes'], function(Ba
 
     },
 
+    // called by AppView
+    keydownHandler: function(e){
+
+      if ( !(e.metaKey || e.ctrlKey) ) return;
+
+      // do not capture from input
+      if (e.originalEvent.srcElement.nodeName === "INPUT") return;
+
+      switch (e.keyCode) {
+        case 68:
+          this.model.removeSelected();
+          return e.preventDefault();
+        case 67:
+          this.model.copy();
+          return e.preventDefault();
+        case 86:
+          this.model.paste();
+          return e.preventDefault();
+        case 88:
+          this.model.copy();
+          this.model.removeSelected();
+          return e.preventDefault();
+        case 89:
+          this.model.redo();
+          return e.preventDefault();
+        case 90:
+          this.model.undo();
+          return e.preventDefault();
+      }
+
+    },
+
     renderConnections: function() {
 
       var this_ = this;

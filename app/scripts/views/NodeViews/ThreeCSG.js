@@ -181,12 +181,17 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView'], function(Backbone, 
       this.$toggleVis = this.$el.find('.toggle-vis');
       this.$toggleVis.show();
 
+      var icon = this.$toggleVis.find('i');
+      var label = this.$toggleVis.find('span');
+
       if (this.model.get('visible')){
-        this.$toggleVis.find('img').attr('src', 'images/vis_off.png');
-        this.$toggleVis.attr('title', 'Hide geometry');
+        icon.addClass('icon-eye-open');
+        icon.removeClass('icon-eye-close');
+        label.html('Hide geometry');
       } else {
-        this.$toggleVis.find('img').attr('src', 'images/toggle_vis.png');
-        this.$toggleVis.attr('title', 'Show geometry');
+        icon.removeClass('icon-eye-open');
+        icon.addClass('icon-eye-close');
+        label.html('Show geometry');
       }
 
       return this;

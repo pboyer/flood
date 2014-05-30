@@ -17,6 +17,10 @@ define(['backbone'], function(Backbone) {
       this.workspace = args.workspace;
       this.workspaceView = args.workspaceView;
 
+      if (this.model.startNode){
+        this.model.startNode.on('change:ignoreDefaults', this.render, this);
+      }
+
     },
 
     delegateEvents: function() {
@@ -43,16 +47,44 @@ define(['backbone'], function(Backbone) {
 
     render: function() {
 
-      this.makeCurveOnce().setAttribute('d', this.template( this.getControlPoints() ));
+      this.makeCurveOnce();
+
+      return this.updateControlPoints()
+        .updateHidden()
+        .updateColor();
+
+    },
+
+    updateControlPoints: function(){
+      this.el.setAttribute('d', this.template( this.getControlPoints() ))
+      return this;
+    },
+
+    updateHidden: function(){
 
       if (this.model.get('hidden')) {
         this.el.setAttribute('class','connection collapsed');
       } else {
         this.el.setAttribute('class','connection');
       }
-      
+
       return this;
 
+    },
+
+    updateColor: function(){
+
+      var startNode = this.model.startNode;
+
+      if (!startNode) return this;
+
+      if (startNode.isPartialFunctionApplication()){
+        this.el.setAttribute('class','partial-function-connection');
+      } else {
+        this.el.setAttribute('class','connection');
+      }
+
+      return this;
     },
 
     curveInit: false, 
@@ -72,7 +104,6 @@ define(['backbone'], function(Backbone) {
 
     // construct the control points for a bezier curve
     getControlPoints: function() {
-
 
       if (!this.model.get('startProxy') || !this.model.get('endProxy')) {
 

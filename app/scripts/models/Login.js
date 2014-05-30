@@ -12,7 +12,7 @@ define(['backbone'], function(Backbone) {
 		initialize: function(atts, vals) {
 
 	  	this.app = vals.app;
-	  	
+
 	  },
 
 	  fetch : function(){

@@ -84,8 +84,6 @@ define(['backbone'], function(Backbone) {
 
     },
 
-    // Signup state
-
     signup: function(e) {  
       e.preventDefault();
       this.model.signup( this.$('#signup-form').serialize());
