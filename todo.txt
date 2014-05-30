@@ -1,6 +1,6 @@
 CURRENT
 
-do not require drag 
+desktop zoom is too slow
 
 POLISH
 
@@ -32,9 +32,3 @@ zoom
 STL
 promise-based execution
 
-
-
-// missing image on ThreeCSG nodes  
-// darken input with defaults
-// ctrl-c, ctrl-v, ctrl-z, ctrl-y -> copy, paste, undo, redo
-// scroll in search
