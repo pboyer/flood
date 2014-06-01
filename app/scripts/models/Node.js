@@ -22,25 +22,6 @@ define(['backbone', 'FLOOD'], function(Backbone, FLOOD) {
       , isEvaluating: false
     },
 
-    // called when saving the node to server
-    serialize : function() {
-
-      var vals = {
-        name: this.get("name")
-        , position: this.get('position')
-        , typeName: this.get('typeName')
-        , selected: this.get('selected')
-        , visible: this.get('visible')
-        , ignoreDefaults: this.get('ignoreDefaults')
-        , _id: this.get('_id')
-        , replication: this.get('replication')
-        , extra: this.get('extra')
-      };
-
-      return vals;
-
-    },
-
     initialize: function(atts, vals) {
 
       // we need to know the type in order to create the node
@@ -71,7 +52,6 @@ define(['backbone', 'FLOOD'], function(Backbone, FLOOD) {
       this.set('ignoreDefaults', atts.ignoreDefaults );
       
       var that = this;
-      this.on('change', function(){ that.dirtySerialization = true; }, this);
       this.on('connection', this.onConnectPort);
       
       this.on('disconnection', this.onDisconnectPort);
@@ -81,6 +61,25 @@ define(['backbone', 'FLOOD'], function(Backbone, FLOOD) {
 
       this.initializePorts();
       
+    },
+
+    // called when saving the node to server
+    serialize : function() {
+
+      var vals = {
+        name: this.get("name")
+        , position: this.get('position')
+        , typeName: this.get('typeName')
+        , selected: this.get('selected')
+        , visible: this.get('visible')
+        , ignoreDefaults: this.get('ignoreDefaults')
+        , _id: this.get('_id')
+        , replication: this.get('replication')
+        , extra: this.get('extra')
+      };
+
+      return vals;
+
     },
 
     initializePorts: function() {

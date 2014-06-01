@@ -25,6 +25,7 @@ define(['backbone', 'jqueryuidraggable'], function(Backbone, jqueryuidraggable) 
       this.workspaceView = args.workspaceView;
 
       this.listenTo(this.model, 'change:position', this.move );
+      this.listenTo(this.model, 'change:lastValue', this.renderLastValue );
       this.listenTo(this.model, 'change:ignoreDefaults', this.colorPorts );
       this.listenTo(this.model, 'connection', this.colorPorts);
       this.listenTo(this.model, 'disconnection', this.colorPorts);
@@ -170,7 +171,8 @@ define(['backbone', 'jqueryuidraggable'], function(Backbone, jqueryuidraggable) 
       .colorSelected()
       .colorEvaluating()
       .moveNode()
-      .renderPorts();
+      .renderPorts()
+      .renderLastValue();
 
       return this;
 
@@ -187,6 +189,12 @@ define(['backbone', 'jqueryuidraggable'], function(Backbone, jqueryuidraggable) 
       }
       
       return this;
+
+    },
+
+    renderLastValue: function() {
+
+      return this.renderNode();
 
     },
 
@@ -230,7 +238,7 @@ define(['backbone', 'jqueryuidraggable'], function(Backbone, jqueryuidraggable) 
           x += parseInt( this.outputPorts[index].getAttribute('cx')) + 5;
           y += parseInt( this.outputPorts[index].getAttribute('cy'));      
         } catch (e){
-          
+
         }
   
       } else {

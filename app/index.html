@@ -64,6 +64,10 @@
 
       <script type="text/template" id="node-template">
 
+        <div class="node-last-value-container">
+          <div class="node-last-value"><%- JSON.stringify( lastValue ) %></div>
+        </div>
+
         <ul class="node-inputs">
           <% _.each(type.inputs, function(ele, index) { %> 
             <li class="node-port node-port-input" data-index=" <%= index %> "> 

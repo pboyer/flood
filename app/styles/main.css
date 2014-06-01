@@ -104,6 +104,44 @@ body {
 	stroke: white;
 }
 
+.node:hover .node-last-value-container {
+	display: block;
+}
+
+.node-last-value-container {
+	display: none;
+	position: absolute;
+	bottom: -20px;
+	left: 0px;
+	right: 0px;
+	height: 20px;
+
+	border: 1px solid #999;
+	background: #DDD;
+	color: #222;
+	
+	overflow-x: hidden;
+	overflow-y: hidden;
+}
+
+.node-last-value-container:hover {
+	right: -100px;
+	left: -100px;
+	height: 40px;
+	bottom: -40px;
+	overflow-x: scroll;
+	overflow-y: scroll;
+}
+
+.node-last-value {
+	opacity: 0.8;
+	display: inline-block;
+	width: 100px;
+	padding: 2px;
+	left: 0;
+	right: 0;
+}
+
 .tab-button {
 	display: inline-block;
 	padding: 10px;

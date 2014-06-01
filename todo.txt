@@ -1,11 +1,12 @@
 CURRENT
 
-desktop zoom is too slow
+show old-value, failure message on nodes
 
 POLISH
 
 set exact number
-show old-value, failure message on nodes
+desktop zoom is too slow
+
 editing formula, number values doesn't get updated with undo/redo
 logging in seems to kill your past session
 login/signup sucks should work with oauth - initially
