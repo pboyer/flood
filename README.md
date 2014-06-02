@@ -28,7 +28,7 @@ The flood app is scaffolded with [Yeoman](http://yeoman.io/), uses [Grunt](http:
 
 flood uses [require.js](http://requirejs.org/) to manage dependencies between JavaScript files and [backbone.js](http://backbonejs.org/) to stick it all together. 
 
-flood also has a server.  This provoides 
+flood also has a server written in node.js that handles user authentication and model synchronization. 
 
 ####Installing dependencies for the app
 
