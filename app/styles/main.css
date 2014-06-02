@@ -62,9 +62,14 @@ body {
 	display:inline-block; 
 }
 
+.workspace-search-container:last-child {
+	border-right: none;
+}
+
 .workspace-search-button-active {
 	color: #BBB;
 	background-color: #222;
+	border-right: 1px solid #333;
 }
 
 .workspace-search-button-active:hover {
@@ -79,6 +84,7 @@ body {
 .workspace-search-button {
 	height: 32px;
 	padding: 8px;
+	margin-left: 0;
 	border-right: 1px solid #333;
 	display:inline-block;
 }
@@ -111,15 +117,17 @@ body {
 .node-last-value-container {
 	display: none;
 	position: absolute;
-	bottom: -20px;
+	bottom: -26px;
 	left: 0px;
 	right: 0px;
-	height: 20px;
+	height: 26px;
+	opacity: 0.7;
+	padding: 3px;
 
 	border: 1px solid #999;
-	background: #DDD;
-	color: #222;
-	
+	background: #EEE;
+	color: #444;
+
 	overflow-x: hidden;
 	overflow-y: hidden;
 }
@@ -134,7 +142,6 @@ body {
 }
 
 .node-last-value {
-	opacity: 0.8;
 	display: inline-block;
 	width: 100px;
 	padding: 2px;

@@ -54,6 +54,23 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView'], function(Backbone, 
 
     }, 
 
+    formatPreview: function(data){
+
+      if (!data) return null;
+      if (data.polygons) return "Solid";
+      if (data.length) {
+
+        var count = 0;
+        for (var i = 0; i < data.length; i++) {
+          if ( data[i].polygons ) count++;
+        }
+        return count + " Solids";
+
+      }
+      return "Nothing";
+
+    },
+
     // 3D move to node subclass
     onRemove: function(){
       this.model.workspace.off('change:current', this.changeVisibility, this);
@@ -174,9 +191,9 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView'], function(Backbone, 
 
     },
 
-    render: function() {
+    renderNode: function() {
       
-      BaseNodeView.prototype.render.apply(this, arguments);
+      BaseNodeView.prototype.renderNode.apply(this, arguments);
 
       this.$toggleVis = this.$el.find('.toggle-vis');
       this.$toggleVis.show();

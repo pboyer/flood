@@ -26,17 +26,14 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView', 'FLOOD'], function(B
 		  this.model.workspace.run();
     },
 
-    rendered: false,
+    renderNode: function() {
 
-    render: function() {
-
-    	BaseNodeView.prototype.render.apply(this, arguments);
-
-    	if (this.silentRender) return;
+    	BaseNodeView.prototype.renderNode.apply(this, arguments);
 
       this.input = this.$el.find('.formula-text-input');
 
       var that = this;
+
       this.input.focus(function(e){ 
       	that.selectable = false;
       	that.model.set('selected', false);
@@ -56,6 +53,8 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView', 'FLOOD'], function(B
 
       this.$el.find('.add-input').click(function(){ that.addInput.call(that); });
       this.$el.find('.remove-input').click(function(){ that.removeInput.call(that); });
+
+      return this;
 
     },
 

@@ -171,8 +171,7 @@ define(['backbone', 'jqueryuidraggable'], function(Backbone, jqueryuidraggable) 
       .colorSelected()
       .colorEvaluating()
       .moveNode()
-      .renderPorts()
-      .renderLastValue();
+      .renderPorts();
 
       return this;
 
@@ -182,6 +181,8 @@ define(['backbone', 'jqueryuidraggable'], function(Backbone, jqueryuidraggable) 
 
       var json = this.model.toJSON();
 
+      json.preview = this.formatPreview( json.lastValue );
+
       this.$el.html( this.template( json ) );
 
       if (this.getCustomContents){
@@ -190,6 +191,25 @@ define(['backbone', 'jqueryuidraggable'], function(Backbone, jqueryuidraggable) 
       
       return this;
 
+    },
+
+    formatPreview: function( value ){
+
+      return JSON.stringify( value, this.prettyPrint );
+
+    },
+
+    prettyPrint: function(key, val){
+
+      if (typeof val === "number"){
+        return val.toPrecision(4);
+      }
+
+      if (typeof val === "string"){
+        return val.replace(new RegExp("\t", 'g'), "").replace(new RegExp("\n", 'g'), "<br>")
+      }
+
+      return val;
     },
 
     renderLastValue: function() {
