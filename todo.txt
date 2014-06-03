@@ -1,16 +1,14 @@
 CURRENT
 
-constant (E, Pi, etc) nodes don't seem to send their past value
-
+login/signup doesn't give you any messages when it fails!
 
 POLISH
 
-failure message on nodes
+logging in seems to kill your past session
 set exact number
 desktop zoom is too slow
-
 editing formula, number values doesn't get updated with undo/redo
-logging in seems to kill your past session
+failure message on nodes
 login/signup sucks should work with oauth - initially
 removing all connections from formula leaves hanging connection
 sticky text inputs on formula, workspace tabs

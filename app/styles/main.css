@@ -114,6 +114,16 @@ body {
 	display: block;
 }
 
+.node-failed .node-last-value {
+	display: none;
+}
+
+.node-failed .node-failure-message {
+	display: block;
+	width: 100%;
+	color: red;
+}
+
 .node-last-value-container {
 	display: none;
 	position: absolute;
@@ -141,9 +151,15 @@ body {
 	overflow-y: scroll;
 }
 
+.node-failure-message {
+	display: none;
+	padding: 2px;
+	left: 0;
+	right: 0;
+}
+
 .node-last-value {
 	display: inline-block;
-	width: 100px;
 	padding: 2px;
 	left: 0;
 	right: 0;

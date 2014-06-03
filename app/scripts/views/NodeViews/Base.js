@@ -26,6 +26,7 @@ define(['backbone', 'jqueryuidraggable'], function(Backbone, jqueryuidraggable) 
 
       this.listenTo(this.model, 'change:position', this.move );
       this.listenTo(this.model, 'change:lastValue', this.renderLastValue );
+      this.listenTo(this.model, 'change:failureMessage', this.renderLastValue );
       this.listenTo(this.model, 'change:ignoreDefaults', this.colorPorts );
       this.listenTo(this.model, 'connection', this.colorPorts);
       this.listenTo(this.model, 'disconnection', this.colorPorts);
@@ -42,8 +43,9 @@ define(['backbone', 'jqueryuidraggable'], function(Backbone, jqueryuidraggable) 
 
     },
 
-    onEvalFailed: function(){
+    onEvalFailed: function(exception){
       this.$el.addClass('node-failed');
+      this.model.set('failureMessage', exception);
     },
 
     onEvalBegin: function(){
@@ -217,11 +219,16 @@ define(['backbone', 'jqueryuidraggable'], function(Backbone, jqueryuidraggable) 
 
     formatPreview: function( value ){
 
-      return JSON.stringify( this.truncatePreview( value ), this.prettyPrint );
+      var that = this;
+      return JSON.stringify( this.truncatePreview( value ), function(k, v){ return that.prettyPrint.call(that, k, v);} );
 
     },
 
     prettyPrint: function(key, val){
+
+      if (val && val.length != undefined && val.length > 100) {
+        return this.truncatePreview( val );
+      }
 
       if (typeof val === "number"){
         return val.toPrecision(4);

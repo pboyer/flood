@@ -66,9 +66,11 @@
 
         <div class="node-last-value-container">
           <div class="node-last-value"><%- preview %></div>
+          <div class="node-failure-message"><%- failureMessage %></div>
         </div>
 
         <ul class="node-inputs">
+        
           <% _.each(type.inputs, function(ele, index) { %> 
             <li class="node-port node-port-input" data-index=" <%= index %> "> 
               <span class="node-port-name"><%= ele.name %></span>

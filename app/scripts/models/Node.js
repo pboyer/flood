@@ -15,6 +15,7 @@ define(['backbone', 'FLOOD'], function(Backbone, FLOOD) {
       , outputConnections: []
       , selected: true
       , lastValue: null
+      , failureMessage: null
       , visible: true
       , replication: "applyLongest"
       , extra: {}
