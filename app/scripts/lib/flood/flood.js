@@ -415,9 +415,9 @@ define(function() {
 
 		this.extend = function(args){
 
-			if (args.value && typeof args.value === "number"){
+			if (args.value != undefined && typeof args.value === "number"){
 				this.lastValue = args.value;
-			} else if (args.value === undefined){
+			} else {
 				this.lastValue = 0;
 			}
 	
@@ -582,6 +582,7 @@ define(function() {
 		FLOOD.baseTypes.NodeType.call(this, typeData );
 
 		this.eval = function(a, b) {
+
 			return a + b;
 		};
 
@@ -1331,6 +1332,13 @@ define(function() {
 
   }
 
+  var prettyPrint = function(key, val){
+
+  	if (val instanceof Array){ return val; }
+  	if (typeof val === "function"){ return }
+
+  }
+
   Function.prototype.mapApply = function( this_arg, args, options ){
 
 	  options = options || {};
@@ -1342,9 +1350,18 @@ define(function() {
 
 	  var replicationType = options.replication || "applyLongest";
 
-	  return this[ replicationType ](this_arg, args, options);
+	  var result = this[ replicationType ](this_arg, args, options);
+
+	  if (result.length === 0){
+	  	throw new Error("You supplied the wrong input types. ");
+	  }
+
+	  return result;
 
   }
+
+
+
 
 	return FLOOD;
 

@@ -1,6 +1,6 @@
 CURRENT
 
-login/signup doesn't give you any messages when it fails!
+node context menus are too big
 
 POLISH
 
@@ -13,12 +13,10 @@ transforms?
 hide slider on number
 ability to turn off live execution!
 disable node lacing
-can't tell why node failed execution - show result
-node context menus are too big
 don't keep workspaces that haven't been saved at least once
-should remember the old 3d 
-save is too sporadic
-workspace execution icon in weird location
+workspace 
+should remember the old 3d orientation
+workspaces menu should update when you reopen it
 
 FEATURE
 

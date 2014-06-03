@@ -197,6 +197,8 @@ define(['backbone', 'jqueryuidraggable'], function(Backbone, jqueryuidraggable) 
 
     truncatePreview: function( value, maxElements ){
 
+      if (typeof value === "string") return value;
+
       if (!value || value.length === undefined || value.length < 100) {
         return value;
       }
@@ -226,16 +228,16 @@ define(['backbone', 'jqueryuidraggable'], function(Backbone, jqueryuidraggable) 
 
     prettyPrint: function(key, val){
 
-      if (val && val.length != undefined && val.length > 100) {
-        return this.truncatePreview( val );
-      }
-
       if (typeof val === "number"){
         return val.toPrecision(4);
       }
 
       if (typeof val === "string"){
-        return val.replace(new RegExp("\t", 'g'), "").replace(new RegExp("\n", 'g'), "<br>")
+        return val.replace(new RegExp("\t", 'g'), "").replace(new RegExp("\n", 'g'), "")
+      }
+
+      if (val && val.length != undefined && val.length > 100) {
+        return this.truncatePreview( val );
       }
 
       return val;

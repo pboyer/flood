@@ -29,8 +29,6 @@ define(['backbone'], function(Backbone) {
 
     render: function() {
 
-      console.log('render login!')
-
       if ( !this.rendered ) {
         this.$el.html( this.template( this.model.toJSON() ) );
         this.rendered = true;
