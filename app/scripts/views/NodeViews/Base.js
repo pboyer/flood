@@ -193,9 +193,31 @@ define(['backbone', 'jqueryuidraggable'], function(Backbone, jqueryuidraggable) 
 
     },
 
+    truncatePreview: function( value, maxElements ){
+
+      if (!value || value.length === undefined || value.length < 100) {
+        return value;
+      }
+
+      if ( maxElements === undefined ) maxElements = 20;
+
+      var shortVal = {};
+      var count = 0;
+      for (var k in value){
+        if (count > maxElements) break;
+        shortVal[k] = value[k];
+        count++;
+      }
+
+      shortVal.length = value.length;
+
+      return shortVal;
+
+    },
+
     formatPreview: function( value ){
 
-      return JSON.stringify( value, this.prettyPrint );
+      return JSON.stringify( this.truncatePreview( value ), this.prettyPrint );
 
     },
 

@@ -57,6 +57,13 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView'], function(Backbone, 
     formatPreview: function(data){
 
       if (!data) return null;
+
+      if (data.x != undefined) 
+        return BaseNodeView.prototype.formatPreview.apply(this, arguments);
+
+      if (data.length > 0 && data[0].x != undefined) 
+        return BaseNodeView.prototype.formatPreview.apply(this, arguments);
+
       if (data.polygons) return "Solid";
       if (data.length) {
 
