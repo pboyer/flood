@@ -257,7 +257,7 @@ define(function() {
 										that.value = that.eval.mapApply(that, Array.prototype.slice.call(arguments, 0), options);
 									} catch (e) {
 										that.value = null;
-										that.evalFailed(that, arguments);
+										that.evalFailed(that, e);
 									}
 
 								} else { 
@@ -534,9 +534,8 @@ define(function() {
 
 		FLOOD.baseTypes.NodeType.call(this, typeData);
 
-		this.compile = function(){
-			this.markClean();
-			return Math.PI;
+		this.eval = function(){
+			return 2 * Math.PI;
 		}
 
 	}.inherits( FLOOD.baseTypes.NodeType );
@@ -550,8 +549,7 @@ define(function() {
 
 		FLOOD.baseTypes.NodeType.call(this, typeData);
 
-		this.compile = function(){
-			this.markClean();
+		this.eval = function(){
 			return 2 * Math.PI;
 		}
 
@@ -566,8 +564,7 @@ define(function() {
 
 		FLOOD.baseTypes.NodeType.call(this, typeData);
 
-		this.compile = function(){
-			this.markClean();
+		this.eval = function(){
 			return Math.E;
 		}
 

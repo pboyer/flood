@@ -1,9 +1,11 @@
 CURRENT
 
-show old-value, failure message on nodes
+constant (E, Pi, etc) nodes don't seem to send their past value
+
 
 POLISH
 
+failure message on nodes
 set exact number
 desktop zoom is too slow
 
