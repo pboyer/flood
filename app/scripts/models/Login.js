@@ -4,15 +4,14 @@ define(['backbone'], function(Backbone) {
 
 	  defaults: {
 	  	isLoggedIn : false,
-	  	loginFail : false,
+	  	failed : false,
+	  	failureMessage : "",
 	  	showing: false,
-	  	email : ''
+	  	email : ""
 	  },
 
 		initialize: function(atts, vals) {
-
 	  	this.app = vals.app;
-
 	  },
 
 	  fetch : function(){
@@ -30,27 +29,28 @@ define(['backbone'], function(Backbone) {
 	  },
 
 		toggle: function(){
-
 		  return this.get('showing') ? this.hide() : this.show();
-
 		},
 
 		show: function() {
-
 		  this.set('showing', true);
-
 		},
 
 		hide: function() {
-
 		  this.set('showing', false);
-
 		},
 
 	  signup: function(data){
 
 	  	var that = this;
 	  	$.post('/signup', data, function(e){
+
+	  		if (e.length && e.length > 0 ) {
+	  			that.set('failureMessage', e[0].msg);
+	  			return that.set('failed', true);
+	  		}
+
+	  		that.set('failed', false);
 	  		that.app.fetch();
 	  	});
 
@@ -60,6 +60,13 @@ define(['backbone'], function(Backbone) {
 
 	  	var that = this;
 	  	$.post('/login', data, function(e){
+
+	  		if (e.length && e.length > 0 ) {
+	  			that.set('failureMessage', e[0].msg);
+	  			return that.set('failed', true);
+	  		}
+
+	  		that.set('failed', false);
 	  		that.app.fetch();
 	  	});
 

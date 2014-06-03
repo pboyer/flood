@@ -50,9 +50,7 @@ exports.postLogin = function(req, res, next) {
   passport.authenticate('local', function(err, user, info) {
     if (err) return next(err);
     if (!user) {
-      // req.flash('errors', { msg: info.message });
-      // return res.redirect('/login');
-      return res.send({ msg: info.message });
+      return res.send([{ msg: info.message }]);
     }
     req.logIn(user, function(err) {
       if (err) return next(err);
@@ -109,7 +107,7 @@ exports.postSignup = function(req, res, next) {
   user.save(function(err) {
     if (err) {
       if (err.code === 11000) {
-        res.send({ msg: 'User with that email already exists.' });
+        return res.send([{ msg: 'User with that email already exists.' }]);
       }
       res.status(500).send({msg: 'Unknown error on signup'});
     }

@@ -70,7 +70,7 @@
         </div>
 
         <ul class="node-inputs">
-        
+
           <% _.each(type.inputs, function(ele, index) { %> 
             <li class="node-port node-port-input" data-index=" <%= index %> "> 
               <span class="node-port-name"><%= ele.name %></span>
@@ -332,6 +332,9 @@
           <div id="tab-button-container">
             <div id="login-tab-button" class="tab-button tab-button-hilite"><a href="#">Login</a></div>
             <div id="signup-tab-button" class="tab-button"><a href="#">Signup</a></div>
+          </div>
+
+          <div id="login-failure-message">
           </div>
 
           <form id="signup-form" style="display:none">

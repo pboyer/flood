@@ -18,6 +18,8 @@ define(['backbone'], function(Backbone) {
       this.app = atts.app;
       this.model.on('change:showing', this.render, this);
       this.model.on('change:isLoggedIn', this.render, this);
+      this.model.on('change:failed', this.render, this);
+      this.model.on('change:failureMessage', this.render, this);
 
       var that = this;
       $('#login-button').click(function(){ that.tabClick.apply(that); });
@@ -27,9 +29,20 @@ define(['backbone'], function(Backbone) {
 
     render: function() {
 
+      console.log('render login!')
+
       if ( !this.rendered ) {
         this.$el.html( this.template( this.model.toJSON() ) );
         this.rendered = true;
+      }
+
+      var failureMessage = this.$el.find('#login-failure-message');
+
+      if (this.model.get('failed')){
+        failureMessage.html( this.model.get('failureMessage') );
+        failureMessage.show();
+      } else {
+        failureMessage.hide();
       }
 
       if (this.model.get('showing') === true){
@@ -45,6 +58,7 @@ define(['backbone'], function(Backbone) {
 
     focusSignup: function(e){
       
+      this.model.set('failed', false);
       this.$el.find('#login-tab-button').removeClass('tab-button-hilite');
       this.$el.find('#signup-tab-button').addClass('tab-button-hilite');
       this.$el.find('#login-form').hide();
@@ -54,9 +68,9 @@ define(['backbone'], function(Backbone) {
 
     focusLogin: function(e){
 
+      this.model.set('failed', false);
       this.$el.find('#signup-tab-button').removeClass('tab-button-hilite');
       this.$el.find('#login-tab-button').addClass('tab-button-hilite');
-
       this.$el.find('#signup-form').hide();
       this.$el.find('#login-form').show();
     },

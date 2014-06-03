@@ -142,6 +142,14 @@ body {
 	overflow-y: hidden;
 }
 
+#login-failure-message {
+	padding: 10px;
+	margin: 10px;
+	background-color: #FF7A7A;
+	color: white;
+	font-weight: bold;
+}
+
 .node-last-value-container:hover {
 	right: -100px;
 	left: -100px;
