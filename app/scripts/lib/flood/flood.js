@@ -701,9 +701,7 @@ define(function() {
 		FLOOD.baseTypes.NodeType.call( this, typeData );
 
 		this.eval = function(f, a) {
-
 			return f.apply(this, a);
-
 		};
 
 	}.inherits( FLOOD.baseTypes.NodeType );

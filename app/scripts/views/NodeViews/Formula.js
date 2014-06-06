@@ -3,10 +3,8 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView', 'FLOOD'], function(B
   return BaseNodeView.extend({
 
     initialize: function(args) {
-
       BaseNodeView.prototype.initialize.apply(this, arguments);
-      this.model.on('change:extra', this.updateChangedScript, this);
-
+      this.model.on('change:extra', this.onChangedExtra, this);
     },
 
     innerTemplate : _.template( $('#node-formula-template').html() ),
@@ -20,10 +18,48 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView', 'FLOOD'], function(B
 
     },
 
-    updateChangedScript: function(){
+    onChangedExtra: function(){
+
+      var ex = this.model.get('extra') || {};
+
+      if (ex.numInputs != undefined ){
+        this.setNumInputConnections( ex.numInputs )
+        this.model.get('type').setNumInputs( ex.numInputs );
+      }
+
     	this.render();
     	this.model.trigger('updateRunner');
 		  this.model.workspace.run();
+    },
+
+    setNumInputConnections: function(num){
+
+      if (num === undefined) return;
+
+      var inputConns = this.model.get('inputConnections');
+
+      var diff = num - inputConns.length;
+
+      if (diff === 0) return;
+
+      if (diff > 0){
+        for (var i = 0; i < diff; i++){
+          inputConns.push([]);
+        }
+      } else {
+        for (var i = 0; i < -diff; i++){
+
+          var conn = this.model.getConnectionAtIndex(inputConns.length - 1);
+
+          if (conn != null){
+            this.model.workspace.removeConnection(conn);
+          }
+
+          inputConns.pop();
+        }
+
+      }
+
     },
 
     renderNode: function() {
@@ -58,55 +94,39 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView', 'FLOOD'], function(B
 
     },
 
+    setNumInputsProperty: function(numInputs){
+      if (numInputs === undefined) return;
+
+      var ex = this.model.get('extra');
+      var exCopy = JSON.parse( JSON.stringify( ex ) );
+      
+      exCopy.numInputs = numInputs;
+      this.model.workspace.setNodeProperty({property: "extra", _id: this.model.get('_id'), newValue: exCopy, oldValue: ex });
+    },
+
     addInput: function(){
 
-    	// get model data
     	var type = this.model.get('type');
-  	  var ex = this.model.get('extra');
+      var ex = this.model.get('extra');
+  	  var numInputs = ex.numInputs;
 
-  	  if (ex.numInputs === undefined) ex.numInputs = 0;
-
-  	  // sorry - no more letters!  hehe
+  	  if (numInputs === undefined) numInputs = 0;
   	  if (type.inputs.length === 26) return;
 
-  	  this.model.get('inputConnections').push([]);
-
-    	ex.numInputs = (ex.numInputs || 1) + 1;
-    	this.model.set('extra', ex);
-    	this.model.trigger('updateRunner');
-
-    	type.setNumInputs( ex.numInputs );
-    	this.render();  
-    	this.workspace.run();
+      this.setNumInputsProperty(numInputs + 1);
 
     },
 
     removeInput: function(){
 
-    	// get model data
     	var type = this.model.get('type');
-  	  var ex = this.model.get('extra');
+      var ex = this.model.get('extra');
+  	  var numInputs = ex.numInputs;
 
-  	  if (ex.numInputs === undefined) ex.numInputs = 1;
-
+  	  if (numInputs === undefined) numInputs = 1;
   	  if (type.inputs.length === 0) return;
 
-  	  // update runner
-    	ex.numInputs = (ex.numInputs || 1) - 1;
-
-    	// update ui
-    	if ( this.model.isPortConnected( this.model.get('inputConnections').length - 1 ) ){
-    		this.model.disconnectPort( this.model.get('inputConnections').length - 1 );
-    	}
-
-    	this.model.get('inputConnections').pop();
-
-    	this.model.set('extra', ex);
-    	this.model.trigger('updateRunner');
-
-    	type.setNumInputs( ex.numInputs );
-    	this.render();
-    	this.workspace.run();
+      this.setNumInputsProperty(numInputs - 1);
 
     }
 

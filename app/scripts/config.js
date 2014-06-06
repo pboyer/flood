@@ -117,9 +117,6 @@ require.config({
         WorkspaceBrowserElement: 'models/WorkspaceBrowserElement',
         WorkspaceBrowser: 'models/WorkspaceBrowser',
 
-        // backbone routers
-        WorkspaceRouter: 'router/WorkspaceRouter',
-
         // backbone views
         AppView: 'views/AppView',
         ConnectionView: 'views/ConnectionView',

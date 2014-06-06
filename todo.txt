@@ -1,28 +1,50 @@
 CURRENT
 
-node context menus are too big
+when dropping node on input node, blow away existing connection
 
-POLISH
-
+weird extra space at the top of search lists
+server deployment should use dist
+custom nodes
+adding an input on a formula node when there are zero inputs results in 2 inputs
 logging in seems to kill your past session
 set exact number
+formula node input should change width based on how much user inputs, allow multiple lines
 desktop zoom is too slow
 login/signup sucks should work with oauth - initially
-curves - whats the minimum requirement - line - polyline?
-transforms?
+too many workspaces?  you need to hide the excess one
 hide slider on number
-ability to turn off live execution!
+formula node does not allow "quotes"
 disable node lacing
+icons for nodes
 don't keep workspaces that haven't been saved at least once
-workspace 
 should remember the old 3d orientation
 workspaces menu should update when you reopen it
+icons, tooltips for undo, redo, etc.
+optimize css:
+	eliminate inline css 
+	get rid of excess bootstrap css
+configure the base url for all end points - necessary for using as a service
+run execution in ui thread, make calls to ui thread from worker
+cancel run, turn off live execution
+add a new library of nodes
 
 FEATURE
 
+archive workspaces
+share workspaces, fork a workspace
+describe workspace
+proxy server for doing remote http
+custom node
+curves - whats the minimum requirement - line - polyline?
+transforms?
 canvas marquee selection
 arbitrary javascript node - better than formula
-zoom
+zoom in the workspace
+NURBS in flood
 STL
 promise-based execution
+
+verb: use a neural network to train system for local or remote exec
+
+
 

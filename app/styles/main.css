@@ -1188,7 +1188,9 @@ body {
 }
 
 
-
+.btn-group-xs {
+	font-size: 20px;
+}
 
 /*!
  * jQuery UI Slider @VERSION
