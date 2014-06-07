@@ -551,23 +551,62 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
       return this;
     },
 
-    completeProxyConnection: function(endNode, endPort) {
+    completeProxyConnection: function(endNodeId, endPortIndex) {
 
       this.draggingProxy = false;
       this.trigger('endProxyDrag');
 
       // this is where we started drawing the connection
       var startNodeId = this.proxyConnection.get('startNodeId')
-        , startPort = this.proxyConnection.get('startPortIndex');
+        , startPortIndex = this.proxyConnection.get('startPortIndex');
 
-      this.makeConnection(startNodeId, startPort, endNode, endPort);
+      this.addConnectionAndRemoveExisting(startNodeId, startPortIndex, endNodeId, endPortIndex);
       
       return this;
     },
 
     endProxyConnection: function() {
+
       this.proxyConnection.set('hidden', true);
       this.draggingProxy = false;
+      return this;
+
+    },
+
+    addConnectionAndRemoveExisting : function(startNodeId, startPort, endNodeId, endPort) {
+      
+      // if (!this.validateConnection(startNodeId, startPort, endNodeId, endPort)){
+      //   console.log('invalid connection', startNodeId, startPort, endNodeId, endPort );
+      //   return this;
+      // }
+
+      var multiCmd = { kind: "multiple", commands: [] };
+
+      // remove any existing connection
+      var endNode = this.get('nodes').get(endNodeId)
+      if ( !endNode ) return this;
+      var existingConnection = endNode.getConnectionAtIndex( endPort );
+
+      if (existingConnection != null){
+        var rmConn = existingConnection.toJSON();
+        rmConn.kind = "removeConnection";
+        multiCmd.commands.push( rmConn );
+      }
+
+      var newConn = {
+          kind: "addConnection",
+          startNodeId: startNodeId,
+          startPortIndex: startPort,
+          endNodeId: endNodeId,
+          endPortIndex: endPort,
+          _id: this.app.makeId()
+        };  
+
+      multiCmd.commands.push( newConn );
+
+      this.runInternalCommand( multiCmd );
+      this.addToUndoAndClearRedo( multiCmd );
+
       return this;
     },
 
