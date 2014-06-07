@@ -28,8 +28,9 @@ define(['backbone', 'List', 'SearchElementView'], function(Backbone, List, Searc
 
       this.app.SearchElements.forEach(function(ele) {
 
-        var eleView = new SearchElementView({ model: ele }, { app: that.app });
-        eleView.elementClick = that.elementClick;
+        if (ele.name === null) return;
+
+        var eleView = new SearchElementView({ model: ele }, { app: that.app, click: function(e){ that.elementClick.call(that, e) } });
 
         eleView.render();
         that.$list.append( eleView.$el );
@@ -44,16 +45,28 @@ define(['backbone', 'List', 'SearchElementView'], function(Backbone, List, Searc
 
     },
 
-    elementClick: function(e){
-      this.model.app.addNodeToWorkspace( this.model.get('name') );
-      this.model.app.set('showingSearch', false);
+    addNode: function(name){
+
+      this.app.getCurrentWorkspace().addNodeByNameAndPosition( name, this.app.newNodePosition );
+
+    },
+
+    elementClick: function(ele){
+
+      this.addNode(ele.model.get('name'));
+      this.app.set('showingSearch', false);
+
     },
 
     searchKeyup: function(event) {
 
       if ( event.keyCode === 13) { // enter key causes first result to be inserted
         var nodeName = this.$list.find('.search-element').first().find('.name').first().html();
-        this.app.addNodeToWorkspace( nodeName );
+        if (nodeName === undefined ) return;
+
+        this.addNode( nodeName );
+        this.app.set('showingSearch', false);
+
       } else if ( event.keyCode === 27) { // esc key exits search
         this.app.set('showingSearch', false);
       }

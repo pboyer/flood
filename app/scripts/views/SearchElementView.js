@@ -14,6 +14,7 @@ define(['backbone'], function(Backbone) {
     initialize: function(a, arr){
       this.app = arr.app;
       this.appView = arr.appView;
+      this.elementClick = arr.click;
     },
 
     render: function() {
@@ -21,7 +22,8 @@ define(['backbone'], function(Backbone) {
     },
 
     click: function(e) {
-      this.elementClick.call(this, e);
+      if (!this.elementClick) return;
+      this.elementClick(this);
     }
 
   });

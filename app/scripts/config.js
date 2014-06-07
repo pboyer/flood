@@ -121,7 +121,7 @@ require.config({
         AppView: 'views/AppView',
         ConnectionView: 'views/ConnectionView',
         SearchView: 'views/SearchView',
-        WorkspaceSearchView: 'views/WorkspaceSearchView',
+        WorkspaceControlsView: 'views/WorkspaceControlsView',
         SearchElementView: 'views/SearchElementView',
         WorkspaceView: 'views/WorkspaceView',
         WorkspaceTabView: 'views/WorkspaceTabView',

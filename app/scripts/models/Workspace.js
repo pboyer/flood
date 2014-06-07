@@ -31,14 +31,6 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
 
     initialize: function(atts, arr) {
 
-      // event to ask user about leaving
-
-      // var closeEditorWarning = function (){
-      //     return 'It looks like you have been editing something -- if you leave before submitting your changes will be lost.'
-      // }
-
-      // window.onbeforeunload = closeEditorWarning
-
       atts = atts || {};
 
       this.app = arr.app;
@@ -70,6 +62,9 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
         that.run();
       });
 
+      // the proxy connection is what is drawn when the user is 
+      // in the process of creating a new connection - it is not 
+      // persisted.
       this.proxyConnection = new Connection({
         _id: -1, 
         startProxy: true, 
@@ -280,6 +275,13 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
 
     },
 
+    addNodeByNameAndPosition: function(name, position){
+
+      if (name === undefined || position === undefined ) return;
+      this.addNode({ typeName: name, position: position, _id: this.makeId() });
+
+    },
+
     addNode: function(data){
 
       var datac = JSON.parse( JSON.stringify( data ) );
@@ -305,6 +307,38 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
       this.runInternalCommand(datac);
       this.addToUndoAndClearRedo( datac );
 
+    },
+
+    addConnectionAndRemoveExisting : function(startNodeId, startPort, endNodeId, endPort) {
+      
+      var multiCmd = { kind: "multiple", commands: [] };
+
+      // remove any existing connection
+      var endNode = this.get('nodes').get(endNodeId)
+      if ( !endNode ) return this;
+      var existingConnection = endNode.getConnectionAtIndex( endPort );
+
+      if (existingConnection != null){
+        var rmConn = existingConnection.toJSON();
+        rmConn.kind = "removeConnection";
+        multiCmd.commands.push( rmConn );
+      }
+
+      var newConn = {
+          kind: "addConnection",
+          startNodeId: startNodeId,
+          startPortIndex: startPort,
+          endNodeId: endNodeId,
+          endPortIndex: endPort,
+          _id: this.app.makeId()
+        };  
+
+      multiCmd.commands.push( newConn );
+
+      this.runInternalCommand( multiCmd );
+      this.addToUndoAndClearRedo( multiCmd );
+
+      return this;
     },
 
     removeConnection: function(data){
@@ -556,7 +590,6 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
       this.draggingProxy = false;
       this.trigger('endProxyDrag');
 
-      // this is where we started drawing the connection
       var startNodeId = this.proxyConnection.get('startNodeId')
         , startPortIndex = this.proxyConnection.get('startPortIndex');
 
@@ -570,74 +603,6 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
       this.proxyConnection.set('hidden', true);
       this.draggingProxy = false;
       return this;
-
-    },
-
-    addConnectionAndRemoveExisting : function(startNodeId, startPort, endNodeId, endPort) {
-      
-      // if (!this.validateConnection(startNodeId, startPort, endNodeId, endPort)){
-      //   console.log('invalid connection', startNodeId, startPort, endNodeId, endPort );
-      //   return this;
-      // }
-
-      var multiCmd = { kind: "multiple", commands: [] };
-
-      // remove any existing connection
-      var endNode = this.get('nodes').get(endNodeId)
-      if ( !endNode ) return this;
-      var existingConnection = endNode.getConnectionAtIndex( endPort );
-
-      if (existingConnection != null){
-        var rmConn = existingConnection.toJSON();
-        rmConn.kind = "removeConnection";
-        multiCmd.commands.push( rmConn );
-      }
-
-      var newConn = {
-          kind: "addConnection",
-          startNodeId: startNodeId,
-          startPortIndex: startPort,
-          endNodeId: endNodeId,
-          endPortIndex: endPort,
-          _id: this.app.makeId()
-        };  
-
-      multiCmd.commands.push( newConn );
-
-      this.runInternalCommand( multiCmd );
-      this.addToUndoAndClearRedo( multiCmd );
-
-      return this;
-    },
-
-    makeConnection : function(startNodeId, startPort, endNodeId, endPort) {
-      
-      if (!this.validateConnection(startNodeId, startPort, endNodeId, endPort)){
-        return;
-      }
-
-      var newCon = {
-          startNodeId: startNodeId,
-          startPortIndex: startPort,
-          endNodeId: endNodeId,
-          endPortIndex: endPort,
-          _id: this.app.makeId()
-        };  
-
-      this.addConnection( newCon );
-
-      return this;
-    },
-
-    validateConnection: function(startNodeId, startPort, endNodeId, endPort) {
-
-      var startNode = this.get('nodes').get(startNodeId)
-        , endNode = this.get('nodes').get(endNodeId);
-
-      if (endNode.isPortConnected(endPort, false))
-        return false;
-
-      return true;
 
     }
 

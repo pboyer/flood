@@ -3,7 +3,7 @@ define([  'backbone',
           'WorkspaceView', 
           'Search', 
           'SearchView', 
-          'WorkspaceSearchView', 
+          'WorkspaceControlsView', 
           'WorkspaceTabView', 
           'Workspace',
           'WorkspaceBrowser',
@@ -12,7 +12,7 @@ define([  'backbone',
           'Help',
           'LoginView',
           'Login'], 
-          function(Backbone, App, WorkspaceView, Search, SearchView, WorkspaceSearchView, WorkspaceTabView, Workspace, WorkspaceBrowser, WorkspaceBrowserView, HelpView, Help, LoginView, Login) {
+          function(Backbone, App, WorkspaceView, Search, SearchView, WorkspaceControlsView, WorkspaceTabView, Workspace, WorkspaceBrowser, WorkspaceBrowserView, HelpView, Help, LoginView, Login) {
 
   return Backbone.View.extend({
 
@@ -257,11 +257,11 @@ define([  'backbone',
       this.model.updateCurrentWorkspace();
     
       // render search
-        if (!this.workspaceSearchView){
+        if (!this.workspaceControlsView){
 
-          this.workspaceSearchView = new WorkspaceSearchView( { model: new Search() }, {app: this.model, appView : this } );
-          this.workspaceSearchView.render();
-          this.$el.find('#workspaces').prepend(this.workspaceSearchView.$el);
+          this.workspaceControlsView = new WorkspaceControlsView( { model: new Search() }, {app: this.model, appView : this } );
+          this.workspaceControlsView.render();
+          this.$el.find('#workspaces').prepend(this.workspaceControlsView.$el);
 
         }
 
@@ -310,7 +310,7 @@ define([  'backbone',
 
       // change whether workspace_container is visible or not
       this.currentWorkspaceView.$el.show();
-      this.workspaceSearchView.$el.show();
+      this.workspaceControlsView.$el.show();
 
       $('#viewer').addClass('blur');
     },
@@ -324,7 +324,7 @@ define([  'backbone',
       this.$el.find('#workspace_hide i').addClass('icon-arrow-right');
 
       this.currentWorkspaceView.$el.hide();
-      this.workspaceSearchView.$el.hide();
+      this.workspaceControlsView.$el.hide();
 
       $('#viewer').removeClass('blur');
 

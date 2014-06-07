@@ -8,22 +8,22 @@ define(['backbone'], function(Backbone) {
 
 		initialize: function(atts, vals) {
 
-		  	this.app = vals.app;
-		  	var ws = vals.workspace;
-		  	this.workspace = ws;
+			this.app = vals.app;
+			var ws = vals.workspace;
+			this.workspace = ws;
 
-		  	this.set('id', ws.get('_id') );
+			this.set('id', ws.get('_id') );
 
-		  	this.reset();
+			this.reset();
 
-			  vals.workspace.get('connections').on('add', this.addConnection, this );
-			  vals.workspace.get('connections').on('remove', this.removeConnection, this );
+			vals.workspace.get('connections').on('add', this.addConnection, this );
+			vals.workspace.get('connections').on('remove', this.removeConnection, this );
 
-	      vals.workspace.get('nodes').on('add', this.addNode, this );
-	      vals.workspace.get('nodes').on('remove', this.removeNode, this );
+			vals.workspace.get('nodes').on('add', this.addNode, this );
+			vals.workspace.get('nodes').on('remove', this.removeNode, this );
 
-	      this.runCount = 0;
-	      this.averageRunTime = 0;
+			this.runCount = 0;
+			this.averageRunTime = 0;
 
 	  },
 

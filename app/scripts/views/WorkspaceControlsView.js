@@ -36,8 +36,8 @@ define(['backbone', 'List', 'SearchElementView'], function(Backbone, List, Searc
 
       this.app.SearchElements.forEach(function(ele) {
 
-        var eleView = new SearchElementView({ model: ele }, { appView: that.appView, app: that.app });
-        eleView.elementClick = that.elementClick;
+        var eleView = new SearchElementView({ model: ele }, { appView: that.appView, app: that.app, 
+          click: function(e){ that.elementClick.call(that, e); } });
 
         eleView.render();
         that.$list.append( eleView.$el );
@@ -88,23 +88,38 @@ define(['backbone', 'List', 'SearchElementView'], function(Backbone, List, Searc
       this.currentWorkspace().redo();
     },
 
-    elementClick: function(e){
+    getWorkspaceCenter: function(){
+      var w = this.appView.currentWorkspaceView.$el.width()
+        , h = this.appView.currentWorkspaceView.$el.height()
+        , ho = this.appView.currentWorkspaceView.$el.scrollTop()
+        , wo = this.appView.currentWorkspaceView.$el.scrollLeft();
 
-      var w = this.appView.currentWorkspaceView.$el.width();
-      var h = this.appView.currentWorkspaceView.$el.height();
-      var ho = this.appView.currentWorkspaceView.$el.scrollTop();
-      var wo = this.appView.currentWorkspaceView.$el.scrollLeft();
+      return [wo + w / 2, ho + h / 2];
+    },
 
-      this.model.app.addNodeToWorkspace( this.model.get('name'), [wo + w / 2, ho + h / 2] );
+    addNode: function(name){
+
+      if (name === undefined ) return;
+      this.currentWorkspace().addNodeByNameAndPosition( name, this.getWorkspaceCenter() );
+
+    },
+
+    elementClick: function(ele){
+
+      this.addNode( ele.model.get('name') );
 
     },
 
     searchKeyup: function(event) {
 
-      if ( event.keyCode === 13) { // enter key causes first result to be inserted
-        var nodeName = this.$list.find('.search-element').first().find('.name').first().html();
+      // enter key causes first result to be inserted
+      if ( event.keyCode === 13) {
 
-        this.app.addNodeToWorkspace( nodeName );
+        var nodeName = this.$list.find('.search-element').first().find('.name').first().html();
+        if (nodeName === undefined ) return;
+
+        this.addNode( nodeName );
+
       } 
 
     } 

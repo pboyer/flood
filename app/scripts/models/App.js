@@ -9,25 +9,6 @@ define(['backbone', 'Workspaces', 'Node', 'Login', 'Workspace', 'SearchElements'
       return '/mys';
     },
 
-    initialize: function(args, options){
-      this.on('change:currentWorkspace', this.updateCurrentWorkspace, this);
-      this.updateCurrentWorkspace();
-
-      this.login = new Login({}, { app: this });
-
-      this.SearchElements = new SearchElements({app:this});
-      this.SearchElements.fetch();
-    },
-
-    enableAutosave: function(){
-
-      this.get('workspaces').on('add remove', function(){ this.sync("update", this); }, this );
-      this.on('change:currentWorkspace', function(){ this.sync("update", this); }, this);
-
-    },
-
-    newNodePosition: [0,0],
-
     defaults: {
       name: "DefaultSession",
       workspaces: new Workspaces(),
@@ -38,9 +19,18 @@ define(['backbone', 'Workspaces', 'Node', 'Login', 'Workspace', 'SearchElements'
       clipBoard: {}
     },
 
+    initialize: function(args, options){
+      this.on('change:currentWorkspace', this.updateCurrentWorkspace, this);
+      this.updateCurrentWorkspace();
+
+      this.login = new Login({}, { app: this });
+
+      this.SearchElements = new SearchElements({app:this});
+      this.SearchElements.fetch();
+    },
+
     parse : function(resp) {
 
-      // TODO: don't leave user with no workspaces at anytime!
       var old = this.get('workspaces').slice();
       this.get('workspaces').add(resp.workspaces, {app: this});
       this.get('workspaces').remove(old);
@@ -78,25 +68,21 @@ define(['backbone', 'Workspaces', 'Node', 'Login', 'Workspace', 'SearchElements'
         return json;
     },
 
+    enableAutosave: function(){
+
+      this.get('workspaces').on('add remove', function(){ this.sync("update", this); }, this );
+      this.on('change:currentWorkspace', function(){ this.sync("update", this); }, this);
+
+    },
+
+    newNodePosition: [0,0],
+
     makeId: function(){
       return Math.floor(Math.random() * 1e9);
     },
 
-    addNodeToWorkspace: function(name, position, workspaceId ){
-
-      if (workspaceId === undefined ){
-        workspaceId = this.get('currentWorkspace');
-      }
-
-      if (position === undefined) {
-        position = this.newNodePosition;
-      }
-      
-      var ws = this.get('workspaces').get( workspaceId );
-      ws.addNode({ typeName: name, position: position, _id: this.makeId() });
-
-      this.set('showingSearch', false);
-
+    getCurrentWorkspace: function(){
+      return this.get('workspaces').get( this.get('currentWorkspace') );
     },
 
     newWorkspace: function( callback ){
