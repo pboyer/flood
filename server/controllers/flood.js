@@ -5,7 +5,7 @@ var mongoose = require('mongoose')
 	, async = require('async')
 	, _ = require('underscore');
 
-var initializeNonUserSession = function(req, res){
+var initNonUserSession = function(req, res){
 
 	var user = req.user;
 	var nws = new Workspace({name : "My first workspace"});
@@ -32,7 +32,7 @@ var initializeNonUserSession = function(req, res){
 
 }
 
-var initializeUserSession = function(req, res){
+var initUserSession = function(req, res){
 
 	var user = req.user;
 	var nws = new Workspace({name : "My first workspace"});
@@ -71,11 +71,11 @@ exports.getMySession = function(req, res) {
 	var user = req.user;
 
 	if (!req.user) {
-		return initializeNonUserSession(req,res);
+		return initNonUserSession(req,res);
 	}
 
 	if (!user.lastSession){
-		return initializeUserSession(req, res);
+		return initUserSession(req, res);
 	}	
 
 	Session
@@ -83,8 +83,7 @@ exports.getMySession = function(req, res) {
 	.populate('workspaces')
 	.exec( function(err, sesh){
 		if (err || !sesh || !sesh.workspaces || sesh.workspaces.length == 0 ) {
-			console.log('fail new sesh')
-			return initializeUserSession(req, res);
+			return initUserSession(req, res);
 		}
 
 		return res.send(sesh);
@@ -94,11 +93,11 @@ exports.getMySession = function(req, res) {
 
 exports.putMySession = function(req, res) {
 
-	if (!req.body || !req.body._id) return res.status(500).send('Malformed body');
-
 	if (!req.user) {
 		return res.status(401).send("You are not logged in");
 	}
+
+	if (!req.body || !req.body._id) return res.status(500).send('Malformed body');
 
   var ns = req.body;
   var sid = ns._id;
@@ -251,10 +250,18 @@ exports.putWorkspace = function(req, res) {
   var wid = req.params.id;
 	var x = req.body;
 
+	if (!req.user) {
+		return res.status(401).send("You need to be logged in to save a workspace");
+	}
+
 	Workspace.findById( wid , function(e, w) {
 
 		if (e) {
-	  	return res.status(404).send('Workspace not found');
+	  		return res.status(404).send('Workspace not found');
+		}
+
+		if (!req.user){
+
 		}
 
 		w.name = x.name || w.name;

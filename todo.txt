@@ -1,13 +1,5 @@
 CURRENT
 
-options
-
-	user saves bad workspace right before requesting new one
-	this may happen immediately before logout, or right after login
-
-
-
-
 set exact number
 server deployment should use dist
 adding an input on a formula node when there are zero inputs results in 2 inputs
@@ -23,6 +15,7 @@ don't keep workspaces that haven't been saved at least once
 should remember the old 3d orientation
 workspaces menu should update when you reopen it
 icons, tooltips for undo, redo, etc.
+
 optimize css:
 	eliminate inline css 
 	get rid of excess bootstrap css
@@ -48,7 +41,7 @@ NURBS in flood
 STL
 promise-based execution
 
-verb: use a neural network to train system for local or remote exec
-
-
-
+verb: 
+	use a neural network to train system for local or remote exec
+flood: 
+	promise-based execution would allow multiple execution paths to proceed in parallel if nodes are dispatched async - this is a VERY good idea

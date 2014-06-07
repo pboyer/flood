@@ -158,7 +158,11 @@ module.exports = function (grunt) {
                         '.htaccess',
                         '*.html',
                         '*.json',
-                        'images/{,*/}*.{webp,gif}'
+                        'images/{,*/}*.{webp,gif}',
+                        'styles/bootstrap.css',
+                        'bower_components/jquery.ui/themes/base/*.css',
+                        'bower_components/jquery.ui/themes/base/images/*.png',
+                        'scripts/lib/flood/*.js'
                     ]
                 }]
             }
