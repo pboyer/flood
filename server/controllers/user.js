@@ -12,7 +12,9 @@ var secrets = require('../config/secrets');
 */
 
 exports.getEmail = function(req, res ){
-  if (!req.user) return res.send("Not logged in");
+  if (!req.user) {
+    return res.send("Not logged in");
+  }
   return res.send({ email: req.user.email });
 }
 

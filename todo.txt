@@ -1,7 +1,13 @@
 CURRENT
 
-weird extra space at the top of search lists
-logging in seems to kill your past session
+options
+
+	user saves bad workspace right before requesting new one
+	this may happen immediately before logout, or right after login
+
+
+
+
 set exact number
 server deployment should use dist
 adding an input on a formula node when there are zero inputs results in 2 inputs

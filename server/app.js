@@ -118,10 +118,6 @@ app.get('/ws', floodController.getWorkspaces);
 app.get('/ws/:id', floodController.getWorkspace);
 app.put('/ws/:id', floodController.putWorkspace);
 
-// app.post('/ws/:id', floodController.saveWorkspace);
-// app.get('/s/:id', floodController.getSession);
-// app.post('/s/:id', floodController.saveSession);
-
 app.get('/', homeController.index);
 
 app.get('/email', userController.getEmail );

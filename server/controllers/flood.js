@@ -70,13 +70,11 @@ exports.getMySession = function(req, res) {
 
 	var user = req.user;
 
-	if (!user) {
-		console.log('init non user')
+	if (!req.user) {
 		return initializeNonUserSession(req,res);
 	}
 
 	if (!user.lastSession){
-		console.log('init new user')
 		return initializeUserSession(req, res);
 	}	
 
@@ -88,6 +86,7 @@ exports.getMySession = function(req, res) {
 			console.log('fail new sesh')
 			return initializeUserSession(req, res);
 		}
+
 		return res.send(sesh);
 	});
 
@@ -96,6 +95,10 @@ exports.getMySession = function(req, res) {
 exports.putMySession = function(req, res) {
 
 	if (!req.body || !req.body._id) return res.status(500).send('Malformed body');
+
+	if (!req.user) {
+		return res.status(401).send("You are not logged in");
+	}
 
   var ns = req.body;
   var sid = ns._id;
@@ -148,6 +151,9 @@ exports.putMySession = function(req, res) {
 			s.currentWorkspace = ns.currentWorkspace; 
 
 			s.lastSaved = Date.now();
+
+			console.log("saving session")
+			console.log(s);
 
 			s.markModified('workspaces currentWorkspace lastSave name');
 
@@ -272,48 +278,3 @@ exports.putWorkspace = function(req, res) {
 
 };
 
-exports.getSession = function(req, res) {
-
-  var sid = req.params.id;
-
-	Session.findById( sid )
-		.populate('workspaces')
-		.exec(function(e, s) {
-
-			if (e) {
-		  	return res.status(404).send('Session not found');
-			}
-
-			return res.send(s);
-			
-		}); 
-
-};
-
-exports.saveSession = function(req, res) {
-
-  var sid = req.params.id;
-  var ns = req.body;
-
-	Session.findById( sid, function(e, s) {
-
-			if (e || !null) {
-		  	return res.status(404).send('Session not found');
-			}
-
-			s.name = ns.name || s.name;
-
-			// TODO: validate ids
-			s.workspaces = ns.workspaces;
-			s.currentWorkspace = ns.currentWorkspace; 
-
-			s.lastSave = Date.now();
-
-			s.save(function(e){
-				if (e) return res.status(500).send("Failed to save session")
-				return res.send("Success");
-			});
-
-		}); 
-
-};
