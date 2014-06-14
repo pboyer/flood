@@ -20,7 +20,10 @@ define(['backbone', 'List', 'SearchElementView'], function(Backbone, List, Searc
       'click #undo-button': 'undoClick',
       'click #redo-button': 'redoClick',
       'click #copy-button': 'copyClick',
-      'click #paste-button': 'pasteClick'
+      'click #paste-button': 'pasteClick',
+      'click #zoomin-button': 'zoominClick',
+      'click #zoomout-button': 'zoomoutClick',
+      'click #zoomreset-button': 'zoomresetClick'
     },
 
     render: function(arg) {
@@ -86,6 +89,18 @@ define(['backbone', 'List', 'SearchElementView'], function(Backbone, List, Searc
 
     redoClick: function(){
       this.currentWorkspace().redo();
+    },
+
+    zoomresetClick: function(){
+      this.currentWorkspace().set('zoom', 1.0);
+    },
+
+    zoominClick: function(){
+      this.currentWorkspace().set('zoom', this.currentWorkspace().get('zoom') + 0.035);
+    },
+
+    zoomoutClick: function(){
+      this.currentWorkspace().set('zoom', this.currentWorkspace().get('zoom') - 0.035);
     },
 
     getWorkspaceCenter: function(){

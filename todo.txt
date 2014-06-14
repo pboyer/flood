@@ -1,13 +1,13 @@
 CURRENT
 
 set exact number
-server deployment should use dist
-adding an input on a formula node when there are zero inputs results in 2 inputs
+
+POLISH
+
 formula node input should change width based on how much user inputs, allow multiple lines
 desktop zoom is too slow
 login/signup sucks should work with oauth - initially
 too many workspaces?  you need to hide the excess one
-hide slider on number
 formula node does not allow "quotes"
 disable node lacing
 icons for nodes
@@ -18,27 +18,31 @@ icons, tooltips for undo, redo, etc.
 
 optimize css:
 	eliminate inline css 
-	get rid of excess bootstrap css
-configure the base url for all end points - necessary for using as a service
-run execution in ui thread, make calls to ui thread from worker
-cancel run, turn off live execution
+	get rid of excess bootstrap css, jquery.ui css
+
 add a new library of nodes
 
 FEATURE
 
+before release
+
+	share workspaces
+	fork a workspace
+	OBJ export
+
 custom nodes
 archive workspaces
-share workspaces, fork a workspace
 describe workspace
 proxy server for doing remote http
-custom node
 curves - whats the minimum requirement - line - polyline?
 transforms?
 canvas marquee selection
 arbitrary javascript node - better than formula
 zoom in the workspace
 NURBS in flood
-STL
+
+run execution in ui thread, make calls to ui thread from worker
+
 promise-based execution
 
 verb: 

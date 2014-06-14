@@ -26,6 +26,8 @@ define(['backbone', 'Workspace', 'ConnectionView', 'NodeViewTypes'], function(Ba
         that.cleanup().renderConnections();
       });
 
+      this.model.on('change:zoom', this.updateZoom, this );
+
       this.model.on('change:isRunning', this.renderRunnerStatus, this);
 
       this.listenTo(this.model, 'change:nodes', function() {
@@ -43,10 +45,6 @@ define(['backbone', 'Workspace', 'ConnectionView', 'NodeViewTypes'], function(Ba
       
     },
 
-    onChangeCurrent: function() {
-
-    },
-
     events: {
       'click .workspace_back':  'deselectAll',
       'dblclick .workspace_back':  'showNodeSearch'
@@ -59,7 +57,19 @@ define(['backbone', 'Workspace', 'ConnectionView', 'NodeViewTypes'], function(Ba
               .renderNodes()
               .renderConnections()
               .renderNodes()
-              .renderRunnerStatus();
+              .renderRunnerStatus()
+              .updateZoom();
+
+    },
+
+    updateZoom: function(){
+
+      var ws = this.$el.find('.workspace')
+
+      ws.css('transform', 'scale(' + this.model.get('zoom') + ')' );
+      ws.css('transform-origin', '0 0');
+
+      return this;
 
     },
 
@@ -67,17 +77,8 @@ define(['backbone', 'Workspace', 'ConnectionView', 'NodeViewTypes'], function(Ba
     runnerTemplate : _.template( $('#workspace-runner-status-template').html() ),
     renderRunnerStatus: function(){
 
-      if ( !this.$runnerStatus ){
-        this.$runnerStatus = $('<div/>', {class: 'workspace-runner-status'});
-        this.$runnerStatus.html( this.runnerTemplate({}) );
-        this.$el.append( this.$runnerStatus );
-      }
-
-      if ( this.model.get('isRunning') ){
-        this.$runnerStatus.show();
-      } else {
-        this.$runnerStatus.hide();
-      }
+      // placeholder for future work
+      return this;
 
     },
 

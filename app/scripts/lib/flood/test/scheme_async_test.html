@@ -1,0 +1,151 @@
+
+<script src="../../../../bower_components/q/q.js"></script>
+
+<script>
+
+
+  // an async promise implementation
+  var Promise = function(func){
+
+    this.f = func;
+    this.fulfilled = false;
+    this.shouldContinue = true;
+
+    this.dependents = [];
+
+    this.then = function(func){
+
+      if (!func) return this;
+
+      var prom = func.constructor === Promise ? func : new Promise(func);
+
+      this.dependents.push( prom );
+
+      return prom;
+
+    };
+
+    this.cancel = function(){
+
+      this.shouldContinue = false;
+
+    };
+
+    this.done = function(){
+
+      var that = this;
+      var args = arguments;
+
+      // do work async
+      setTimeout(function(){
+
+        if ( that.first && !that.first.fulfilled ){
+          return that.first.done.apply( that.first, args );
+        }
+
+        var res = that.f.apply(that, args);
+        
+
+        if (res != undefined && res.constructor === Promise){
+
+          res.then( that.next );
+          res.done();
+
+        } else {
+
+          that.resolve( res );
+
+        }
+        
+      }, 0);
+
+     };
+
+     this.resolve = function(res){
+
+        this.fulfilled = true;
+
+        if ( !this.shouldContinue ) {
+          return res;
+        } 
+
+        if (this.dependents){
+          this.dependents.forEach(function(p){
+            p.done.call(p, res);
+          });
+        }
+
+     }
+
+  }
+
+  Promise.all = function(promises){
+
+    var promiseCountdown = promises.length;
+    var startedAll = false;
+    var results = new Array( promiseCountdown );
+
+    var prom = new Promise(function(x){
+      return x;
+    });
+
+    promises.forEach(function(p, i){
+
+      return p.then(function(res){
+
+        results[i] = res;
+
+        promiseCountdown--;
+
+        if (promiseCountdown === 0) {
+          return results;
+        }
+
+        console.log(this.f);
+
+        this.cancel();
+        return res;
+        
+      });
+
+    });
+
+    return prom;
+
+  }
+
+  new Promise(function(){ console.log("a"); return 1; })
+  .then(function(){
+    console.log("b");
+  }).then(function(){
+    console.log("c");
+  }).then(function(){ 
+    console.log("d"); 
+    return new Promise(function(){
+      console.log("e")
+    });
+  }).then(function(){ 
+    console.log("f"); 
+    return 3; 
+  }).done();
+
+
+
+  Promise.all(
+
+    [
+      new Promise(function(){ console.log("a"); return 1; }),
+      new Promise(function(){ console.log("b"); return new Promise(function(){
+        console.log("c")
+      }); }),
+      new Promise(function(){ console.log("d"); return 3; })
+    ]
+
+  ).then(function(res){
+
+    console.log('yo yo yo');
+
+  }).done();
+
+</script>
+

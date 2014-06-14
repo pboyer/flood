@@ -12,7 +12,9 @@
     "threejs": "r64",
     "jquery.ui": "1.10.3",
     "listjs": "1.0.0",
-    "modernizr": "~2.6.2"
+    "modernizr": "~2.6.2",
+    "q":"1.0",
+    "pace":"0.5.1"
   },
   "devDependencies": {}
 }
