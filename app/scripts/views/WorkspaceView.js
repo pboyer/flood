@@ -100,7 +100,10 @@ define(['backbone', 'Workspace', 'ConnectionView', 'NodeViewTypes'], function(Ba
 
     proxyDrag: function(event){
       var offset = this.$workspace.offset()
-        , posInWorkspace = [event.pageX - offset.left, event.pageY - offset.top];
+        , zoom = this.model.get('zoom')
+        , posInWorkspace = [ (1 / zoom) * (event.pageX - offset.left), (1 / zoom) * ( event.pageY - offset.top) ];
+
+
       this.model.proxyConnection.set('endProxyPosition', posInWorkspace);
     },
 

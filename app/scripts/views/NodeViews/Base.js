@@ -88,8 +88,10 @@ define(['backbone', 'jqueryuidraggable'], function(Backbone, jqueryuidraggable) 
       this.initPos = [];
       this.$el.draggable( {
         drag : function(e, ui) {
-          that.workspace.get('nodes').moveSelected([ui.position.left - that.initPos[0], ui.position.top- that.initPos[1] ], that);
-          that.model.set('position', [ui.position.left, ui.position.top]);
+          var zoom = 1 / that.workspace.get('zoom');
+
+          that.workspace.get('nodes').moveSelected([ ui.position.left - that.initPos[0], ui.position.top- that.initPos[1]], that);
+          that.model.set('position', [ ui.position.left, ui.position.top ]);
         },
         start : function(startEvent) {
           if (!startEvent.shiftKey)
