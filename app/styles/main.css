@@ -3,6 +3,7 @@ body {
   	height: 100%;
   	margin: 0px;
   	margin: 0;
+  	-webkit-backface-visibility: hidden;
   }
 
 .row, .col { overflow: hidden; position: absolute; }

@@ -13,6 +13,7 @@ define(['backbone', 'Workspace', 'ConnectionView', 'NodeViewTypes'], function(Ba
       this.app = this.model.app;
 
       this.$workspace = $('<div/>', {class: 'workspace'});
+
       this.$workspace_back = $('<div/>', {class: 'workspace_back'});
       this.$workspace_canvas = $('<svg class="workspace_canvas" xmlns="http://www.w3.org/2000/svg" version="1.1" />');
 
@@ -64,10 +65,8 @@ define(['backbone', 'Workspace', 'ConnectionView', 'NodeViewTypes'], function(Ba
 
     updateZoom: function(){
 
-      var ws = this.$el.find('.workspace')
-
-      ws.css('transform', 'scale(' + this.model.get('zoom') + ')' );
-      ws.css('transform-origin', '0 0');
+      this.$workspace.css('transform', 'scale(' + this.model.get('zoom') + ')' );
+      this.$workspace.css('transform-origin', '0 0');
 
       return this;
 
@@ -102,7 +101,6 @@ define(['backbone', 'Workspace', 'ConnectionView', 'NodeViewTypes'], function(Ba
       var offset = this.$workspace.offset()
         , zoom = this.model.get('zoom')
         , posInWorkspace = [ (1 / zoom) * (event.pageX - offset.left), (1 / zoom) * ( event.pageY - offset.top) ];
-
 
       this.model.proxyConnection.set('endProxyPosition', posInWorkspace);
     },

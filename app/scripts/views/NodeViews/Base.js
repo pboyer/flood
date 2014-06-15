@@ -90,17 +90,29 @@ define(['backbone', 'jqueryuidraggable'], function(Backbone, jqueryuidraggable) 
         drag : function(e, ui) {
           var zoom = 1 / that.workspace.get('zoom');
 
-          that.workspace.get('nodes').moveSelected([ ui.position.left - that.initPos[0], ui.position.top- that.initPos[1]], that);
+          ui.position.left = zoom * ui.position.left;
+          ui.position.top = zoom * ui.position.top;
+
+          that.workspace.get('nodes').moveSelected([ ui.position.left - that.initPos[0], ui.position.top - that.initPos[1]], that);
+
           that.model.set('position', [ ui.position.left, ui.position.top ]);
         },
         start : function(startEvent) {
+
           if (!startEvent.shiftKey)
             that.workspace.get('nodes').deselectAll();
+
           that.model.set('selected', true );
           that.workspace.get('nodes').startDragging(that);
-          that.initPos = that.model.get('position');
+
+          var zoom = 1 / that.model.workspace.get('zoom');
+          var pos = that.model.get('position');
+
+          that.initPos = [ pos[0] * zoom, pos[1] * zoom ];
+
         },
         stop : function() {
+
           var start = [ that.initPos[0], that.initPos[1] ];
           var pos = that.model.get('position');
           var end = [ pos[0], pos[1] ];
@@ -108,6 +120,7 @@ define(['backbone', 'jqueryuidraggable'], function(Backbone, jqueryuidraggable) 
           var cmd = { property: 'position', _id: that.model.get('_id'), 
             oldValue: start, newValue : end };
           that.model.workspace.setNodeProperty( cmd );
+
         }
       });  
       this.$el.css('position', 'absolute');
@@ -350,9 +363,15 @@ define(['backbone', 'jqueryuidraggable'], function(Backbone, jqueryuidraggable) 
 
     moveNode: function() {
       
-      this.position = this.model.get('position');
-      this.$el.css("left", this.model.get('position')[0] );
-      this.$el.css("top", this.model.get('position')[1] );
+      var pos = this.model.get('position');
+
+      if (pos[0] < 0) pos[0] = 0;
+      if (pos[1] < 0) pos[1] = 0;
+
+      this.position = pos;
+
+      this.$el.css("left", this.position[0] );
+      this.$el.css("top", this.position[1] );
 
       return this;
     },
