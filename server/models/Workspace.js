@@ -6,6 +6,7 @@ var sessionSchema = new Schema({
   , currentWorkspace: {type: Schema.ObjectId, ref: 'Workspace' }
   , workspaces: [ {type: Schema.ObjectId, ref: 'Workspace' } ]
   , lastSaved: Date
+  , isFirstExperience: { type: Boolean, default: true }
 });
 
 var workspaceSchema = new Schema({
@@ -13,12 +14,13 @@ var workspaceSchema = new Schema({
   , nodes: [ Schema.Types.Mixed ]
   , connections: [ Schema.Types.Mixed ]
   , selectedNodes: [ Schema.Types.Mixed ]
-  , isPublic: { type: String, default: false }
+  , isPublic: { type: Boolean, default: false }
   , zoom: { type: Number, default: 1 }
   , lastSaved: Date
   , maintainers: [{type: Schema.ObjectId, ref: 'User' }]
   , undoStack: [ Schema.Types.Mixed ]
   , redoStack: [ Schema.Types.Mixed ]
+  , isModified: { type: Boolean, default: false }
 });
 
 exports.SessionModel = mongoose.model('Session', sessionSchema);

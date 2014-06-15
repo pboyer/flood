@@ -111,6 +111,7 @@ exports.putMySession = function(req, res) {
 
 				if (e || !w) return callback("Failed to find workspace");
 
+				// todo optimize this
 				w.name = x.name || w.name;
 				w.nodes = x.nodes || w.nodes;
 				w.connections = x.connections || w.connections;
@@ -120,8 +121,9 @@ exports.putMySession = function(req, res) {
 				w.lastSaved = Date.now();
 				w.redoStack = x.redoStack || w.redoStack;
 				w.undoStack = x.undoStack || w.undoStack;
+				w.isFirstExperience = false;
 
-				w.markModified("name nodes connections currentWorkspace selectedNodes zoom lastSaved undoStack redoStack");
+				w.markModified("isFirstExperience name nodes connections currentWorkspace selectedNodes zoom lastSaved undoStack redoStack");
 
 				w.save(function(se){
 					if (se) return callback(se);
@@ -148,13 +150,10 @@ exports.putMySession = function(req, res) {
 			// TODO: validate ids
 			s.workspaces = ns.workspaces.map(function(x){ return x._id; });
 			s.currentWorkspace = ns.currentWorkspace; 
-
+			s.isModified = true;
 			s.lastSaved = Date.now();
 
-			console.log("saving session")
-			console.log(s);
-
-			s.markModified('workspaces currentWorkspace lastSave name');
+			s.markModified('isModified workspaces currentWorkspace lastSave name');
 
 			s.save(function(e){
 				if (e) return res.status(500).send("Failed to save session");
@@ -222,9 +221,9 @@ exports.getWorkspaces = function(req, res) {
 	if (!user) return res.status(403).send("Must be logged in to list your workspaces")
 
 	User.findById( user._id )
-		.populate('workspaces', 'name lastSaved isPublic maintainers')
+		.populate('workspaces', 'name lastSaved isPublic maintainers isModified')
 		.exec(function(e, u) {
-			return res.send( u.workspaces.sort(dateSort) );
+			return res.send( u.workspaces.filter(function(x){ return x.isModified === true; }).sort(dateSort) );
 	}); 
 
 };
@@ -260,10 +259,6 @@ exports.putWorkspace = function(req, res) {
 	  		return res.status(404).send('Workspace not found');
 		}
 
-		if (!req.user){
-
-		}
-
 		w.name = x.name || w.name;
 		w.nodes = x.nodes || w.nodes;
 		w.connections = x.connections || w.connections;
@@ -273,8 +268,9 @@ exports.putWorkspace = function(req, res) {
 		w.lastSaved = Date.now();
 		w.redoStack = x.redoStack || w.redoStack;
 		w.undoStack = x.undoStack || w.undoStack;
+		w.isModified = true;
 
-		w.markModified("name nodes connections currentWorkspace selectedNodes zoom lastSaved undoStack redoStack");
+		w.markModified("name nodes connections currentWorkspace selectedNodes zoom lastSaved undoStack redoStack isModified");
 
 		w.save(function(se){
 			if (se) return res.status(500).send('Could not save the workspace');

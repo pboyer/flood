@@ -32,35 +32,8 @@ define(['backbone'], function(Backbone) {
         // bind to end nodes
         this.startNode = this.workspace.get('nodes').get(args.startNodeId);
         this.endNode = this.workspace.get('nodes').get(args.endNodeId);
-
-        var that = this;
-
-        // watch the start and end node for removal
-        // this.startNode.on('removed', (function(){
-        //   return function() {
-        //     that.onNodeRemoved(true);
-        //   };
-        // })());
-
-        // this.endNode.on('removed', (function(){
-        //   return function() {
-        //     that.onNodeRemoved(false);
-        //   };
-        // })());
-
       }
-      
-      this.on('remove', this.onRemove);
 
-    },
-
-    onNodeRemoved: function(isStart){ 
-      console.log('removing connection!')
-      this.workspace.get('connections').remove(this);
-    },
-
-    onRemove: function(model, collection, options){
-      
     },
 
     getOpposite: function(startNode){

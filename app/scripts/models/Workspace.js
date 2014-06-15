@@ -1,5 +1,5 @@
-define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Runner', 'Node'], 
-    function(Backbone, Nodes, Connection, Connections, scheme, FLOOD, Runner, Node) {
+define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Runner', 'Node', 'Marquee'], 
+    function(Backbone, Nodes, Connection, Connections, scheme, FLOOD, Runner, Node, Marquee) {
 
   return Backbone.Model.extend({
 
@@ -25,8 +25,14 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
       clipBoard: []
     },
 
+    // connection creation
     draggingProxy: false,
     proxyConnection: null,
+
+    // marquee selection
+    dragSelect: false,
+
+
     runAllowed: false,
 
     initialize: function(atts, arr) {
@@ -71,6 +77,10 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
         endProxy: true, 
         startProxyPosition: [0,0], 
         endProxyPosition: [0,0],
+        hidden: true }, { workspace: this });
+
+      this.marquee = new Marquee({
+        _id: -1, 
         hidden: true }, { workspace: this });
 
       this.runAllowed = true;
@@ -560,6 +570,22 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
 
       this.runner.run( bottomNodes );
 
+    },
+
+    startMarqueeSelect: function(startPosition) {
+
+      this.set('marqueeStart', startPosition );
+      this.set('marqueeEnd', startPosition );
+      this.set('marqueeSelectEnabled', true);
+
+      return this;
+    },
+
+    endMarqueeSelect: function() {
+
+      this.set('marqueeSelectEnabled', false);
+  
+      return this;
     },
 
     startProxyConnection: function(startNodeId, nodePort, startPosition) {

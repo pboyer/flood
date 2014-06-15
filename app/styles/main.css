@@ -489,6 +489,11 @@ body {
 	opacity: 0;
 }
 
+.marquee {
+	fill: none;
+	stroke: black;
+}
+
 .workspace {
 	z-index: 90;
 	position: absolute;
