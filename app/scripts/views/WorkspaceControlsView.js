@@ -107,9 +107,10 @@ define(['backbone', 'List', 'SearchElementView'], function(Backbone, List, Searc
       var w = this.appView.currentWorkspaceView.$el.width()
         , h = this.appView.currentWorkspaceView.$el.height()
         , ho = this.appView.currentWorkspaceView.$el.scrollTop()
-        , wo = this.appView.currentWorkspaceView.$el.scrollLeft();
+        , wo = this.appView.currentWorkspaceView.$el.scrollLeft()
+        , zoom = 1 / this.currentWorkspace().get('zoom');
 
-      return [wo + w / 2, ho + h / 2];
+      return [zoom * (wo + w / 2), zoom * (ho + h / 2)];
     },
 
     addNode: function(name){
