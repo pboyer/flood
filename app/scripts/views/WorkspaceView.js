@@ -248,20 +248,27 @@ define(['backbone', 'Workspace', 'ConnectionView', 'MarqueeView', 'NodeViewTypes
 
     keydownHandler: function(e){
 
-      if ( !(e.metaKey || e.ctrlKey) ) return;
+      var isBackspaceOrDelete = e.keyCode === 46 || e.keyCode === 8;
+
+      if ( !(e.metaKey || e.ctrlKey) && !isBackspaceOrDelete ) return;
 
       // do not capture from input
       if (e.originalEvent.srcElement.nodeName === "INPUT") return;
 
+      // keycodes: http://css-tricks.com/snippets/javascript/javascript-keycodes/
+
       switch (e.keyCode) {
+        case 8:
+          this.model.removeSelected();
+          return e.preventDefault();
+        case 46:
+          this.model.removeSelected();
+          return e.preventDefault();
         case 187:
           this.model.set('zoom', this.model.get('zoom') + 0.05)
           return e.preventDefault();
         case 189:
           this.model.set('zoom', this.model.get('zoom') - 0.05)
-          return e.preventDefault();
-        case 68:
-          this.model.removeSelected();
           return e.preventDefault();
         case 67:
           this.model.copy();
