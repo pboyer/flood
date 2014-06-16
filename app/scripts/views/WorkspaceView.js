@@ -337,7 +337,6 @@ define(['backbone', 'Workspace', 'ConnectionView', 'MarqueeView', 'NodeViewTypes
     },
 
     deselectAll: function() {
-      console.log('deselectall')
       this.model.get('nodes').deselectAll();
     },
 
