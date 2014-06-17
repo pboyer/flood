@@ -96,11 +96,13 @@ define(['backbone', 'jqueryuidraggable'], function(Backbone, jqueryuidraggable) 
           that.workspace.get('nodes').moveSelected([ ui.position.left - that.initPos[0], ui.position.top - that.initPos[1]], that);
 
           that.model.set('position', [ ui.position.left, ui.position.top ]);
+
         },
         start : function(startEvent) {
 
-          if (!startEvent.shiftKey)
-            that.workspace.get('nodes').deselectAll();
+          if ( !that.model.get('selected') ){
+            that.model.workspace.get('nodes').deselectAll();
+          }
 
           that.model.set('selected', true );
           that.workspace.get('nodes').startDragging(that);
@@ -108,7 +110,7 @@ define(['backbone', 'jqueryuidraggable'], function(Backbone, jqueryuidraggable) 
           var zoom = 1 / that.model.workspace.get('zoom');
           var pos = that.model.get('position');
 
-          that.initPos = [ pos[0] * zoom, pos[1] * zoom ];
+          that.initPos = [ pos[0], pos[1] ];
 
         },
         stop : function() {
