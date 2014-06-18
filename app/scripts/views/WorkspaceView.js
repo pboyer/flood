@@ -28,6 +28,7 @@ define(['backbone', 'Workspace', 'ConnectionView', 'MarqueeView', 'NodeViewTypes
       });
 
       this.model.on('change:zoom', this.updateZoom, this );
+      this.model.on('change:offset', this.updateOffset, this );
 
       this.model.on('change:isRunning', this.renderRunnerStatus, this);
 
@@ -61,7 +62,8 @@ define(['backbone', 'Workspace', 'ConnectionView', 'MarqueeView', 'NodeViewTypes
               .renderConnections()
               .renderNodes()
               .renderRunnerStatus()
-              .updateZoom();
+              .updateZoom()
+              .updateOffset();
 
     },
 
@@ -138,10 +140,33 @@ define(['backbone', 'Workspace', 'ConnectionView', 'MarqueeView', 'NodeViewTypes
 
     },
 
+    getCenter: function(){
+
+      var w = this.$el.width()
+        , h = this.$el.height()
+        , ho = this.$el.scrollTop()
+        , wo = this.$el.scrollLeft()
+        , zoom = 1 / this.model.get('zoom');
+
+      return [wo + w / 2, ho + h / 2];
+
+    },
+
     updateZoom: function(){
 
+      var center = this.getCenter();
+
       this.$workspace.css('transform', 'scale(' + this.model.get('zoom') + ')' );
-      this.$workspace.css('transform-origin', '0 0');
+      this.$workspace.css('transform-origin', "0 0" );
+
+      return this;
+
+    },
+
+    updateOffset: function(){
+
+      // this.$el.scrollLeft( this.model.get('offset')[0] );
+      // this.$el.scrollTop( this.model.get('offset')[1] );
 
       return this;
 
@@ -265,10 +290,10 @@ define(['backbone', 'Workspace', 'ConnectionView', 'MarqueeView', 'NodeViewTypes
           this.model.removeSelected();
           return e.preventDefault();
         case 187:
-          this.model.set('zoom', this.model.get('zoom') + 0.05)
+          this.model.zoomIn();
           return e.preventDefault();
         case 189:
-          this.model.set('zoom', this.model.get('zoom') - 0.05)
+          this.model.zoomOut();
           return e.preventDefault();
         case 67:
           this.model.copy();

@@ -18,6 +18,7 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
       isPublic: false,
       isRunning: false,
       lastSaved: Date.now(),
+      offset: [20000, 20000],
 
       // undo/redo stack
       undoStack: [],
@@ -115,6 +116,26 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
         this._isSerializing = false;
 
         return json;
+    },
+
+    zoomIn: function(){
+
+      if ( this.get('zoom') > 4 ){
+        return;
+      }
+
+      this.set('zoom', this.get('zoom') + 0.05);
+
+    },
+
+    zoomOut: function(){
+
+      if ( this.get('zoom') < 0.2 ){
+        return;
+      }
+
+      this.set('zoom', this.get('zoom') - 0.05);
+
     },
 
     parse : function(resp) {

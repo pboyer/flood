@@ -96,11 +96,11 @@ define(['backbone', 'List', 'SearchElementView'], function(Backbone, List, Searc
     },
 
     zoominClick: function(){
-      this.currentWorkspace().set('zoom', this.currentWorkspace().get('zoom') + 0.035);
+      this.currentWorkspace().zoomIn();
     },
 
     zoomoutClick: function(){
-      this.currentWorkspace().set('zoom', this.currentWorkspace().get('zoom') - 0.035);
+      this.currentWorkspace().zoomOut();
     },
 
     getWorkspaceCenter: function(){
