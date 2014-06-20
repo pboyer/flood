@@ -665,17 +665,9 @@ body {
 	text-align: left;
 }
 
-.num-data-container{
-	width: 54px;
-	font-size: 10px;
-	font-family: monospace;
-	overflow:hidden;
-	margin: 0px 5px 0px 10px;
-	padding: 2px;
-	color: black;
-	text-shadow: none;
-	background: #f6f6f6;
-	border: 1px solid #BBB;
+.num-data-container input{
+	width: 60px;
+	margin-left: 5px;
 }
 
 .node-inputs, .node-outputs {
