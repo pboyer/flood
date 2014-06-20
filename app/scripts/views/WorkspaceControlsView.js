@@ -1,4 +1,4 @@
-define(['backbone', 'List', 'SearchElementView'], function(Backbone, List, SearchElementView) {
+define(['backbone', 'List', 'SearchElementView', 'bootstrap'], function(Backbone, List, SearchElementView, bootstrap) {
 
   return Backbone.View.extend({
 
@@ -52,6 +52,21 @@ define(['backbone', 'List', 'SearchElementView'], function(Backbone, List, Searc
       };
 
       this.list = new List(this.el, options);
+
+      var del = { show: 300 };
+
+      // build button tooltips
+      this.$el.find('#undo-button').tooltip({title: "Ctrl/Cmd Z", delay: del});
+      this.$el.find('#redo-button').tooltip({title: "Ctrl/Cmd Y", delay: del});
+
+      this.$el.find('#copy-button').tooltip({title: "Ctrl/Cmd C", delay: del});
+      this.$el.find('#paste-button').tooltip({title: "Ctrl/Cmd V", delay: del});
+
+      this.$el.find('#delete-button').tooltip({title: "Backspace/Delete", delay: del});
+
+      this.$el.find('#zoomin-button').tooltip({title: "Ctrl/Cmd +", delay: del});
+      this.$el.find('#zoomout-button').tooltip({title: "Ctrl/Cmd -", delay: del});
+      this.$el.find('#zoomreset-button').tooltip({title: "Ctrl/Cmd 0", delay: del});
 
     },
 

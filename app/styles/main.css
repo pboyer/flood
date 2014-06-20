@@ -116,7 +116,7 @@ body {
 	height: 26px;
 	bottom: -26px;
 	padding: 3px;
-	border: 1px solid #666;
+	border: 1px solid #999;
 	transition-duration: 0.2s;
 	-webkit-transition-duration: 0.2s; /* Safari */
 }
@@ -135,16 +135,17 @@ body {
 	height: 0;
 	bottom: 0;
 	padding: 0;
-	
+
 	transition-duration: 0.2s;
 	-webkit-transition-duration: 0.2s; /* Safari */
 
+	opacity: 0.8;
 	position: absolute;
 	left: -1px;
 	right: -1px;
-	opacity: 0.8;
-	background: #333;
-	color: #AAA;
+
+	background: white;
+	color: #444;
 
 	overflow-x: hidden;
 	overflow-y: hidden;

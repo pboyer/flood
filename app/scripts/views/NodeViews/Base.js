@@ -1,4 +1,4 @@
-define(['backbone', 'jqueryuidraggable'], function(Backbone, jqueryuidraggable) {
+define(['backbone', 'jqueryuidraggable', 'bootstrap'], function(Backbone, jqueryuidraggable, bootstrap) {
 
   return Backbone.View.extend({
 
@@ -207,6 +207,9 @@ define(['backbone', 'jqueryuidraggable'], function(Backbone, jqueryuidraggable) 
       if (this.getCustomContents){
         this.$el.find('.node-data-container').html( this.getCustomContents() );
       }
+
+      var del = { show: 400 };
+      this.$el.find('.node-port-output').tooltip({title: "Click & drag to create a connection", placement: "right", delay: del});
       
       return this;
 
