@@ -49,8 +49,12 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView', 'jqueryuislider'], f
           slide: function(e, ui){ that.inputChanged.call(that, e, ui); } 
         });
 
+      // this.currentValueInput = this.$el.find('.currentValue');
+      // this.currentValueInput.html( value );
+
       this.currentValueInput = this.$el.find('.currentValue');
-      this.currentValueInput.html( value );
+      this.currentValueInput.val( value );
+      this.currentValueInput.change( function(e){ that.valChanged.call(that, e); e.stopPropagation(); });
 
       this.minInput = this.$el.find('.num-min');
       this.minInput.val(min);
@@ -93,7 +97,7 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView', 'jqueryuislider'], f
     silentSyncUI: function(data){
 
       this.silent = true;
-      this.$el.find('.currentValue').html( data.value );
+      this.currentValueInput.val( data.value );
       this.setSliderValue( data.value );
       this.minInput.html( data.min );
       this.maxInput.html( data.max );
@@ -108,6 +112,12 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView', 'jqueryuislider'], f
 
     setSliderValue: function(val){
       return this.slider.slider("option", "value", val);
+    },
+
+    valChanged: function(val){
+      var val = parseFloat( this.currentValueInput.val() );
+      if (isNaN(val)) return;
+      return this.setSliderValue( val );
     },
 
     minChanged: function(e, u){
