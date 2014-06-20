@@ -659,7 +659,7 @@ define(function() {
 	FLOOD.nodeTypes.Eval = function() {
 
 		var typeData = {
-			inputs: [ 	new FLOOD.baseTypes.InputPort( "Code", [String], 0 ) ],
+			inputs: [ 	new FLOOD.baseTypes.InputPort( "Code", [String] ) ],
 			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [AnyType] ) ],
 			typeName: "Eval" 
 		};

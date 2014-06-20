@@ -35,6 +35,8 @@ define(['backbone'], function(Backbone) {
         this.$el.removeClass('current-workspace')
       }
 
+      this.$input = this.$('.workspace-name');
+
     },
 
     showEditButton: function() {
@@ -42,14 +44,18 @@ define(['backbone'], function(Backbone) {
     },
 
     startEdit: function(e) {
-      this.$('.workspace-name').prop('disabled', false);
-      this.$('.workspace-name').focus();
+      
+      this.$input.prop('disabled', false);
+      this.$input.focus();
+      this.$input.css('pointer-events', 'auto');
+
       e.stopPropagation();
     },
 
     endEdit: function() {
-      this.$('.workspace-name').prop('disabled', true);
-      this.model.set('name', this.$('.workspace-name').val() );
+      this.$input.prop('disabled', true);
+      this.$input.css('pointer-events', 'none');
+      this.model.set('name', this.$input.val() );
     },
 
     hideEditButton: function() {

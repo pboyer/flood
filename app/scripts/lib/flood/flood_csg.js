@@ -256,9 +256,11 @@ define(['FLOOD'], function(FLOOD) {
 
 		this.toObjectLiteral = function( csg_model ) {
 
-			var i, j, vertices, face, 
-				obj = { vertices : [], faces: [] },
-				polygons = csg_model.toPolygons( );
+			var obj = { vertices : [], faces: [] };
+			if (!csg_model || !csg_model.toPolygons) return obj;
+
+			var i, j, vertices, face,
+				polygons = csg_model.toPolygons();
 				
 			for ( i = 0; i < polygons.length; i++ ) {
 				
@@ -367,8 +369,8 @@ define(['FLOOD'], function(FLOOD) {
 	FLOOD.nodeTypes.SolidIntersect = function() {
 
 		var typeData = {
-			inputs: [ 	new FLOOD.baseTypes.InputPort( "A", [ CSG ], null ),
-						new FLOOD.baseTypes.InputPort( "B", [ CSG ], null ) ],
+			inputs: [ 	new FLOOD.baseTypes.InputPort( "A", [ CSG ] ),
+						new FLOOD.baseTypes.InputPort( "B", [ CSG ] ) ],
 			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [ CSG ] ) ],
 			typeName: "SolidIntersect" 
 		};
@@ -387,7 +389,7 @@ define(['FLOOD'], function(FLOOD) {
 	FLOOD.nodeTypes.SolidUnionAll = function() {
 
 		var typeData = {
-			inputs: [ 	new FLOOD.baseTypes.InputPort( "Solids", [ FLOOD.QuotedArray, CSG ], null ) ],
+			inputs: [ 	new FLOOD.baseTypes.InputPort( "Solids", [ FLOOD.QuotedArray, CSG ]) ],
 			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [ CSG ] ) ],
 			typeName: "SolidUnionAll" 
 		};
@@ -409,8 +411,8 @@ define(['FLOOD'], function(FLOOD) {
 	FLOOD.nodeTypes.SolidUnion = function() {
 
 		var typeData = {
-			inputs: [ 	new FLOOD.baseTypes.InputPort( "A", [ CSG ], null ),
-						new FLOOD.baseTypes.InputPort( "B", [ CSG ], null ) ],
+			inputs: [ 	new FLOOD.baseTypes.InputPort( "A", [ CSG ] ),
+						new FLOOD.baseTypes.InputPort( "B", [ CSG ] ) ],
 			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [ CSG ] ) ],
 			typeName: "SolidUnion" 
 		};
@@ -429,8 +431,8 @@ define(['FLOOD'], function(FLOOD) {
 	FLOOD.nodeTypes.SolidSubtract = function() {
 
 		var typeData = {
-			inputs: [ 	new FLOOD.baseTypes.InputPort( "A", [ CSG ], null ),
-									new FLOOD.baseTypes.InputPort( "B", [ CSG ], null ) ],
+			inputs: [ 	new FLOOD.baseTypes.InputPort( "A", [ CSG ] ),
+									new FLOOD.baseTypes.InputPort( "B", [ CSG ] ) ],
 			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [ CSG ] ) ],
 			typeName: "SolidSubtract" 
 		};

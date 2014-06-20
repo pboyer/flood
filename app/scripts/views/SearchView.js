@@ -47,6 +47,9 @@ define(['backbone', 'List', 'SearchElementView'], function(Backbone, List, Searc
 
     addNode: function(name){
 
+
+      console.log(this.app.newNodePosition)
+
       this.app.getCurrentWorkspace().addNodeByNameAndPosition( name, this.app.newNodePosition );
 
     },

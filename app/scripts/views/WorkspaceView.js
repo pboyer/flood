@@ -183,7 +183,13 @@ define(['backbone', 'Workspace', 'ConnectionView', 'MarqueeView', 'NodeViewTypes
 
     showNodeSearch: function(e){
       this.app.set('showingSearch', true);
-      this.app.newNodePosition = [e.offsetX, e.offsetY];
+
+      console.log(e)
+
+      var offX  = (e.offsetX || e.clientX - $(e.target).offset().left);
+      var offY  = (e.offsetY || e.clientY - $(e.target).offset().top);
+
+      this.app.newNodePosition = [offX, offY];
     },
 
     startProxyDrag: function(event){
@@ -278,7 +284,8 @@ define(['backbone', 'Workspace', 'ConnectionView', 'MarqueeView', 'NodeViewTypes
       if ( !(e.metaKey || e.ctrlKey) && !isBackspaceOrDelete ) return;
 
       // do not capture from input
-      if (e.originalEvent.srcElement.nodeName === "INPUT") return;
+      if (e.originalEvent.srcElement && e.originalEvent.srcElement.nodeName === "INPUT") return;
+      if (e.target.nodeName === "INPUT") return;
 
       // keycodes: http://css-tricks.com/snippets/javascript/javascript-keycodes/
 
@@ -289,10 +296,12 @@ define(['backbone', 'Workspace', 'ConnectionView', 'MarqueeView', 'NodeViewTypes
         case 46:
           this.model.removeSelected();
           return e.preventDefault();
+        case 61:
         case 187:
           this.model.zoomIn();
           return e.preventDefault();
         case 189:
+        case 173:
           this.model.zoomOut();
           return e.preventDefault();
         case 67:

@@ -89,22 +89,24 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView'], function(Backbone, 
 
     toThreeGeom: function( rawGeom ) {
 
-      var three_geometry = new THREE.Geometry( ), face;
+      var threeGeom = new THREE.Geometry( ), face;
+
+      if (!rawGeom || !rawGeom.vertices || !rawGeom.vertices.length) return threeGeom;
 
       for ( var i = 0; i < rawGeom.vertices.length; i++ ) {
         var v = rawGeom.vertices[i];
-        three_geometry.vertices.push( new THREE.Vector3( v[0], v[1], v[2] ) );
+        threeGeom.vertices.push( new THREE.Vector3( v[0], v[1], v[2] ) );
       }
 
-      if (!rawGeom.faces) return three_geometry;
+      if (!rawGeom.faces) return threeGeom;
 
       for ( var i = 0; i < rawGeom.faces.length; i++ ) {
         var f = rawGeom.faces[i];
         face = new THREE.Face3( f[0], f[1], f[2], new THREE.Vector3( f[3][0], f[3][1], f[3][2] ) );
-        three_geometry.faces.push( face );
+        threeGeom.faces.push( face );
       }
       
-      return three_geometry;
+      return threeGeom;
 
     },
 
