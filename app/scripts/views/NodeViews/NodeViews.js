@@ -16,6 +16,9 @@ define(['BaseNodeView', 'WatchNodeView', 'NumNodeView', 'CSGNodeView', 'FormulaV
   nodeViewTypes.SolidUnionAll = CSGNodeView;
   nodeViewTypes.SolidIntersect = CSGNodeView;
   nodeViewTypes.SolidSubtract = CSGNodeView;
+  nodeViewTypes.SolidMove = CSGNodeView;
+  nodeViewTypes.SolidRotate = CSGNodeView;
+  nodeViewTypes.SolidScale = CSGNodeView;
   nodeViewTypes.Point = CSGNodeView;
 
   return nodeViewTypes;

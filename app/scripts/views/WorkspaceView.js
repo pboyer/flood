@@ -184,10 +184,9 @@ define(['backbone', 'Workspace', 'ConnectionView', 'MarqueeView', 'NodeViewTypes
     showNodeSearch: function(e){
       this.app.set('showingSearch', true);
 
-      console.log(e)
-
-      var offX  = (e.offsetX || e.clientX - $(e.target).offset().left);
-      var offY  = (e.offsetY || e.clientY - $(e.target).offset().top);
+      var z = this.model.get('zoom');
+      var offX  = z * (e.offsetX || e.clientX - $(e.target).offset().left);
+      var offY  = z * (e.offsetY || e.clientY - $(e.target).offset().top);
 
       this.app.newNodePosition = [offX, offY];
     },

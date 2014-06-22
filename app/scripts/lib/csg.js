@@ -42,6 +42,7 @@
 // ## License
 // 
 // Copyright (c) 2011 Evan Wallace (http://madebyevan.com/), under the MIT license.
+// Parts Copyright (c) 2012 Joost Nieuwenhuijse (joost@newhouse.nl) under the MIT license.
 
 // # class CSG
 
@@ -157,6 +158,39 @@ CSG.prototype = {
     var csg = this.clone();
     csg.polygons.map(function(p) { p.flip(); });
     return csg;
+  },
+  
+  // Affine transformation of CSG object. Returns a new CSG object
+  transform: function(matrix4x4) {
+    var newpolygons = this.polygons.map(function(p) { return p.transform(matrix4x4); } );
+    return CSG.fromPolygons(newpolygons);  
+  },
+  
+  translate: function(v) {
+    return this.transform(CSG.Matrix4x4.translation(v));
+  },
+  
+  scale: function(f) {
+    return this.transform(CSG.Matrix4x4.scaling(f));
+  },
+  
+  rotateX: function(deg) {
+    return this.transform(CSG.Matrix4x4.rotationX(deg));
+  },
+  
+  rotateY: function(deg) {
+    return this.transform(CSG.Matrix4x4.rotationY(deg));
+  },
+  
+  rotateZ: function(deg) {
+    return this.transform(CSG.Matrix4x4.rotationZ(deg));
+  },
+  
+  toStlString: function() {
+    var result="solid csg.js\n";
+    this.polygons.map(function(p){ result += p.toStlString(); });
+    result += "endsolid csg.js\n";
+    return result;
   }
 };
 
@@ -351,6 +385,16 @@ CSG.Vector.prototype = {
       this.z * a.x - this.x * a.z,
       this.x * a.y - this.y * a.x
     );
+  },
+  
+  // Right multiply by a 4x4 matrix (the vector is interpreted as a row vector)
+  // Returns a new CSG.Vector
+  multiply4x4: function(matrix4x4) {
+    return matrix4x4.rightMultiply1x3Vector(this);
+  },
+  
+  toStlString: function() {
+    return this.x+" "+this.y+" "+this.z;
   }
 };
 
@@ -388,6 +432,19 @@ CSG.Vertex.prototype = {
       this.pos.lerp(other.pos, t),
       this.normal.lerp(other.normal, t)
     );
+  },
+  
+  // Affine transformation of vertex. Returns a new CSG.Vertex
+  transform: function(matrix4x4) {
+    var newpos = this.pos.multiply4x4(matrix4x4);
+    var posPlusNormal = this.pos.plus(this.normal);
+    var newPosPlusNormal = posPlusNormal.multiply4x4(matrix4x4);
+    var newnormal = newPosPlusNormal.minus(newpos).unit();
+    return new CSG.Vertex(newpos, newnormal);  
+  },
+  
+  toStlString: function() {
+    return "vertex "+this.pos.toStlString()+"\n";
   }
 };
 
@@ -500,7 +557,51 @@ CSG.Polygon.prototype = {
   flip: function() {
     this.vertices.reverse().map(function(v) { v.flip(); });
     this.plane.flip();
+  },
+  
+  // Affine transformation of polygon. Returns a new CSG.Polygon
+  transform: function(matrix4x4) {
+    var newvertices = this.vertices.map(function(v) { return v.transform(matrix4x4); } );
+    return new CSG.Polygon(newvertices, this.shared);
+  },
+  
+  toStlString: function() {
+    var result="";
+    if(this.vertices.length >= 3) // should be!
+    {
+      // SLT requires triangular polygons. If our polygon has more vertices, create
+      // multiple triangles:
+      var firstVertexStl = this.vertices[0].toStlString();
+      for(var i=0; i < this.vertices.length-2; i++)
+      {
+        result += "facet normal "+this.plane.normal.toStlString()+"\nouter loop\n";
+        result += firstVertexStl;
+        result += this.vertices[i+1].toStlString();
+        result += this.vertices[i+2].toStlString();
+        result += "endloop\nendfacet\n";    
+      } 
+    }
+    return result;
   }
+};
+
+// Create a polygon from the given points
+CSG.Polygon.createFromPoints = function(points, shared) {
+  // initially set a dummy vertex normal:
+  var dummynormal = new CSG.Vector(0, 0, 0);
+  var vertices = [];
+  points.map( function(p) {
+    var vec = new CSG.Vector(p);
+    var vertex = new CSG.Vertex(vec, dummynormal);
+    vertices.push(vertex); 
+  });            
+  var polygon = new CSG.Polygon(vertices, shared);
+  // now set the vertex normals to the polygon normal:
+  var normal = polygon.plane.normal;
+  polygon.vertices.map( function(v) {
+    v.normal = normal;
+  });
+  return polygon;
 };
 
 // # class Node
@@ -591,5 +692,413 @@ CSG.Node.prototype = {
       if (!this.back) this.back = new CSG.Node();
       this.back.build(back);
     }
+  }
+};
+
+// # class Matrix4x4:
+// Represents a 4x4 matrix. Elements are specified in row order
+CSG.Matrix4x4 = function(elements) {
+  if (arguments.length >= 1) {
+    this.elements=elements;
+  }
+  else
+  {
+    // if no arguments passed: create unity matrix  
+    this.elements=[1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
+  }
+}
+
+CSG.Matrix4x4.prototype = {
+  plus: function(m) {
+    var r=[];
+    for(var i=0; i < 16; i++)
+    {
+      r[i]=this.elements[i]+m.elements[i];
+    }
+    return new CSG.Matrix4x4(r);
+  },
+  
+  minus: function(m) {
+    var r=[];
+    for(var i=0; i < 16; i++)
+    {
+      r[i]=this.elements[i]-m.elements[i];
+    }
+    return new CSG.Matrix4x4(r);
+  },
+
+  // right multiply by another 4x4 matrix:
+  multiply: function(m) {
+    // cache elements in local variables, for speedup:
+    var this0=this.elements[0];
+    var this1=this.elements[1];
+    var this2=this.elements[2];
+    var this3=this.elements[3];
+    var this4=this.elements[4];
+    var this5=this.elements[5];
+    var this6=this.elements[6];
+    var this7=this.elements[7];
+    var this8=this.elements[8];
+    var this9=this.elements[9];
+    var this10=this.elements[10];
+    var this11=this.elements[11];
+    var this12=this.elements[12];
+    var this13=this.elements[13];
+    var this14=this.elements[14];
+    var this15=this.elements[15];
+    var m0=m.elements[0];
+    var m1=m.elements[1];
+    var m2=m.elements[2];
+    var m3=m.elements[3];
+    var m4=m.elements[4];
+    var m5=m.elements[5];
+    var m6=m.elements[6];
+    var m7=m.elements[7];
+    var m8=m.elements[8];
+    var m9=m.elements[9];
+    var m10=m.elements[10];
+    var m11=m.elements[11];
+    var m12=m.elements[12];
+    var m13=m.elements[13];
+    var m14=m.elements[14];
+    var m15=m.elements[15];
+    
+    var result=[];
+    result[0] = this0*m0 + this1*m4 + this2*m8 + this3*m12;
+    result[1] = this0*m1 + this1*m5 + this2*m9 + this3*m13;
+    result[2] = this0*m2 + this1*m6 + this2*m10 + this3*m14;
+    result[3] = this0*m3 + this1*m7 + this2*m11 + this3*m15;
+    result[4] = this4*m0 + this5*m4 + this6*m8 + this7*m12;
+    result[5] = this4*m1 + this5*m5 + this6*m9 + this7*m13;
+    result[6] = this4*m2 + this5*m6 + this6*m10 + this7*m14;
+    result[7] = this4*m3 + this5*m7 + this6*m11 + this7*m15;
+    result[8] = this8*m0 + this9*m4 + this10*m8 + this11*m12;
+    result[9] = this8*m1 + this9*m5 + this10*m9 + this11*m13;
+    result[10] = this8*m2 + this9*m6 + this10*m10 + this11*m14;
+    result[11] = this8*m3 + this9*m7 + this10*m11 + this11*m15;
+    result[12] = this12*m0 + this13*m4 + this14*m8 + this15*m12;
+    result[13] = this12*m1 + this13*m5 + this14*m9 + this15*m13;
+    result[14] = this12*m2 + this13*m6 + this14*m10 + this15*m14;
+    result[15] = this12*m3 + this13*m7 + this14*m11 + this15*m15;
+    return new CSG.Matrix4x4(result);
+  },
+  
+  clone: function() {
+    var elements = this.elements.map(function(p) { return p; }); 
+    return new CSG.Matrix4x4(elements);
+  },
+  
+  // Multiply a CSG.Vector (interpreted as 1 row, 3 column) by this matrix 
+  // Fourth element is taken as 1
+  rightMultiply1x3Vector: function(v) {
+    var v0 = v.x;
+    var v1 = v.y;
+    var v2 = v.z;
+    var v3 = 1;    
+    var x = v0*this.elements[0] + v1*this.elements[1] + v2*this.elements[2] + v3*this.elements[3];    
+    var y = v0*this.elements[4] + v1*this.elements[5] + v2*this.elements[6] + v3*this.elements[7];    
+    var z = v0*this.elements[8] + v1*this.elements[9] + v2*this.elements[10] + v3*this.elements[11];    
+    var w = v0*this.elements[12] + v1*this.elements[13] + v2*this.elements[14] + v3*this.elements[15];
+    // scale such that fourth element becomes 1:
+    if(w != 1)
+    {
+      var invw=1.0/w;
+      x *= invw;
+      y *= invw;
+      z *= invw;
+    }
+    return new CSG.Vector(x,y,z);       
+  },
+  
+  // Multiply a CSG.Vector2D (interpreted as 1 row, 2 column) by this matrix 
+  // Fourth element is taken as 1
+  rightMultiply1x2Vector: function(v) {
+    var v0 = v.x;
+    var v1 = v.y;
+    var v2 = 0;
+    var v3 = 1;    
+    var x = v0*this.elements[0] + v1*this.elements[1] + v2*this.elements[2] + v3*this.elements[3];    
+    var y = v0*this.elements[4] + v1*this.elements[5] + v2*this.elements[6] + v3*this.elements[7];    
+    var z = v0*this.elements[8] + v1*this.elements[9] + v2*this.elements[10] + v3*this.elements[11];    
+    var w = v0*this.elements[12] + v1*this.elements[13] + v2*this.elements[14] + v3*this.elements[15];
+    // scale such that fourth element becomes 1:
+    if(w != 1)
+    {
+      var invw=1.0/w;
+      x *= invw;
+      y *= invw;
+      z *= invw;
+    }
+    return new CSG.Vector2D(x,y);       
+  },
+};
+
+// return the unity matrix
+CSG.Matrix4x4.unity = function() {
+  return new CSG.Matrix4x4(); 
+};
+
+// Create a rotation matrix for rotating around the x axis
+CSG.Matrix4x4.rotationX = function(degrees) {
+  var radians = degrees * Math.PI * (1.0/180.0);
+  var cos = Math.cos(radians);
+  var sin = Math.sin(radians);
+  var els = [
+    1, 0, 0, 0,
+    0, cos, -sin, 0,
+    0, sin, cos, 0,
+    0, 0, 0, 1
+  ];
+  return new CSG.Matrix4x4(els);
+};
+
+// Create a rotation matrix for rotating around the y axis
+CSG.Matrix4x4.rotationY = function(degrees) {
+  var radians = degrees * Math.PI * (1.0/180.0);
+  var cos = Math.cos(radians);
+  var sin = Math.sin(radians);
+  var els = [
+    cos, 0, sin, 0,
+    0, 1, 0, 0,
+    -sin, 0, cos, 0,
+    0, 0, 0, 1
+  ];
+  return new CSG.Matrix4x4(els);
+};
+
+// Create a rotation matrix for rotating around the z axis
+CSG.Matrix4x4.rotationZ = function(degrees) {
+  var radians = degrees * Math.PI * (1.0/180.0);
+  var cos = Math.cos(radians);
+  var sin = Math.sin(radians);
+  var els = [
+    cos, -sin, 0, 0,
+    sin, cos, 0, 0,
+    0, 0, 1, 0,
+    0, 0, 0, 1
+  ];
+  return new CSG.Matrix4x4(els);
+};
+
+// Create an affine matrix for translation:
+CSG.Matrix4x4.translation = function(v) {
+  // parse as CSG.Vector, so we can pass an array or a CSG.Vector
+  var vec = new CSG.Vector(v);
+  var els = [
+    1, 0, 0, vec.x,
+    0, 1, 0, vec.y,
+    0, 0, 1, vec.z,
+    0, 0, 0, 1
+  ];
+  return new CSG.Matrix4x4(els);
+};
+
+// Create an affine matrix for scaling:
+CSG.Matrix4x4.scaling = function(v) {
+  // parse as CSG.Vector, so we can pass an array or a CSG.Vector
+  var vec = new CSG.Vector(v);
+  var els = [
+    vec.x, 0, 0, 0,
+    0, vec.y, 0, 0,
+    0, 0, vec.z, 0,
+    0, 0, 0, 1
+  ];
+  return new CSG.Matrix4x4(els);
+};
+
+///////////////////////////////////////////////////
+
+// # class Vector2D:
+// Represents a 2 element vector
+CSG.Vector2D = function(x, y) {
+  if (arguments.length == 2) {
+    this.x = x;
+    this.y = y;
+  } else if ('x' in x) {
+    this.x = x.x;
+    this.y = x.y;
+  } else {
+    this.x = x[0];
+    this.y = x[1];
+  }
+};
+
+CSG.Vector2D.prototype = {
+  // extend to a 3D vector by adding a z coordinate:
+  toVector3D: function(z) {
+    return new CSG.Vector(this.x, this.y, z);
+  },
+  
+  clone: function() {
+    return new CSG.Vector(this.x, this.y);
+  },
+
+  negated: function() {
+    return new CSG.Vector(-this.x, -this.y);
+  },
+
+  plus: function(a) {
+    return new CSG.Vector(this.x + a.x, this.y + a.y);
+  },
+
+  minus: function(a) {
+    return new CSG.Vector(this.x - a.x, this.y - a.y);
+  },
+
+  times: function(a) {
+    return new CSG.Vector(this.x * a, this.y * a);
+  },
+
+  dividedBy: function(a) {
+    return new CSG.Vector(this.x / a, this.y / a);
+  },
+
+  dot: function(a) {
+    return this.x * a.x + this.y * a.y;
+  },
+
+  lerp: function(a, t) {
+    return this.plus(a.minus(this).times(t));
+  },
+
+  length: function() {
+    return Math.sqrt(this.dot(this));
+  },
+
+  unit: function() {
+    return this.dividedBy(this.length());
+  },
+
+  // Right multiply by a 4x4 matrix (the vector is interpreted as a row vector)
+  // Returns a new CSG.Vector2D
+  multiply4x4: function(matrix4x4) {
+    return matrix4x4.rightMultiply1x2Vector(this);
+  },
+};
+
+// A polygon in 2D space:
+CSG.Polygon2D = function(points, shared) {
+  var vectors = [];
+  if(arguments.length >= 1) {
+    points.map( function(p) {
+      vectors.push(new CSG.Vector2D(p) );
+    });    
+  }
+  this.points = vectors;
+  this.shared = shared;
+};
+
+CSG.Polygon2D.prototype = {
+  // Matrix transformation of polygon. Returns a new CSG.Polygon2D
+  transform: function(matrix4x4) {
+    var newpoints = this.points.map(function(p) { return p.multiply4x4(matrix4x4); } );
+    return new CSG.Polygon2D(newpoints, this.shared);
+  },
+  
+  translate: function(v) {
+    v=new CSG.Vector2D(v);
+    return this.transform(CSG.Matrix4x4.translation(v.toVector3D(0)));
+  },
+  
+  scale: function(f) {
+    f=new CSG.Vector2D(f);
+    return this.transform(CSG.Matrix4x4.scaling(f.toVector3D(1)));
+  },
+  
+  rotate: function(deg) {
+    return this.transform(CSG.Matrix4x4.rotationZ(deg));
+  },    
+  
+  // convert into a CSG.Polygon; set z coordinate to the given value
+  toPolygon3D: function(z) {
+    var points3d=[];
+    this.points.map( function(p) {
+      var vec3d = p.toVector3D(z);      
+      points3d.push(vec3d);
+    });
+    return CSG.Polygon.createFromPoints(points3d, this.shared);
+  },
+  
+  // extruded=shape2d.extrude({offset: [0,0,10], twistangle: 360, twiststeps: 100});
+  // linear extrusion of 2D polygon, with optional twist
+  // The 2d polygon is placed in in z=0 plane and extruded into direction <offset> (a CSG.Vector)
+  // The final face is rotated <twistangle> degrees. Rotation is done around the origin of the 2d shape (i.e. x=0, y=0)
+  // twiststeps determines the resolution of the twist (should be >= 1)  
+  // returns a CSG object
+  extrude: function(params) {
+    // parse parameters:
+    if(!params) params={};
+    var offsetvector;
+    if("offset" in params)
+    {
+      offsetvector = new CSG.Vector(params.offset); // reparse as a CSG.Vector
+    }
+    else
+    {
+      offsetvector = new CSG.Vector(0,0,1);
+    }
+    
+    var twistangle=0;
+    if("twistangle" in params)
+    {
+      twistangle = params.twistangle;
+    }
+    
+    var twiststeps=10;
+    if("twiststeps" in params)
+    {
+      twiststeps = params.twiststeps;
+    }
+    if(twistangle == 0) twiststeps=1;
+    if(twiststeps < 1) twiststeps=1;
+
+    // create the polygons:        
+    var newpolygons = [];
+    
+    // bottom face polygon:
+    var bottomfacepolygon = this.toPolygon3D(0);
+    var direction = bottomfacepolygon.plane.normal.dot(offsetvector);
+    if(direction > 0)
+    {
+      bottomfacepolygon.flip();
+    }
+    newpolygons.push(bottomfacepolygon);
+    
+    var getTwistedPolygon = function(twiststep) {
+      var fraction = (twiststep + 1) / twiststeps;
+      var rotation = twistangle * fraction;
+      var offset = offsetvector.times(fraction);
+      var transformmatrix = CSG.Matrix4x4.rotationZ(rotation).multiply( CSG.Matrix4x4.translation(offset) );
+      var polygon = bottomfacepolygon.transform(transformmatrix);      
+      return polygon;
+    };
+
+    // create the side face polygons:
+    var numvertices = bottomfacepolygon.vertices.length;
+    var prevlevelpolygon = bottomfacepolygon;
+    for(var twiststep=0; twiststep < twiststeps; ++twiststep)
+    {
+      var levelpolygon = getTwistedPolygon(twiststep);
+      for(var i=0; i < numvertices; i++)
+      {
+        var sidefacepoints = [];
+        var nexti = (i < (numvertices-1))? i+1:0;
+        sidefacepoints.push(prevlevelpolygon.vertices[i].pos);
+        sidefacepoints.push(levelpolygon.vertices[i].pos);
+        sidefacepoints.push(levelpolygon.vertices[nexti].pos);
+        sidefacepoints.push(prevlevelpolygon.vertices[nexti].pos);
+        var sidefacepolygon=CSG.Polygon.createFromPoints(sidefacepoints, this.shared);
+        newpolygons.push(sidefacepolygon);
+      }
+      if(twiststep == (twiststeps -1) )
+      {
+        // last level; add the top face polygon:
+        levelpolygon.flip(); // flip so that the normal points outwards
+        newpolygons.push(levelpolygon);
+      }
+      prevlevelpolygon = levelpolygon;
+    }
+
+    return CSG.fromPolygons(newpolygons);
   }
 };
