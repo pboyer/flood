@@ -256,7 +256,9 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
       var that = this;
 
       var nodes = {};
-      var nodeOffset = Math.min( 20, Math.abs( 40 * Math.random() ) );
+      var nodeOffset = Math.min( 20, Math.abs( 80 * Math.random() ) );
+
+      var nodeCount = 0;
 
       _.each(cb.nodes, function(x){
 
@@ -264,8 +266,11 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
         nodes[x._id] = x;
         nodes[x._id].position = [ x.position[0] + nodeOffset, x.position[1] + nodeOffset ];
         nodes[x._id]._id = that.makeId();
+        nodeCount++;
 
       });
+
+      if (nodeCount > 0) this.get('nodes').deselectAll();
 
       var connections = {};
 

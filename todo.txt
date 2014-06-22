@@ -1,14 +1,13 @@
 CURRENT
 
-set exact number
+node port heights are messed up when zoomed
+save zoom when changed
 
 POLISH
 
 share workspaces
 fork a workspace
 OBJ export
-save zoom when changed
-marquee selection
 example workspaces
 initial user walkthrough of interface
 formula node input should change width based on how much user inputs, allow multiple lines

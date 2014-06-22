@@ -412,6 +412,8 @@ define(['backbone', 'jqueryuidraggable', 'bootstrap'], function(Backbone, jquery
       var that = this;
       var inIndex = 0;
       var outIndex = 0;
+      var zoom = 1 / this.model.workspace.get('zoom');
+
       this.$el.find('.node-port').each(function(index, ele) {
 
         var nodeCircle = document.createElementNS('http://www.w3.org/2000/svg','circle');

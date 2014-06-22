@@ -454,7 +454,7 @@ CSG.Vertex.prototype = {
 
 CSG.Plane = function(normal, w) {
   this.normal = normal;
-  this.w = w;
+  this.w = w; // the distance from the origin along the normal
 };
 
 // `CSG.Plane.EPSILON` is the tolerance used by `splitPolygon()` to decide if a
@@ -561,6 +561,16 @@ CSG.Polygon.prototype = {
   
   // Affine transformation of polygon. Returns a new CSG.Polygon
   transform: function(matrix4x4) {
+    var newvertices = this.vertices.map(function(v) { return v.transform(matrix4x4); } );
+    return new CSG.Polygon(newvertices, this.shared);
+  },
+
+  translate: function(matrix4x4) {
+    var newvertices = this.vertices.map(function(v) { return v.transform(matrix4x4); } );
+    return new CSG.Polygon(newvertices, this.shared);
+  },
+
+  scale: function(matrix4x4) {
     var newvertices = this.vertices.map(function(v) { return v.transform(matrix4x4); } );
     return new CSG.Polygon(newvertices, this.shared);
   },
@@ -976,6 +986,7 @@ CSG.Vector2D.prototype = {
   },
 };
 
+
 // A polygon in 2D space:
 CSG.Polygon2D = function(points, shared) {
   var vectors = [];
@@ -1065,12 +1076,14 @@ CSG.Polygon2D.prototype = {
     newpolygons.push(bottomfacepolygon);
     
     var getTwistedPolygon = function(twiststep) {
+
       var fraction = (twiststep + 1) / twiststeps;
       var rotation = twistangle * fraction;
       var offset = offsetvector.times(fraction);
       var transformmatrix = CSG.Matrix4x4.rotationZ(rotation).multiply( CSG.Matrix4x4.translation(offset) );
       var polygon = bottomfacepolygon.transform(transformmatrix);      
       return polygon;
+
     };
 
     // create the side face polygons:
