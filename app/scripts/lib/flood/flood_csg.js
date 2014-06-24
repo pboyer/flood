@@ -305,11 +305,13 @@ define(['FLOOD'], function(FLOOD) {
 
 				var d = [];
 				for (var i = 0; i < value.length; i++){
-					d.push( value[i].toObjectLiteral() );
+					d.push( value.toObjectLiteral ? value[i].toObjectLiteral() : value[i] );
 				}
 
 				return d;
 			}
+
+			if (!value.toObjectLiteral) return value;
 
 			return value.toObjectLiteral();
 		};
