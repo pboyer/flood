@@ -16,11 +16,13 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView'], function(Backbone, 
 
     },
 
-    setMaterials: function(partMat, meshMat){
+    setMaterials: function(partMat, meshMat, lineMat){
 
       this.threeGeom.traverse(function(ele) {
         if (ele instanceof THREE.Mesh) {
           ele.material = meshMat;
+        } else if (ele instanceof THREE.Line) {
+          ele.material = lineMat;
         } else {
           ele.material = partMat;
         }
@@ -40,15 +42,17 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView'], function(Backbone, 
 
         var meshMat = new THREE.MeshPhongMaterial({color: 0x00FFFF});
         var partMat = new THREE.ParticleBasicMaterial({color: 0x00FFFF, size: 3, sizeAttenuation: false});
+        var lineMat = new THREE.LineBasicMaterial({ color: 0x00ffff });
 
       } else {
 
         var meshMat = new THREE.MeshPhongMaterial({color: 0x999999});
         var partMat = new THREE.ParticleBasicMaterial({color: 0x999999, size: 3, sizeAttenuation: false});
+        var lineMat = new THREE.LineBasicMaterial({ color: 0x000000 });
 
       }
 
-      this.setMaterials(partMat, meshMat);
+      this.setMaterials(partMat, meshMat, lineMat);
 
       return this;
 
@@ -65,13 +69,26 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView'], function(Backbone, 
         return BaseNodeView.prototype.formatPreview.apply(this, arguments);
 
       if (data.polygons) return "Solid";
+      if (data.vertices) return "Polygon";
       if (data.length) {
 
-        var count = 0;
+        var solidCount = 0;
+        var polyCount = 0;
         for (var i = 0; i < data.length; i++) {
-          if ( data[i].polygons ) count++;
+          if ( data[i].polygons ) solidCount++;
+          if ( data[i].vertices ) polyCount++;
         }
-        return count + " Solids";
+        var solidString = solidCount + " Solids";
+        var polyString = polyCount + " Polygons";
+
+        var stringArr = [];
+
+        if (solidCount > 0) stringArr.push(solidString);
+        if (polyCount > 0) stringArr.push(polyString);
+
+        if (solidCount === 0 && polyCount === 0) return "Nothing";
+
+        return stringArr.join(',');
 
       }
       return "Nothing";
@@ -89,9 +106,15 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView'], function(Backbone, 
 
     toThreeGeom: function( rawGeom ) {
 
-      var threeGeom = new THREE.Geometry( ), face;
+      var threeGeom = new THREE.Geometry(), face;
 
-      if (!rawGeom || !rawGeom.vertices || !rawGeom.vertices.length) return threeGeom;
+      if (!rawGeom) return threeGeom;
+
+      if (!rawGeom.vertices && !rawGeom.linestrip ) return threeGeom;
+
+      if (rawGeom.linestrip) return this.addLineStrip( rawGeom, threeGeom );
+
+      if (rawGeom.vertices && !rawGeom.faces) return addPoints( rawGeom, threeGeom );
 
       for ( var i = 0; i < rawGeom.vertices.length; i++ ) {
         var v = rawGeom.vertices[i];
@@ -106,8 +129,35 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView'], function(Backbone, 
         threeGeom.faces.push( face );
       }
       
+      threeGeom._floodType = 0;
+
       return threeGeom;
 
+    },
+
+    addPoints: function( rawGeom, threeGeom ){
+
+      for ( var i = 0; i < rawGeom.vertices.length; i++ ) {
+        var v = rawGeom.vertices[i];
+        threeGeom.vertices.push( new THREE.Vector3( v[0], v[1], v[2] ) );
+      }
+
+      threeGeom._floodType = 1;
+
+      return threeGeom;
+    },
+
+    addLineStrip: function( rawGeom, threeGeom ){
+
+      for ( var i = 0; i < rawGeom.linestrip.length; i++ ) {
+        var v = rawGeom.linestrip[i];
+        threeGeom.vertices.push( new THREE.Vector3( v[0], v[1], v[2] ) );
+      }
+
+      threeGeom._floodType = 2;
+
+      return threeGeom;
+      
     },
 
     onEvalComplete: function(a, b, newValue){
@@ -121,7 +171,7 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView'], function(Backbone, 
 
       if ( !lastValue ) return;
 
-      if ( lastValue.vertices ){ 
+      if ( lastValue.vertices || lastValue.linestrip ){ 
         temp = [];
         temp.push(lastValue);
       } else {
@@ -162,12 +212,18 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView'], function(Backbone, 
             var color = 0x999999;
           }
 
-          if ( g3.faces.length > 0){
-            geom.add( new THREE.Mesh(g3, new THREE.MeshPhongMaterial({color: color})) );
-          } else if ( g3.faces.length === 0 && g3.vertices.length > 0){
-            geom.add( new THREE.ParticleSystem(g3, new THREE.ParticleBasicMaterial({color: color, size: 3, sizeAttenuation: false}) ));
+          switch (g3._floodType) {
+            case 0:
+              geom.add( new THREE.Mesh(g3, new THREE.MeshPhongMaterial({color: color})) );
+              break;
+            case 1:
+              geom.add( new THREE.ParticleSystem(g3, new THREE.ParticleBasicMaterial({color: color, size: 3, sizeAttenuation: false}) ));
+              break;
+            case 2:
+              geom.add( new THREE.Line(g3, new THREE.LineBasicMaterial({ color: 0x000000 })));
+              break;
           }
-          
+
         }
 
         if (i < list.length) {

@@ -21,6 +21,7 @@ define(['BaseNodeView', 'WatchNodeView', 'NumNodeView', 'CSGNodeView', 'FormulaV
   nodeViewTypes.Rotate = CSGNodeView;
   nodeViewTypes.Scale = CSGNodeView;
   nodeViewTypes.Point = CSGNodeView;
+  nodeViewTypes.Polygon = CSGNodeView;
 
   return nodeViewTypes;
 

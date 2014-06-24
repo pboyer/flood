@@ -13,6 +13,64 @@ if (typeof require != 'function' && typeof window != "object") {
 
 define(['FLOOD'], function(FLOOD) {
 
+	CSG.prototype.toObjectLiteral = function() {
+
+		var obj = { vertices : [], faces: [] };
+
+		var i, j, vertices, face,
+			polygons = this.toPolygons();
+			
+		for ( i = 0; i < polygons.length; i++ ) {
+			
+			vertices = [];
+			for ( j = 0; j < polygons[i].vertices.length; j++ ) {
+				vertices.push( this.getVertexIndex( obj, polygons[i].vertices[j].pos ) );
+			}
+
+			if ( vertices[0] === vertices[vertices.length - 1] ) {
+				vertices.pop();
+			}
+			
+			for (var j = 2; j < vertices.length; j++) {
+				var n = polygons[i].plane.normal;
+				face = [ vertices[0], vertices[j-1], vertices[j], [n.x, n.y, n.z] ];
+				obj.faces.push( face );
+			}
+		}
+		
+		return obj;
+
+	};
+
+	CSG.prototype.getVertexIndex = function ( geometry, pos ) {
+
+		var i;
+		for ( i = 0; i < geometry.vertices.length; i++ ) {
+			if ( geometry.vertices[i][0] === pos.x && geometry.vertices[i][1] === pos.y && geometry.vertices[i][2] === pos.z ) {
+				return i;
+			}
+		};
+		
+		geometry.vertices.push( [ pos.x, pos.y, pos.z ] );
+		return geometry.vertices.length - 1;
+	};
+
+	CSG.Polygon.prototype.toObjectLiteral = function() {
+
+		var obj = { linestrip : [] };
+
+		var i, j, vertices, face,
+			vertices = this.vertices;
+			
+		for ( i = 0; i < vertices.length; i++ ) { 
+			obj.linestrip.push( [vertices[i].pos.x, vertices[i].pos.y, vertices[i].pos.z] );
+		}
+
+		obj.linestrip.push( [vertices[0].pos.x, vertices[0].pos.y, vertices[0].pos.z] );
+		
+		return obj;
+	};
+
 	FLOOD.nodeTypes.Vector = function() {
 
 		var typeData = {
@@ -230,6 +288,7 @@ define(['FLOOD'], function(FLOOD) {
 			p.vertices.push( [ value.x, value.y, value.z ] );
 
 			return p;
+
 		};
 
 	}.inherits( FLOOD.baseTypes.NodeType );
@@ -240,59 +299,19 @@ define(['FLOOD'], function(FLOOD) {
 
 		this.postProcess = function(value){
 
+			if (!value) return {};
+
 			if ( value.map ) {
 
 				var d = [];
 				for (var i = 0; i < value.length; i++){
-					d.push( this.toObjectLiteral( value[i] ) );
+					d.push( value[i].toObjectLiteral() );
 				}
 
 				return d;
 			}
 
-			return this.toObjectLiteral( value );
-		};
-
-		this.toObjectLiteral = function( csg_model ) {
-
-			var obj = { vertices : [], faces: [] };
-			if (!csg_model || !csg_model.toPolygons) return obj;
-
-			var i, j, vertices, face,
-				polygons = csg_model.toPolygons();
-				
-			for ( i = 0; i < polygons.length; i++ ) {
-				
-				vertices = [];
-				for ( j = 0; j < polygons[i].vertices.length; j++ ) {
-					vertices.push( this.getVertexIndex( obj, polygons[i].vertices[j].pos ) );
-				}
-
-				if ( vertices[0] === vertices[vertices.length - 1] ) {
-					vertices.pop();
-				}
-				
-				for (var j = 2; j < vertices.length; j++) {
-					var n = polygons[i].plane.normal;
-					face = [ vertices[0], vertices[j-1], vertices[j], [n.x, n.y, n.z] ];
-					obj.faces.push( face );
-				}
-			}
-			
-			return obj;
-		};
-
-		this.getVertexIndex = function ( geometry, pos ) {
-
-			var i;
-			for ( i = 0; i < geometry.vertices.length; i++ ) {
-				if ( geometry.vertices[i][0] === pos.x && geometry.vertices[i][1] === pos.y && geometry.vertices[i][2] === pos.z ) {
-					return i;
-				}
-			};
-			
-			geometry.vertices.push( [ pos.x, pos.y, pos.z ] );
-			return geometry.vertices.length - 1;
+			return value.toObjectLiteral();
 		};
 
 	}.inherits( FLOOD.baseTypes.NodeType );
@@ -487,35 +506,35 @@ define(['FLOOD'], function(FLOOD) {
 			typeName: "Rotate" 
 		};
 
-	var matrixFromAxisAngle = function(angle, axis) {
+		var matrixFromAxisAngle = function(angle, axis) {
 
-    var c = Math.cos(angle);
-    var s = Math.sin(angle);
-    var t = 1.0 - c;
+	    var c = Math.cos(angle);
+	    var s = Math.sin(angle);
+	    var t = 1.0 - c;
 
-    var m00 = c + axis.x*axis.x*t;
-    var m11 = c + axis.y*axis.y*t;
-    var m22 = c + axis.z*axis.z*t;
+	    var m00 = c + axis.x*axis.x*t;
+	    var m11 = c + axis.y*axis.y*t;
+	    var m22 = c + axis.z*axis.z*t;
 
-    var tmp1 = axis.x*axis.y*t;
-    var tmp2 = axis.z*s;
-    var m10 = tmp1 + tmp2;
-    var m01 = tmp1 - tmp2;
-    var tmp1 = axis.x*axis.z*t;
-    var tmp2 = axis.y*s;
-    var m20 = tmp1 - tmp2;
-    var m02 = tmp1 + tmp2;    
-    var tmp1 = axis.y*axis.z*t;
-    var tmp2 = axis.x*s;
-    var m21 = tmp1 + tmp2;
-    var m12 = tmp1 - tmp2;
+	    var tmp1 = axis.x*axis.y*t;
+	    var tmp2 = axis.z*s;
+	    var m10 = tmp1 + tmp2;
+	    var m01 = tmp1 - tmp2;
+	    var tmp1 = axis.x*axis.z*t;
+	    var tmp2 = axis.y*s;
+	    var m20 = tmp1 - tmp2;
+	    var m02 = tmp1 + tmp2;    
+	    var tmp1 = axis.y*axis.z*t;
+	    var tmp2 = axis.x*s;
+	    var m21 = tmp1 + tmp2;
+	    var m12 = tmp1 - tmp2;
 
-    return new CSG.Matrix4x4([ m00, m01, m02, 0,
-									    				 m10, m11, m12, 0,
-									    				 m20, m21, m22, 0,
-									    				 0,		0, 		 0, 1 ] );
+	    return new CSG.Matrix4x4([ m00, m01, m02, 0,
+										    				 m10, m11, m12, 0,
+										    				 m20, m21, m22, 0,
+										    				 0,		0, 		 0, 1 ] );
 
-	};
+		};
 
 		FLOOD.baseTypes.NodeType.call(this, typeData );
 
@@ -537,7 +556,7 @@ define(['FLOOD'], function(FLOOD) {
 			typeName: "Polygon" 
 		};
 
-		FLOOD.baseTypes.NodeType.call(this, typeData );
+		FLOOD.baseTypes.NodeType.call(this, typeData);
 
 		this.eval = function(numSides, radius) {
 
@@ -561,7 +580,7 @@ define(['FLOOD'], function(FLOOD) {
 
 		};
 
-	}.inherits( FLOOD.baseTypes.NodeType );
+	}.inherits( FLOOD.baseTypes.CSG );
 
 	FLOOD.nodeTypes.SolidExtrusion = function() {
 
@@ -619,8 +638,6 @@ define(['FLOOD'], function(FLOOD) {
 		};
 
 	}.inherits( FLOOD.baseTypes.CSG );
-
-
 
 	// Rectangle
 	// RegularPolygon

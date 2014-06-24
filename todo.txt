@@ -1,5 +1,6 @@
 CURRENT
 
+show polygon edges in viewport
 node port heights are messed up when zoomed
 save zoom when changed
 
