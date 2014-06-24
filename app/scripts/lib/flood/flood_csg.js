@@ -305,7 +305,7 @@ define(['FLOOD'], function(FLOOD) {
 
 				var d = [];
 				for (var i = 0; i < value.length; i++){
-					d.push( value.toObjectLiteral ? value[i].toObjectLiteral() : value[i] );
+					d.push( value[i].toObjectLiteral ? value[i].toObjectLiteral() : value[i] );
 				}
 
 				return d;
