@@ -25,26 +25,22 @@ require.config({
         CSG: {
             exports: 'CSG'
         },
-        FCSG: {
+        FLOODCSG: {
             deps: ['CSG'],
-            exports: 'FCSG'
+            exports: 'FLOODCSG'
         },
-        ThreeCSG: {
-            deps: ['Three', 'CSG'],
-            exports: 'ThreeCSG'
-        },
-        FThree: {
+        Viewport: {
             deps: [
                 'Three',
-                'TrackballControls'
+                'OrbitControls'
             ],
-            exports: 'FThree'
+            exports: 'Viewport'
         },
-        TrackballControls: {
+        OrbitControls: {
             deps: [
                 'Three'
             ],
-            exports: 'TrackballControls'
+            exports: 'OrbitControls'
         },
         jqueryuislider: {
             deps: [
@@ -141,12 +137,11 @@ require.config({
 
         CSGNodeView: 'views/NodeViews/ThreeCSG',
 
-        TrackballControls: 'lib/TrackballControls',
-        FThree: 'lib/3d',
-        ThreeCSG: 'lib/ThreeCSG',
-        FCSG: 'lib/flood/flood_csg',
+        OrbitControls: 'lib/OrbitControls',
+        Viewport: 'lib/Viewport',
+        FLOODCSG: 'lib/flood/flood_csg',
         FLOOD: 'lib/flood/flood',
-        CSG: 'lib/csg',
+        CSG: 'lib/flood/csg',
         scheme: 'lib/flood/scheme',
 
         // bower

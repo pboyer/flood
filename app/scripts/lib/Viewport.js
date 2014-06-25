@@ -4,8 +4,6 @@ var camera, controls, scene, renderer;
 
 var geometry, group;
 
-
-
 var mouse = new THREE.Vector2(),
 offset = new THREE.Vector3(),
 INTERSECTED, SELECTED;
@@ -41,32 +39,35 @@ function init() {
 	container.appendChild( renderer.domElement );
 	renderer.domElement.setAttribute("id", "renderer_canvas");
 
-	// plane = new THREE.Mesh( new THREE.PlaneGeometry( 100, 100, 20, 20 ), 
-	// 	new THREE.MeshBasicMaterial( { color: 0x999999, opacity: 0.25, transparent: false, wireframe: true, wireframeLinewidth: 0.1 } ) );
-	// plane.visible = true;
-	// scene.add( plane );
+	makeGrid();
 
-	var axisHelper = new THREE.AxisHelper( 50 );
-	scene.add( axisHelper );
+	// add subtle ambient lighting
+	var ambientLight = new THREE.AmbientLight(0x555555);
+	scene.add(ambientLight);
 
-  // add subtle ambient lighting
-  var ambientLight = new THREE.AmbientLight(0x555555);
-  scene.add(ambientLight);
+	// add directional light source
+	var directionalLight = new THREE.DirectionalLight(0xbbbbbb);
+	directionalLight.position.set(0.5, 0.3, 0.5);
+	scene.add(directionalLight);
 
-  // add directional light source
-  var directionalLight = new THREE.DirectionalLight(0xbbbbbb);
-  directionalLight.position.set(0.5, 0.3, 0.5);
-  scene.add(directionalLight);
+	var directionalLight = new THREE.DirectionalLight(0xaaaaaa);
+	directionalLight.position.set(-0.2, -0.8, 1).normalize();
+	scene.add(directionalLight);
 
-   var directionalLight = new THREE.DirectionalLight(0xaaaaaa);
-  directionalLight.position.set(-0.2, -0.8, 1).normalize();
-  scene.add(directionalLight);
+	makeGrid();
 
 	controls = new THREE.OrbitControls(camera, container);
 
 	window.addEventListener( 'resize', onWindowResize, false );
 
 	animate();
+
+}
+
+function makeGrid(){
+
+	var axisHelper = new THREE.AxisHelper( 50 );
+	scene.add( axisHelper );
 
 }
 
@@ -87,9 +88,7 @@ function onWindowResize() {
 function animate() {
 
 	requestAnimationFrame( animate );
-
 	render();
-	// stats.update();
 
 }
 
@@ -97,3 +96,5 @@ function render() {
 	controls.update();
 	renderer.render( scene, camera );
 }
+
+
