@@ -62,9 +62,11 @@ function init() {
   directionalLight.position.set(-0.2, -0.8, 1).normalize();
   scene.add(directionalLight);
 
-	controls = new THREE.TrackballControls(camera, container);
+	controls = new THREE.OrbitControls(camera, container);
 
 	window.addEventListener( 'resize', onWindowResize, false );
+
+	animate();
 
 }
 
@@ -79,6 +81,15 @@ function onWindowResize() {
 	renderer.setSize( 2*windowHalfX, 2*windowHalfY );
 
 	render();
+
+}
+
+function animate() {
+
+	requestAnimationFrame( animate );
+
+	render();
+	// stats.update();
 
 }
 
