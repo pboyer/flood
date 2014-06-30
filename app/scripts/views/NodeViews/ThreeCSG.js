@@ -160,7 +160,6 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView'], function(Backbone, 
 
     addLineStrip: function( rawGeom, threeGeom ){
 
-      console.log('add line strip')
       for ( var i = 0; i < rawGeom.linestrip.length; i++ ) {
         var v = rawGeom.linestrip[i];
         threeGeom.vertices.push( new THREE.Vector3( v[0], v[1], v[2] ) );
