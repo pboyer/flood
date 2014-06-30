@@ -428,8 +428,8 @@ define(function() {
 	FLOOD.nodeTypes.Formula = function() {
 
 		var typeData = {
-			inputs: [ 	new FLOOD.baseTypes.InputPort( "A", [Number], 0 ) ],
-			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [Number] ) ],
+			inputs: [ 	new FLOOD.baseTypes.InputPort( "A", [AnyTypeButQuotedArray], 0 ) ],
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [AnyType] ) ],
 			typeName: "Formula" 
 		};
 
@@ -510,7 +510,7 @@ define(function() {
 		};
 
 		var addFormulaInput = function(){
-			var port = new FLOOD.baseTypes.InputPort( that.portNames[ that.inputs.length ], [Number], 0 );
+			var port = new FLOOD.baseTypes.InputPort( that.portNames[ that.inputs.length ], [AnyTypeButQuotedArray], 0 );
 			port.parentNode = that;
 			port.parentIndex = that.inputs.length;
 			that.inputs.push( port );
@@ -601,6 +601,22 @@ define(function() {
 
 		this.eval = function(a, b) {
 			return a - b;
+		};
+
+	}.inherits( FLOOD.baseTypes.NodeType );
+
+	FLOOD.nodeTypes.Negate = function() {
+
+		var typeData = {
+			inputs: [ 	new FLOOD.baseTypes.InputPort( "A", [Number], 1 ) ],
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [Number] ) ],
+			typeName: "Negate" 
+		};
+
+		FLOOD.baseTypes.NodeType.call(this, typeData );
+
+		this.eval = function(a) {
+			return -1 * a;
 		};
 
 	}.inherits( FLOOD.baseTypes.NodeType );
@@ -924,6 +940,23 @@ define(function() {
 		this.eval = function(l) {
 			if (l.length <= 1) return [];
 			return l.slice(1);
+		};
+
+	}.inherits( FLOOD.baseTypes.NodeType );
+
+	FLOOD.nodeTypes.ListAddToFront = function() {
+
+		var typeData = {
+			inputs: [ 	new FLOOD.baseTypes.InputPort( "Item", [AnyTypeButQuotedArray] ), 
+						new FLOOD.baseTypes.InputPort( "List", [QuotedArray, AnyType] )],
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [AnyType] ) ],
+			typeName: "ListAddToFront" 
+		};
+
+		FLOOD.baseTypes.NodeType.call( this, typeData );
+
+		this.eval = function(i, l) {
+			return [i].concat(l);
 		};
 
 	}.inherits( FLOOD.baseTypes.NodeType );

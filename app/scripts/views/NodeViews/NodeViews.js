@@ -2,26 +2,27 @@ define(['BaseNodeView', 'WatchNodeView', 'NumNodeView', 'CSGNodeView', 'FormulaV
 
   var nodeViewTypes = {};
 
-  nodeViewTypes.Base = BaseNodeView;
+  nodeViewTypes.Base = CSGNodeView;
   nodeViewTypes.Watch = WatchNodeView;
   nodeViewTypes.Number = NumNodeView;
 
   nodeViewTypes.Formula = FormulaView;
 
-  nodeViewTypes.SolidSphere = CSGNodeView;
-  nodeViewTypes.SolidCylinder = CSGNodeView;
-  nodeViewTypes.SolidCube = CSGNodeView;
-  nodeViewTypes.SolidExtrusion = CSGNodeView;
+  // nodeViewTypes.SolidSphere = CSGNodeView;
+  // nodeViewTypes.SolidCylinder = CSGNodeView;
+  // nodeViewTypes.SolidCube = CSGNodeView;
+  // nodeViewTypes.SolidExtrusion = CSGNodeView;
 
-  nodeViewTypes.SolidUnion = CSGNodeView;
-  nodeViewTypes.SolidUnionAll = CSGNodeView;
-  nodeViewTypes.SolidIntersect = CSGNodeView;
-  nodeViewTypes.SolidSubtract = CSGNodeView;
-  nodeViewTypes.Move = CSGNodeView;
-  nodeViewTypes.Rotate = CSGNodeView;
-  nodeViewTypes.Scale = CSGNodeView;
-  nodeViewTypes.Point = CSGNodeView;
-  nodeViewTypes.Polygon = CSGNodeView;
+  // nodeViewTypes.SolidUnion = CSGNodeView;
+  // nodeViewTypes.SolidUnionAll = CSGNodeView;
+  // nodeViewTypes.SolidIntersect = CSGNodeView;
+  // nodeViewTypes.SolidSubtract = CSGNodeView;
+  // nodeViewTypes.Move = CSGNodeView;
+  // nodeViewTypes.Rotate = CSGNodeView;
+  // nodeViewTypes.Scale = CSGNodeView;
+  // nodeViewTypes.Point = CSGNodeView;
+  // nodeViewTypes.Plane = CSGNodeView;
+  // nodeViewTypes.RegularPolygon = CSGNodeView;
 
   return nodeViewTypes;
 

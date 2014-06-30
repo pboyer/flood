@@ -60,33 +60,43 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView'], function(Backbone, 
 
     formatPreview: function(data){
 
+      // ugh this is terrible code
+
       if (!data) return null;
 
-      if (data.x != undefined) 
+      if (!data.normal && !data.polygons && !data.vertices) 
         return BaseNodeView.prototype.formatPreview.apply(this, arguments);
 
-      if (data.length > 0 && data[0].x != undefined) 
+      if (data.length > 0 && !data[0].normal && !data[0].polygons && !data[0].vertices) 
         return BaseNodeView.prototype.formatPreview.apply(this, arguments);
 
+      if (data.normal) return "Plane";
       if (data.polygons) return "Solid";
       if (data.vertices) return "Polygon";
+
       if (data.length) {
 
         var solidCount = 0;
         var polyCount = 0;
+        var planeCount = 0;
+
         for (var i = 0; i < data.length; i++) {
           if ( data[i].polygons ) solidCount++;
+          if ( data[i].normal ) planeCount++;
           if ( data[i].vertices ) polyCount++;
         }
+
         var solidString = solidCount + " Solids";
         var polyString = polyCount + " Polygons";
+        var planeString = planeCount + " Planes";
 
         var stringArr = [];
 
         if (solidCount > 0) stringArr.push(solidString);
+        if (planeCount > 0) stringArr.push(planeString);
         if (polyCount > 0) stringArr.push(polyString);
 
-        if (solidCount === 0 && polyCount === 0) return "Nothing";
+        if (planeCount === 0 && solidCount === 0 && polyCount === 0) return "Nothing";
 
         return stringArr.join(',');
 
@@ -149,6 +159,7 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView'], function(Backbone, 
 
     addLineStrip: function( rawGeom, threeGeom ){
 
+      console.log('add line strip')
       for ( var i = 0; i < rawGeom.linestrip.length; i++ ) {
         var v = rawGeom.linestrip[i];
         threeGeom.vertices.push( new THREE.Vector3( v[0], v[1], v[2] ) );

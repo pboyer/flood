@@ -455,6 +455,8 @@ CSG.Vertex.prototype = {
 CSG.Plane = function(normal, w) {
   this.normal = normal;
   this.w = w; // the distance from the origin along the normal
+
+  
 };
 
 // `CSG.Plane.EPSILON` is the tolerance used by `splitPolygon()` to decide if a

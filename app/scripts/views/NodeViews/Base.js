@@ -208,9 +208,6 @@ define(['backbone', 'jqueryuidraggable', 'bootstrap'], function(Backbone, jquery
         this.$el.find('.node-data-container').html( this.getCustomContents() );
       }
 
-      var del = { show: 400 };
-      this.$el.find('.node-port-output').tooltip({title: "Click & drag to create a connection", placement: "right", delay: del});
-      
       return this;
 
     },
@@ -427,12 +424,12 @@ define(['backbone', 'jqueryuidraggable', 'bootstrap'], function(Backbone, jquery
         // position input ports on left side, output ports on right side
         if ( $(ele).hasClass('node-port-input') ) {
           nodeCircle.setAttribute('cx', 0);
-          nodeCircle.setAttribute('cy', that.portHeight / 2 + $(ele).position().top); 
+          nodeCircle.setAttribute('cy', zoom * that.portHeight / 2 + $(ele).position().top); 
           that.inputPorts.push(nodeCircle);
           inIndex++;
         } else {
           nodeCircle.setAttribute('cx', that.$el.width() + 3 );
-          nodeCircle.setAttribute('cy', that.portHeight / 2 + $(ele).position().top); 
+          nodeCircle.setAttribute('cy', zoom * that.portHeight / 2 + $(ele).position().top); 
           that.outputPorts.push(nodeCircle);
           outIndex++;
         }

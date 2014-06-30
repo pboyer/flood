@@ -1,0 +1,74 @@
+Confirm we can compile a set of nodes to a lambda, add a unit test for this
+
+WorkspaceSchema
+
+	// for non-functions
+	IsCustomNode
+	FunctionId
+
+	// for functions 
+	WorkspaceDependencies
+
+
+flood_runner 
+
+	FLOOD.NodeTypes.FloodFunction[] Functions
+
+
+Before opening a workspace:
+
+	Get reference to all dependents (possibly using local copy from other home workspace)
+	Rebuild dependents making them available in Search, define associated node
+
+
+	Then the dependency changes - the workspace will need to send the update to the runner for the dependents
+	You send me an update to custom node - I will recompile that custom node and update the environment
+	The runner can hold onto the functions
+
+
+FLOOD.NodeTypes.FloodFunction
+
+	Unique ID
+	Its inputs and outputs are modified similar to a normal node
+
+
+WorkspaceTabView
+
+	Extend "New" button to pick Project or Node
+	Extend single TabView UI to distinguish from normal Tab
+
+
+SearchElements
+
+	Input, Output - with specified name
+
+
+Runner Requirements
+
+	Compile a workspace to a lambda
+	Define the workspace in the environment of the scheme interpreter
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

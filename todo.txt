@@ -1,8 +1,10 @@
 CURRENT
 
-show polygon edges in viewport
+previews are screwed up when you get a list of solids
+more delay for tooltip on output port
 node port heights are messed up when zoomed
 save zoom when changed
+
 
 POLISH
 
