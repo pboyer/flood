@@ -62,9 +62,10 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView'], function(Backbone, 
 
       // ugh this is terrible code
 
-      if (!data) return null;
+      if (data == null || data === undefined)
+        return BaseNodeView.prototype.formatPreview.apply(this, arguments);
 
-      if (!data.normal && !data.polygons && !data.vertices) 
+      if (data.length === undefined && !data.normal && !data.polygons && !data.vertices) 
         return BaseNodeView.prototype.formatPreview.apply(this, arguments);
 
       if (data.length > 0 && !data[0].normal && !data[0].polygons && !data[0].vertices) 
