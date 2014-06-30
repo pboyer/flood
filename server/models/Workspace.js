@@ -21,6 +21,8 @@ var workspaceSchema = new Schema({
   , undoStack: [ Schema.Types.Mixed ]
   , redoStack: [ Schema.Types.Mixed ]
   , isModified: { type: Boolean, default: false }
+  , isCustomNode: { type: Boolean, default: false }
+  , workspaceDependencies: [{type: Schema.ObjectId, ref: 'Workspace' }]
 });
 
 exports.SessionModel = mongoose.model('Session', sessionSchema);

@@ -302,6 +302,7 @@ define(function() {
 
 	}
 
+
 	// InputPort
 
 	FLOOD.baseTypes.NodePort = function(name, type, parentNode, parentIndex, oppNode, oppIndex) {
@@ -390,6 +391,80 @@ define(function() {
 		}
 
 	}.inherits( FLOOD.baseTypes.NodePort );
+
+	var characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+	var currentInputChar = 0;
+
+	FLOOD.nodeTypes.Input = function(name) {
+
+		var typeData = {
+			typeName: "Input",
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [AnyTypeButQuotedArray] ) ],
+		};
+
+		if (this.name === undefined) name = characters[currentInputChar++];
+
+		this.name = name;
+
+		FLOOD.baseTypes.NodeType.call(this, typeData);
+
+		this.compile = function() {
+			return this.name;
+		}
+
+		this.printExpression = function(){
+			return this.name;
+		}
+
+	}.inherits( FLOOD.baseTypes.NodeType );
+
+	var currentOutputChar = 0;
+
+	FLOOD.nodeTypes.Output = function(name) {
+
+		var typeData = {
+			inputs: [ 	new FLOOD.baseTypes.InputPort( "⇒", [AnyType] ) ],
+			typeName: "Output"
+		};
+
+		if (this.name === undefined) name = characters[currentOutputChar++];
+
+		this.name = name;
+
+		FLOOD.baseTypes.NodeType.call(this, typeData);
+
+		this.compile = function() {
+			return this.inputs[0].compile();
+		}
+
+	}.inherits( FLOOD.baseTypes.NodeType );
+
+	FLOOD.internalNodeTypes.CustomNode = function(functionName, functionId, workspace) {
+
+		var typeData = {
+			typeName: "CustomNode"
+		};
+
+		this.functionName = functionName;
+		this.functionId = functionId;
+		this.workspace = workspace;
+
+		FLOOD.baseTypes.NodeType.call(this, typeData );
+
+		this.compile = function() {
+			return [ this.functionId ].concat( this.inputs.map(function(input){
+				return input.compile();
+			}));
+		}
+
+		this.printExpression = function(){
+			return [ this.functionName ].concat( this.inputs.map(function(input){
+				return input.printExpression();
+			}));
+		};
+
+
+	}.inherits( FLOOD.baseTypes.NodeType );
 
 	// Number
 
@@ -535,7 +610,7 @@ define(function() {
 		FLOOD.baseTypes.NodeType.call(this, typeData);
 
 		this.eval = function(){
-			return 2 * Math.PI;
+			return Math.PI;
 		}
 
 	}.inherits( FLOOD.baseTypes.NodeType );

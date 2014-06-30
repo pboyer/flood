@@ -42,7 +42,16 @@ define([  'backbone',
       'click #settings-button': 'showSettings',
       'click #workspace_hide' : 'toggleViewer',
       'click #add-workspace-button': 'newWorkspace',
+      'click #add-node-workspace-button': 'newNodeWorkspace',
       'click #workspace-browser-button': 'toggleBrowser'
+    },
+
+    newWorkspace: function(){
+      this.model.newWorkspace();
+    },
+
+    newNodeWorkspace: function(){
+      this.model.newNodeWorkspace();
     },
 
     keydownHandler: function(e){
@@ -158,10 +167,6 @@ define([  'backbone',
     workspaceViews: {},
 
     workspaceCounter: 1,
-
-    newWorkspace: function(){
-      this.model.newWorkspace();
-    },
 
     // This callback is called when a Workspace is added to
     // the App's Workspace Collection

@@ -36,6 +36,14 @@ body {
 	z-index: 100;
 }
 
+.workspace-tab-function {
+	font-style: italic;
+	font-family: serif;
+	color: gray;
+	font-size: 15px;
+	padding-left: 7px;
+}
+
 #workspace-search-input-container {
 	padding-left: 10px;
 }
@@ -441,6 +449,10 @@ body {
 }
 
 #add-workspace-button {
+	padding: 5px;
+}
+
+#add-node-workspace-button {
 	border-right: 1px solid #c7bbb1;
 	padding: 5px;
 }

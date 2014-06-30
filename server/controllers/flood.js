@@ -121,9 +121,10 @@ exports.putMySession = function(req, res) {
 				w.lastSaved = Date.now();
 				w.redoStack = x.redoStack || w.redoStack;
 				w.undoStack = x.undoStack || w.undoStack;
+				w.isCustomNode = ( x.isCustomNode != undefined ) ? x.isCustomNode : w.isCustomNode;
 				w.isFirstExperience = false;
 
-				w.markModified("isFirstExperience name nodes connections currentWorkspace selectedNodes zoom lastSaved undoStack redoStack");
+				w.markModified("isCustomNode isFirstExperience name nodes connections currentWorkspace selectedNodes zoom lastSaved undoStack redoStack");
 
 				w.save(function(se){
 					if (se) return callback(se);
@@ -268,6 +269,7 @@ exports.putWorkspace = function(req, res) {
 		w.lastSaved = Date.now();
 		w.redoStack = x.redoStack || w.redoStack;
 		w.undoStack = x.undoStack || w.undoStack;
+		w.isCustomNode = ( x.isCustomNode != undefined ) ? x.isCustomNode : w.isCustomNode;
 		w.isModified = true;
 
 		w.markModified("name nodes connections currentWorkspace selectedNodes zoom lastSaved undoStack redoStack isModified");

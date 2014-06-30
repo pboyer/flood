@@ -52,6 +52,10 @@
               <i class="icon-file dim-button"></i>
             </div>
 
+            <div id="add-node-workspace-button" class="menu-element" style="float: left">
+              <i class="icon-book dim-button"></i>
+            </div>
+
             <div id="more-menu">
               <div id="login-button" class="menu-element"></div>
               <div id="workspace-browser-button" class="menu-element">Workspaces</div>
@@ -193,6 +197,7 @@
       <script type="text/template" id="workspace-tab-template">
 
         <i class="icon-pencil dim-button edit-button" style="visibility: hidden; margin-left: 10px"></i>
+        <span class="workspace-tab-function <%= isCustomNode ? "" : "hidden" %>">f</span>
         <input class="workspace-name" disabled="disabled" value="<%= name %>"></input>
         <i class="icon-remove dim-button remove-button"></i>
 

@@ -23,7 +23,12 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
       // undo/redo stack
       undoStack: [],
       redoStack: [],
-      clipBoard: []
+      clipBoard: [],
+
+      // for custom nodes
+      workspaceDependencyIds: [],
+      isCustomNode: false
+
     },
 
     // connection creation
@@ -32,7 +37,6 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
 
     // marquee selection
     dragSelect: false,
-
 
     runAllowed: false,
 
@@ -114,6 +118,8 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
         });
 
         this._isSerializing = false;
+
+        console.log(json)
 
         return json;
     },

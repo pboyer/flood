@@ -104,6 +104,28 @@ define(['backbone', 'Workspaces', 'Node', 'Login', 'Workspace', 'SearchElements'
 
     },
 
+    newNodeWorkspace: function( callback ){
+
+      var that = this;
+
+      $.get("/nws", function(data, status){
+
+        data.isCustomNode = true;
+
+        var ws = new Workspace(data, { app: that });
+
+        that.get('workspaces').add( ws );
+        that.set('currentWorkspace', ws.get('_id') );
+        if (callback) callback( ws );
+
+      }).fail(function(){
+
+        console.error("failed to get new workspace");
+
+      });
+
+    },
+
     openWorkspace: function( id, callback ){
 
       var ws = this.get('workspaces').get(id);

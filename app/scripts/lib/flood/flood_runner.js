@@ -74,7 +74,11 @@ on_run = function(data){
 
 	// get all nodes with output ports
 	var S = new scheme.Interpreter()
-	  , baseNode = null
+	 
+	// TODO: update function definitions here
+	
+
+	var baseNode = null
 	  , bottomNodes = workspace.nodes
 	                      .filter(function(ele){
 	                        return !(data.bottom_ids.indexOf(ele.id) < 0 );

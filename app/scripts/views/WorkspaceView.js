@@ -64,7 +64,6 @@ define(['backbone', 'Workspace', 'ConnectionView', 'MarqueeView', 'NodeViewTypes
               .renderRunnerStatus()
               .updateZoom()
               .updateOffset();
-
     },
 
     startMarqueeDrag: function(event){
