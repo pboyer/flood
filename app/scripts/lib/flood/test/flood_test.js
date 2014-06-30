@@ -1,6 +1,6 @@
-var FLOOD = new require('./flood.js')
+var FLOOD = new require('../flood.js')
 	, assert = require('assert')
-	, scheme = require('./scheme.js');
+	, scheme = require('../scheme.js');
 
 // mapApply - applyCartesian without nesting
 (function(scheme, FLOOD) {

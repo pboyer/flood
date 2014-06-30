@@ -1,7 +1,7 @@
-var FLOOD = new require('./flood.js')
+var FLOOD = new require('../flood.js')
 	, assert = require('assert')
-	, scheme = require('./scheme.js')
-	, f = require('./flood_csg.js');
+	, scheme = require('../scheme.js')
+	, f = require('../flood_csg.js');
 
 // mapApply - applyLongest with nesting
 (function(scheme, FLOOD) {

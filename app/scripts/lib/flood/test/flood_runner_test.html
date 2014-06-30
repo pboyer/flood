@@ -1,5 +1,5 @@
 <script>
-  var worker = new Worker('flood_router.js');
+  var worker = new Worker('../flood_router.js');
 
   worker.addEventListener('message', function(e) {
     console.log(e.data);
