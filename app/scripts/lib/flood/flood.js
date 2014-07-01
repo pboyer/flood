@@ -69,7 +69,6 @@ define(function() {
 	    return this;
 	});
 
-
 	// MultiOutResult
 	// ===========
 	//
@@ -79,7 +78,16 @@ define(function() {
 			this[i] = object[i];
 		}
 	};
-	QuotedArray.prototype = new Object();
+	MultiOutResult.prototype = new Object();
+
+	MultiOutResult.wrap = function(){
+
+		if (arguments.length === 0) return undefined;
+
+		return arguments.length === 1 ? arguments[0] : 
+			new FLOOD.MultiOutResult( arguments );
+
+	};
 
 	MultiOutResult.prototype.constructor = MultiOutResult;
 	FLOOD.MultiOutResult = MultiOutResult;
@@ -123,12 +131,10 @@ define(function() {
 			qa.push( this[i].toQuotedArray ? this[i].toQuotedArray() : this[i] );
 		}
 		return qa;
-	}
+	};
+
 	QuotedArray.prototype.constructor = QuotedArray;
 	FLOOD.QuotedArray = QuotedArray;
-
-	// NodeType
-	// ========
 
 	FLOOD.baseTypes.NodeType = function(options) {
 
@@ -302,9 +308,6 @@ define(function() {
 
 	}
 
-
-	// InputPort
-
 	FLOOD.baseTypes.NodePort = function(name, type, parentNode, parentIndex, oppNode, oppIndex) {
 		
 		this.name = name;
@@ -392,8 +395,35 @@ define(function() {
 
 	}.inherits( FLOOD.baseTypes.NodePort );
 
-	var characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-	var currentInputChar = 0;
+	FLOOD.compileNodesToLambda = function(nodes){
+
+		// find all input nodes
+		var inputNodes = nodes.filter(function(x){
+			return x instanceof FLOOD.nodeTypes.Input;
+		});
+
+		// find all output nodes
+		var outputNodes = nodes.filter(function(x){
+			return x instanceof FLOOD.nodeTypes.Output;
+		});
+
+		// compile the input nodes, forming the arg list
+		var args = inputNodes.map(function(x){
+			return x.compile();
+		});
+
+		// compile the output nodes, forming the internal value expressions
+		var internalExp = outputNodes.map( function(x){ return x.compile(); });
+
+		// we need a function to box up the internal expression
+		// in a dictionary if there are multiple outputs
+		var boxedExp = internalExp.length > 1 ? 
+			[ FLOOD.MultiOutResult.wrap ].concat( internalExp ) : internalExp; 
+
+		// ( lambda (args) boxedExp )
+		return ["lambda", args, boxedExp];
+
+	};
 
 	FLOOD.nodeTypes.Input = function(name) {
 
@@ -402,7 +432,7 @@ define(function() {
 			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [AnyTypeButQuotedArray] ) ],
 		};
 
-		if (this.name === undefined) name = characters[currentInputChar++];
+		if (name === undefined) name = characters[currentInputChar++];
 
 		this.name = name;
 
@@ -427,7 +457,7 @@ define(function() {
 			typeName: "Output"
 		};
 
-		if (this.name === undefined) name = characters[currentOutputChar++];
+		if (name === undefined) name = characters[currentOutputChar++];
 
 		this.name = name;
 
@@ -438,35 +468,6 @@ define(function() {
 		}
 
 	}.inherits( FLOOD.baseTypes.NodeType );
-
-	FLOOD.internalNodeTypes.CustomNode = function(functionName, functionId, workspace) {
-
-		var typeData = {
-			typeName: "CustomNode"
-		};
-
-		this.functionName = functionName;
-		this.functionId = functionId;
-		this.workspace = workspace;
-
-		FLOOD.baseTypes.NodeType.call(this, typeData );
-
-		this.compile = function() {
-			return [ this.functionId ].concat( this.inputs.map(function(input){
-				return input.compile();
-			}));
-		}
-
-		this.printExpression = function(){
-			return [ this.functionName ].concat( this.inputs.map(function(input){
-				return input.printExpression();
-			}));
-		};
-
-
-	}.inherits( FLOOD.baseTypes.NodeType );
-
-	// Number
 
 	FLOOD.nodeTypes.Number = function() {
 
@@ -499,6 +500,9 @@ define(function() {
 		}
 
 	}.inherits( FLOOD.baseTypes.NodeType );
+
+	var characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+	var currentInputChar = 0;
 
 	FLOOD.nodeTypes.Formula = function() {
 
@@ -743,6 +747,33 @@ define(function() {
 
 		this.eval = function(a, b) {
 			return a > b;
+		};
+
+	}.inherits( FLOOD.baseTypes.NodeType );
+
+
+	FLOOD.internalNodeTypes.CustomNode = function(functionName, functionId, workspace) {
+
+		var typeData = {
+			typeName: "CustomNode"
+		};
+
+		this.functionName = functionName;
+		this.functionId = functionId;
+		this.workspace = workspace;
+
+		FLOOD.baseTypes.NodeType.call(this, typeData );
+
+		this.compile = function() {
+			return [ this.functionId ].concat( this.inputs.map(function(input){
+				return input.compile();
+			}));
+		}
+
+		this.printExpression = function(){
+			return [ this.functionName ].concat( this.inputs.map(function(input){
+				return input.printExpression();
+			}));
 		};
 
 	}.inherits( FLOOD.baseTypes.NodeType );
