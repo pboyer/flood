@@ -38,9 +38,9 @@ var FLOOD = new require('../flood.js')
 
 	var S = new scheme.Interpreter();
 
-	var eres = S.eval( [ lambda, 5 ] );
+	var eres = S.eval( [ lambda, 5, 7 ] );
 
-	// assert.equal( eres[0], 12 );
-	// assert.equal( eres[1], 35 );
+	assert.equal( eres[0], 12 );
+	assert.equal( eres[1], 35 );
 
 })(scheme, FLOOD);

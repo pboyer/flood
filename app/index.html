@@ -135,7 +135,7 @@
         </ul>
 
         <div class="node-data-container" >
-          <span class="name searchfield"><%- typeName %></span>
+          <span class="name searchfield"><%= typeName != "CustomNode" ? typeName : type.functionName  %></span>
         </div>
 
         <ul class="node-outputs" >

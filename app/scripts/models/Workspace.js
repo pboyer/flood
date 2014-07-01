@@ -55,13 +55,8 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
         this.get('nodes').get(ele.get('endNodeId')).connectPort(ele.get('endPortIndex'), false, ele);
       }, this);
 
-      this.runner = new Runner({id : this.get('_id') }, { workspace: this });
-
       // updates to connections and nodes are emitted to listeners
       var that = this;
-      this.runner.on('change:isRunning', function(v){
-        that.set('isRunning', v.get('isRunning'));
-      });
 
       this.get('connections').on('add remove', function(){ 
         that.trigger('change:connections'); 
@@ -90,13 +85,43 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
 
       this.runAllowed = true;
 
-      // run the workspace for the first time
-      this.run();
+      if (!this.get('isCustomNode')) this.initializeRunner();
 
       // save on every change
       var throttledSync = _.throttle(function(){ this.sync('update', this); }, 2000);
       this.on('runCommand', throttledSync, this);
       this.on('change:name', throttledSync, this);
+
+      if (this.get('isCustomNode')) this.initializeCustomNode();
+
+    },
+
+    initializeRunner: function(){
+
+      this.runner = new Runner({id : this.get('_id') }, { workspace: this });
+
+      var that = this;
+      this.runner.on('change:isRunning', function(v){
+        that.set('isRunning', v.get('isRunning'));
+      });
+
+      this.run();
+
+    },
+
+    customNode : null,
+
+    initializeCustomNode: function(){
+
+      this.customNode = new FLOOD.internalNodeTypes.CustomNode( this.get('name'), this.get('_id') );
+
+      var ni = this.get('nodes').where({typeName: "Input"}).length;
+      var no = this.get('nodes').where({typeName: "Output"}).length;
+
+      this.customNode.setNumInputs(ni);
+      this.customNode.setNumOutputs(no);
+
+      this.app.SearchElements.addCustomNode( this.customNode );
 
     },
 
@@ -118,8 +143,6 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
         });
 
         this._isSerializing = false;
-
-        console.log(json)
 
         return json;
     },
@@ -326,10 +349,33 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
 
     addNode: function(data){
 
+      // its a custom workspace
+      if ( data.typeName === "CustomNode" ){
+
+        // now emit custom node definition to runner
+        this.sendCustomNodeToRunner( data );
+
+      }
+
       var datac = JSON.parse( JSON.stringify( data ) );
       datac.kind = "addNode";
       this.runInternalCommand(datac);
       this.addToUndoAndClearRedo( datac );
+
+    },
+
+    sendCustomNodeToRunner: function(data){
+
+      if (this.get('workspaceDependencyIds').indexOf( data.extra.functionId ) === -1){
+        this.get('workspaceDependencyIds').push( data.extra.functionId );
+      }
+
+      console.log("this id is" + this.id);
+      console.log("the cs id is " + data.extra.functionId);
+
+      var ws = this.app.get('workspaces').where({ _id: data.extra.functionId })[0];
+
+      this.runner.addDefinition(ws);
 
     },
 
@@ -582,7 +628,7 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
 
     run: function() {
 
-      if (!this.runAllowed){
+      if ( !this.runAllowed || this.get('isCustomNode') ){
         this.runRejected = true;
         return;
       }

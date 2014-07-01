@@ -3,7 +3,9 @@ define(['backbone'], function(Backbone) {
   return Backbone.Model.extend({
 
     defaults: {
-      name: null
+      name: null,
+      isCustomNode: false,
+      functionId: -1
     }, 
     
     initialize: function(a, b) {

@@ -174,10 +174,11 @@ define(function() {
 
 		}
 
+		this.alwaysDirty = false;
 		this.doPostProcess = true;
 
 		this.isDirty = function() {
-			return _isDirty;
+			return this.alwaysDirty ? true : _isDirty;
 		};
 
 		this.markClean = function() {
@@ -418,12 +419,114 @@ define(function() {
 		// we need a function to box up the internal expression
 		// in a dictionary if there are multiple outputs
 		var boxedExp = internalExp.length > 1 ? 
-			[ FLOOD.MultiOutResult.wrap ].concat( internalExp ) : internalExp; 
+			[ FLOOD.MultiOutResult.wrap ].concat( internalExp ) : internalExp[0];
+
+		// nodes in a custom node do not cache their value
+		nodes.forEach(function(x){ x.alwaysDirty = true; });
 
 		// ( lambda (args) boxedExp )
 		return ["lambda", args, boxedExp];
 
 	};
+
+	FLOOD.internalNodeTypes.CustomNode = function(functionName, functionId, lambda) {
+
+		var typeData = {
+			typeName: "CustomNode"
+		};
+
+		this.functionName = functionName;
+		this.functionId = functionId;
+		this.lambda = lambda;
+
+		if (scheme) var S = new scheme.Interpreter();
+
+		FLOOD.baseTypes.NodeType.call(this, typeData );
+
+		this.eval = function() {
+
+			var args = Array.prototype.slice.call(arguments, 0);
+			var exp = [ this.lambda ].concat(args) ;
+
+			return S.eval( exp );
+
+		};
+
+		this.printExpression = function() { 
+			return "(" + this.functionName + " " + this.inputs.map(function(n){ return n.printExpression(); }).join(' ') + ")";					
+		};
+
+		this.extend = function(args){
+
+			if (args.functionName && typeof args.functionName === "string"){
+				this.functionName = args.functionName;
+			}
+
+			if (args.functionId && typeof args.functionId === "string"){
+				this.functionId = args.functionId;
+			}
+
+			if (args.numInputs && typeof args.numInputs === "number" ){
+				this.setNumInputs(args.numInputs);
+			}
+
+			if (args.numOutputs && typeof args.numOutputs === "number" ){
+				this.setNumOutputs(args.numOutputs);
+			}
+
+		};
+
+		var that = this;
+
+		this.setNumInputs = function( num ){
+
+			if (typeof num != "number" || num < 0 || this.inputs.length === num) {
+				return;
+			}
+
+			if (this.inputs.length < num) addInput();
+			if (this.inputs.length > num) removeInput();
+
+			this.setNumInputs( num );
+		}
+
+		this.setNumOutputs = function( num ){
+
+			if (typeof num != "number" || num < 0 || this.outputs.length === num) {
+				return;
+			}
+
+			if (this.outputs.length < num) addOutput();
+			if (this.outputs.length > num) removeInput();
+
+			this.setNumOutputs( num );
+		}
+
+		var addInput = function(){
+			var port = new FLOOD.baseTypes.InputPort( characters[ that.inputs.length ], [AnyTypeButQuotedArray], 0 );
+			port.parentNode = that;
+			port.parentIndex = that.inputs.length;
+			that.inputs.push( port );
+		};
+
+		var removeInput = function(){
+			if (that.inputs.length === 0) return;
+			that.inputs.pop();
+		};
+
+		var addOutput = function(){
+			var port = new FLOOD.baseTypes.OutputPort( characters[ that.outputs.length ], [AnyType] );
+			port.parentNode = that;
+			port.parentIndex = that.outputs.length;
+			that.outputs.push( port );
+		};
+
+		var removeOutput = function(){
+			if (that.outputs.length === 0) return;
+			that.outputs.pop();
+		};
+
+	}.inherits( FLOOD.baseTypes.NodeType );
 
 	FLOOD.nodeTypes.Input = function(name) {
 
@@ -747,33 +850,6 @@ define(function() {
 
 		this.eval = function(a, b) {
 			return a > b;
-		};
-
-	}.inherits( FLOOD.baseTypes.NodeType );
-
-
-	FLOOD.internalNodeTypes.CustomNode = function(functionName, functionId, workspace) {
-
-		var typeData = {
-			typeName: "CustomNode"
-		};
-
-		this.functionName = functionName;
-		this.functionId = functionId;
-		this.workspace = workspace;
-
-		FLOOD.baseTypes.NodeType.call(this, typeData );
-
-		this.compile = function() {
-			return [ this.functionId ].concat( this.inputs.map(function(input){
-				return input.compile();
-			}));
-		}
-
-		this.printExpression = function(){
-			return [ this.functionName ].concat( this.inputs.map(function(input){
-				return input.printExpression();
-			}));
 		};
 
 	}.inherits( FLOOD.baseTypes.NodeType );

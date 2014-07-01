@@ -47,6 +47,7 @@ fail = function(m, silent){
 };
 
 workspaces = {};
+functionDefinitions = {};
 commands = [];
 
 // Receive
@@ -73,10 +74,21 @@ on_run = function(data){
 	var ts = Date.now();
 
 	// get all nodes with output ports
-	var S = new scheme.Interpreter()
-	 
-	// TODO: update function definitions here
-	
+	var S = new scheme.Interpreter();
+
+	// update function definitions
+	for (var funcId in functionDefinitions){
+
+		// don't always do this on every run
+		var lambda = FLOOD.compileNodesToLambda( workspaces[funcId].nodes );
+
+		var csnodes = workspace.nodes.filter(function(x){
+			return x.functionId && x.functionId === funcId;
+		}).forEach(function(x){
+			x.lambda = lambda;
+		});
+
+	}
 
 	var baseNode = null
 	  , bottomNodes = workspace.nodes
@@ -118,6 +130,7 @@ on_run = function(data){
 on_addWorkspace = function(data){
 
 	var workspace = lookupWorkspace(data.workspace_id);
+
 	if (workspace) return fail({kind: "addWorkspace", msg: "A workspace with that id already exists"});
 
 	var workspace = { id: data.workspace_id, nodes: [] };
@@ -127,7 +140,7 @@ on_addWorkspace = function(data){
 	if (data.nodes){
 		data.nodes.forEach(function(x){
 			x.workspace_id = workspace.id;
-			x.silent = true;
+			x.silent = false;
 			on_addNode(x);
 		});
 	}
@@ -135,7 +148,7 @@ on_addWorkspace = function(data){
 	if (data.connections){
 		data.connections.forEach(function(x){
 			x.workspace_id = workspace.id;
-			x.silent = true;
+			x.silent = false;
 			on_addConnection(x);
 		});
 	}
@@ -154,6 +167,14 @@ on_removeWorkspace = function(data){
 	return success({ kind: "removeWorkspace" }, data.silent);
 
 }
+
+on_addDefinition = function(data){
+
+	this.functionDefinitions[data._id] = null;
+	data.workspace_id = data._id;
+	on_addWorkspace( data );
+
+};
 
 on_addConnection = function(data){
 
@@ -234,10 +255,12 @@ on_addNode = function(data){
 	var id = lookupNodeIndex(ws, data._id);
 	if (!(id < 0)) return fail({ kind: "addNode", msg: "Node with given id already exists", workspace_id: data.workspace_id, _id: data._id });
 
-	if ( !FLOOD.nodeTypes[data.typeName] ) 
+	if ( !FLOOD.nodeTypes[data.typeName] && !FLOOD.internalNodeTypes[data.typeName] ) 
 		return fail({ kind: "addNode", msg: "Node with that name does not exist", typeName: data.typeName, workspace_id: data.workspace_id, _id: data._id });
 
-	var node = new FLOOD.nodeTypes[ data.typeName ]();
+	var type = FLOOD.nodeTypes[ data.typeName ] || FLOOD.internalNodeTypes[ data.typeName ];
+
+	var node = new type();
 
 	node.id = data._id;
 	node.replication = data.replication;
@@ -283,7 +306,7 @@ on_removeNode = function(data){
 
 };
 
-// set the nodes for a workspace
+// set the nodes & connections for a workspace
 // the entire set of nodes must be sent, although they can provide values
 on_setWorkspaceContents = function(data){
 
@@ -360,11 +383,10 @@ post_nodeEvalComplete = function(node, args, isNew, value, prettyValue ){
 
 post_nodeEvalFailed = function(node, exception){
 
-	console.log( exception.toString() )
+	console.log( JSON.stringify(exception) )
 	return fail({ kind: "nodeEvalFailed", _id: node.id, exception: exception.toString() });
 
 };
-
 
 // Helpers
 

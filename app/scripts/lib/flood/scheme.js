@@ -98,6 +98,9 @@ define(function() {
 
 			var that = this;
 			if ( typeof x === "string") {							// variable reference
+
+				console.log('looking up identifier', x)
+
 				return env.find(x)[x];
 			} else if ( !(x instanceof Array) ){					// literal	
 				return x; 
@@ -113,7 +116,9 @@ define(function() {
 				var vari = x[1], exp = x[2];
 				env.scope[vari] = this.eval(exp, env);
 			} else if (x[0] === "lambda") {							// (lambda (var*) exp)
+
 				var vars = x[1], exp = x[2];
+
 				return (function(args) {
 					return that.eval( exp, new Env(vars, arguments, env) );
 				});
@@ -128,6 +133,7 @@ define(function() {
 				var exps = x.map(function(exp) { 					
 					return that.eval(exp, env);
 				});
+
 			  var proc = exps.shift();
 			  return proc.apply(this, exps);
 			}

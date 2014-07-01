@@ -131,6 +131,29 @@ define(['backbone', 'List', 'SearchElementView', 'bootstrap'], function(Backbone
     addNode: function(name){
 
       if (name === undefined ) return;
+
+      var se = this.app.SearchElements.where({name: name})[0];
+
+      console.log(se)
+
+      if (se.get('isCustomNode')){
+
+        var sec = { typeName: "CustomNode"
+                    , position: this.getWorkspaceCenter()
+                    , _id: this.app.makeId()  };
+
+        console.log('adding ' + se.get('functionName'))
+
+        sec.extra = { functionId: se.get('functionId')
+                      , functionName: se.get('functionName')
+                      , numInputs: se.get('numInputs')
+                      , numOutputs: se.get('numOutputs')
+                    };
+
+        return this.currentWorkspace().addNode( sec );
+
+      }
+
       this.currentWorkspace().addNodeByNameAndPosition( name, this.getWorkspaceCenter() );
 
     },

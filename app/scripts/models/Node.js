@@ -28,6 +28,8 @@ define(['backbone', 'FLOOD'], function(Backbone, FLOOD) {
       // we need to know the type in order to create the node
       if ( atts.typeName != null && FLOOD.nodeTypes[atts.typeName] != undefined){
         this.set( 'type', new FLOOD.nodeTypes[ atts.typeName ]() );
+      } else if ( atts.typeName != null && FLOOD.internalNodeTypes[atts.typeName] != undefined ) {
+        this.set( 'type', new FLOOD.internalNodeTypes[ atts.typeName ]() );
       } else {
         this.set( 'type', new FLOOD.nodeTypes.Add() );
       }

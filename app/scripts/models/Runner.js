@@ -180,6 +180,30 @@ define(['backbone'], function(Backbone) {
 
 	  },	
 
+	 	addDefinition: function(workspace){
+
+	  	var c = workspace.toJSON();
+	  	c.kind = "addDefinition";
+	  	c.workspace_id = c._id;
+
+	  	this.post( c );
+
+	  },	
+
+	  on_addWorkspace: function(data){
+	  	console.log(data)
+	  },
+
+	  on_addNode: function(data){
+
+	  	console.log(data)
+	  },
+
+	 	on_addConnection: function(data){
+
+	  	console.log(data)
+	  },
+
 	  reset: function(){
 
 	  	this.initWorker();
