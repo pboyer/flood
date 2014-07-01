@@ -190,20 +190,6 @@ define(['backbone'], function(Backbone) {
 
 	  },	
 
-	  on_addWorkspace: function(data){
-	  	console.log(data)
-	  },
-
-	  on_addNode: function(data){
-
-	  	console.log(data)
-	  },
-
-	 	on_addConnection: function(data){
-
-	  	console.log(data)
-	  },
-
 	  reset: function(){
 
 	  	this.initWorker();

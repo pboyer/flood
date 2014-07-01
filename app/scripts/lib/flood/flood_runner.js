@@ -76,10 +76,9 @@ on_run = function(data){
 	// get all nodes with output ports
 	var S = new scheme.Interpreter();
 
-	// update function definitions
+	// todo - this is a mess - should store environment
 	for (var funcId in functionDefinitions){
 
-		// don't always do this on every run
 		var lambda = FLOOD.compileNodesToLambda( workspaces[funcId].nodes );
 
 		var csnodes = workspace.nodes.filter(function(x){

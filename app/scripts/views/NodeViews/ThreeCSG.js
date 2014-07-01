@@ -125,7 +125,7 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView'], function(Backbone, 
 
       if (rawGeom.linestrip) return this.addLineStrip( rawGeom, threeGeom );
 
-      if (rawGeom.vertices && !rawGeom.faces) return addPoints( rawGeom, threeGeom );
+      if (rawGeom.vertices && !rawGeom.faces) return this.addPoints( rawGeom, threeGeom );
 
       for ( var i = 0; i < rawGeom.vertices.length; i++ ) {
         var v = rawGeom.vertices[i];

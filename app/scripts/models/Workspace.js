@@ -343,18 +343,38 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
     addNodeByNameAndPosition: function(name, position){
 
       if (name === undefined || position === undefined ) return;
+
+      var se = this.app.SearchElements.where({ name: name })[0];
+
+      if (!se) {
+        console.warn('Could not find node with name in Library: ' + name)
+        return;
+      }
+
+      if (se.get('isCustomNode')){
+
+        var sec = { typeName: "CustomNode"
+                    , position: position
+                    , _id: this.makeId()  };
+
+        sec.extra = { functionId: se.get('functionId')
+                      , functionName: se.get('functionName')
+                      , numInputs: se.get('numInputs')
+                      , numOutputs: se.get('numOutputs')
+                    };
+
+        return this.addNode( sec );
+
+      }
+
       this.addNode({ typeName: name, position: position, _id: this.makeId() });
 
     },
 
     addNode: function(data){
 
-      // its a custom workspace
       if ( data.typeName === "CustomNode" ){
-
-        // now emit custom node definition to runner
-        this.sendCustomNodeToRunner( data );
-
+        this.sendDefinitionToRunner( data );
       }
 
       var datac = JSON.parse( JSON.stringify( data ) );
@@ -364,18 +384,29 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
 
     },
 
-    sendCustomNodeToRunner: function(data){
+    sendDefinitionToRunner: function(data){
 
-      if (this.get('workspaceDependencyIds').indexOf( data.extra.functionId ) === -1){
-        this.get('workspaceDependencyIds').push( data.extra.functionId );
-      }
+      var id = data.extra.functionId;
 
-      console.log("this id is" + this.id);
-      console.log("the cs id is " + data.extra.functionId);
+      this.addWorkspaceDependency( id );
+      this.runner.addDefinition( this.app.getLoadedWorkspace( id ) );
 
-      var ws = this.app.get('workspaces').where({ _id: data.extra.functionId })[0];
+      // TODO: remove this
+      this.run();
 
-      this.runner.addDefinition(ws);
+    },
+
+    addWorkspaceDependency: function(id){
+
+      var ws = this.app.getLoadedWorkspace(id);
+
+      if (!ws) throw new Error("You tried to add an unloaded workspace as a dependency!")
+
+      var depDeps = ws.get('workspaceDependencyIds')
+        , currentDeps = this.get('workspaceDependencyIds')
+        , unionDeps = _.union( [id], currentDeps, depDeps );
+
+      ws.set( 'workspaceDependencyIds', unionDeps );
 
     },
 

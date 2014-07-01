@@ -85,6 +85,16 @@ define(['backbone', 'Workspaces', 'Node', 'Login', 'Workspace', 'SearchElements'
       return this.get('workspaces').get( this.get('currentWorkspace') );
     },
 
+    getLoadedWorkspace: function(id){
+
+      var workspaces = this.get('workspaces').where({ _id: id });
+
+      if (workspaces.length === 0) return undefined;
+
+      return workspaces[0];
+
+    },
+
     newWorkspace: function( callback ){
 
       var that = this;
