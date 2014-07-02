@@ -101,7 +101,8 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
 
     initializeDependencies: function(depIds){
 
-      console.log('InitDeps: ', this.get('name'), depIds.length > 0 ? depIds[0] : "");
+      // console.log('InitDeps: ', this.get('name'), depIds.length > 0 ? depIds[0] : "");
+      
       if (depIds.length === 0) return;
 
       var that = this;
@@ -135,10 +136,16 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
       if (index < 0) return;
 
       this.awaitedWorkspaceDependencyIds.remove(index);
-
       this.sendDefinitionToRunner( workspace.id );
+      this.watchDependency( workspace );
 
       if (this.awaitedWorkspaceDependencyIds.length === 0) this.run();
+
+    },
+
+    watchDependency: function(workspace){
+
+      workspace.get('nodes').on('add')
 
     },
 

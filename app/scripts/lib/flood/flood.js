@@ -450,6 +450,9 @@ define(function() {
 			var args = Array.prototype.slice.call(arguments, 0);
 			var exp = [ this.lambda ].concat(args) ;
 
+			console.log('evaluating custom node')
+			console.log( this.functionName )
+
 			return S.eval( exp );
 
 		};

@@ -29,7 +29,9 @@ define(['backbone'], function(Backbone) {
 
 	  post: function(data, quiet){
 
-	  	data.workspace_id = this.workspace.get('_id');
+	  	if (!data.workspace_id)
+	  		data.workspace_id = this.workspace.get('_id');
+
 	  	this.worker.postMessage(data);
 
 	  	if (quiet) return;
@@ -136,6 +138,7 @@ define(['backbone'], function(Backbone) {
 
 	  	var n = node.serialize();
 	  	n.kind = "updateNode";
+	  	n.workspace_id = node.workspace.id;
 
 	  	this.post( n );
 
@@ -145,6 +148,8 @@ define(['backbone'], function(Backbone) {
 
 	  	var n = node.serialize();
 	  	n.kind = "addNode";
+	  	n.workspace_id = node.workspace.id;
+
 	  	this.watchNodeEvents( node );
 
 	  	this.post(n);
@@ -155,15 +160,20 @@ define(['backbone'], function(Backbone) {
 
 	  	var n = node.serialize();
 	  	n.kind = "removeNode";
+	  	n.workspace_id = node.workspace.id;
+
 	  	this.post( n );
 
 	  },
 
-	  addConnection: function(connection){
+	  addConnection: function(connection, workspace){
+
+	  	console.log(connection)
 
 	  	var c = connection.toJSON();
 	  	c.kind = "addConnection";
 	  	c.id = connection.get('_id');
+	  	c.workspace_id = connection.workspace.id;
 
 	  	this.post(c);
 
@@ -175,10 +185,22 @@ define(['backbone'], function(Backbone) {
 	  	c.kind = "removeConnection";
 	  	c.id = connection.get('endNodeId');
 	  	c.portIndex = connection.get('endPortIndex');
+	  	c.workspace_id = connection.workspace.id;
 
 	  	this.post( c );
 
 	  },	
+
+	  recompile: function(workspace){
+
+	  	console.log('recompiling ', workspace.get('name'));
+
+	  	var c = workspace.toJSON();
+	  	c.kind = "recompile";
+
+	  	this.post( c );
+
+	  },
 
 	 	addDefinition: function(workspace){
 
@@ -186,9 +208,57 @@ define(['backbone'], function(Backbone) {
 	  	c.kind = "addDefinition";
 	  	c.workspace_id = c._id;
 
+			workspace.get('connections').on('add', function(x){ 
+				this.addConnection(x);
+				this.recompile(workspace);
+				this.workspace.run(); 
+			}, this );
+
+			workspace.get('connections').on('remove', function(x){ 
+				this.removeConnection(x);
+				this.recompile(workspace);
+				this.workspace.run(); 
+			}, this );
+
+			workspace.get('nodes').on('add', function(x){ 
+				this.addNode(x);
+				this.recompile(workspace);
+				this.workspace.run(); 
+			}, this );
+
+			workspace.get('nodes').on('remove', function(x){ 
+				this.removeNode(x);
+				this.recompile(workspace);
+				this.workspace.run(); 
+			}, this );
+
 	  	this.post( c );
 
 	  },	
+
+	  on_addConnection: function(data){
+
+	  	console.log(data);
+
+	  },
+
+	  on_removeConnection: function(data){
+
+	  	console.log(data);
+
+	  },
+
+	  on_recompile: function(data){
+
+	  	console.log(data);
+
+	  },
+
+	  on_addNode: function(data){
+
+	  	console.log(data);
+
+	  },
 
 	  reset: function(){
 

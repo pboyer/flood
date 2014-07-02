@@ -139,7 +139,7 @@ on_addWorkspace = function(data){
 	if (data.nodes){
 		data.nodes.forEach(function(x){
 			x.workspace_id = workspace.id;
-			x.silent = false;
+			x.silent = true;
 			on_addNode(x);
 		});
 	}
@@ -147,7 +147,7 @@ on_addWorkspace = function(data){
 	if (data.connections){
 		data.connections.forEach(function(x){
 			x.workspace_id = workspace.id;
-			x.silent = false;
+			x.silent = true;
 			on_addConnection(x);
 		});
 	}
@@ -177,6 +177,11 @@ on_addDefinition = function(data){
 
 on_addConnection = function(data){
 
+	console.log('ADDCONNECTION')
+	console.log(data.workspace_id);
+	console.log(data.startNodeId);
+	console.log(data.endNodeId);
+
 	var ws = lookupWorkspace(data.workspace_id);
 	if (!ws) return fail({ kind: "run", msg: "The workspace id given is not valid" }, data.silent);
 
@@ -200,6 +205,35 @@ on_addConnection = function(data){
 	return success({ kind: "addConnection" }, data.silent);
 
 };
+
+
+on_recompile = function(data){
+
+	var wsToRecompile = lookupWorkspace(data._id);
+	if (!wsToRecompile) return fail({ kind: "run", msg: "The workspace id given is not valid" }, data.silent);
+
+	// recompile it
+	var lambda = FLOOD.compileNodesToLambda(wsToRecompile.nodes);
+
+	// mark all instances of this custom node as dirty
+	for (var id in workspaces){	
+
+		var ws = lookupWorkspace( id );
+
+		ws.nodes.forEach(function(n){
+
+			if ( n.functionId && n.functionId === data._id ){
+				n.lambda = lambda;
+				n.setDirty();	
+			}
+
+		});
+
+	};
+
+	return success({ kind: "recompile", _id: data.workspace_id }, data.silent);
+
+}
 
 on_removeConnection = function(data){
 
