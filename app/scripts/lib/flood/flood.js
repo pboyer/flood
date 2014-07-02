@@ -445,6 +445,8 @@ define(function() {
 
 		this.eval = function() {
 
+			if ( !this.lambda ) throw new Error("The custom node is not yet compiled.");
+
 			var args = Array.prototype.slice.call(arguments, 0);
 			var exp = [ this.lambda ].concat(args) ;
 

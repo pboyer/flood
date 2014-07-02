@@ -68,9 +68,6 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
         that.run();
       });
 
-      // the proxy connection is what is drawn when the user is 
-      // in the process of creating a new connection - it is not 
-      // persisted.
       this.proxyConnection = new Connection({
         _id: -1, 
         startProxy: true, 
@@ -85,14 +82,63 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
 
       this.runAllowed = true;
 
-      if (!this.get('isCustomNode')) this.initializeRunner();
+      if ( !this.get('isCustomNode') ) this.initializeRunner();
 
       // save on every change
       var throttledSync = _.throttle(function(){ this.sync('update', this); }, 2000);
       this.on('runCommand', throttledSync, this);
       this.on('change:name', throttledSync, this);
 
-      if (this.get('isCustomNode')) this.initializeCustomNode();
+      if ( this.get('isCustomNode') ) this.initializeCustomNode();
+
+      this.initializeDependencies( atts.workspaceDependencyIds );
+
+      this.app.trigger('workspaceLoaded', this);
+
+    },
+
+    awaitedWorkspaceDependencyIds: [],
+
+    initializeDependencies: function(depIds){
+
+      console.log('InitDeps: ', this.get('name'), depIds.length > 0 ? depIds[0] : "");
+      if (depIds.length === 0) return;
+
+      var that = this;
+
+      this.app.get('workspaces').on('add', this.resolveDependency, this);
+
+      depIds.forEach(function(x){
+        that.awaitOrResolveDependency.call(that, x);
+      });
+
+    },
+
+    awaitOrResolveDependency: function(id){
+
+      var ws = this.app.getLoadedWorkspace(id);
+
+      if (ws) {
+        return this.resolveDependency(ws);
+      }
+
+      this.awaitedWorkspaceDependencyIds.push(id);
+
+    },
+
+    resolveDependency: function(workspace){
+
+      if (workspace.id === this.id) return;
+
+      var index = this.awaitedWorkspaceDependencyIds.indexOf( workspace.id );
+
+      if (index < 0) return;
+
+      this.awaitedWorkspaceDependencyIds.remove(index);
+
+      this.sendDefinitionToRunner( workspace.id );
+
+      if (this.awaitedWorkspaceDependencyIds.length === 0) this.run();
 
     },
 
@@ -104,8 +150,6 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
       this.runner.on('change:isRunning', function(v){
         that.set('isRunning', v.get('isRunning'));
       });
-
-      this.run();
 
     },
 
@@ -168,6 +212,10 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
     },
 
     parse : function(resp) {
+
+      console.log('parsing workspace')
+      console.log(resp)
+
       resp.nodes = new Nodes( resp.nodes );
       resp.connections = new Connections( resp.connections )
       return resp;
@@ -374,7 +422,9 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
     addNode: function(data){
 
       if ( data.typeName === "CustomNode" ){
-        this.sendDefinitionToRunner( data );
+        var id = data.extra.functionId;
+        this.addWorkspaceDependency( id );
+        this.sendDefinitionToRunner( id );
       }
 
       var datac = JSON.parse( JSON.stringify( data ) );
@@ -382,17 +432,17 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
       this.runInternalCommand(datac);
       this.addToUndoAndClearRedo( datac );
 
+      this.run();
+
     },
 
-    sendDefinitionToRunner: function(data){
+    sendDefinitionToRunner: function( id ){
 
-      var id = data.extra.functionId;
+      if (!this.runner) {
+        return;
+      }
 
-      this.addWorkspaceDependency( id );
       this.runner.addDefinition( this.app.getLoadedWorkspace( id ) );
-
-      // TODO: remove this
-      this.run();
 
     },
 
@@ -406,7 +456,7 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
         , currentDeps = this.get('workspaceDependencyIds')
         , unionDeps = _.union( [id], currentDeps, depDeps );
 
-      ws.set( 'workspaceDependencyIds', unionDeps );
+      this.set( 'workspaceDependencyIds', unionDeps );
 
     },
 

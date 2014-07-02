@@ -2,16 +2,15 @@ define(['backbone', 'Connection'], function(Backbone, Connection) {
 
 	return Backbone.Model.extend({
 
-		  defaults: {
+	  defaults: {
 
-		  },
+	  },
 
-		  initialize: function(atts, vals) {
-		  	
-		  }
+	  initialize: function(atts, vals) {
+	  	
+	  }
 
 	});
-
 
 });
 
