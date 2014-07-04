@@ -24,6 +24,7 @@ define(['backbone', 'jqueryuidraggable', 'bootstrap'], function(Backbone, jquery
       this.workspace = args.workspace;
       this.workspaceView = args.workspaceView;
 
+      this.listenTo(this.model, 'requestRender', this.render );
       this.listenTo(this.model, 'change:position', this.move );
       this.listenTo(this.model, 'change:lastValue', this.renderLastValue );
       this.listenTo(this.model, 'change:failureMessage', this.renderLastValue );
@@ -203,6 +204,10 @@ define(['backbone', 'jqueryuidraggable', 'bootstrap'], function(Backbone, jquery
       json.preview = this.formatPreview( json.lastValue );
 
       this.$el.html( this.template( json ) );
+
+      if (json.type.name === "CustomNode"){
+        this.$el.find('name').html('oiueoiurw');
+      }
 
       if (this.getCustomContents){
         this.$el.find('.node-data-container').html( this.getCustomContents() );
@@ -388,10 +393,6 @@ define(['backbone', 'jqueryuidraggable', 'bootstrap'], function(Backbone, jquery
 
     renderPorts: function() {
 
-      if (this.portGroup 
-          && this.inputPorts.length === this.model.get('type').inputs.length 
-          && this.outputPorts.length === this.model.get('type').outputs.length ) return this.movePorts().colorPorts();
-
       if ( this.portGroup ) {
         // we need to redraw the ports
         $(this.portGroup).empty();
@@ -409,7 +410,6 @@ define(['backbone', 'jqueryuidraggable', 'bootstrap'], function(Backbone, jquery
       var that = this;
       var inIndex = 0;
       var outIndex = 0;
-      var zoom = 1 / this.model.workspace.get('zoom');
 
       this.$el.find('.node-port').each(function(index, ele) {
 
@@ -424,12 +424,12 @@ define(['backbone', 'jqueryuidraggable', 'bootstrap'], function(Backbone, jquery
         // position input ports on left side, output ports on right side
         if ( $(ele).hasClass('node-port-input') ) {
           nodeCircle.setAttribute('cx', 0);
-          nodeCircle.setAttribute('cy', zoom * that.portHeight / 2 + $(ele).position().top); 
+          nodeCircle.setAttribute('cy', that.portHeight / 2 + $(ele).position().top); 
           that.inputPorts.push(nodeCircle);
           inIndex++;
         } else {
           nodeCircle.setAttribute('cx', that.$el.width() + 3 );
-          nodeCircle.setAttribute('cy', zoom * that.portHeight / 2 + $(ele).position().top); 
+          nodeCircle.setAttribute('cy', that.portHeight / 2 + $(ele).position().top); 
           that.outputPorts.push(nodeCircle);
           outIndex++;
         }

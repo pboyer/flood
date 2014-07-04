@@ -8,6 +8,8 @@ define(['backbone', 'List', 'SearchElementView', 'bootstrap'], function(Backbone
     initialize: function(atts, arr) {
       this.app = arr.app;
       this.appView = arr.appView;
+
+      this.app.SearchElements.on('add remove', this.render, this);
     },
 
     template: _.template( $('#workspace-search-template').html() ),
@@ -128,8 +130,6 @@ define(['backbone', 'List', 'SearchElementView', 'bootstrap'], function(Backbone
 
       return [zoom * (wo + w / 2), zoom * (ho + h / 2)];
     },
-
-
 
     addNode: function(name){
 

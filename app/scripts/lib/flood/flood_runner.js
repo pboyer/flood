@@ -177,11 +177,6 @@ on_addDefinition = function(data){
 
 on_addConnection = function(data){
 
-	console.log('ADDCONNECTION')
-	console.log(data.workspace_id);
-	console.log(data.startNodeId);
-	console.log(data.endNodeId);
-
 	var ws = lookupWorkspace(data.workspace_id);
 	if (!ws) return fail({ kind: "run", msg: "The workspace id given is not valid" }, data.silent);
 

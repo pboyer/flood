@@ -7,6 +7,8 @@ define(['backbone', 'List', 'SearchElementView'], function(Backbone, List, Searc
 
     initialize: function(atts, arr) {
       this.app = arr.app;
+
+      this.app.SearchElements.on('add remove', this.render, this);
     },
 
     template: _.template( $('#search-template').html() ),

@@ -10,7 +10,10 @@ define(['backbone', 'SearchElement', 'FLOOD'], function(Backbone, SearchElement,
 
 		addCustomNode: function(customNode){
 
-			this.models.push(new SearchElement({name: customNode.functionName, functionName: customNode.functionName, 
+			var match = this.where({ functionId: customNode.functionId });
+			if (match) this.remove( match );
+
+			this.add(new SearchElement({name: customNode.functionName, functionName: customNode.functionName, 
 				isCustomNode: true, functionId: customNode.functionId, app: this.app, numInputs: customNode.inputs.length, 
 				numOutputs: customNode.outputs.length }));
 
@@ -18,7 +21,6 @@ define(['backbone', 'SearchElement', 'FLOOD'], function(Backbone, SearchElement,
 
 		fetch: function() {
 
-			// the models array has a single empty element at start (not sure why)
 			this.models.length = 0;
 
 			for (var key in FLOOD.nodeTypes){

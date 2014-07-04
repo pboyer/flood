@@ -84,6 +84,8 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
 
       if ( !this.get('isCustomNode') ) this.initializeRunner();
 
+      this.sync = _.throttle(this.sync, 2000);
+
       // save on every change
       var throttledSync = _.throttle(function(){ this.sync('update', this); }, 2000);
       this.on('runCommand', throttledSync, this);
@@ -91,7 +93,8 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
 
       if ( this.get('isCustomNode') ) this.initializeCustomNode();
 
-      this.initializeDependencies( atts.workspaceDependencyIds );
+      this.cleanupDependencies();
+      this.initializeDependencies( this.get('workspaceDependencyIds') );
 
       this.app.trigger('workspaceLoaded', this);
 
@@ -101,8 +104,6 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
 
     initializeDependencies: function(depIds){
 
-      // console.log('InitDeps: ', this.get('name'), depIds.length > 0 ? depIds[0] : "");
-      
       if (depIds.length === 0) return;
 
       var that = this;
@@ -112,6 +113,24 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
       depIds.forEach(function(x){
         that.awaitOrResolveDependency.call(that, x);
       });
+
+    },
+
+    cleanupDependencies: function(){
+
+      var oldDeps = this.get('workspaceDependencyIds');;
+
+      var that = this;
+      var deps = oldDeps.reduce(function(a,x){
+
+        var cns = that.getCustomNodesWithId(x);
+
+        if ( cns && cns.length != 0 ) a.push(x);
+        return a;
+
+      }, []);
+
+      this.set('workspaceDependencyIds', deps);
 
     },
 
@@ -143,9 +162,62 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
 
     },
 
-    watchDependency: function(workspace){
+    watchDependency: function( customNodeWorkspace ){
 
-      workspace.get('nodes').on('add')
+      customNodeWorkspace.on('change:name', this.syncCustomNodesWithWorkspace, this);
+      // customNodeWorkspace.get('nodes').on( 'add remove', this.syncCustomNodesWithWorkspace, this );
+
+    },
+
+    getCustomNodeInputsOutputs: function(getOutputs){
+
+      var typeName = getOutputs ? "Output" : "Input";
+
+      return this.get('nodes').filter(function(x){
+        return x.get('type').typeName === typeName;
+      });
+
+    },
+
+    getCustomNodesWithId: function(functionId){
+
+      return this.get('nodes').filter(function(x){
+
+        var type = x.get('type');
+
+        return type instanceof FLOOD.internalNodeTypes.CustomNode && 
+          type.functionId === functionId;
+
+      });
+
+    },
+
+    syncCustomNodesWithWorkspace: function(workspace){
+
+      var inputs = workspace.getCustomNodeInputsOutputs();
+      var outputs = workspace.getCustomNodeInputsOutputs(true);
+
+      var doSync = false;
+
+      this.getCustomNodesWithId(workspace.id).forEach(function(x){
+
+        var extraCop = JSON.parse( JSON.stringify( x.get('extra') ) );
+
+        x.get('type').functionName = workspace.get('name');
+
+        extraCop.numInputs = inputs.length;
+        extraCop.numOutputs = outputs.length;
+        extraCop.functionName = workspace.get('name');
+
+        doSync = true;
+
+        x.set('extra', extraCop);
+
+        x.trigger('requestRender');
+
+      });
+
+      if (doSync) this.sync('update', this);
 
     },
 
@@ -173,6 +245,13 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
       this.customNode.setNumOutputs(no);
 
       this.app.SearchElements.addCustomNode( this.customNode );
+
+      var that = this;
+
+      this.on('change:name', function(){
+        that.customNode.functionName = that.get('name');
+        that.app.SearchElements.addCustomNode( that.customNode );
+      }, this);
 
     },
 
@@ -219,9 +298,6 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
     },
 
     parse : function(resp) {
-
-      console.log('parsing workspace')
-      console.log(resp)
 
       resp.nodes = new Nodes( resp.nodes );
       resp.connections = new Connections( resp.connections )
