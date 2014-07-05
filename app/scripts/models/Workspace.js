@@ -18,7 +18,7 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
       isPublic: false,
       isRunning: false,
       lastSaved: Date.now(),
-      offset: [20000, 20000],
+      offset: [0,0],
 
       // undo/redo stack
       undoStack: [],

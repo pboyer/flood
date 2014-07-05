@@ -56,6 +56,10 @@ define(function() {
 	  return this.push.apply(this, rest);
 	};
 
+	Array.prototype.last = function() {
+	    return this[this.length-1];
+	}
+
 	Function.prototype.method = function (name, func) {
 	    this.prototype[name] = func;
 	    return this;
@@ -191,7 +195,15 @@ define(function() {
 
 		this.inputTypes = function(){
 			return this.inputs.map(function(x){ return x.type; });
-		}
+		};
+
+		this.getIndexOfInputNode = function( otherNode ){
+			for (var i = 0; i < this.inputs.length; i++){
+				if ( this.inputs[i].isConnectedTo( otherNode ) ) return i;
+			}
+
+			return -1;
+		};
 
 		this.markDirty = function() {
 
@@ -382,6 +394,10 @@ define(function() {
 			return undefined;
 		}
 
+		this.isConnectedTo = function( otherNode ){
+			return this.oppNode === otherNode;
+		}
+
 		this.connect = function(otherNode, outIndexOnOtherNode){
 			this.oppNode = otherNode;
 			this.oppIndex = outIndexOnOtherNode != undefined ? outIndexOnOtherNode : 0;
@@ -408,6 +424,8 @@ define(function() {
 			return x instanceof FLOOD.nodeTypes.Output;
 		});
 
+		var inputTypes = FLOOD.buildCustomNodeInputTypes( nodes, inputNodes );
+
 		// compile the input nodes, forming the arg list
 		var args = inputNodes.map(function(x){
 			return x.compile();
@@ -429,6 +447,60 @@ define(function() {
 
 	};
 
+	// TODO: write tests for this
+
+	FLOOD.buildCustomNodeInputTypes = function(allNodes, inputNodes){
+
+		return inputNodes.map(function(inode, index){
+
+			// get all of the types for all connections to this one
+			var allPotentialTypes = allNodes.reduce(function(agg, node){
+
+				var con = node.getIndexOfInputNode( inode );
+				if (con < 0) return agg;
+
+				add.push( node.inputs[con].type );
+				return agg;
+
+			}, []);
+			
+			// check if input port is not connected - if so, short-circuit
+			if (allPotentialTypes.length === 0) return AnyTypeButQuotedArray;
+
+			// each type is an array - the last position is the concrete type
+			var typeToMatch = allPotentialTypes[0];
+			var firstConcreteType = typeToMatch.last();
+
+			// assert all types match
+			allPotentialTypes.map(function(t){
+				return t.last();
+			}).forEach(function(t){
+
+				if ( t === firstConcreteType ||
+						 t === AnyType ||
+						 t === AnyTypeButQuotedArray ) return;
+
+				throw new TypeError("One of the inputs is connected to multiple nodes with incompatible types!")
+
+			});
+
+			// get the most complex type, this is simply the longest array
+			var maxLen = 0;
+			var idMax = -1;
+			for (var i = allPotentialTypes.length - 1; i >= 0; i--) {
+				if ( allPotentialTypes[i].length > maxLen ) {
+					idMax = i;
+					maxLen = allPotentialTypes[i].length;
+				} 
+			};
+
+			return allPotentialTypes[maxLen];
+
+		});
+
+	};
+
+
 	FLOOD.internalNodeTypes.CustomNode = function(functionName, functionId, lambda) {
 
 		var typeData = {
@@ -449,9 +521,6 @@ define(function() {
 
 			var args = Array.prototype.slice.call(arguments, 0);
 			var exp = [ this.lambda ].concat(args) ;
-
-			console.log('evaluating custom node')
-			console.log( this.functionName )
 
 			return S.eval( exp );
 

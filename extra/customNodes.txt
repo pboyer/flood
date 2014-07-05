@@ -1,10 +1,16 @@
-refactor of custom node needs to update search, UI
+capture input ports
 
-update of node in custom node does not cause recompilation of custom node
+adding/removing custom node ports should update UI
+
+update of nodes in custom node does not cause recompilation of custom node
 
 Allow "hidden workspaces"
 
 Do not show input or output in project workspace
+
+Special color for node inports, outports
+
+Set name of inport, outport
 
 Projects, Nodes
 	- need to update search elements
