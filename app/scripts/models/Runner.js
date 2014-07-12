@@ -168,8 +168,6 @@ define(['backbone'], function(Backbone) {
 
 	  addConnection: function(connection, workspace){
 
-	  	console.log(connection)
-
 	  	var c = connection.toJSON();
 	  	c.kind = "addConnection";
 	  	c.id = connection.get('_id');
@@ -236,28 +234,8 @@ define(['backbone'], function(Backbone) {
 
 	  },	
 
-	  on_addConnection: function(data){
-
-	  	console.log(data);
-
-	  },
-
-	  on_removeConnection: function(data){
-
-	  	console.log(data);
-
-	  },
-
 	  on_recompile: function(data){
-
 	  	console.log(data);
-
-	  },
-
-	  on_addNode: function(data){
-
-	  	console.log(data);
-
 	  },
 
 	  reset: function(){

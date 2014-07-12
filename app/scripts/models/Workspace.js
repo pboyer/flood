@@ -140,9 +140,10 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
 
       if (ws) {
         return this.resolveDependency(ws);
-      }
+      } 
 
       this.awaitedWorkspaceDependencyIds.push(id);
+      this.app.loadWorkspace( id ); //async open
 
     },
 
@@ -157,6 +158,7 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
       this.awaitedWorkspaceDependencyIds.remove(index);
       this.sendDefinitionToRunner( workspace.id );
       this.watchDependency( workspace );
+      this.syncCustomNodesWithWorkspace( workspace );
 
       if (this.awaitedWorkspaceDependencyIds.length === 0) this.run();
 
@@ -165,7 +167,9 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
     watchDependency: function( customNodeWorkspace ){
 
       customNodeWorkspace.on('change:name', this.syncCustomNodesWithWorkspace, this);
-      // customNodeWorkspace.get('nodes').on( 'add remove', this.syncCustomNodesWithWorkspace, this );
+
+      var that = this;
+      customNodeWorkspace.get('nodes').on('add remove', function(){ that.syncCustomNodesWithWorkspace.call(that, customNodeWorkspace) }, this );
 
     },
 
@@ -194,30 +198,80 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
 
     syncCustomNodesWithWorkspace: function(workspace){
 
-      var inputs = workspace.getCustomNodeInputsOutputs();
-      var outputs = workspace.getCustomNodeInputsOutputs(true);
+      var inputNodes = workspace.getCustomNodeInputsOutputs();
+      var outputNodes = workspace.getCustomNodeInputsOutputs(true);
 
-      var doSync = false;
+      var customNodesToSync = this.getCustomNodesWithId(workspace.id);
 
-      this.getCustomNodesWithId(workspace.id).forEach(function(x){
+      customNodesToSync.forEach(function(x){
+
+        // cleanup hanging input connections
+        var inputConns = x.get('inputConnections');
+        var diff = inputNodes.length - inputConns.length;
+
+        if (diff > 0){
+          for (var i = 0; i < diff; i++){
+            inputConns.push([]);
+          }
+        } else {
+          for (var i = 0; i < -diff; i++){
+
+            var inConn = x.getConnectionAtIndex(inputConns.length - 1);
+
+            if (inConn != null){
+              x.workspace.removeConnection(inConn);
+            }
+
+            inputConns.pop();
+          }
+
+        }
+
+        // clean up hanging output connections
+        var outputConns = x.get('outputConnections');
+        var diff2 = outputNodes.length - outputConns.length;
+
+        if (diff2 > 0){
+
+          for (var i = 0; i < diff2; i++){
+            outputConns.push( [] );
+          }
+
+        } else {
+
+          for (var i = 0; i < -diff2; i++){
+
+            x.get('outputConnections')
+              .last()
+              .slice(0)
+              .forEach(function(outConn){ x.workspace.removeConnection(outConn); })
+
+            outputConns.pop();
+          }
+
+        }
 
         var extraCop = JSON.parse( JSON.stringify( x.get('extra') ) );
 
         x.get('type').functionName = workspace.get('name');
+        x.get('type').setNumInputs(inputNodes.length);
+        x.get('type').setNumOutputs(outputNodes.length);
 
-        extraCop.numInputs = inputs.length;
-        extraCop.numOutputs = outputs.length;
+        extraCop.numInputs = inputNodes.length;
+        extraCop.numOutputs = outputNodes.length;
         extraCop.functionName = workspace.get('name');
 
         doSync = true;
 
+        // silently set for serialization
         x.set('extra', extraCop);
 
+        // triggers a redraw
         x.trigger('requestRender');
 
       });
 
-      if (doSync) this.sync('update', this);
+      if (customNodesToSync.length > 0) this.sync('update', this);
 
     },
 
@@ -805,7 +859,7 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
         
       var bottomNodes = this.get('nodes')
                             .filter(function(ele){
-                              return ele.isOutputNode();
+                              return ele.isOutputNode() && ele.get('type').outputs.length > 0;
                             }).map(function(ele){
                               return ele.get('_id');
                             });

@@ -79,7 +79,7 @@ on_run = function(data){
 	// todo - this is a mess - should store environment
 	for (var funcId in functionDefinitions){
 
-		var lambda = FLOOD.compileNodesToLambda( workspaces[funcId].nodes );
+		var lambda = FLOOD.internalNodeTypes.CustomNode.compileNodesToLambda( workspaces[funcId].nodes );
 
 		var csnodes = workspace.nodes.filter(function(x){
 			return x.functionId && x.functionId === funcId;
@@ -201,14 +201,18 @@ on_addConnection = function(data){
 
 };
 
-
 on_recompile = function(data){
 
 	var wsToRecompile = lookupWorkspace(data._id);
 	if (!wsToRecompile) return fail({ kind: "run", msg: "The workspace id given is not valid" }, data.silent);
 
+	var nodes = wsToRecompile.nodes;
+
 	// recompile it
-	var lambda = FLOOD.compileNodesToLambda(wsToRecompile.nodes);
+	var lambda = FLOOD.internalNodeTypes.CustomNode.compileNodesToLambda( nodes );
+	// var inputTypes = FLOOD.internalNodeTypes.CustomNode.findInputTypes( nodes );
+	var numInputs = FLOOD.internalNodeTypes.CustomNode.nodesOfType( FLOOD.nodeTypes.Input, nodes ).length;
+	var numOutputs = FLOOD.internalNodeTypes.CustomNode.nodesOfType( FLOOD.nodeTypes.Output, nodes ).length;
 
 	// mark all instances of this custom node as dirty
 	for (var id in workspaces){	
@@ -218,8 +222,15 @@ on_recompile = function(data){
 		ws.nodes.forEach(function(n){
 
 			if ( n.functionId && n.functionId === data._id ){
+
 				n.lambda = lambda;
-				n.setDirty();	
+
+				n.setNumInputs( numInputs );
+				n.setNumOutputs( numOutputs );
+				// n.setInputTypes( inputTypes );
+
+				n.setDirty();
+
 			}
 
 		});
@@ -335,7 +346,7 @@ on_removeNode = function(data){
 };
 
 // set the nodes & connections for a workspace
-// the entire set of nodes must be sent, although they can provide values
+// the entire set of nodes must be sent
 on_setWorkspaceContents = function(data){
 
 	var workspace = lookupWorkspace(data.workspace_id);

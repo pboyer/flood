@@ -205,10 +205,6 @@ define(['backbone', 'jqueryuidraggable', 'bootstrap'], function(Backbone, jquery
 
       this.$el.html( this.template( json ) );
 
-      if (json.type.name === "CustomNode"){
-        this.$el.find('name').html('oiueoiurw');
-      }
-
       if (this.getCustomContents){
         this.$el.find('.node-data-container').html( this.getCustomContents() );
       }
@@ -315,8 +311,12 @@ define(['backbone', 'jqueryuidraggable', 'bootstrap'], function(Backbone, jquery
         }
   
       } else {
-        x += parseInt( this.inputPorts[index].getAttribute('cx'))- 5;
-        y += parseInt( this.inputPorts[index].getAttribute('cy'));   
+        try {
+          x += parseInt( this.inputPorts[index].getAttribute('cx')) - 5;
+          y += parseInt( this.inputPorts[index].getAttribute('cy'));   
+        } catch (e){
+
+        }
       }
 
       return [x, y];

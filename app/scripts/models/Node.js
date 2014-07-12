@@ -242,23 +242,24 @@ define(['backbone', 'FLOOD'], function(Backbone, FLOOD) {
 
     getConnectionAtIndex: function( portIndex, isOutput, connectionIndex ){
 
-      if (!this.isValidPort(portIndex, isOutput)){
-        return null;
-      }
+      var ports = this.getAllConnectionsAtPort( portIndex, isOutput );
+
+      if (ports == null) return null;
+      if ( connectionIndex === undefined ) connectionIndex = 0;
+      if ( connectionIndex >= ports.length || connectionIndex < 0) return null;
+
+      return ports[connectionIndex];
+
+    },
+
+    getAllConnectionsAtPort: function( portIndex, isOutput ){
+
+      if (!this.isValidPort(portIndex, isOutput)) return null;
 
       if (isOutput === undefined) isOutput = false;
 
-      var port = this.getPorts(isOutput)[portIndex];
-
-      if (port == null) {
-        return null;
-      }
-
-      if ( connectionIndex === undefined ) connectionIndex = 0;
-
-      if (connectionIndex >= port.length || connectionIndex < 0) return null;
-
-      return port[connectionIndex];
+      var ports = this.getPorts(isOutput)[portIndex];
+      return ports;
 
     },
 

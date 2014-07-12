@@ -1,32 +1,29 @@
-CURRENT
+CUSTOM NODES
 
-previews are screwed up when you get a list of solids
-more delay for tooltip on output port
-node port heights are messed up when zoomed
-save zoom when changed
-
+hidden workspaces - this should be the default when loading a workspace dependency
+setCurrentWorkspace should reveal the hidden workspace
+closing a project should cleanup hidden workspaces - removing the ones that are not depended upon
+should be able to set the names of inputs/outputs
 
 POLISH
 
+node port heights are messed up when zoomed
+save zoom when changed
 share workspaces
 fork a workspace
 OBJ export
 example workspaces
-initial user walkthrough of interface
+initial user walkthrough of interface - just modify help
 formula node input should change width based on how much user inputs, allow multiple lines
-desktop zoom is too slow
-login/signup sucks should work with oauth - initially
-too many workspaces?  you need to hide the excess one
 formula node does not allow "quotes"
 disable node lacing
 icons for nodes
-don't keep workspaces that haven't been saved at least once
 should remember the old 3d orientation
 workspaces menu should update when you reopen it
-icons, tooltips for undo, redo, etc.
+icons for undo/redo/copy/paste
 
 optimize css:
-	eliminate inline css 
+	eliminate inline css
 	get rid of excess bootstrap css, jquery.ui css
 
 FEATURE
@@ -34,13 +31,8 @@ FEATURE
 before release
 
 easily add a new library of nodes
-custom nodes
 archive workspaces
 describe workspace
-proxy server for doing remote http
-curves - whats the minimum requirement - line - polyline?
-transforms?
-canvas marquee selection
 arbitrary javascript node - better than formula
 NURBS in flood
 

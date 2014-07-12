@@ -412,95 +412,6 @@ define(function() {
 
 	}.inherits( FLOOD.baseTypes.NodePort );
 
-	FLOOD.compileNodesToLambda = function(nodes){
-
-		// find all input nodes
-		var inputNodes = nodes.filter(function(x){
-			return x instanceof FLOOD.nodeTypes.Input;
-		});
-
-		// find all output nodes
-		var outputNodes = nodes.filter(function(x){
-			return x instanceof FLOOD.nodeTypes.Output;
-		});
-
-		var inputTypes = FLOOD.buildCustomNodeInputTypes( nodes, inputNodes );
-
-		// compile the input nodes, forming the arg list
-		var args = inputNodes.map(function(x){
-			return x.compile();
-		});
-
-		// compile the output nodes, forming the internal value expressions
-		var internalExp = outputNodes.map( function(x){ return x.compile(); });
-
-		// we need a function to box up the internal expression
-		// in a dictionary if there are multiple outputs
-		var boxedExp = internalExp.length > 1 ? 
-			[ FLOOD.MultiOutResult.wrap ].concat( internalExp ) : internalExp[0];
-
-		// nodes in a custom node do not cache their value
-		nodes.forEach(function(x){ x.alwaysDirty = true; });
-
-		// ( lambda (args) boxedExp )
-		return ["lambda", args, boxedExp];
-
-	};
-
-	// TODO: write tests for this
-
-	FLOOD.buildCustomNodeInputTypes = function(allNodes, inputNodes){
-
-		return inputNodes.map(function(inode, index){
-
-			// get all of the types for all connections to this one
-			var allPotentialTypes = allNodes.reduce(function(agg, node){
-
-				var con = node.getIndexOfInputNode( inode );
-				if (con < 0) return agg;
-
-				add.push( node.inputs[con].type );
-				return agg;
-
-			}, []);
-			
-			// check if input port is not connected - if so, short-circuit
-			if (allPotentialTypes.length === 0) return AnyTypeButQuotedArray;
-
-			// each type is an array - the last position is the concrete type
-			var typeToMatch = allPotentialTypes[0];
-			var firstConcreteType = typeToMatch.last();
-
-			// assert all types match
-			allPotentialTypes.map(function(t){
-				return t.last();
-			}).forEach(function(t){
-
-				if ( t === firstConcreteType ||
-						 t === AnyType ||
-						 t === AnyTypeButQuotedArray ) return;
-
-				throw new TypeError("One of the inputs is connected to multiple nodes with incompatible types!")
-
-			});
-
-			// get the most complex type, this is simply the longest array
-			var maxLen = 0;
-			var idMax = -1;
-			for (var i = allPotentialTypes.length - 1; i >= 0; i--) {
-				if ( allPotentialTypes[i].length > maxLen ) {
-					idMax = i;
-					maxLen = allPotentialTypes[i].length;
-				} 
-			};
-
-			return allPotentialTypes[maxLen];
-
-		});
-
-	};
-
-
 	FLOOD.internalNodeTypes.CustomNode = function(functionName, functionId, lambda) {
 
 		var typeData = {
@@ -552,6 +463,14 @@ define(function() {
 
 		var that = this;
 
+
+		this.setInputTypes = function( inputTypes ){
+
+			for (var i = 0; i < this.inputs.length; i++) 
+				this.inputs[i].type = inputTypes[i];
+
+		};
+
 		this.setNumInputs = function( num ){
 
 			if (typeof num != "number" || num < 0 || this.inputs.length === num) {
@@ -562,7 +481,7 @@ define(function() {
 			if (this.inputs.length > num) removeInput();
 
 			this.setNumInputs( num );
-		}
+		};
 
 		this.setNumOutputs = function( num ){
 
@@ -571,10 +490,10 @@ define(function() {
 			}
 
 			if (this.outputs.length < num) addOutput();
-			if (this.outputs.length > num) removeInput();
+			if (this.outputs.length > num) removeOutput();
 
 			this.setNumOutputs( num );
-		}
+		};
 
 		var addInput = function(){
 			var port = new FLOOD.baseTypes.InputPort( characters[ that.inputs.length ], [AnyTypeButQuotedArray], 0 );
@@ -601,6 +520,97 @@ define(function() {
 		};
 
 	}.inherits( FLOOD.baseTypes.NodeType );
+
+	FLOOD.internalNodeTypes.CustomNode.nodesOfType = function(type, nodes){
+
+		return nodes.filter(function(x){
+			return x instanceof type;
+		});
+	};
+
+	FLOOD.internalNodeTypes.CustomNode.findInputTypes = function(nodes){
+
+		var inputNodes = FLOOD.internalNodeTypes.CustomNode.nodesOfType( FLOOD.nodeTypes.Input, nodes );
+
+		return inputNodes.map(function(inode, index){
+
+			// get all of the types for all connections to this one
+			var allPotentialTypes = nodes.reduce(function(agg, node){
+
+				var con = node.getIndexOfInputNode( inode );
+				if (con < 0) return agg;
+
+				agg.push( node.inputs[con].type );
+				return agg;
+
+			}, []);
+			
+			// check if input port is not connected - if so, short-circuit
+			if (allPotentialTypes.length === 0) return AnyTypeButQuotedArray;
+
+			// each type is an array - the last position is the concrete type
+			var typeToMatch = allPotentialTypes[0];
+			var firstConcreteType = typeToMatch.last();
+
+			// assert all types match
+			allPotentialTypes.map(function(t){
+				return t.last();
+			}).forEach(function(t){
+
+				if ( t === firstConcreteType ||
+						 t === AnyType ||
+						 t === AnyTypeButQuotedArray ) return;
+
+				throw new TypeError("One of the inputs is connected to multiple nodes with incompatible types!")
+
+			});
+
+			// get the most complex type, this is simply the longest array
+			var maxLen = 0;
+			var idMax = -1;
+			for (var i = allPotentialTypes.length - 1; i >= 0; i--) {
+				if ( allPotentialTypes[i].length > maxLen ) {
+					idMax = i;
+					maxLen = allPotentialTypes[i].length;
+				} 
+			};
+
+			return allPotentialTypes[maxLen];
+
+		});
+	};
+
+	FLOOD.internalNodeTypes.CustomNode.compileNodesToLambda = function(nodes){
+
+		// find all input nodes
+		var inputNodes = nodes.filter(function(x){
+			return x instanceof FLOOD.nodeTypes.Input;
+		});
+
+		// find all output nodes
+		var outputNodes = nodes.filter(function(x){
+			return x instanceof FLOOD.nodeTypes.Output;
+		});
+
+		// compile the input nodes, forming the arg list
+		var args = inputNodes.map(function(x){
+			return x.compile();
+		});
+
+		// compile the output nodes, forming the internal value expressions
+		var internalExp = outputNodes.map( function(x){ return x.compile(); });
+
+		// we need a function to box up the internal expression
+		// in a dictionary if there are multiple outputs
+		var boxedExp = internalExp.length > 1 ? 
+			[ FLOOD.MultiOutResult.wrap ].concat( internalExp ) : internalExp[0];
+
+		// nodes in a custom node do not cache their value
+		nodes.forEach(function(x){ x.alwaysDirty = true; });
+
+		// ( lambda (args) boxedExp )
+		return ["lambda", args, boxedExp];
+	};
 
 	FLOOD.nodeTypes.Input = function(name) {
 

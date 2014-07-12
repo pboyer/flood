@@ -55,9 +55,7 @@ define([  'backbone',
     },
 
     keydownHandler: function(e){
-      
       this.currentWorkspaceView.keydownHandler(e);
-
     },
 
     saveClick: function(e){
@@ -168,9 +166,9 @@ define([  'backbone',
 
     workspaceCounter: 1,
 
-    // This callback is called when a Workspace is added to
-    // the App's Workspace Collection
     addWorkspaceTab: function(workspace){
+
+      if ( this.workspaceTabViews[workspace.get('_id')] != undefined) return;
 
       var view = new WorkspaceTabView({ model: workspace });
       this.workspaceTabViews[workspace.get('_id')] = view;
@@ -180,8 +178,6 @@ define([  'backbone',
 
     },
 
-    // Function is called when a workspace is removed from the 
-    // App's Workspace Collection
     removeWorkspaceTab: function(workspace){
 
       // The Workspace can no longer be current
@@ -239,22 +235,25 @@ define([  'backbone',
 
     showWorkspace: function(workspaceView){
 
+      // if the workspace tab does not exist
+      this.addWorkspaceTab( workspaceView.model );
+
       if (!$.contains(document.documentElement, workspaceView.$el[0])){
         this.$el.children('#workspaces').append( this.currentWorkspaceView.$el );
       }
       
       workspaceView.$el.show();
-      
+
     },
 
     render: function(arg) {
 
+      var model = this.model;
       var workspaces = this.model.get('workspaces')
       var currentWorkspaceId = this.model.get('currentWorkspace');
 
       if (!currentWorkspaceId){
         var currentWorkspace = workspaces.first();
-        // this.model.set('currentWorkspace', currentWorkspace.get('_id'));
       } else {
         var currentWorkspace = workspaces.get(currentWorkspaceId);
       }
@@ -266,14 +265,18 @@ define([  'backbone',
 
           this.workspaceControlsView = new WorkspaceControlsView( { model: new Search() }, {app: this.model, appView : this } );
           this.workspaceControlsView.render();
-          this.$el.find('#workspaces').prepend(this.workspaceControlsView.$el);
+
+          this.$el.find('#workspaces').prepend( this.workspaceControlsView.$el );
 
         }
 
       // render tabs
         if (!this.workspaceTabViews){
           this.workspaceTabViews = {};
-          workspaces.each(this.addWorkspaceTab, this);
+
+          workspaces
+            .filter(function(x){ return this.model.get('hiddenWorkspaces').indexOf(x) === -1; })
+            .each( this.addWorkspaceTab, this );
         }
 
       // hide current workspace, show workspace
@@ -297,10 +300,12 @@ define([  'backbone',
     },
 
     renderLogin: function(){
+
       if (!this.loginView){
         this.loginView = new LoginView({model: this.model.login }, { app: this.model });
         this.loginView.render();
       }
+
     },
 
     lookingAtViewer: false,
