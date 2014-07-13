@@ -168,6 +168,8 @@ define([  'backbone',
 
     addWorkspaceTab: function(workspace){
 
+      if ( this.model.isBackgroundWorkspace(workspace.id) ) return;
+
       if ( this.workspaceTabViews[workspace.get('_id')] != undefined) return;
 
       var view = new WorkspaceTabView({ model: workspace });
@@ -236,6 +238,7 @@ define([  'backbone',
     showWorkspace: function(workspaceView){
 
       // if the workspace tab does not exist
+      this.model.removeWorkspaceFromBackground( workspaceView.model.id );
       this.addWorkspaceTab( workspaceView.model );
 
       if (!$.contains(document.documentElement, workspaceView.$el[0])){
@@ -274,9 +277,7 @@ define([  'backbone',
         if (!this.workspaceTabViews){
           this.workspaceTabViews = {};
 
-          workspaces
-            .filter(function(x){ return this.model.get('hiddenWorkspaces').indexOf(x) === -1; })
-            .each( this.addWorkspaceTab, this );
+          workspaces.each( this.addWorkspaceTab, this );
         }
 
       // hide current workspace, show workspace

@@ -60,12 +60,12 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
 
       this.get('connections').on('add remove', function(){ 
         that.trigger('change:connections'); 
-        that.run();
+        that.trigger('requestRun');
       });
 
       this.get('nodes').on('add remove', function(){ 
         that.trigger('change:nodes'); 
-        that.run();
+        that.trigger('requestRun');
       });
 
       this.proxyConnection = new Connection({
@@ -90,6 +90,10 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
       var throttledSync = _.throttle(function(){ this.sync('update', this); }, 2000);
       this.on('runCommand', throttledSync, this);
       this.on('change:name', throttledSync, this);
+      this.on('requestRun', this.run, this);
+
+
+      this.on('requestRun', function(){ console.log('requestRun' + this.get('name') ); }, this)
 
       if ( this.get('isCustomNode') ) this.initializeCustomNode();
 
@@ -137,13 +141,12 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
     awaitOrResolveDependency: function(id){
 
       var ws = this.app.getLoadedWorkspace(id);
-
-      if (ws) {
-        return this.resolveDependency(ws);
-      } 
-
+      if (ws) return this.resolveDependency(ws);
+ 
       this.awaitedWorkspaceDependencyIds.push(id);
-      this.app.loadWorkspace( id ); //async open
+      
+      this.app.setWorkspaceToBackground( id );
+      this.app.loadWorkspace( id ); 
 
     },
 
@@ -166,9 +169,10 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
 
     watchDependency: function( customNodeWorkspace ){
 
-      customNodeWorkspace.on('change:name', this.syncCustomNodesWithWorkspace, this);
-
       var that = this;
+
+      customNodeWorkspace.on('change:name', function(){ that.syncCustomNodesWithWorkspace.call(that, customNodeWorkspace) }, this);
+      customNodeWorkspace.on('requestRun', function(){ that.syncCustomNodesWithWorkspace.call(that, customNodeWorkspace); that.trigger('requestRun'); }, this );
       customNodeWorkspace.get('nodes').on('add remove', function(){ that.syncCustomNodesWithWorkspace.call(that, customNodeWorkspace) }, this );
 
     },
@@ -183,27 +187,58 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
 
     },
 
-    getCustomNodesWithId: function(functionId){
+    getCustomNodes: function(){
 
       return this.get('nodes').filter(function(x){
-
-        var type = x.get('type');
-
-        return type instanceof FLOOD.internalNodeTypes.CustomNode && 
-          type.functionId === functionId;
-
+        return x.get('type') instanceof FLOOD.internalNodeTypes.CustomNode;
       });
+
+    },
+
+    getCustomNodesWithId: function(functionId){
+
+      return this.getCustomNodes().filter(function(x){
+        return x.get('type').functionId === functionId;
+      });
+
+    },
+
+    // for each custom node in the graph - does it depend on the changed functionId?
+    // if so, return it
+    getIndirectlyAffectedCustomNodes: function(functionId){
+
+      var cns = this.getCustomNodes();
+
+      var thisApp = this.app;
+      return cns.filter(function(cn){
+
+        var id = cn.get('type').functionId
+          , wsd = thisApp.getLoadedWorkspace( id ).get('workspaceDependencyIds');
+        return id != functionId && wsd.indexOf( functionId ) != -1;
+
+      })
 
     },
 
     syncCustomNodesWithWorkspace: function(workspace){
 
+      if (typeof workspace === "string") workspace = this.app.getLoadedWorkspace(workspace);
+
+      this.syncDirectlyAffectedCustomNodesWithWorkspace( workspace );
+      this.syncIndirectlyAffectedCustomNodesWithWorkspace( workspace );
+
+    },
+
+    syncDirectlyAffectedCustomNodesWithWorkspace: function(workspace){
+
+      // get the nodes directly affected by this change
+      var directlyAffectedCustomNodes = this.getCustomNodesWithId(workspace.id);
+
+      // get the workspace inputs/outputs
       var inputNodes = workspace.getCustomNodeInputsOutputs();
       var outputNodes = workspace.getCustomNodeInputsOutputs(true);
 
-      var customNodesToSync = this.getCustomNodesWithId(workspace.id);
-
-      customNodesToSync.forEach(function(x){
+      directlyAffectedCustomNodes.forEach(function(x){
 
         // cleanup hanging input connections
         var inputConns = x.get('inputConnections');
@@ -261,17 +296,34 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
         extraCop.numOutputs = outputNodes.length;
         extraCop.functionName = workspace.get('name');
 
-        doSync = true;
-
         // silently set for serialization
         x.set('extra', extraCop);
 
         // triggers a redraw
         x.trigger('requestRender');
 
+        // update runner
+        x.trigger('updateRunner');
+
       });
 
-      if (customNodesToSync.length > 0) this.sync('update', this);
+      if (directlyAffectedCustomNodes.length > 0) this.sync('update', this);
+
+    },
+
+    syncIndirectlyAffectedCustomNodesWithWorkspace: function(workspace){
+
+      var indirectlyAffectedNodes = this.getIndirectlyAffectedCustomNodes( workspace.id );
+
+      indirectlyAffectedNodes.forEach(function(x){
+
+        console.log('syncing indirectly', x.get('type').functionName );
+
+        x.trigger('updateRunner');
+
+      });
+
+      if (indirectlyAffectedNodes.length > 0) this.sync('update', this);
 
     },
 
@@ -569,7 +621,11 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
       this.runInternalCommand(datac);
       this.addToUndoAndClearRedo( datac );
 
-      this.run();
+      if ( data.typeName === "CustomNode" ){
+        this.syncCustomNodesWithWorkspace( id );
+      }
+
+      this.trigger('requestRun');
 
     },
 

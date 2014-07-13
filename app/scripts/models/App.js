@@ -12,7 +12,7 @@ define(['backbone', 'Workspaces', 'Node', 'Login', 'Workspace', 'SearchElements'
     defaults: {
       name: "DefaultSession",
       workspaces: new Workspaces(),
-      hiddenWorkspaces: [],
+      backgroundWorkspaces: [],
       currentWorkspace: null,
       showingBrowser: false,
       showingSearch: false,
@@ -71,7 +71,7 @@ define(['backbone', 'Workspaces', 'Node', 'Login', 'Workspace', 'SearchElements'
 
       this.get('workspaces').on('add remove', function(){ this.sync("update", this); }, this );
       this.on('change:currentWorkspace', function(){ this.sync("update", this); }, this);
-      this.on('change:hiddenWorkspaces', function(){ this.sync("update", this); }, this);
+      this.on('change:backgroundWorkspaces', function(){ this.sync("update", this); }, this);
 
     },
 
@@ -158,10 +158,38 @@ define(['backbone', 'Workspaces', 'Node', 'Login', 'Workspace', 'SearchElements'
 
     },
 
+    isBackgroundWorkspace: function(id){
+      return this.get('backgroundWorkspaces').indexOf(id) != -1;
+    },
+
+    setWorkspaceToBackground: function(id){
+
+      if ( !this.isBackgroundWorkspace(id) ){
+        var copy = this.get('backgroundWorkspaces').slice(0);
+        copy.push(id);
+        this.set('backgroundWorkspaces', copy);
+      }
+
+    },
+
+    removeWorkspaceFromBackground: function( id ){
+
+      if ( this.isBackgroundWorkspace(id) ){
+
+        var copy = this.get('backgroundWorkspaces').slice(0);
+        copy.remove(copy.indexOf(id));
+        this.set('backgroundWorkspaces', copy);
+
+      }
+
+    },
+
     openWorkspace: function( id, callback ){
 
+      this.removeWorkspaceFromBackground( id );
+
       var ws = this.get('workspaces').get(id);
-      
+
       if ( ws ){
         this.set('currentWorkspace', id);
       }

@@ -1,7 +1,7 @@
 CUSTOM NODES
 
-hidden workspaces - this should be the default when loading a workspace dependency
-setCurrentWorkspace should reveal the hidden workspace
+editing number in custom node doesn't dirty custom node
+editing a nested custom node should trigger dirtying of its parent
 closing a project should cleanup hidden workspaces - removing the ones that are not depended upon
 should be able to set the names of inputs/outputs
 

@@ -16,7 +16,7 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView', 'jqueryuislider'], f
         this.silentSyncUI( ex );
 
         this.model.trigger('updateRunner'); 
-        this.model.workspace.run(); 
+        this.model.workspace.trigger('requestRun');
 
       }, this);
 

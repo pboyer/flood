@@ -428,6 +428,8 @@ define(function() {
 
 		this.eval = function() {
 
+			this.lambda = FLOOD.environment[this.functionId];
+
 			if ( !this.lambda ) throw new Error("The custom node is not yet compiled.");
 
 			var args = Array.prototype.slice.call(arguments, 0);

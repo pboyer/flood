@@ -81,11 +81,17 @@ on_run = function(data){
 
 		var lambda = FLOOD.internalNodeTypes.CustomNode.compileNodesToLambda( workspaces[funcId].nodes );
 
-		var csnodes = workspace.nodes.filter(function(x){
-			return x.functionId && x.functionId === funcId;
-		}).forEach(function(x){
-			x.lambda = lambda;
-		});
+		console.log('compiling', funcId);
+
+		// var csnodes = workspace.nodes.filter(function(x){
+		// 	return x.functionId && x.functionId === funcId;
+		// }).forEach(function(x){
+		// 	x.lambda = lambda;
+		// });
+
+		if (!FLOOD.environment) FLOOD.environment = {};
+		
+		FLOOD.environment[funcId] = lambda;
 
 	}
 
