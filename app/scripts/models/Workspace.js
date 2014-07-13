@@ -317,8 +317,6 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
 
       indirectlyAffectedNodes.forEach(function(x){
 
-        console.log('syncing indirectly', x.get('type').functionName );
-
         x.trigger('updateRunner');
 
       });
