@@ -16,8 +16,10 @@ define(['backbone', 'WorkspaceBrowserElementView'], function(Backbone, Workspace
 
     template: _.template( $('#workspace-browser-template').html() ),
 
-    events: {
-
+    events: { 
+      'click #refresh-workspace-browser': "refreshClick",
+      'click #workspace-browser-custom-nodes-header': "customNodeHeaderClick",
+      'click #workspace-browser-projects-header': "projectHeaderClick"
     },
 
     render: function(arg) {
@@ -25,18 +27,34 @@ define(['backbone', 'WorkspaceBrowserElementView'], function(Backbone, Workspace
       this.$el.html( this.template( this.model.toJSON() ) );
 
       this.contents = this.$el.find('#workspace-browser-contents');
-      this.contents.empty();
 
+      this.customNodes = this.$el.find('#workspace-browser-custom-nodes');
+      this.customNodes.empty();
+
+      this.projects = this.$el.find('#workspace-browser-projects');
+      this.projects.empty();
+
+    },
+
+    refreshClick: function(){
+      this.model.refresh();
     },
 
     addWorkspace: function(x){
 
       if (!this.contents) this.render();
 
+      console.log(x)
+
       var v = new WorkspaceBrowserElementView( { model: x }, { app : this.app } );
       v.render();
-      this.contents.append(v.$el);
 
+      if ( x.get('isCustomNode') ){
+        this.customNodes.append( v.$el );
+      } else {
+        this.projects.append( v.$el );
+      }
+      
     }, 
 
     removeWorkspace: function(ws){

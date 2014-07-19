@@ -34,9 +34,7 @@ define(['backbone', 'FLOOD'], function(Backbone, FLOOD) {
         this.set( 'type', new FLOOD.nodeTypes.Add() );
       }
 
-      if (atts.extra){
-        this.get('type').extend( atts.extra );
-      }
+      if (atts.extra){ this.get('type').extend( atts.extra );  }
 
       if (atts.lastValue){
         this.get('type').value = atts.lastValue;

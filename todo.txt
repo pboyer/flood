@@ -1,46 +1,47 @@
 CUSTOM NODES
 
-editing number in custom node doesn't dirty custom node
-editing a nested custom node should trigger dirtying of its parent
-closing a project should cleanup hidden workspaces - removing the ones that are not depended upon
 should be able to set the names of inputs/outputs
+dropping in a previously created, nested custom node causes placed node to return null value
+insure unnecessary deps are removed on startup
+enter custom node by double click
 
-POLISH
+WORKSPACES MENU
+
+workspaces menu - should be "refreshable"
+workspace browser should divide between custom nodes and projects
 
 node port heights are messed up when zoomed
-save zoom when changed
-share workspaces
-fork a workspace
-OBJ export
-example workspaces
-initial user walkthrough of interface - just modify help
 formula node input should change width based on how much user inputs, allow multiple lines
 formula node does not allow "quotes"
 disable node lacing
 icons for nodes
 should remember the old 3d orientation
-workspaces menu should update when you reopen it
+
 icons for undo/redo/copy/paste
 
 optimize css:
 	eliminate inline css
 	get rid of excess bootstrap css, jquery.ui css
 
+
 FEATURE
 
-before release
-
-easily add a new library of nodes
-archive workspaces
+OBJ export
+initial user walkthrough of interface - just modify help
+example workspaces
+fork a workspace
+share workspaces
 describe workspace
 arbitrary javascript node - better than formula
 NURBS in flood
-
 run execution in ui thread, make calls to ui thread from worker
 
-promise-based execution
+
+THOUGHTS
 
 verb: 
+	breps
+	use distributed computation
 	use a neural network to train system for local or remote exec
 flood: 
 	promise-based execution would allow multiple execution paths to proceed in parallel if nodes are dispatched async - this is a VERY good idea

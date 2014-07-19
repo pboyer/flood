@@ -90,10 +90,8 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
       var throttledSync = _.throttle(function(){ this.sync('update', this); }, 2000);
       this.on('runCommand', throttledSync, this);
       this.on('change:name', throttledSync, this);
+      this.on('change:zoom', throttledSync, this);
       this.on('requestRun', this.run, this);
-
-
-      this.on('requestRun', function(){ console.log('requestRun' + this.get('name') ); }, this)
 
       if ( this.get('isCustomNode') ) this.initializeCustomNode();
 
@@ -173,7 +171,7 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
 
       customNodeWorkspace.on('change:name', function(){ that.syncCustomNodesWithWorkspace.call(that, customNodeWorkspace) }, this);
       customNodeWorkspace.on('requestRun', function(){ that.syncCustomNodesWithWorkspace.call(that, customNodeWorkspace); that.trigger('requestRun'); }, this );
-      customNodeWorkspace.get('nodes').on('add remove', function(){ that.syncCustomNodesWithWorkspace.call(that, customNodeWorkspace) }, this );
+      customNodeWorkspace.on('updateRunner', function(){ that.syncCustomNodesWithWorkspace.call(that, customNodeWorkspace); that.trigger('updateRunner'); }, this );
 
     },
 

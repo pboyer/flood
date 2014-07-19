@@ -8,6 +8,11 @@ define(['backbone', 'WorkspaceBrowserElements'], function(Backbone, WorkspaceBro
 
 	  initialize: function(atts, vals) {
 	  	this.get('workspaces').fetch();
+	  },
+
+	  refresh: function(){
+	  	this.get('workspaces').reset();
+	  	this.get('workspaces').fetch();
 	  }
 
 	});

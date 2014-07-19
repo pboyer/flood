@@ -6,9 +6,8 @@ define(['backbone'], function(Backbone) {
 
     defaults: {
       name: "Unnamed Workspace",
-      zoom: 1,
-      current: false,
       isPublic: false,
+      isCustomNode: false,
       lastSaved: Date.now()
     },
 

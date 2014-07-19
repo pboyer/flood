@@ -128,9 +128,6 @@ exports.putMySession = function(req, res) {
 				w.isCustomNode = ( x.isCustomNode != undefined ) ? x.isCustomNode : w.isCustomNode;
 				w.isFirstExperience = false;
 
-				console.log('after setting')
-				console.log( w.workspaceDependencyIds );
-
 				w.markModified("workspaceDependencyIds isCustomNode isFirstExperience name nodes connections currentWorkspace selectedNodes zoom lastSaved undoStack redoStack");
 
 				w.save(function(se){
@@ -229,8 +226,9 @@ exports.getWorkspaces = function(req, res) {
 	if (!user) return res.status(403).send("Must be logged in to list your workspaces")
 
 	User.findById( user._id )
-		.populate('workspaces', 'name lastSaved isPublic maintainers isModified')
+		.populate('workspaces', 'name lastSaved isPublic maintainers isModified isCustomNode')
 		.exec(function(e, u) {
+			console.log(u)
 			return res.send( u.workspaces.filter(function(x){ return x.isModified === true; }).sort(dateSort) );
 	}); 
 
@@ -243,7 +241,7 @@ exports.getWorkspace = function(req, res) {
 	Workspace.findById( wid , function(e, ws) {
 
 		if (e) {
-	  	return res.send('Workspace not found');
+	  		return res.send('Workspace not found');
 		}
 
 		return res.send(ws);
