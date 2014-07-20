@@ -3,14 +3,12 @@ CUSTOM NODES
 should be able to set the names of inputs/outputs
 dropping in a previously created, nested custom node causes placed node to return null value
 insure unnecessary deps are removed on startup
-enter custom node by double click
+enter custom node by double clicking on the node instance
 
 WORKSPACES MENU
 
-workspaces menu - should be "refreshable"
-workspace browser should divide between custom nodes and projects
-
-node port heights are messed up when zoomed
+tools to refresh workspaces menu
+node port locations need fixing
 formula node input should change width based on how much user inputs, allow multiple lines
 formula node does not allow "quotes"
 disable node lacing
@@ -22,7 +20,6 @@ icons for undo/redo/copy/paste
 optimize css:
 	eliminate inline css
 	get rid of excess bootstrap css, jquery.ui css
-
 
 FEATURE
 

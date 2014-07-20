@@ -17,7 +17,7 @@ define(['backbone', 'WorkspaceBrowserElementView'], function(Backbone, Workspace
     template: _.template( $('#workspace-browser-template').html() ),
 
     events: { 
-      'click #refresh-workspace-browser': "refreshClick",
+      'click .workspace-browser-refresh': "refreshClick",
       'click #workspace-browser-header-custom-nodes': "customNodeHeaderClick",
       'click #workspace-browser-header-projects': "projectHeaderClick"
     },
@@ -36,8 +36,9 @@ define(['backbone', 'WorkspaceBrowserElementView'], function(Backbone, Workspace
 
     },
 
-    refreshClick: function(){
+    refreshClick: function(e){
       this.model.refresh();
+      e.preventPropagation();
     },
 
     customNodeHeaderClick: function(e){
@@ -53,6 +54,7 @@ define(['backbone', 'WorkspaceBrowserElementView'], function(Backbone, Workspace
 
       this.customNodes.hide();
       this.projects.show();
+
       $('#workspace-browser-header-custom-nodes').css('bottom','0').css('top','');
 
     },

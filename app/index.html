@@ -34,7 +34,6 @@
             display: none;
           }
         </style>
-        
 
         <!-- jqueryui -->
         <link rel="stylesheet" href="bower_components/jquery.ui/themes/base/jquery.ui.all.css">
@@ -258,10 +257,16 @@
 
         <div id="workspace-browser-contents">
 
-          <span class="workspace-browser-header row" id="workspace-browser-header-projects">My Projects</span>
+          <span class="workspace-browser-header row" id="workspace-browser-header-projects">
+            My Projects
+            <i class="workspace-browser-header-refresh icon-refresh dim-button workspace-browser-refresh" ></i>
+          </span>
           <ul class="workspace-browser-element-list row scroll-y" id="workspace-browser-projects"></ul>
 
-          <span class="workspace-browser-header row" id="workspace-browser-header-custom-nodes">My Custom Nodes</span>
+          <span class="workspace-browser-header row" id="workspace-browser-header-custom-nodes">
+            My Custom Nodes
+            <i class="workspace-browser-header-refresh icon-refresh dim-button workspace-browser-refresh" ></i>
+          </span>
           <ul class="workspace-browser-element-list row scroll-y" id="workspace-browser-custom-nodes"></ul>
 
         </div>

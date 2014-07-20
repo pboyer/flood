@@ -411,6 +411,13 @@ define(['backbone', 'jqueryuidraggable', 'bootstrap'], function(Backbone, jquery
       var inIndex = 0;
       var outIndex = 0;
 
+      // set the zoom from the workspace container
+      var zoom = 1.0
+        , ele = this.$el.parent().css('transform');
+
+      if (ele != "none") zoom = ele.match(/-?[0-9\.]+/g)[0];
+        
+
       this.$el.find('.node-port').each(function(index, ele) {
 
         var nodeCircle = document.createElementNS('http://www.w3.org/2000/svg','circle');
@@ -424,12 +431,12 @@ define(['backbone', 'jqueryuidraggable', 'bootstrap'], function(Backbone, jquery
         // position input ports on left side, output ports on right side
         if ( $(ele).hasClass('node-port-input') ) {
           nodeCircle.setAttribute('cx', 0);
-          nodeCircle.setAttribute('cy', that.portHeight / 2 + $(ele).position().top); 
+          nodeCircle.setAttribute('cy', that.portHeight / 2 + 1/zoom * $(ele).position().top ); 
           that.inputPorts.push(nodeCircle);
           inIndex++;
         } else {
           nodeCircle.setAttribute('cx', that.$el.width() + 3 );
-          nodeCircle.setAttribute('cy', that.portHeight / 2 + $(ele).position().top); 
+          nodeCircle.setAttribute('cy', that.portHeight / 2 + 1/zoom * $(ele).position().top ); 
           that.outputPorts.push(nodeCircle);
           outIndex++;
         }
