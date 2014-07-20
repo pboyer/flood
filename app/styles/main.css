@@ -262,14 +262,48 @@ body {
 	width: 200px;
 	bottom: 0;
 	top: 30px;
-	overflow-y: scroll;
 }
 
-#workspace-browser-contents {
+.workspace-browser-header {
+	background: #DDD;
+	color: #444;
+	padding: 10px;
+	display: block;
+	width: 100%;
+	height: 40px;
+	border-bottom: 1px solid #c7bbb1;
+}
+
+.workspace-browser-header:hover {
+	background: white;
+}
+
+#workspace-browser-header-projects {
+	top: 0px;
+	z-index: 1;
+}
+
+#workspace-browser-header-custom-nodes {
+	bottom: 0px;
+}
+
+.workspace-browser-element-list {
 	list-style: none;
 	margin: 0;
 	padding : 0;
+	background: #222;
 }	
+
+#workspace-browser-projects {
+	top: 40px;
+	bottom: 40px;
+}
+
+#workspace-browser-custom-nodes {
+	display: none;
+	top: 80px;
+	bottom: 0px;
+}
 
 .workspace-name {
   pointer-events: none;
@@ -298,14 +332,18 @@ body {
 
 .workspace-browser-element {
 	margin: 0;
-	border-top: 1px solid #333;
 	padding: 5px;
-	background: #444;
-	color: #BBB;
+	padding-left: 14px;
+
+	background: #333;
+	color: white;
+	border-top: solid 1px #444;
+	border-bottom: solid 1px #222;
+
 }
 
 .workspace-browser-element:hover {
-	background: #222;
+	background: #444;
 	color: white;
 }
 

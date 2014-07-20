@@ -8,8 +8,8 @@ define(['backbone', 'WorkspaceBrowserElementView'], function(Backbone, Workspace
       this.app = arr.app;
 
       this.model.get('workspaces').on('reset', this.render, this );
-      this.model.get('workspaces').on('add', this.addWorkspace, this );
-      this.model.get('workspaces').on('remove', this.removeWorkspace, this );
+      this.model.get('workspaces').on('add', this.addWorkspaceElement, this );
+      this.model.get('workspaces').on('remove', this.removeWorkspaceElement, this );
 
       this.render();
     },
@@ -18,8 +18,8 @@ define(['backbone', 'WorkspaceBrowserElementView'], function(Backbone, Workspace
 
     events: { 
       'click #refresh-workspace-browser': "refreshClick",
-      'click #workspace-browser-custom-nodes-header': "customNodeHeaderClick",
-      'click #workspace-browser-projects-header': "projectHeaderClick"
+      'click #workspace-browser-header-custom-nodes': "customNodeHeaderClick",
+      'click #workspace-browser-header-projects': "projectHeaderClick"
     },
 
     render: function(arg) {
@@ -40,11 +40,26 @@ define(['backbone', 'WorkspaceBrowserElementView'], function(Backbone, Workspace
       this.model.refresh();
     },
 
-    addWorkspace: function(x){
+    customNodeHeaderClick: function(e){
+
+      this.projects.hide();
+      this.customNodes.show();
+
+      $('#workspace-browser-header-custom-nodes').css('bottom','').css('top','40px');
+
+    },
+
+    projectHeaderClick: function(e){
+
+      this.customNodes.hide();
+      this.projects.show();
+      $('#workspace-browser-header-custom-nodes').css('bottom','0').css('top','');
+
+    },
+
+    addWorkspaceElement: function(x){
 
       if (!this.contents) this.render();
-
-      console.log(x)
 
       var v = new WorkspaceBrowserElementView( { model: x }, { app : this.app } );
       v.render();
@@ -57,7 +72,7 @@ define(['backbone', 'WorkspaceBrowserElementView'], function(Backbone, Workspace
       
     }, 
 
-    removeWorkspace: function(ws){
+    removeWorkspaceElement: function(ws){
 
       if (!this.contents) return;
       this.contents.find('.workspace-browser-element[data-id*=' + ws.get('_id') + ']').remove();

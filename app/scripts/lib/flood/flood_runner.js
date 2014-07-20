@@ -76,23 +76,10 @@ on_run = function(data){
 	// get all nodes with output ports
 	var S = new scheme.Interpreter();
 
-	// todo - this is a mess - should store environment
+	// recompile custom nodes and store in env
+	if (!FLOOD.environment) FLOOD.environment = {};
 	for (var funcId in functionDefinitions){
-
-		var lambda = FLOOD.internalNodeTypes.CustomNode.compileNodesToLambda( workspaces[funcId].nodes );
-
-		console.log('compiling', funcId);
-
-		// var csnodes = workspace.nodes.filter(function(x){
-		// 	return x.functionId && x.functionId === funcId;
-		// }).forEach(function(x){
-		// 	x.lambda = lambda;
-		// });
-
-		if (!FLOOD.environment) FLOOD.environment = {};
-		
-		FLOOD.environment[funcId] = lambda;
-
+		FLOOD.environment[funcId] = FLOOD.internalNodeTypes.CustomNode.compileNodesToLambda( workspaces[funcId].nodes );
 	}
 
 	var baseNode = null

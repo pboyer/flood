@@ -255,19 +255,16 @@
       </script>
 
       <script type="text/template" id="workspace-browser-template">
-        <h5 style="padding: 5px;">My Workspaces</h5>
 
-        <span id="refresh-workspace-browser">Refresh</span>
+        <div id="workspace-browser-contents">
 
-        <ul id="workspace-browser-contents">
-          <ul id="workspace-browser-custom-nodes">
-        
-          </ul>
+          <span class="workspace-browser-header row" id="workspace-browser-header-projects">My Projects</span>
+          <ul class="workspace-browser-element-list row scroll-y" id="workspace-browser-projects"></ul>
 
-          <ul id="workspace-browser-projects">
-        
-          </ul>
-        </ul>
+          <span class="workspace-browser-header row" id="workspace-browser-header-custom-nodes">My Custom Nodes</span>
+          <ul class="workspace-browser-element-list row scroll-y" id="workspace-browser-custom-nodes"></ul>
+
+        </div>
       </script>
 
       <script type="text/template" id="workspace-browser-element-template">

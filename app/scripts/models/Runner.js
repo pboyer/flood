@@ -138,8 +138,6 @@ define(['backbone'], function(Backbone) {
 
 	  	var n = node.serialize();
 
-	  	console.log('updateNode', n)
-
 	  	n.kind = "updateNode";
 	  	n.workspace_id = node.workspace.id;
 
