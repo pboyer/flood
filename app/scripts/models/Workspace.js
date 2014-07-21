@@ -106,7 +106,9 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
 
     initializeDependencies: function(depIds){
 
-      if (depIds.length === 0) return;
+      if (depIds.length === 0) {
+        this.trigger('requestRun');
+      }
 
       var that = this;
 
