@@ -5,6 +5,15 @@ dropping in a previously created, nested custom node causes placed node to retur
 insure unnecessary deps are removed on startup
 enter custom node by double clicking on the node instance
 
+
+paste should be offset to workspace center
+
+UI
+
+drop down to create new project or custom node
+drop down to export to STL, or OBJ
+
+
 WORKSPACES MENU
 
 tools to refresh workspaces menu
@@ -23,7 +32,6 @@ optimize css:
 
 FEATURE
 
-OBJ export
 initial user walkthrough of interface - just modify help
 example workspaces
 fork a workspace
