@@ -435,7 +435,7 @@ define(['backbone', 'jqueryuidraggable', 'bootstrap'], function(Backbone, jquery
           that.inputPorts.push(nodeCircle);
           inIndex++;
         } else {
-          nodeCircle.setAttribute('cx', that.$el.width() + 3 );
+          nodeCircle.setAttribute('cx', that.$el.width() + 2.5 );
           nodeCircle.setAttribute('cy', that.portHeight / 2 + 1/zoom * $(ele).position().top ); 
           that.outputPorts.push(nodeCircle);
           outIndex++;

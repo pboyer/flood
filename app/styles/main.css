@@ -172,8 +172,8 @@ body {
 .node-last-value-container:hover {
 	right: -100px;
 	left: -100px;
-	height: 40px;
-	bottom: -40px;
+	height: 60px;
+	bottom: -60px;
 	overflow-x: scroll;
 	overflow-y: scroll;
 }

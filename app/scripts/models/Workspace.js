@@ -87,32 +87,39 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
       this.sync = _.throttle(this.sync, 2000);
 
       // save on every change
-      var throttledSync = _.throttle(function(){ this.sync('update', this); }, 2000);
+      var throttledSync = _.throttle(function(){ this.sync('update', this); }, 1000);
       this.on('runCommand', throttledSync, this);
       this.on('change:name', throttledSync, this);
       this.on('change:zoom', throttledSync, this);
+      this.on('change:workspaceDependencyIds', throttledSync, this);
       this.on('requestRun', this.run, this);
 
       if ( this.get('isCustomNode') ) this.initializeCustomNode();
 
-      this.cleanupDependencies();
+      // this.cleanupDependencies();
       this.initializeDependencies( this.get('workspaceDependencyIds') );
 
       this.app.trigger('workspaceLoaded', this);
 
     },
 
-    awaitedWorkspaceDependencyIds: [],
+    
 
     initializeDependencies: function(depIds){
 
-      if (depIds.length === 0) {
+      if (depIds.length === 0 || !depIds ) {
+        console.log(this.get('name') + " has no dependencies");
         this.trigger('requestRun');
+        return;
       }
+
+      this.awaitedWorkspaceDependencyIds = [];
+
+      console.log(this.get('name') + " has dependencies: " + JSON.stringify( depIds) );
 
       var that = this;
 
-      this.app.get('workspaces').on('add', this.resolveDependency, this);
+      this.app.get('workspaces').on('add', function(ws){ that.resolveDependency.call(that, ws); }, this);
 
       depIds.forEach(function(x){
         that.awaitOrResolveDependency.call(that, x);
@@ -123,6 +130,8 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
     cleanupDependencies: function(){
 
       var oldDeps = this.get('workspaceDependencyIds');;
+
+      console.log("Before cleaning up, " + this.get('name') + " has dependencies: " + JSON.stringify( oldDeps ) );
 
       var that = this;
       var deps = oldDeps.reduce(function(a,x){
@@ -152,11 +161,17 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
 
     resolveDependency: function(workspace){
 
+      console.log(this.get('name') + " resolve dep with " + workspace.id );
+      console.log(this.get('name') + " still awaits " + this.awaitedWorkspaceDependencyIds );
+
       if (workspace.id === this.id) return;
 
       var index = this.awaitedWorkspaceDependencyIds.indexOf( workspace.id );
 
       if (index < 0) return;
+
+      console.log('Resolving dependency for ' + this.get("name") + " with " + workspace.id );
+      console.log("Awaited workspace ids are " + this.awaitedWorkspaceDependencyIds );
 
       this.awaitedWorkspaceDependencyIds.remove(index);
       this.sendDefinitionToRunner( workspace.id );
@@ -174,6 +189,24 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
       customNodeWorkspace.on('change:name', function(){ that.syncCustomNodesWithWorkspace.call(that, customNodeWorkspace) }, this);
       customNodeWorkspace.on('requestRun', function(){ that.syncCustomNodesWithWorkspace.call(that, customNodeWorkspace); that.trigger('requestRun'); }, this );
       customNodeWorkspace.on('updateRunner', function(){ that.syncCustomNodesWithWorkspace.call(that, customNodeWorkspace); that.trigger('updateRunner'); }, this );
+
+    },
+
+    addWorkspaceDependency: function(id){
+
+      console.log('Adding ' + id + " as a dependency for " + this.get('name'));
+
+      var ws = this.app.getLoadedWorkspace(id);
+
+      if (!ws) throw new Error("You tried to add an unloaded workspace as a dependency!")
+
+      var depDeps = ws.get('workspaceDependencyIds')
+        , currentDeps = this.get('workspaceDependencyIds')
+        , unionDeps = _.union( [id], currentDeps, depDeps );
+
+      console.log('After adding dependencies, the dependencies for ' + this.get('name') + " is now " + unionDeps );
+
+      this.set( 'workspaceDependencyIds', unionDeps );
 
     },
 
@@ -637,19 +670,6 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
 
     },
 
-    addWorkspaceDependency: function(id){
-
-      var ws = this.app.getLoadedWorkspace(id);
-
-      if (!ws) throw new Error("You tried to add an unloaded workspace as a dependency!")
-
-      var depDeps = ws.get('workspaceDependencyIds')
-        , currentDeps = this.get('workspaceDependencyIds')
-        , unionDeps = _.union( [id], currentDeps, depDeps );
-
-      this.set( 'workspaceDependencyIds', unionDeps );
-
-    },
 
     removeNode: function(data){
 

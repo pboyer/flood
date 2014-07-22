@@ -1,5 +1,19 @@
 CUSTOM NODES
 
+
+preview scroll-x blocks view
+
+BUG
+
+	create custom node
+	create workspace
+	add nodes to custom node
+	add custom node to workspace
+	refresh
+	custom node result is null
+	custom node is not compiled
+
+cleanup dependencies has flawed logic
 should be able to set the names of inputs/outputs
 dropping in a previously created, nested custom node causes placed node to return null value
 insure unnecessary deps are removed on startup
