@@ -103,8 +103,6 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
 
     },
 
-    
-
     initializeDependencies: function(depIds){
 
       if (depIds.length === 0 || !depIds ) {
