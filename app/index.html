@@ -43,16 +43,21 @@
 
         <div id="app" class="row col">
 
-          <div id="top_container" class="row">
+          <div id="top_container" class="row" style="overflow: visible;">
                 
             <div id="workspace-tabs"></div>
 
-            <div id="add-workspace-button" class="menu-element" style="float: left">
+            <div id="add-workspace-button" class="menu-element" style="float: left;">
               <i class="icon-file dim-button"></i>
             </div>
 
-            <div id="add-node-workspace-button" class="menu-element" style="float: left">
-              <i class="icon-book dim-button"></i>
+            <div id="add-workspace-select-element">
+              <div id="add-workspace-select-container">
+                <ul>
+                  <li id="add-project-workspace">Project</li>
+                  <li id="add-node-workspace">Custom node</li>
+                </ul>
+              </div>
             </div>
 
             <div id="more-menu">

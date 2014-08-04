@@ -41,17 +41,33 @@ define([  'backbone',
       'click #help-button': 'showHelp',
       'click #settings-button': 'showSettings',
       'click #workspace_hide' : 'toggleViewer',
-      'click #add-workspace-button': 'newWorkspace',
-      'click #add-node-workspace-button': 'newNodeWorkspace',
-      'click #workspace-browser-button': 'toggleBrowser'
+      'click #workspace-browser-button': 'toggleBrowser',
+
+      'click #add-project-workspace' : 'newWorkspace',
+      'click #add-node-workspace' : 'newNodeWorkspace',
+
+      'mouseover #add-workspace-button': 'showAddWorkspaceSelect',
+      'mouseout #add-workspace-button': 'hideAddWorkspaceSelect',
+      'mouseover #add-workspace-select-element': 'showAddWorkspaceSelect',
+      'mouseout #add-workspace-select-element': 'hideAddWorkspaceSelect',
+    },
+
+    showAddWorkspaceSelect: function(){
+      $('#add-workspace-select-element').show();
+    },
+
+    hideAddWorkspaceSelect: function(){
+      $('#add-workspace-select-element').hide();
     },
 
     newWorkspace: function(){
       this.model.newWorkspace();
+      this.hideAddWorkspaceSelect();
     },
 
     newNodeWorkspace: function(){
       this.model.newNodeWorkspace();
+      this.hideAddWorkspaceSelect();
     },
 
     keydownHandler: function(e){

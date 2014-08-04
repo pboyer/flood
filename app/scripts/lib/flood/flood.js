@@ -614,50 +614,6 @@ define(function() {
 		return ["lambda", args, boxedExp];
 	};
 
-	FLOOD.nodeTypes.Input = function(name) {
-
-		var typeData = {
-			typeName: "Input",
-			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [AnyTypeButQuotedArray] ) ],
-		};
-
-		if (name === undefined) name = characters[currentInputChar++];
-
-		this.name = name;
-
-		FLOOD.baseTypes.NodeType.call(this, typeData);
-
-		this.compile = function() {
-			return this.name;
-		}
-
-		this.printExpression = function(){
-			return this.name;
-		}
-
-	}.inherits( FLOOD.baseTypes.NodeType );
-
-	var currentOutputChar = 0;
-
-	FLOOD.nodeTypes.Output = function(name) {
-
-		var typeData = {
-			inputs: [ 	new FLOOD.baseTypes.InputPort( "⇒", [AnyType] ) ],
-			typeName: "Output"
-		};
-
-		if (name === undefined) name = characters[currentOutputChar++];
-
-		this.name = name;
-
-		FLOOD.baseTypes.NodeType.call(this, typeData);
-
-		this.compile = function() {
-			return this.inputs[0].compile();
-		}
-
-	}.inherits( FLOOD.baseTypes.NodeType );
-
 	FLOOD.nodeTypes.Number = function() {
 
 		var typeData = {
@@ -937,6 +893,50 @@ define(function() {
 		this.eval = function(a, b) {
 			return a > b;
 		};
+
+	}.inherits( FLOOD.baseTypes.NodeType );
+
+	FLOOD.nodeTypes.Input = function(name) {
+
+		var typeData = {
+			typeName: "Input",
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [AnyTypeButQuotedArray] ) ],
+		};
+
+		if (name === undefined) name = characters[currentInputChar++];
+
+		this.name = name;
+
+		FLOOD.baseTypes.NodeType.call(this, typeData);
+
+		this.compile = function() {
+			return this.name;
+		}
+
+		this.printExpression = function(){
+			return this.name;
+		}
+
+	}.inherits( FLOOD.baseTypes.NodeType );
+
+	var currentOutputChar = 0;
+
+	FLOOD.nodeTypes.Output = function(name) {
+
+		var typeData = {
+			inputs: [ 	new FLOOD.baseTypes.InputPort( "⇒", [AnyType] ) ],
+			typeName: "Output"
+		};
+
+		if (name === undefined) name = characters[currentOutputChar++];
+
+		this.name = name;
+
+		FLOOD.baseTypes.NodeType.call(this, typeData);
+
+		this.compile = function() {
+			return this.inputs[0].compile();
+		}
 
 	}.inherits( FLOOD.baseTypes.NodeType );
 
