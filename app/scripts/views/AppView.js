@@ -71,6 +71,24 @@ define([  'backbone',
     },
 
     keydownHandler: function(e){
+
+      var isBackspaceOrDelete = e.keyCode === 46 || e.keyCode === 8;
+
+      if ( !(e.metaKey || e.ctrlKey) && !isBackspaceOrDelete ) return;
+
+      // do not capture from input
+      if (e.originalEvent.srcElement && e.originalEvent.srcElement.nodeName === "INPUT") return;
+      if (e.target.nodeName === "INPUT") return;
+
+      console.log(e.keyCode)
+
+      // keycodes: http://css-tricks.com/snippets/javascript/javascript-keycodes/
+      switch (e.keyCode) {
+        case 78:
+          this.newWorkspace();
+          return e.preventDefault();
+      }
+
       this.currentWorkspaceView.keydownHandler(e);
     },
 
