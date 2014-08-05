@@ -1093,6 +1093,25 @@ define(function() {
 
 	}.inherits( FLOOD.baseTypes.NodeType );
 
+	FLOOD.nodeTypes.If = function() {
+
+		var typeData = {
+			typeName: "if",
+			inputs: [ 	new FLOOD.baseTypes.InputPort( "Test", [AnyType], true ),
+									new FLOOD.baseTypes.InputPort( "Then", [AnyType] ),
+									new FLOOD.baseTypes.InputPort( "Else", [AnyType] ) ],
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [AnyType] ) ],
+		};
+
+		FLOOD.baseTypes.NodeType.call(this, typeData );
+
+		this.compile = function() {
+			return [this.typeName, this.inputs[0].compile(), this.inputs[1].compile(), 
+				this.inputs[2].compile() ];
+		}
+
+	}.inherits( FLOOD.baseTypes.NodeType );
+
 	FLOOD.nodeTypes.Range = function() {
 
 		var typeData = {
