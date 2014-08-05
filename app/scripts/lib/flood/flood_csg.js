@@ -370,7 +370,7 @@ define(['FLOOD'], function(FLOOD) {
 
 		var typeData = {
 			inputs: [ 	new FLOOD.baseTypes.InputPort( "StartPoint", [ CSG.Vector ], new CSG.Vector([0,-5,0]) ),
-						new FLOOD.baseTypes.InputPort( "EndPoint", [ CSG.Vector ], new CSG.Vector([0,2,0]) ),
+						new FLOOD.baseTypes.InputPort( "EndPoint", [ CSG.Vector ], new CSG.Vector([0,5,0]) ),
 						new FLOOD.baseTypes.InputPort( "Radius", [Number], 5 ),
 						new FLOOD.baseTypes.InputPort( "Slices", [Number], 20 ) ],
 			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [ CSG ] ) ],
@@ -392,7 +392,7 @@ define(['FLOOD'], function(FLOOD) {
 	FLOOD.nodeTypes.SolidCube = function() {
 
 		var typeData = {
-			inputs: [ 	new FLOOD.baseTypes.InputPort( "Center", [ CSG.Vector ], new CSG.Vector([0,-1,0]) ),
+			inputs: [ 	new FLOOD.baseTypes.InputPort( "Center", [ CSG.Vector ], new CSG.Vector([0,0,0]) ),
 						new FLOOD.baseTypes.InputPort( "Radius", [ Number ], 10 ) ],
 			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [ CSG ] ) ],
 			typeName: "SolidCube" 
