@@ -1206,8 +1206,8 @@ define(function() {
 		FLOOD.baseTypes.NodeType.call( this, typeData );
 
 		this.eval = function(l) {
-			if (l.length <= 1) return [];
-			return l.slice(1);
+			if (l.length <= 1) return [].toQuotedArray();
+			return l.slice(1).toQuotedArray();
 		};
 
 	}.inherits( FLOOD.baseTypes.NodeType );
@@ -1224,7 +1224,7 @@ define(function() {
 		FLOOD.baseTypes.NodeType.call( this, typeData );
 
 		this.eval = function(i, l) {
-			return [i].concat(l);
+			return [i].concat(l).toQuotedArray();
 		};
 
 	}.inherits( FLOOD.baseTypes.NodeType );
@@ -1268,8 +1268,8 @@ define(function() {
 	FLOOD.nodeTypes.ListMap = function() {
 
 		var typeData = {
-			inputs: [ 	new FLOOD.baseTypes.InputPort( "Function", [Function] ),
-						new FLOOD.baseTypes.InputPort( "List", [QuotedArray, AnyType] ) ],
+			inputs: [ 	new FLOOD.baseTypes.InputPort( "Function", [Function], function(a){ return a; } ),
+								new FLOOD.baseTypes.InputPort( "List", [QuotedArray, AnyType] ) ],
 			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [QuotedArray, AnyType] ) ],
 			typeName: "ListMap" 
 		};
