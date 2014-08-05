@@ -224,11 +224,11 @@ define(['backbone', 'List', 'SearchElementView', 'bootstrap'], function(Backbone
 
     exportClick: function(e){
 
-      var res = this.getFileFromSelected( this.objConverter );
+      var res = this.getFileFromSelected( this.stlConverter );
 
       var wsName = this.currentWorkspace().get('name');
 
-      this.download(wsName + ".obj", res);
+      this.download(wsName + ".stl", res);
 
     },
 
