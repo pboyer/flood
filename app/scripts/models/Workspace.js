@@ -190,13 +190,15 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
 
     },
 
-    addWorkspaceDependency: function(id){
+    addWorkspaceDependency: function(id, watchDependency){
 
       console.log('Adding ' + id + " as a dependency for " + this.get('name'));
 
       var ws = this.app.getLoadedWorkspace(id);
 
       if (!ws) throw new Error("You tried to add an unloaded workspace as a dependency!")
+
+      if (watchDependency) this.watchDependency( ws );
 
       var depDeps = ws.get('workspaceDependencyIds')
         , currentDeps = this.get('workspaceDependencyIds')
@@ -641,7 +643,7 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
 
       if ( data.typeName === "CustomNode" ){
         var id = data.extra.functionId;
-        this.addWorkspaceDependency( id );
+        this.addWorkspaceDependency( id, true );
         this.sendDefinitionToRunner( id );
       }
 

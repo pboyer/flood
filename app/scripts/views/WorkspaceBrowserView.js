@@ -38,7 +38,7 @@ define(['backbone', 'WorkspaceBrowserElementView'], function(Backbone, Workspace
 
     refreshClick: function(e){
       this.model.refresh();
-      e.preventPropagation();
+      e.stopPropagation();
     },
 
     customNodeHeaderClick: function(e){
