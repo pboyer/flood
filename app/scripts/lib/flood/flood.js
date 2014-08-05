@@ -1320,7 +1320,7 @@ define(function() {
 		var typeData = {
 			inputs: [ 	new FLOOD.baseTypes.InputPort( "Function", [Function], function(a,b){ return a; } ),
 									new FLOOD.baseTypes.InputPort( "List", [QuotedArray, AnyType], new QuotedArray() ), 
-									new FLOOD.baseTypes.InputPort( "Base", [AnyType], 0 ) ],
+									new FLOOD.baseTypes.InputPort( "Base", [AnyType] ) ],
 			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [AnyType] ) ],
 			typeName: "ListReduce" 
 		};
