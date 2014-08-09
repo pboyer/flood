@@ -141,7 +141,8 @@ module.exports = function (grunt) {
                 files: {
                     '<%= yeoman.dist %>/styles/main.css': [
                         '.tmp/styles/{,*/}*.css',
-                        '<%= yeoman.app %>/styles/{,*/}*.css'
+                        '<%= yeoman.app %>/bower_components/jquery.ui/themes/base/*.css',
+                        '<%= yeoman.app %>/styles/{,*/}*.css',
                     ]
                 }
             }
@@ -159,7 +160,6 @@ module.exports = function (grunt) {
                         '*.html',
                         '*.json',
                         'images/{,*/}*.{webp,gif}',
-                        'styles/bootstrap.css',
                         'bower_components/jquery.ui/themes/base/*.css',
                         'bower_components/jquery.ui/themes/base/images/*.png',
                         'bower_components/pace/pace.min.js',
