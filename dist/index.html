@@ -1,4 +1,4 @@
-ç<!doctype html>
+<!doctype html>
 <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
 <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
 <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
@@ -9,8 +9,8 @@
         <title>flood</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width">
-        <!-- <link rel="stylesheet" href="styles/bootstrap.css"> -->
-        <link rel="stylesheet" href="styles/main.css">
+
+        <link rel="stylesheet" href="style.min.css">
 
         <style>
 
@@ -41,28 +41,9 @@
             color: #DDD;
           }
 
-          /* pace progress bar */
-          .pace .pace-progress {
-            background: #29d;
-            position: fixed;
-            z-index: 2000;
-            top: 0;
-            left: 0;
-            height: 2px;
-
-            -webkit-transition: width 1s;
-            -moz-transition: width 1s;
-            -o-transition: width 1s;
-            transition: width 1s;
-          }
-
-          .pace-inactive {
-            display: none;
-          }
         </style>
 
-        <!-- jqueryui -->
-        <!-- <link rel="stylesheet" href="bower_components/jquery.ui/themes/base/jquery.ui.all.css"> -->
+
     </head>
     
     <body>
@@ -521,8 +502,6 @@
             g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
             s.parentNode.ingruntsertBefore(g,s)}(document,'script'));
         </script> -->
-  
-    <script src="bower_components/pace/pace.min.js"></script>
 
     <!-- Application source. -->
     <script data-main="/scripts/main" src="source.min.js"></script>
