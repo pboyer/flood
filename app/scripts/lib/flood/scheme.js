@@ -1,10 +1,12 @@
 if (typeof define !== 'function' && typeof require === 'function') {
     var define = require('amdefine')(module);
+    var async = require('./async.js');
 } 
 
 if (typeof require != 'function' && typeof window != "object") { 
 
 	var scheme = {};
+
 	var define = function(x, y){
 		if (typeof x === "function") scheme = x();
 		if (typeof y === "function") scheme = y();
@@ -91,6 +93,93 @@ define(function() {
 
 		this.parse_eval = function(exp){
 			return this.eval( this.parse(exp) );
+		}
+
+		function defer(x){
+			setTimeout(x, 0);
+		}
+
+		this.eval_async = function(x, env, cb) {
+
+			env = typeof env !== 'undefined' ? env : this.global_env;
+
+			var that = this;
+			if ( typeof x === "string") {							// variable reference
+
+				defer(function(){ cb( env.find(x)[x] ); });
+
+			} else if ( !(x instanceof Array) ){					// literal	
+
+				// console.log( "hi", x );
+				defer(function(){ cb( x ) });
+
+			} else if (x[0] === "quote") {							// (quote exp)
+
+				defer(function(){ cb( x[1] ); });
+
+			} else if (x[0] === "if") {								// (if test conseq alt)
+
+				var test = x[1], conseq = x[2], alt = x[3];
+
+				this.eval_async( test, env, function(res){
+					this.eval_async( res ? conseq : alt, env, cb );
+				});
+
+			} else if (x[0] === "lambda") {							// (lambda (var*) exp)
+
+				var vars = x[1], exp = x[2];
+
+				defer(function(){ 
+					cb( function(args) {
+						return that.eval( exp, new Env(vars, arguments, env) );
+					});
+				});
+
+			} else if (x[0] === "begin") {							// (begin exp*)
+
+				x.shift();
+
+				// build up all of the evaluations
+				var exps = x.map(function(exp){
+					return function(cbi){
+						that.eval_async( exp, env, function(res){
+							cbi(null, res);
+						});
+					};
+				});
+
+				// do all in parallel, returning results as array
+				return async.parallel( exps, function(err, res){
+
+					// return the last element
+					defer(function(){ cb( res[res.length -1] ); });
+
+				});
+
+			} else {												// (proc exp*)
+
+				// build all evaluations
+				var exps = x.map(function(exp){
+					return function(cbi){
+						that.eval_async( exp, env, function(res){
+							cbi(null, res);
+						});
+					}
+				});
+
+				// evaluate all of the inputs in parallel
+				async.parallel( exps, function(err, results){
+
+					// then finally apply function in deferred fashion
+					defer(function(){
+						var proc = results.shift();
+			  		cb( proc.apply(that, results) );
+					});
+
+				});
+			
+			}
+
 		}
 
 		this.eval = function(x, env) {

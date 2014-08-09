@@ -47,7 +47,7 @@ function init() {
 
 	// add directional light source
 	var directionalLight = new THREE.DirectionalLight(0xbbbbbb);
-	directionalLight.position.set(0.5, 0.3, 0.5);
+	directionalLight.position.set(50, 30, 50);
 	scene.add(directionalLight);
 
 	var directionalLight = new THREE.DirectionalLight(0xaaaaaa);
