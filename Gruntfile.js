@@ -162,6 +162,7 @@ module.exports = function (grunt) {
                         'styles/bootstrap.css',
                         'bower_components/jquery.ui/themes/base/*.css',
                         'bower_components/jquery.ui/themes/base/images/*.png',
+                        'bower_components/pace/pace.min.js',
                         'scripts/lib/flood/*.js'
                     ]
                 }]

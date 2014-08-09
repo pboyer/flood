@@ -218,40 +218,6 @@ body {
 	width: 150px;
 }
 
-#login {
-
-	text-align: center;
-	z-index: 120;
-	right: 0;
-	left: 0;
-	top: 0;
-	bottom: 0;
-	padding: 100px;
-	background-color: #444;
-
-}
-
-#login h1 {
-	font-size: 110px;
-}
-
-.form-group {
-	padding: 5px;
-}
-
-.form-group label {
-	color: #AAA;
-}
-
-.login-container {
-	width: 300px;
-	margin-left: auto;
-	margin-right: auto;
-}
-
-.login-container a {
-	color: #DDD;
-}
 
 #workspace-browser {
 	background: #e0e0e0;
