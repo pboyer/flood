@@ -7,7 +7,7 @@ define(['backbone', 'List', 'SearchElementView'], function(Backbone, List, Searc
 
     initialize: function(atts, arr) {
       this.app = arr.app;
-
+      this.app.on('change:showingSearch', this.highlightInput, this );
       this.app.SearchElements.on('add remove', this.render, this);
     },
 
@@ -45,6 +45,10 @@ define(['backbone', 'List', 'SearchElementView'], function(Backbone, List, Searc
 
       this.list = new List(this.el, options);
 
+    },
+
+    highlightInput: function(){
+      this.$input.focus().select();
     },
 
     addNode: function(name){
