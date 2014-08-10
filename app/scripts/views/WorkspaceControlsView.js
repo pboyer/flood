@@ -36,6 +36,9 @@ define(['backbone', 'List', 'SearchElementView', 'bootstrap'], function(Backbone
       this.$input = this.$('.library-search-input');
       this.$list = this.$('.search-list');
 
+      // highlight text in the search input when focussed
+      this.$input.focus(function(){ this.select(); });
+
       this.$list.empty();
 
       var that = this;

@@ -134,6 +134,8 @@ require.config({
         WatchNodeView: 'views/NodeViews/Watch',
         NumNodeView: 'views/NodeViews/Num',
         FormulaView: 'views/NodeViews/Formula',
+        InputView: 'views/NodeViews/Input',
+        OutputView: 'views/NodeViews/Output',
 
         CSGNodeView: 'views/NodeViews/ThreeCSG',
 

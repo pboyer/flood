@@ -159,8 +159,8 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
 
     resolveDependency: function(workspace){
 
-      console.log(this.get('name') + " resolve dep with " + workspace.id );
-      console.log(this.get('name') + " still awaits " + this.awaitedWorkspaceDependencyIds );
+      // console.log(this.get('name') + " resolve dep with " + workspace.id );
+      // console.log(this.get('name') + " still awaits " + this.awaitedWorkspaceDependencyIds );
 
       if (workspace.id === this.id) return;
 
@@ -168,8 +168,8 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
 
       if (index < 0) return;
 
-      console.log('Resolving dependency for ' + this.get("name") + " with " + workspace.id );
-      console.log("Awaited workspace ids are " + this.awaitedWorkspaceDependencyIds );
+      // console.log('Resolving dependency for ' + this.get("name") + " with " + workspace.id );
+      // console.log("Awaited workspace ids are " + this.awaitedWorkspaceDependencyIds );
 
       this.awaitedWorkspaceDependencyIds.remove(index);
       this.sendDefinitionToRunner( workspace.id );
@@ -255,6 +255,8 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
     },
 
     syncCustomNodesWithWorkspace: function(workspace){
+
+      console.log('hi hi hi!')
 
       if (typeof workspace === "string") workspace = this.app.getLoadedWorkspace(workspace);
 

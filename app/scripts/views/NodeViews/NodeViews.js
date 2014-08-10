@@ -1,4 +1,5 @@
-define(['BaseNodeView', 'WatchNodeView', 'NumNodeView', 'CSGNodeView', 'FormulaView'], function(BaseNodeView, WatchNodeView, NumNodeView, CSGNodeView, FormulaView){
+define(['BaseNodeView', 'WatchNodeView', 'NumNodeView', 'CSGNodeView', 'FormulaView', 'OutputView', 'InputView'], 
+  function(BaseNodeView, WatchNodeView, NumNodeView, CSGNodeView, FormulaView, OutputView, InputView){
 
   var nodeViewTypes = {};
 
@@ -7,22 +8,8 @@ define(['BaseNodeView', 'WatchNodeView', 'NumNodeView', 'CSGNodeView', 'FormulaV
   nodeViewTypes.Number = NumNodeView;
 
   nodeViewTypes.Formula = FormulaView;
-
-  // nodeViewTypes.SolidSphere = CSGNodeView;
-  // nodeViewTypes.SolidCylinder = CSGNodeView;
-  // nodeViewTypes.SolidCube = CSGNodeView;
-  // nodeViewTypes.SolidExtrusion = CSGNodeView;
-
-  // nodeViewTypes.SolidUnion = CSGNodeView;
-  // nodeViewTypes.SolidUnionAll = CSGNodeView;
-  // nodeViewTypes.SolidIntersect = CSGNodeView;
-  // nodeViewTypes.SolidSubtract = CSGNodeView;
-  // nodeViewTypes.Move = CSGNodeView;
-  // nodeViewTypes.Rotate = CSGNodeView;
-  // nodeViewTypes.Scale = CSGNodeView;
-  // nodeViewTypes.Point = CSGNodeView;
-  // nodeViewTypes.Plane = CSGNodeView;
-  // nodeViewTypes.RegularPolygon = CSGNodeView;
+  nodeViewTypes.Input = InputView;
+  nodeViewTypes.Output = OutputView;
 
   return nodeViewTypes;
 

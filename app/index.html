@@ -111,7 +111,6 @@
 
       </body>
 
-
       <script type="text/template" id="node-template">
 
         <div class="node-last-value-container">
@@ -192,6 +191,34 @@
         <a href="#" class="add-input"> + </a> 
         <a href="#" class="remove-input" style="padding-left: 10px; padding-right: 10px"> - </a>
         <input type="text" class="formula-text-input" placeholder="Custom formula" value="<%= extra.script %>">
+
+      </script>
+
+      <script type="text/template" id="node-input-template">
+
+        <div class="node-data-container node-input-container">
+          <input type="text" class="input-text-input" placeholder="Input name" value="<%= extra.script %>">
+        </div>
+
+        <ul class="node-outputs" >
+          <% _.each(type.outputs, function(ele, index) { %> 
+            <li class="node-port node-port-output" data-index=" <%= index %> "> <span class="node-port-name"> <%= ele.name %> </span> </li> 
+          <% }); %>
+        </ul>
+
+      </script>
+
+      <script type="text/template" id="node-output-template">
+
+        <ul class="node-inputs">
+          <% _.each(type.inputs, function(ele, index) { %> 
+            <li class="node-port node-port-input" data-index=" <%= index %> "> <span class="node-port-name"> <%= ele.name %> </span>  </li> 
+          <% }); %>
+        </ul>
+
+        <div class="node-data-container node-output-container">
+          <input type="text" class="output-text-input" placeholder="Output name" value="<%= extra.script %>">
+        </div>
 
       </script>
 
