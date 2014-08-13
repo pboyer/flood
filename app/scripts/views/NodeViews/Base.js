@@ -25,6 +25,7 @@ define(['backbone', 'jqueryuidraggable', 'bootstrap'], function(Backbone, jquery
       this.workspaceView = args.workspaceView;
 
       this.listenTo(this.model, 'requestRender', this.render );
+      this.listenTo(this.model, 'requestRender', this.renderKick );
       this.listenTo(this.model, 'change:position', this.move );
       this.listenTo(this.model, 'change:lastValue', this.renderLastValue );
       this.listenTo(this.model, 'change:failureMessage', this.renderLastValue );
@@ -42,6 +43,10 @@ define(['backbone', 'jqueryuidraggable', 'bootstrap'], function(Backbone, jquery
       this.$workspace_canvas = $('#workspace_canvas');
       this.position = this.model.get('position');
 
+    },
+
+    renderKick: function(){
+      console.log(this.model);
     },
 
     onEvalFailed: function(exception){

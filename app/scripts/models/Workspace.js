@@ -256,8 +256,6 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
 
     syncCustomNodesWithWorkspace: function(workspace){
 
-      console.log('hi hi hi!')
-
       if (typeof workspace === "string") workspace = this.app.getLoadedWorkspace(workspace);
 
       this.syncDirectlyAffectedCustomNodesWithWorkspace( workspace );
@@ -277,60 +275,98 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
       directlyAffectedCustomNodes.forEach(function(x){
 
         // cleanup hanging input connections
-        var inputConns = x.get('inputConnections');
-        var diff = inputNodes.length - inputConns.length;
 
-        if (diff > 0){
-          for (var i = 0; i < diff; i++){
-            inputConns.push([]);
-          }
-        } else {
-          for (var i = 0; i < -diff; i++){
+          var inputConns = x.get('inputConnections');
+          var diff = inputNodes.length - inputConns.length;
 
-            var inConn = x.getConnectionAtIndex(inputConns.length - 1);
+          if (diff > 0){
+            for (var i = 0; i < diff; i++){
+              inputConns.push([]);
+            }
+          } else {
+            for (var i = 0; i < -diff; i++){
 
-            if (inConn != null){
-              x.workspace.removeConnection(inConn);
+              var inConn = x.getConnectionAtIndex(inputConns.length - 1);
+
+              if (inConn != null){
+                x.workspace.removeConnection(inConn);
+              }
+
+              inputConns.pop();
             }
 
-            inputConns.pop();
           }
-
-        }
 
         // clean up hanging output connections
-        var outputConns = x.get('outputConnections');
-        var diff2 = outputNodes.length - outputConns.length;
 
-        if (diff2 > 0){
+          var outputConns = x.get('outputConnections');
+          var diff2 = outputNodes.length - outputConns.length;
 
-          for (var i = 0; i < diff2; i++){
-            outputConns.push( [] );
+          if (diff2 > 0){
+
+            for (var i = 0; i < diff2; i++){
+              outputConns.push( [] );
+            }
+
+          } else {
+
+            for (var i = 0; i < -diff2; i++){
+
+              x.get('outputConnections')
+                .last()
+                .slice(0)
+                .forEach(function(outConn){ x.workspace.removeConnection(outConn); })
+
+              outputConns.pop();
+            }
+
           }
 
-        } else {
+        // set the type
 
-          for (var i = 0; i < -diff2; i++){
+          x.get('type').functionName = workspace.get('name');
+          x.get('type').setNumInputs(inputNodes.length);
+          x.get('type').setNumOutputs(outputNodes.length);
 
-            x.get('outputConnections')
-              .last()
-              .slice(0)
-              .forEach(function(outConn){ x.workspace.removeConnection(outConn); })
+        // save to extra 
 
-            outputConns.pop();
-          }
+          var extraCop = JSON.parse( JSON.stringify( x.get('extra') ) );
 
-        }
+          extraCop.numInputs = inputNodes.length;
+          extraCop.numOutputs = outputNodes.length;
+          extraCop.functionName = workspace.get('name');
 
-        var extraCop = JSON.parse( JSON.stringify( x.get('extra') ) );
+        // sync the input names  ------------------------
 
-        x.get('type').functionName = workspace.get('name');
-        x.get('type').setNumInputs(inputNodes.length);
-        x.get('type').setNumOutputs(outputNodes.length);
+          extraCop.inputNames = inputNodes.map(function(inputNode, ind){
+            var ex = inputNode.get('extra');
 
-        extraCop.numInputs = inputNodes.length;
-        extraCop.numOutputs = outputNodes.length;
-        extraCop.functionName = workspace.get('name');
+            if (ex === undefined || !ex.name || ex.name === "" ){
+              return String.fromCharCode(97 + ind);
+            } 
+
+            return ex.name;
+          });
+
+          extraCop.inputNames.forEach(function(name, ind) {
+            x.get('type').inputs[ind].name = name;
+          });
+
+        // sync the output names  ------------------------
+
+          extraCop.outputNames = outputNodes.map(function(outputNode, ind){
+            var ex = outputNode.get('extra');
+
+            if (ex === undefined || !ex.name || ex.name === "" ){
+              return String.fromCharCode(97 + ind);
+            } 
+
+            return ex.name;
+          });
+
+          extraCop.outputNames.forEach(function(name, ind) {
+            x.get('type').outputs[ind].name = name;
+          });
 
         // silently set for serialization
         x.set('extra', extraCop);
