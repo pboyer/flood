@@ -4,21 +4,51 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView'], function(Backbone, 
 
     template: _.template( $('#node-output-template').html() ),
 
-    renderNode: function(){
+    initialize: function(args) {
+      BaseNodeView.prototype.initialize.apply(this, arguments);
 
-    	var res = BaseNodeView.prototype.renderNode.apply(this, arguments);
+      this.model.on('change:extra', function() { 
+        
+        var ex = this.model.get('extra') ;
+        this.silentSyncUI( ex.name );
+        this.model.trigger('updateRunner'); 
 
-      var that = this;
-      this.$el.find(".output-text-input").blur(function(){ that.textChanged.call(that); })
-
-      return res;
+      }, this);
 
     },
 
-    textChanged: function(){
+    render: function(){
 
+      BaseNodeView.prototype.render.apply(this, arguments);
+
+      var that = this;
+      var extra = this.model.get('extra');
+      var name = extra.name != undefined ? extra.name : "";
+
+      this.inputText = this.$el.find(".output-text-input");
+      this.inputText.val( name );
+      this.inputText.change( function(e){ that.nameChanged.call(that, e); e.stopPropagation(); });
+
+      return this;
+
+    },
+
+    nameChanged: function(){
+      this.inputSet();
       this.model.workspace.trigger('updateRunner');
-      
+    },
+
+    silentSyncUI: function(name){
+      this.silent = true;
+      this.inputText.val( name );
+      this.silent = false;
+    },
+
+    inputSet: function(e,ui) {
+      if ( this.silent ) return;
+
+      var newValue = { name: this.inputText.val() };
+      this.model.workspace.setNodeProperty({property: 'extra', _id: this.model.get('_id'), newValue: newValue });      
     }
 
   });
