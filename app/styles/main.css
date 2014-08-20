@@ -626,7 +626,7 @@ body {
 	background: #e3e3e3;
 	padding-top: 2px;
 	padding-bottom: 2px;
-	color: #222;
+	color: #111;
 
 	border: 1px solid #999;
 }
@@ -679,7 +679,7 @@ body {
 
 .node-number-input {
 	padding:2px;
-	margin:2px;
+	margin:2px;`
 }
 
 .node-evaluating {
@@ -695,6 +695,7 @@ body {
 	z-index: 99;
 	border: 1px solid #0BB;
 	color: black;
+	background-color: #aed1d1;
 }
 
 .node-data-container {

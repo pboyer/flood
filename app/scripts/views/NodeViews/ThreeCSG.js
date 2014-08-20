@@ -40,9 +40,9 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView'], function(Backbone, 
 
       if (this.model.get('selected')) {
 
-        var meshMat = new THREE.MeshPhongMaterial({color: 0x00FFFF});
-        var partMat = new THREE.ParticleBasicMaterial({color: 0x00FFFF, size: 3, sizeAttenuation: false});
-        var lineMat = new THREE.LineBasicMaterial({ color: 0x00ffff });
+        var meshMat = new THREE.MeshPhongMaterial({color: 0x66d6ff });
+        var partMat = new THREE.ParticleBasicMaterial({color: 0x66d6ff, size: 3, sizeAttenuation: false});
+        var lineMat = new THREE.LineBasicMaterial({ color: 0x66d6ff });
 
       } else {
 
