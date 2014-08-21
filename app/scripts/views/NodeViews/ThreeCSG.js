@@ -218,7 +218,7 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView'], function(Backbone, 
           var g3  = that.toThreeGeom( list[i] );
 
           if (that.model.get('selected')){
-            var color = 0x00FFFF;
+            var color = 0x66d6ff;
           } else {
             var color = 0x999999;
           }

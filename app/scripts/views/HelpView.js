@@ -20,7 +20,7 @@ define(['backbone'], function(Backbone) {
 
       var that = this;
 
-      this.$el.html();
+      this.$el.empty();
 
       this.model.get('sections').forEach(function(section){
 
@@ -45,8 +45,6 @@ define(['backbone'], function(Backbone) {
         that.$el.append(template( section ));
 
       });
-
-      this.rendered = true;
 
       return this;
 

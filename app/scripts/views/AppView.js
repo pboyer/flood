@@ -144,8 +144,9 @@ define([  'backbone',
     viewHelp: function(){
       if (!this.helpView){
         this.helpView = new HelpView({model: new Help() }, { app: this.model });
-        this.helpView.render();
       }
+      
+      this.helpView.render();
 
       if (this.model.get('showingHelp') === true){
         this.helpView.$el.fadeIn();  
