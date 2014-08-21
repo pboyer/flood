@@ -149,13 +149,10 @@ define([  'backbone',
         this.helpView = new HelpView({model: new Help() }, { app: this.model });
       }
       
-      this.helpView.render();
-
       if (this.model.get('showingHelp') === true){
-
-        // focus the workspace
-
-
+        // the workspace must be focused before showing help
+        this.focusWorkspace();
+        this.helpView.render();
         this.helpView.$el.fadeIn();  
       } else {
         this.helpView.$el.fadeOut();
