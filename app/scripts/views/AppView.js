@@ -36,6 +36,9 @@ define([  'backbone',
 
       $(document).bind('keydown', $.proxy( this.keydownHandler, this) );
 
+      // deactivate the context menu
+      $(document).bind("contextmenu",function(e){ return false; });
+
     },
 
     events: {
@@ -149,6 +152,10 @@ define([  'backbone',
       this.helpView.render();
 
       if (this.model.get('showingHelp') === true){
+
+        // focus the workspace
+
+
         this.helpView.$el.fadeIn();  
       } else {
         this.helpView.$el.fadeOut();

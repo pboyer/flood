@@ -197,9 +197,7 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView'], function(Backbone, 
         }
 
         this.threeGeom = threeTemp;
-
         scene.add( this.threeGeom );
-
         this.changeVisibility();
 
       }, this );
