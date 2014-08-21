@@ -27,9 +27,12 @@ define([  'backbone',
       this.model.get('workspaces').on('remove', this.removeWorkspaceTab, this);
 
       this.model.on('change:showingSettings', this.viewSettings, this);
-      this.model.on('change:showingLogin', this.viewLogin, this);
+      this.model.on('change:showingFeedback', this.viewFeedback, this);
       this.model.on('change:showingHelp', this.viewHelp, this);
       this.model.on('change:showingBrowser', this.viewBrowser, this);
+
+      this.model.login.on('change:isLoggedIn', this.showHelpOnFirstExperience, this );
+      this.model.login.on('change:showing', this.showHelpOnFirstExperience, this );
 
       $(document).bind('keydown', $.proxy( this.keydownHandler, this) );
 
@@ -50,6 +53,21 @@ define([  'backbone',
       'mouseout #add-workspace-button': 'hideAddWorkspaceSelect',
       'mouseover #add-workspace-select-element': 'showAddWorkspaceSelect',
       'mouseout #add-workspace-select-element': 'hideAddWorkspaceSelect',
+    },
+
+    showHelpOnFirstExperience: function(){
+
+      var that = this;
+
+      if (that.model.login.get('isLoggedIn')  && that.model.get('isFirstExperience')){
+        setTimeout(function(){
+          that.model.set( 'showingHelp', true);
+          that.model.set( 'isFirstExperience', false );
+         }, 800);
+      } else {
+        that.model.set( 'showingHelp', false);
+      }
+
     },
 
     showAddWorkspaceSelect: function(){
@@ -79,8 +97,6 @@ define([  'backbone',
       // do not capture from input
       if (e.originalEvent.srcElement && e.originalEvent.srcElement.nodeName === "INPUT") return;
       if (e.target.nodeName === "INPUT") return;
-
-      console.log(e.keyCode)
 
       // keycodes: http://css-tricks.com/snippets/javascript/javascript-keycodes/
       switch (e.keyCode) {
@@ -132,9 +148,22 @@ define([  'backbone',
       }
 
       if (this.model.get('showingHelp') === true){
-        this.helpView.$el.show();  
+        this.helpView.$el.fadeIn();  
       } else {
-        this.helpView.$el.hide();
+        this.helpView.$el.fadeOut();
+      }
+    },
+
+    viewFeedback: function(){
+      if (!this.feedbackView){
+        this.feedbackView = new FeedbackView({model: new Feedback() }, { app: this.model });
+        this.feedbackView.render();
+      }
+
+      if (this.model.get('showingFeedback') === true){
+        this.feedbackView.$el.fadeIn();  
+      } else {
+        this.feedbackView.$el.fadeOut();
       }
     },
 
@@ -144,6 +173,14 @@ define([  'backbone',
 
     hideHelp: function(){
       this.model.set('showingHelp', true);
+    },
+
+    showFeedback: function(){
+      this.model.set('showingFeedback', true);
+    },
+
+    hideFeedback: function(){
+      this.model.set('showingFeedback', true);
     },
 
     showLogin: function(){

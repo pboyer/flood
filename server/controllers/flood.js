@@ -47,7 +47,8 @@ var initUserSession = function(req, res){
 				if (errSesh) return res.status(500).send("Failed to initialize user session");
 
 				user.lastSession = newSesh;
-				user.markModified("lastSession");
+				user.workspaces = [ nws ];
+				user.markModified("lastSession workspaces");		
 
 				user.save(function(err){
 					if (err) return res.status(500).send("Failed to save user session");
@@ -121,8 +122,6 @@ exports.putMySession = function(req, res) {
 				w.lastSaved = Date.now();
 				w.redoStack = x.redoStack || w.redoStack;
 				w.undoStack = x.undoStack || w.undoStack;
-
-				console.log( x.workspaceDependencyIds );
 
 				w.workspaceDependencyIds = x.workspaceDependencyIds || w.workspaceDependencyIds;
 				w.isCustomNode = ( x.isCustomNode != undefined ) ? x.isCustomNode : w.isCustomNode;
@@ -228,8 +227,11 @@ exports.getWorkspaces = function(req, res) {
 	User.findById( user._id )
 		.populate('workspaces', 'name lastSaved isPublic maintainers isModified isCustomNode')
 		.exec(function(e, u) {
-			console.log(u)
-			return res.send( u.workspaces.filter(function(x){ return x.isModified === true; }).sort(dateSort) );
+			console.log(u);
+			var filtered = u.workspaces.filter(function(x, i){ return x.isModified === true || i === 0; }).sort(dateSort);
+			console.log(filtered);
+
+			return res.send( filtered );
 	}); 
 
 };

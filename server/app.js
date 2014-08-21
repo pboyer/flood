@@ -7,7 +7,6 @@ var cookieParser = require('cookie-parser');
 var compress = require('compression');
 var session = require('express-session');
 var bodyParser = require('body-parser');
-var favicon = require('static-favicon');
 var logger = require('morgan');
 var errorHandler = require('errorhandler');
 // var csrf = require('csurf');
@@ -69,7 +68,6 @@ app.use(connectAssets({
   helperContext: app.locals
 }));
 app.use(compress());
-app.use(favicon());
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());

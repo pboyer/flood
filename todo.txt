@@ -1,51 +1,34 @@
 CUSTOM NODES
 
+interactive help on first experience
+icons for undo/redo/copy/paste/switch focus
+send feedback
+polygon node
+
 preview scroll-x blocks view
 
-BUG
-
-	create custom node
-	create workspace
-	add nodes to custom node
-	add custom node to workspace
-	refresh
-	custom node result is null
-	custom node is not compiled
-
 cleanup dependencies has flawed logic
-should be able to set the names of inputs/outputs
 dropping in a previously created, nested custom node causes placed node to return null value
 insure unnecessary deps are removed on startup
 enter custom node by double clicking on the node instance
-
 
 paste should be offset to workspace center
 
 UI
 
-drop down to create new project or custom node
 drop down to export to STL, or OBJ
-
 
 WORKSPACES MENU
 
-tools to refresh workspaces menu
-node port locations need fixing
 formula node input should change width based on how much user inputs, allow multiple lines
 formula node does not allow "quotes"
 disable node lacing
 icons for nodes
 should remember the old 3d orientation
 
-icons for undo/redo/copy/paste
-
-optimize css:
-	eliminate inline css
-	get rid of excess bootstrap css, jquery.ui css
 
 FEATURE
 
-initial user walkthrough of interface - just modify help
 example workspaces
 fork a workspace
 share workspaces

@@ -16,7 +16,9 @@ define(['backbone', 'Workspaces', 'Node', 'Login', 'Workspace', 'SearchElements'
       currentWorkspace: null,
       showingBrowser: false,
       showingSearch: false,
+      showingFeedback: false,
       showingHelp: false,
+      isFirstExperience: false,
       clipBoard: {}
     },
 
@@ -71,6 +73,7 @@ define(['backbone', 'Workspaces', 'Node', 'Login', 'Workspace', 'SearchElements'
 
       this.get('workspaces').on('add remove', function(){ this.sync("update", this); }, this );
       this.on('change:currentWorkspace', function(){ this.sync("update", this); }, this);
+      this.on('change:isFirstExperience', function(){ this.sync("update", this); }, this);
       this.on('change:backgroundWorkspaces', function(){ this.sync("update", this); }, this);
 
     },

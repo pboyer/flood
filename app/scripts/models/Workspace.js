@@ -312,10 +312,12 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
 
             for (var i = 0; i < -diff2; i++){
 
-              x.get('outputConnections')
-                .last()
-                .slice(0)
-                .forEach(function(outConn){ x.workspace.removeConnection(outConn); })
+              var ocs = x.get('outputConnections')
+                .last();
+
+              if (ocs){
+                ocs.slice(0).forEach(function(outConn){ x.workspace.removeConnection(outConn); })
+              }
 
               outputConns.pop();
             }
