@@ -43,7 +43,6 @@
 
         </style>
 
-
     </head>
     
     <body>
@@ -350,7 +349,7 @@
           <div class="search-bottom-container">
 
             <i style="display:inline-block;" class="icon-search icon-white dim-button" ></i>
-            <input placeholder="Add a node..." class="library-search-input search"></input>
+            <input placeholder="Add a node..." id="bottom-search" class="library-search-input search"></input>
 
           </div>
 
@@ -498,23 +497,26 @@
 
       </script>
 
-      <script type="text/template" id="help-template">
+      <script type="text/template" id="feedback-template">
 
-        <div class="help-container">
-          <h2 class="help-title">Help</h2>
-          <h3 class="help-title">Add a node</h3>
-          <p>Use the node library in the bottom right corner or double click on your workspace to make a new node </p>
-          <h3 class="help-title">Remove a node</h3>
-          <p>Select the node and hit the delete/backspace key</p>
-          <h3 class="help-title">Making a connection</h3>
-          <p>Click and drag from an output port to an input port</p>
-          <h3 class="help-title">Removing a connection</h3>
-          <p>Click and drag away from the connections end port</p>
-          <h3 class="help-title">Select multiple nodes</h3>
-          <p>Hold shift while clicking on new nodes</p>
+        <div class="feedback-container">
+          <h3 class="feedback-title">Let me have it</h3>
+          <p>What''s broken in flood?</p>
         </div>
 
-        <i class="icon-remove exit-help" />
+      </script>
+
+      <script type="text/template" id="help-section-template">
+
+        <div class="enter-help-section" data-target-id="<%= targetId %>" style="left: <%= elementPosition[0] %>px; top: <%= elementPosition[1] %>px;">
+          ?
+        </div>
+        <div class="help-section" data-target-id="<%= targetId %>" style="left: <%= elementPosition[0] + offset[0] %>px; top: <%= elementPosition[1] + offset[1]  %>px;">
+          <span><%= title %> </span>
+          <p><%= text %></p>
+          <div class="exit-help-section" data-target-id="<%= targetId %>">Ok, got it</div>
+          <div class="exit-help" data-target-id="<%= targetId %>">Exit all</div>
+        </div>
 
       </script>
 
@@ -527,7 +529,7 @@
             var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']];
             (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
             g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
-            s.parentNode.ingruntsertBefore(g,s)}(document,'script'));
+            s.parentNode.inertBefore(g,s)}(document,'script'));
         </script> -->
 
     <!-- Application source. -->
