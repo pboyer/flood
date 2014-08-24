@@ -25,6 +25,7 @@ define(['backbone'], function(Backbone) {
 	  		}
 
 	  		that.set('failure', false);
+	  		that.trigger('success');
 	  	});
 
 	  }

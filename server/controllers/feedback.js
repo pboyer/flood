@@ -32,9 +32,9 @@ exports.postFeedback = function(req, res) {
     text: ns.message
 		}, function(err) {
 	    if (err) {
-	      return req.status(500).send({ msg: "Could not send feedback!  Try again later!" });
+	      return res.status(500).send({ msg: "Could not send feedback!  Try again later!" });
 	    }
-	    return req.send('success', { msg: 'Feedback has been sent successfully!' });
+	    return res.send('success', { msg: 'Feedback has been sent successfully!' });
 	  });
 
 };

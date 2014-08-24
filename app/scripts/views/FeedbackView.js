@@ -16,7 +16,7 @@ define(['backbone'], function(Backbone) {
       this.app = atts.app;
 
       this.model.on('change:failure', this.fail, this );
-      this.model.on('submitSuccess', this.success, this );
+      this.model.on('success', this.success, this );
     },
 
     render: function() {
