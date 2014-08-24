@@ -169,6 +169,29 @@ body {
 	font-weight: bold;
 }
 
+#feedback-box p {
+	font-style: 12px;
+	padding: 5px;
+}
+
+#feedback-sending-message {
+	display: none;
+	padding: 10px;
+	margin: 10px;
+	background-color: lightblue;
+	color: white;
+	font-weight: bold;
+}
+
+#feedback-success-message {
+	display: none;
+	padding: 10px;
+	margin: 10px;
+	background-color: green;
+	color: white;
+	font-weight: bold;
+}
+
 #feedback-failure-message {
 	display: none;
 	padding: 10px;
@@ -339,6 +362,7 @@ body {
 	border: 1px solid #AAA;
 	width: 200px;	
 	padding: 10px;
+	box-shadow: 1px 1px 10px #444;
 }
 
 .help-section span {
@@ -346,6 +370,10 @@ body {
 	font-size: 13px;
 	display: block;
 	padding-bottom: 8px;
+}
+
+#workspace-search-input-container {
+	box-shadow: 0 10px 12px #444;
 }
 
 .exit-help-section {
@@ -361,6 +389,7 @@ body {
 }
 
 .enter-help-section {
+	box-shadow: 0 0 10px white;
 	color: white;
 	position: absolute;
 	height: 24px;

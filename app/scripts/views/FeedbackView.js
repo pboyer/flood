@@ -25,14 +25,17 @@ define(['backbone'], function(Backbone) {
 
       this.subject = this.$el.find('#feedback-subject');
       this.message = this.$el.find('#feedback-message');
-      this.severity = this.$el.find('#feedback-severity');
       this.failureView = this.$el.find('#feedback-failure-message');
+      this.successView = this.$el.find('#feedback-success-message');
+      this.sendingView = this.$el.find('#feedback-sending-message');
 
       return this;
 
     },
 
     fail: function(){
+
+      this.sendingView.hide();
 
       if (!this.failureView) return;
 
@@ -47,7 +50,21 @@ define(['backbone'], function(Backbone) {
     },
 
     success: function(){
-      this.app.set("showingFeedback", false);
+
+      this.sendingView.hide();
+      this.successView.show();
+
+      var that = this;
+
+      setTimeout(function(){
+        that.app.set("showingFeedback", false);
+
+        that.subject.val("");
+        that.message.val("");
+
+        that.successView.fadeOut();
+      }, 800);
+
     },
 
     clickExit: function(e){
@@ -57,6 +74,7 @@ define(['backbone'], function(Backbone) {
     clickSend: function(e) {
       
       e.preventDefault();
+      this.sendingView.show();
       this.model.send({ subject: this.subject.val(), message: this.message.val() });
 
     }
