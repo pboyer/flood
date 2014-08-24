@@ -11,6 +11,8 @@ var smtpTransport = nodemailer.createTransport('SMTP', {
  }
 });
 
+var emailTarget = process.env.FEEDBACK_EMAIL;
+
 exports.postFeedback = function(req, res) {
 
 	if (!req.user) {
@@ -21,11 +23,18 @@ exports.postFeedback = function(req, res) {
 
 	var ns = req.body;
 
+	if (!emailTarget) return req.status(500).send({ msg: "Feedback temporarily unsupported" });
+
 	smtpTransport.sendMail({
     from: 'feedback@floodmodeler.com',
-    to: 'peter.b.boyer@gmail.com',
+    to: emailTarget,
     subject: "\"" + ns.subject + "\" says " + req.user.email,
     text: ns.message
-	});
+		}, function(err) {
+	    if (err) {
+	      return req.status(500).send({ msg: "Could not send feedback!  Try again later!" });
+	    }
+	    return req.send('success', { msg: 'Feedback has been sent successfully!' });
+	  });
 
 };
