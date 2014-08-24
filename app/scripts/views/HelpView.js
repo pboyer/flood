@@ -52,7 +52,7 @@ define(['backbone'], function(Backbone) {
 
     getHelpSection: function(e){
 
-      var ui = $(event.target);
+      var ui = $(e.target);
       var attr = ui.attr('data-target-id');
 
       return this.$el.find(".help-section[data-target-id='" + attr + "']");
@@ -62,7 +62,7 @@ define(['backbone'], function(Backbone) {
     clickEnterHelpSection: function(e){
 
       var ele = this.getHelpSection(e);
-      var ui = $(event.target);
+      var ui = $(e.target);
 
       ele.fadeIn();
       ui.fadeOut();

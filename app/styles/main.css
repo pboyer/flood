@@ -169,6 +169,15 @@ body {
 	font-weight: bold;
 }
 
+#feedback-failure-message {
+	display: none;
+	padding: 10px;
+	margin: 10px;
+	background-color: #FF7A7A;
+	color: white;
+	font-weight: bold;
+}
+
 .node-last-value-container:hover {
 	right: -100px;
 	left: -100px;
@@ -366,6 +375,37 @@ body {
 	margin: 30px;
 }
 
+#feedback {
+	z-index: 101;
+	display: none;
+	top: 0;
+	right: 0;
+	left: 0;
+	bottom: 0;
+	background-color: rgba(0,0,0,0.6);
+}
+
+#feedback-box {
+	background: whitesmoke;
+	border: 1px solid #AAA;
+	position: relative;
+	padding: 18px;
+	top: 70px;
+	width: 400px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: auto;
+}
+
+#feedback-box h3 {
+	color: grey;
+}
+
+#exit-feedback {
+	position: absolute;
+	right: 10px;
+	top: 10px;
+}
 
 #top_container { 
 	z-index: 100;

@@ -1,8 +1,9 @@
 CUSTOM NODES
 
+send feedback
+stl export doesn't work on firefox
 interactive help on first experience
 icons for undo/redo/copy/paste/switch focus
-send feedback
 polygon node
 
 preview scroll-x blocks view

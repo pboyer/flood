@@ -11,8 +11,12 @@ define([  'backbone',
           'HelpView',
           'Help',
           'LoginView',
-          'Login'], 
-          function(Backbone, App, WorkspaceView, Search, SearchView, WorkspaceControlsView, WorkspaceTabView, Workspace, WorkspaceBrowser, WorkspaceBrowserView, HelpView, Help, LoginView, Login) {
+          'Login',
+          'FeedbackView',
+          'Feedback' ], 
+          function(Backbone, App, WorkspaceView, Search, SearchView, WorkspaceControlsView, 
+            WorkspaceTabView, Workspace, WorkspaceBrowser, WorkspaceBrowserView, HelpView, 
+            Help, LoginView, Login, FeedbackView, Feedback ) {
 
   return Backbone.View.extend({
 
@@ -48,6 +52,7 @@ define([  'backbone',
       'click #settings-button': 'showSettings',
       'click #workspace_hide' : 'toggleViewer',
       'click #workspace-browser-button': 'toggleBrowser',
+      'click #feedback-button': 'showFeedback',
 
       'click #add-project-workspace' : 'newWorkspace',
       'click #add-node-workspace' : 'newNodeWorkspace',
