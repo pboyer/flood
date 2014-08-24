@@ -41,13 +41,13 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView'], function(Backbone, 
       if (this.model.get('selected')) {
 
         var meshMat = new THREE.MeshPhongMaterial({color: 0x66d6ff });
-        var partMat = new THREE.ParticleBasicMaterial({color: 0x66d6ff, size: 3, sizeAttenuation: false});
+        var partMat = new THREE.ParticleBasicMaterial({color: 0x66d6ff, size: 5, sizeAttenuation: false});
         var lineMat = new THREE.LineBasicMaterial({ color: 0x66d6ff });
 
       } else {
 
         var meshMat = new THREE.MeshPhongMaterial({color: 0x999999});
-        var partMat = new THREE.ParticleBasicMaterial({color: 0x999999, size: 3, sizeAttenuation: false});
+        var partMat = new THREE.ParticleBasicMaterial({color: 0x999999, size: 5, sizeAttenuation: false});
         var lineMat = new THREE.LineBasicMaterial({ color: 0x000000 });
 
       }
@@ -226,7 +226,7 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView'], function(Backbone, 
               geom.add( new THREE.Mesh(g3, new THREE.MeshPhongMaterial({color: color})) );
               break;
             case 1:
-              geom.add( new THREE.ParticleSystem(g3, new THREE.ParticleBasicMaterial({color: color, size: 3, sizeAttenuation: false}) ));
+              geom.add( new THREE.ParticleSystem(g3, new THREE.ParticleBasicMaterial({color: color, size: 5, sizeAttenuation: false}) ));
               break;
             case 2:
               geom.add( new THREE.Line(g3, new THREE.LineBasicMaterial({ color: 0x000000 })));

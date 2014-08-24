@@ -125,10 +125,25 @@ body {
 	bottom: -26px;
 	padding: 3px;
 	border: 1px solid #999;
+
 	transition-delay: 0.3s;
 	-webkit-transition-delay: 0.3s; /* Safari */
-	transition-duration: 0.2s;
-	-webkit-transition-duration: 0.2s; /* Safari */
+	transition-duration: 0.1s;
+	-webkit-transition-duration: 0.1s; /* Safari */
+}
+
+.node:hover .node-last-value-container:hover {
+	right: -100px;
+	left: -100px;
+	height: 60px;
+	bottom: -60px;
+	overflow-x: scroll;
+	overflow-y: scroll;
+}
+
+.node:hover .node-last-value-container:hover .node-last-value {
+	width: 100%;
+	word-wrap: break-word;
 }
 
 .node-failed .node-last-value {
@@ -199,15 +214,6 @@ body {
 	background-color: #FF7A7A;
 	color: white;
 	font-weight: bold;
-}
-
-.node-last-value-container:hover {
-	right: -100px;
-	left: -100px;
-	height: 60px;
-	bottom: -60px;
-	overflow-x: scroll;
-	overflow-y: scroll;
 }
 
 .node-failure-message {

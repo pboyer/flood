@@ -48,11 +48,11 @@ define([  'backbone',
     events: {
       'click #save-button' : 'saveClick',
       'click .workspaces_curtain' : 'endSearch',
-      'click #help-button': 'showHelp',
+      'click #help-button': 'toggleHelp',
       'click #settings-button': 'showSettings',
       'click #workspace_hide' : 'toggleViewer',
       'click #workspace-browser-button': 'toggleBrowser',
-      'click #feedback-button': 'showFeedback',
+      'click #feedback-button': 'toggleFeedback',
 
       'click #add-project-workspace' : 'newWorkspace',
       'click #add-node-workspace' : 'newNodeWorkspace',
@@ -155,7 +155,6 @@ define([  'backbone',
       }
       
       if (this.model.get('showingHelp') === true){
-        // the workspace must be focused before showing help
         this.focusWorkspace();
         this.helpView.render();
         this.helpView.$el.fadeIn();  
@@ -177,12 +176,20 @@ define([  'backbone',
       }
     },
 
+    toggleHelp: function(){
+      this.model.set('showingHelp', !this.model.get('showingHelp'));
+    },
+
+    toggleFeedback: function(){
+      this.model.set('showingFeedback', !this.model.get('showingFeedback'));
+    },
+
     showHelp: function(){
       this.model.set('showingHelp', true);
     },
 
     hideHelp: function(){
-      this.model.set('showingHelp', true);
+      this.model.set('showingHelp', false);
     },
 
     showFeedback: function(){
@@ -190,7 +197,7 @@ define([  'backbone',
     },
 
     hideFeedback: function(){
-      this.model.set('showingFeedback', true);
+      this.model.set('showingFeedback', false);
     },
 
     showLogin: function(){
