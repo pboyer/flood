@@ -1,5 +1,5 @@
-define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Runner', 'Node', 'Marquee'], 
-    function(Backbone, Nodes, Connection, Connections, scheme, FLOOD, Runner, Node, Marquee) {
+define(['backbone', 'Nodes', 'Connection', 'Connections', 'FLOOD', 'Runner', 'Node', 'Marquee', 'WorkspaceResolver'], 
+    function(Backbone, Nodes, Connection, Connections, FLOOD, Runner, Node, Marquee, WorkspaceResolver) {
 
   return Backbone.Model.extend({
 
@@ -96,7 +96,7 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
 
       if ( this.get('isCustomNode') ) this.initializeCustomNode();
 
-      this.dependencyManager = new WorkspaceDependencyManager(null, { app : this.app, workspace : this });
+      this.dependencyManager = new WorkspaceResolver(null, { app : this.app, workspace : this });
       this.dependencyManager.resolveAll();
 
       this.app.trigger('workspaceLoaded', this);

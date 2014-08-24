@@ -114,6 +114,7 @@ require.config({
         Login: 'models/Login',
         WorkspaceBrowserElement: 'models/WorkspaceBrowserElement',
         WorkspaceBrowser: 'models/WorkspaceBrowser',
+        WorkspaceResolver: 'models/WorkspaceResolver',
 
         // backbone views
         AppView: 'views/AppView',
