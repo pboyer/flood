@@ -308,9 +308,7 @@ define(['backbone', 'FLOOD'],
       var indirectlyAffectedNodes = this.getIndirectlyAffectedCustomNodes( workspace.id );
 
       indirectlyAffectedNodes.forEach(function(x){
-
         x.trigger('updateRunner');
-
       });
 
       if (indirectlyAffectedNodes.length > 0) this.workspace.sync('update', this);
