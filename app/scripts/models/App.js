@@ -31,6 +31,13 @@ define(['backbone', 'Workspaces', 'Node', 'Login', 'Workspace', 'SearchElements'
       this.SearchElements = new SearchElements({app:this});
       this.SearchElements.fetch();
 
+      this.get('workspaces').on('remove', this.workspaceRemoved, this);
+    },
+
+    workspaceRemoved: function(){
+
+      // we need to determine the 
+
     },
 
     parse : function(resp) {

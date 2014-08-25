@@ -67,6 +67,8 @@ define(['backbone', 'FLOOD'],
 
       var index = this.awaitedWorkspaceDependencyIds.indexOf( workspace.id );
 
+      console.log(workspace)
+
       if (index < 0) return;
 
       this.awaitedWorkspaceDependencyIds.remove(index);
@@ -120,10 +122,14 @@ define(['backbone', 'FLOOD'],
       return cns.filter(function(cn){
 
         var id = cn.get('type').functionId
-          , wsd = thisApp.getLoadedWorkspace( id ).get('workspaceDependencyIds');
+          , ws = thisApp.getLoadedWorkspace( id );
+
+        if (!ws) return false;
+
+        var wsd = ws.get('workspaceDependencyIds');
         return id != functionId && wsd.indexOf( functionId ) != -1;
 
-      })
+      });
 
     },
 

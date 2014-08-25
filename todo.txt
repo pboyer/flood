@@ -1,12 +1,9 @@
 CUSTOM NODES
 
-cleanup background workspaces
+if you close a workspace and it's still in use 
+	- add it to hidden workspaces
+	- otherwise completely remove it
 
-when all the deps are loaded, do full cleanup
-
-
-cleanup dependencies has flawed logic
-	insure unnecessary deps are removed on startup
 stl export doesn't work on firefox
 icons for undo/redo/copy/paste/switch focus
 polygon node
