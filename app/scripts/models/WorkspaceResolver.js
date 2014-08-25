@@ -27,7 +27,7 @@ define(['backbone', 'FLOOD'],
 
       this.awaitedWorkspaceDependencyIds = [];
 
-      console.log(this.get('name') + " has dependencies: " + JSON.stringify( depIds) );
+      console.log(this.workspace.get('name') + " has dependencies: " + JSON.stringify( depIds) );
 
       var that = this;
 
@@ -48,7 +48,7 @@ define(['backbone', 'FLOOD'],
       var that = this;
       var deps = oldDeps.reduce(function(a,x){
 
-        var cns = that.getCustomNodesWithId(x);
+        var cns = that.workspace.getCustomNodesWithId(x);
 
         if ( cns && cns.length != 0 ) a.push(x);
         return a;
@@ -86,11 +86,11 @@ define(['backbone', 'FLOOD'],
       // console.log("Awaited workspace ids are " + this.awaitedWorkspaceDependencyIds );
 
       this.awaitedWorkspaceDependencyIds.remove(index);
-      this.sendDefinitionToRunner( workspace.id );
+      this.workspace.sendDefinitionToRunner( workspace.id );
       this.watchDependency( workspace );
       this.syncCustomNodesWithWorkspace( workspace );
 
-      if (this.awaitedWorkspaceDependencyIds.length === 0) this.run();
+      if (this.awaitedWorkspaceDependencyIds.length === 0) this.workspace.run();
 
     },
 
@@ -99,8 +99,8 @@ define(['backbone', 'FLOOD'],
       var that = this;
 
       var sync = function(){ that.syncCustomNodesWithWorkspace.call(that, customNodeWorkspace) }
-        , syncAndRequestRun = function(){ that.syncCustomNodesWithWorkspace.call(that, customNodeWorkspace) }
-        , syncAndUpdateRunner = function(){ that.syncCustomNodesWithWorkspace.call(that, customNodeWorkspace) };
+        , syncAndRequestRun = function(){ that.syncCustomNodesWithWorkspace.call(that, customNodeWorkspace); that.workspace.trigger('requestRun'); }
+        , syncAndUpdateRunner = function(){ that.syncCustomNodesWithWorkspace.call(that, customNodeWorkspace); that.workspace.trigger('updateRunner'); };
 
       customNodeWorkspace.on('change:name', sync, this);
       customNodeWorkspace.on('change:workspaceDependencyIds', sync, this);
@@ -129,37 +129,11 @@ define(['backbone', 'FLOOD'],
 
     },
 
-    getCustomNodeInputsOutputs: function(getOutputs){
-
-      var typeName = getOutputs ? "Output" : "Input";
-
-      return this.workspace.get('nodes').filter(function(x){
-        return x.get('type').typeName === typeName;
-      });
-
-    },
-
-    getCustomNodes: function(){
-
-      return this.workspace.get('nodes').filter(function(x){
-        return x.get('type') instanceof FLOOD.internalNodeTypes.CustomNode;
-      });
-
-    },
-
-    getCustomNodesWithId: function(functionId){
-
-      return this.workspace.getCustomNodes().filter(function(x){
-        return x.get('type').functionId === functionId;
-      });
-
-    },
-
     // for each custom node in the graph - does it depend on the changed functionId?
     // if so, return it
     getIndirectlyAffectedCustomNodes: function(functionId){
 
-      var cns = this.getCustomNodes();
+      var cns = this.workspace.getCustomNodes();
 
       var thisApp = this.app;
       return cns.filter(function(cn){
@@ -184,7 +158,7 @@ define(['backbone', 'FLOOD'],
     syncDirectlyAffectedCustomNodesWithWorkspace: function(workspace){
 
       // get the nodes directly affected by this change
-      var directlyAffectedCustomNodes = this.getCustomNodesWithId(workspace.id);
+      var directlyAffectedCustomNodes = this.workspace.getCustomNodesWithId(workspace.id);
 
       // get the workspace inputs/outputs
       var inputNodes = workspace.getCustomNodeInputsOutputs();
@@ -299,7 +273,7 @@ define(['backbone', 'FLOOD'],
 
       });
 
-      if (directlyAffectedCustomNodes.length > 0) this.workspace.sync('update', this);
+      if (directlyAffectedCustomNodes.length > 0) this.workspace.sync('update', this.workspace);
 
     },
 

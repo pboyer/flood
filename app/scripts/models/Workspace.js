@@ -1,5 +1,5 @@
-define(['backbone', 'Nodes', 'Connection', 'Connections', 'FLOOD', 'Runner', 'Node', 'Marquee', 'WorkspaceResolver'], 
-    function(Backbone, Nodes, Connection, Connections, FLOOD, Runner, Node, Marquee, WorkspaceResolver) {
+define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Runner', 'Node', 'Marquee', 'WorkspaceResolver'], 
+    function(Backbone, Nodes, Connection, Connections, scheme, FLOOD, Runner, Node, Marquee, WorkspaceResolver) {
 
   return Backbone.Model.extend({
 
@@ -96,29 +96,10 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'FLOOD', 'Runner', 'No
 
       if ( this.get('isCustomNode') ) this.initializeCustomNode();
 
-      this.dependencyManager = new WorkspaceResolver(null, { app : this.app, workspace : this });
-      this.dependencyManager.resolveAll();
+      this.resolver = new WorkspaceResolver(null, { app : this.app, workspace : this });
+      this.resolver.resolveAll();
 
       this.app.trigger('workspaceLoaded', this);
-
-    },
-
-    addWorkspaceDependency: function(id, watchDependency){
-      this.depedencyManager.addWorkspaceDependency(id, watchDependency);
-    },
-
-    syncCustomNodesWithWorkspace: function(workspace){
-      this.dependencyManager.syncCustomNodesWithWorkspace(workspace);
-    },
-
-    initializeRunner: function(){
-
-      this.runner = new Runner({id : this.get('_id') }, { workspace: this });
-
-      var that = this;
-      this.runner.on('change:isRunning', function(v){
-        that.set('isRunning', v.get('isRunning'));
-      });
 
     },
 
@@ -166,6 +147,52 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'FLOOD', 'Runner', 'No
 
         return json;
     },
+
+    addWorkspaceDependency: function(id, watchDependency){
+      this.resolver.addWorkspaceDependency(id, watchDependency);
+    },
+
+    syncCustomNodesWithWorkspace: function(workspace){
+      this.resolver.syncCustomNodesWithWorkspace(workspace);
+    },
+
+    initializeRunner: function(){
+
+      this.runner = new Runner({id : this.get('_id') }, { workspace: this });
+
+      var that = this;
+      this.runner.on('change:isRunning', function(v){
+        that.set('isRunning', v.get('isRunning'));
+      });
+
+    },
+
+    getCustomNodeInputsOutputs: function(getOutputs){
+
+      var typeName = getOutputs ? "Output" : "Input";
+
+      return this.get('nodes').filter(function(x){
+        return x.get('type').typeName === typeName;
+      });
+
+    },
+
+    getCustomNodes: function(){
+
+      return this.get('nodes').filter(function(x){
+        return x.get('type') instanceof FLOOD.internalNodeTypes.CustomNode;
+      });
+
+    },
+
+    getCustomNodesWithId: function(functionId){
+
+      return this.getCustomNodes().filter(function(x){
+        return x.get('type').functionId === functionId;
+      });
+
+    },
+
 
     zoomIn: function(){
 
