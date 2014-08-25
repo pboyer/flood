@@ -11,26 +11,19 @@ define(['backbone', 'FLOOD'],
     },
 
     resolveAll: function(){
-
-      // // this.cleanupDependencies();
       this.initializeDependencies( this.workspace.get('workspaceDependencyIds') );
-
     },
 
     initializeDependencies: function(depIds){
 
       if (depIds.length === 0 || !depIds ) {
-        console.log(this.workspace.get('name') + " has no dependencies");
         this.workspace.trigger('requestRun');
         return;
       }
 
       this.awaitedWorkspaceDependencyIds = [];
 
-      console.log(this.workspace.get('name') + " has dependencies: " + JSON.stringify( depIds) );
-
       var that = this;
-
       this.app.get('workspaces').on('add', function(ws){ that.resolveDependency.call(that, ws); }, this);
 
       depIds.forEach(function(x){
@@ -39,23 +32,21 @@ define(['backbone', 'FLOOD'],
 
     },
 
-    cleanupDependencies: function(){
-
-      var oldDeps = this.workspace.get('workspaceDependencyIds');;
-
-      // console.log("Before cleaning up, " + this.get('name') + " has dependencies: " + JSON.stringify( oldDeps ) );
+    generateAllDependencies: function(){
 
       var that = this;
-      var deps = oldDeps.reduce(function(a,x){
+      var directDependencies = this.workspace.getCustomNodes().map(function(x){ return x.get('type').functionId; });
+      var indirectDependencies = directDependencies.map(function(x){ return that.app.get('workspaces').get(x); }).map(function(x){ return x.get('workspaceDependencyIds'); });
 
-        var cns = that.workspace.getCustomNodesWithId(x);
+      var allDependencyLists = directDependencies.concat( indirectDependencies );
 
-        if ( cns && cns.length != 0 ) a.push(x);
-        return a;
+      return _.union.apply(null, allDependencyLists );
 
-      }, []);
+    },
 
-      this.workspace.set('workspaceDependencyIds', deps);
+    cleanupDependencies: function(){
+
+      this.workspace.set('workspaceDependencyIds', this.generateAllDependencies());
 
     },
 
@@ -66,15 +57,11 @@ define(['backbone', 'FLOOD'],
  
       this.awaitedWorkspaceDependencyIds.push(id);
       
-      this.app.setWorkspaceToBackground( id );
       this.app.loadWorkspace( id ); 
 
     },
 
     resolveDependency: function(workspace){
-
-      // console.log(this.get('name') + " resolve dep with " + workspace.id );
-      // console.log(this.get('name') + " still awaits " + this.awaitedWorkspaceDependencyIds );
 
       if (workspace.id === this.id) return;
 
@@ -82,15 +69,15 @@ define(['backbone', 'FLOOD'],
 
       if (index < 0) return;
 
-      // console.log('Resolving dependency for ' + this.get("name") + " with " + workspace.id );
-      // console.log("Awaited workspace ids are " + this.awaitedWorkspaceDependencyIds );
-
       this.awaitedWorkspaceDependencyIds.remove(index);
       this.workspace.sendDefinitionToRunner( workspace.id );
       this.watchDependency( workspace );
       this.syncCustomNodesWithWorkspace( workspace );
 
-      if (this.awaitedWorkspaceDependencyIds.length === 0) this.workspace.run();
+      if (this.awaitedWorkspaceDependencyIds.length === 0) {
+        this.workspace.run();
+        this.cleanupDependencies();
+      }
 
     },
 
@@ -111,8 +98,6 @@ define(['backbone', 'FLOOD'],
 
     addWorkspaceDependency: function( id, watchDependency ){
 
-      // console.log('Adding ' + id + " as a dependency for " + this.get('name'));
-
       var ws = this.app.getLoadedWorkspace(id);
 
       if (!ws) throw new Error("You tried to add an unloaded workspace as a dependency!")
@@ -123,14 +108,10 @@ define(['backbone', 'FLOOD'],
         , currentDeps = this.workspace.get('workspaceDependencyIds')
         , unionDeps = _.union( [id], currentDeps, depDeps );
 
-      // console.log('After adding dependencies, the dependencies for ' + this.get('name') + " is now " + unionDeps );
-
       this.workspace.set( 'workspaceDependencyIds', unionDeps );
 
     },
 
-    // for each custom node in the graph - does it depend on the changed functionId?
-    // if so, return it
     getIndirectlyAffectedCustomNodes: function(functionId){
 
       var cns = this.workspace.getCustomNodes();
@@ -167,7 +148,6 @@ define(['backbone', 'FLOOD'],
       directlyAffectedCustomNodes.forEach(function(x){
 
         // cleanup hanging input connections
-
           var inputConns = x.get('inputConnections');
           var diff = inputNodes.length - inputConns.length;
 

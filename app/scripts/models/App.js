@@ -30,6 +30,7 @@ define(['backbone', 'Workspaces', 'Node', 'Login', 'Workspace', 'SearchElements'
 
       this.SearchElements = new SearchElements({app:this});
       this.SearchElements.fetch();
+
     },
 
     parse : function(resp) {
@@ -92,9 +93,7 @@ define(['backbone', 'Workspaces', 'Node', 'Login', 'Workspace', 'SearchElements'
 
       var workspaces = this.get('workspaces').where({ _id: id });
 
-      if (workspaces.length === 0) {
-        return undefined;
-      }
+      if (workspaces.length === 0) return undefined;
 
       return workspaces[0];
 
@@ -112,9 +111,7 @@ define(['backbone', 'Workspaces', 'Node', 'Login', 'Workspace', 'SearchElements'
         if (callback) callback( ws );
 
       }).fail(function(){
-
         console.error("failed to get new workspace");
-
       });
 
     },
@@ -134,9 +131,7 @@ define(['backbone', 'Workspaces', 'Node', 'Login', 'Workspace', 'SearchElements'
         if (callback) callback( ws );
 
       }).fail(function(){
-
         console.error("failed to get new workspace");
-
       });
 
     },
@@ -154,9 +149,7 @@ define(['backbone', 'Workspaces', 'Node', 'Login', 'Workspace', 'SearchElements'
         if (callback) callback( ws );
 
       }).fail(function(){
-
         console.error("failed to get workspace with id: " + id);
-
       });
 
     },
@@ -167,7 +160,7 @@ define(['backbone', 'Workspaces', 'Node', 'Login', 'Workspace', 'SearchElements'
 
     setWorkspaceToBackground: function(id){
 
-      if ( !this.isBackgroundWorkspace(id) ){
+      if ( !this.isBackgroundWorkspace( id ) ){
         var copy = this.get('backgroundWorkspaces').slice(0);
         copy.push(id);
         this.set('backgroundWorkspaces', copy);
@@ -178,11 +171,9 @@ define(['backbone', 'Workspaces', 'Node', 'Login', 'Workspace', 'SearchElements'
     removeWorkspaceFromBackground: function( id ){
 
       if ( this.isBackgroundWorkspace(id) ){
-
         var copy = this.get('backgroundWorkspaces').slice(0);
         copy.remove(copy.indexOf(id));
         this.set('backgroundWorkspaces', copy);
-
       }
 
     },

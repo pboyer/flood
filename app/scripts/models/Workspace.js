@@ -319,8 +319,6 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
           }
         });
 
-        console.log(connCount, " connections copied")
-
       this.app.set('clipboard', { nodes: copyNodes, connections: copyConns });
 
     },
@@ -719,6 +717,8 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
                             });
 
       this.runner.run( bottomNodes );
+
+      console.log(this.app.attributes);
 
     },
 

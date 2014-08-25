@@ -111,6 +111,7 @@ body {
 	fill:none; 
 	stroke-width: 3.2;
 	stroke:#777;
+	box-shadow: 1px 1px 10px red;
 }
 
 .partial-function-connection {

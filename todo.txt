@@ -1,6 +1,10 @@
 CUSTOM NODES
 
-preview scroll-x blocks view
+cleanup background workspaces
+
+when all the deps are loaded, do full cleanup
+
+
 cleanup dependencies has flawed logic
 	insure unnecessary deps are removed on startup
 stl export doesn't work on firefox
