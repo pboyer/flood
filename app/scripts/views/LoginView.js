@@ -22,7 +22,7 @@ define(['backbone'], function(Backbone) {
       this.model.on('change:failureMessage', this.render, this);
 
       var that = this;
-      $('#login-button').click(function(){ that.tabClick.apply(that); });
+      $('#login-button').click(function(){ that.tabClick.call(that); });
     },
 
     rendered : false,
@@ -30,8 +30,12 @@ define(['backbone'], function(Backbone) {
     render: function() {
 
       if ( !this.rendered ) {
-        this.$el.html( this.template( this.model.toJSON() ) );
+        this.$el.find('.login-container').html( this.template( this.model.toJSON() ) );
         this.rendered = true;
+        this.$el.find('#title-grey').css('height', '50px');
+
+        var that = this;
+        setTimeout(function(){ that.$el.find('.login-container').fadeIn(); }, 200);
       }
 
       var failureMessage = this.$el.find('#login-failure-message');
@@ -46,7 +50,7 @@ define(['backbone'], function(Backbone) {
       if (this.model.get('showing') === true){
         this.$el.show();  
       } else {
-        this.$el.hide();
+        this.$el.fadeOut();
       }
 
       this.renderLoginState();
@@ -76,10 +80,8 @@ define(['backbone'], function(Backbone) {
     renderLoginState: function(){
 
       if( this.model.get('isLoggedIn') ){
-        $('#login-button').html("Logout");
         this.model.hide();
       } else {
-        $('#login-button').html("Login");
         this.$el.show();
       }
 
@@ -88,11 +90,14 @@ define(['backbone'], function(Backbone) {
 
     tabClick: function(){
 
-      if (this.model.get('isLoggedIn')){
-        this.model.logout();
-      } else {
-        this.model.toggle();
-      }
+      console.log('hi!')
+
+      console.log(this.model);
+
+      this.model.logout();
+        
+      if (!this.model.get('isLoggedIn')) this.model.toggle();
+        
 
     },
 

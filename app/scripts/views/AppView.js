@@ -23,7 +23,7 @@ define([  'backbone',
     el: '#app',
 
     initialize: function() { 
-      
+
       this.listenTo(this.model, 'change', this.render);
       this.$workspace_tabs = this.$('#workspace-tabs');
 
@@ -67,7 +67,7 @@ define([  'backbone',
 
       var that = this;
 
-      if (that.model.login.get('isLoggedIn')  && that.model.get('isFirstExperience')){
+      if (that.model.login.get('isLoggedIn') && that.model.get('isFirstExperience')){
         setTimeout(function(){
           that.model.set( 'showingHelp', true);
           that.model.set( 'isFirstExperience', false );
