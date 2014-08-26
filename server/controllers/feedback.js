@@ -11,7 +11,7 @@ var smtpTransport = nodemailer.createTransport('SMTP', {
  }
 });
 
-var emailTarget = process.env.FEEDBACK_EMAIL;
+var emailTarget = secrets.feedback.email;
 
 exports.postFeedback = function(req, res) {
 
@@ -23,7 +23,7 @@ exports.postFeedback = function(req, res) {
 
 	var ns = req.body;
 
-	if (!emailTarget) return req.status(500).send({ msg: "Feedback temporarily unsupported" });
+	if (!emailTarget) return res.status(500).send({ msg: "Feedback temporarily unsupported" });
 
 	smtpTransport.sendMail({
     from: 'feedback@floodmodeler.com',

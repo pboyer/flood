@@ -5,6 +5,10 @@ module.exports = {
 
   localAuth: true,
 
+  feedback: { 
+    email: process.env.FEEDBACK_EMAIL || "Your email"
+  },:w
+
   mailgun: {
     login: process.env.MAILGUN_LOGIN || 'Your Mailgun SMTP Username',
     password: process.env.MAILGUN_PASSWORD || 'Your Mailgun SMTP Password'
