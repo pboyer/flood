@@ -7,7 +7,7 @@ module.exports = {
 
   feedback: { 
     email: process.env.FEEDBACK_EMAIL || "Your email"
-  },:w
+  },
 
   mailgun: {
     login: process.env.MAILGUN_LOGIN || 'Your Mailgun SMTP Username',
