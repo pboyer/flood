@@ -125,9 +125,9 @@ exports.putMySession = function(req, res) {
 
 				w.workspaceDependencyIds = x.workspaceDependencyIds || w.workspaceDependencyIds;
 				w.isCustomNode = ( x.isCustomNode != undefined ) ? x.isCustomNode : w.isCustomNode;
-				w.isFirstExperience = false;
+				w.isModified = true;
 
-				w.markModified("workspaceDependencyIds isCustomNode isFirstExperience name nodes connections currentWorkspace selectedNodes zoom lastSaved undoStack redoStack");
+				w.markModified("workspaceDependencyIds isCustomNode isModified name nodes connections currentWorkspace selectedNodes zoom lastSaved undoStack redoStack");
 
 				w.save(function(se){
 					if (se) return callback(se);
@@ -154,10 +154,10 @@ exports.putMySession = function(req, res) {
 			// TODO: validate ids
 			s.workspaces = ns.workspaces.map(function(x){ return x._id; });
 			s.currentWorkspace = ns.currentWorkspace; 
-			s.isModified = true;
+			s.isFirstExperience = false;
 			s.lastSaved = Date.now();
 
-			s.markModified('isModified workspaces currentWorkspace lastSave name');
+			s.markModified('isFirstExperience workspaces currentWorkspace lastSave name');
 
 			s.save(function(e){
 				if (e) return res.status(500).send("Failed to save session");

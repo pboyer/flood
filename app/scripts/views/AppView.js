@@ -35,8 +35,8 @@ define([  'backbone',
       this.model.on('change:showingHelp', this.viewHelp, this);
       this.model.on('change:showingBrowser', this.viewBrowser, this);
 
-      this.model.login.on('change:isLoggedIn', this.showHelpOnFirstExperience, this );
       this.model.login.on('change:showing', this.showHelpOnFirstExperience, this );
+      this.model.login.on('change:isLoggedIn', this.showHelpOnFirstExperience, this );
 
       $(document).bind('keydown', $.proxy( this.keydownHandler, this) );
 
@@ -66,14 +66,13 @@ define([  'backbone',
     showHelpOnFirstExperience: function(){
 
       var that = this;
-
-      if (that.model.login.get('isLoggedIn') && that.model.get('isFirstExperience')){
+      
+      if (this.model.login.get('isLoggedIn') && this.model.get('isFirstExperience')){
         setTimeout(function(){
           that.model.set( 'showingHelp', true);
-          that.model.set( 'isFirstExperience', false );
          }, 800);
       } else {
-        that.model.set( 'showingHelp', false);
+        this.model.set( 'showingHelp', false);
       }
 
     },

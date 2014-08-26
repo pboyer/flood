@@ -34,8 +34,7 @@ define(['backbone'], function(Backbone) {
         this.rendered = true;
         this.$el.find('#title-grey').css('height', '50px');
 
-        var that = this;
-        setTimeout(function(){ that.$el.find('.login-container').fadeIn(); }, 200);
+        this.$el.find('.login-container').show(); 
       }
 
       var failureMessage = this.$el.find('#login-failure-message');
@@ -50,7 +49,7 @@ define(['backbone'], function(Backbone) {
       if (this.model.get('showing') === true){
         this.$el.show();  
       } else {
-        this.$el.fadeOut();
+        this.$el.hide();
       }
 
       this.renderLoginState();
@@ -90,14 +89,11 @@ define(['backbone'], function(Backbone) {
 
     tabClick: function(){
 
-      console.log('hi!')
-
-      console.log(this.model);
-
-      this.model.logout();
-        
-      if (!this.model.get('isLoggedIn')) this.model.toggle();
-        
+      if (this.model.get('isLoggedIn')){
+        this.model.logout();
+      } else {
+        this.model.toggle();
+      }
 
     },
 
