@@ -15,30 +15,59 @@
         <style>
 
           #login {
+            background: #e3e3e3;
             text-align: center;
             z-index: 120;
             right: 0;
             left: 0;
             top: 0;
             bottom: 0;
-            padding: 100px;
-            background-color: #444;
+            padding: 40px;
           }
 
-          #login h1 {font-size: 110px;}
+          #login h1 { 
+            font-size: 150px;
+          }
+
+          .title-box {
+            width: 500px;
+            left: 50%;
+            margin-left: -250px;
+
+            position: absolute;
+            overflow: hidden;
+
+            transition: height 2s;
+            transition-timing-function: ease-in;
+          }
+
+          #title-grey {
+            height: 145px;
+            z-index: 122;
+            color: #555;
+          }
+  
+          #title-blue {
+            position: absolute;
+            color: #589cc8;
+          }
 
           .form-group {padding: 5px;}
 
           .form-group label { color: #AAA; }
 
           .login-container {
-            width: 200px;
+            display: none;
+            padding-top: 180px;
+            width: 300px;
             margin-left: auto;
             margin-right: auto;
           }
 
           .login-container a {
-            color: #DDD;
+            color: #444;
+            font-weight: bold;
+            font-size: 15px;
           }
 
         </style>
@@ -67,7 +96,7 @@
             </div>
 
             <div id="more-menu">
-              <div id="login-button" class="menu-element"></div>
+              <div id="login-button" class="menu-element">Logout</div>
               <div id="help-button" class="menu-element">Help</div>
               <div id="workspace-browser-button" class="menu-element">Workspaces</div>
               <div id="feedback-button" class="menu-element">Send feedback</div>
@@ -85,12 +114,18 @@
           </div>
 
           <div id="login" class="row col">
-             <div class="login-container">
+              
+            <div id="title-container">
+              <div class="title-box" id="title-grey">
+                <h1>flood</h1>
+              </div>
 
-              <h1>flood</h1>
+              <div class="title-box" id="title-blue">
+                <h1>flood</h1>
+              </div>
+            </div>
 
-              <h4>wait for it...</h4>
-
+            <div class="login-container">
             </div>
           </div>
 
@@ -111,6 +146,12 @@
         </div>
 
       </body>
+
+      <script>
+        setTimeout(function(){ 
+          document.getElementById("title-grey").style.height = "50px";
+        }, 10);
+      </script>
 
       <script type="text/template" id="node-template">
 
@@ -440,66 +481,58 @@
 
       <script type="text/template" id="login-template">
 
-        <div class="login-container">
-
-          <h1>flood</h1>
-
-          <h4>visual programming on the web</h4>
-
-          <div id="tab-button-container">
-            <div id="login-tab-button" class="tab-button tab-button-hilite"><a href="#">Login</a></div>
-            <div id="signup-tab-button" class="tab-button"><a href="#">Signup</a></div>
-          </div>
-
-          <div id="login-failure-message">
-          </div>
-
-          <form id="signup-form" style="display:none">
-
-            <input type="hidden" name="_csrf">
-
-            <div class="form-group">
-              <label for="email" class="control-label">Email</label>
-              <input type="email" name="email" id="email" placeholder="Email" autofocus class="form-control">
-            </div>
-
-            <div class="form-group">
-              <label for="password" class="control-label">Password</label>
-              <input type="password" name="password" id="password" placeholder="Password" class="form-control">
-            </div>
-
-            <div class="form-group">
-              <label for="confirmPassword" class="control-label">Confirm Password</label>
-              <input type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirm Password" class="form-control">
-            </div>
-
-            <div class="form-group">
-              <button type="submit" class="btn btn-success"><i class="fa fa-check"></i>Signup</button>
-            </div>
-
-          </form>
-
-          <form id="login-form" style="display:none">
-
-            <input type="hidden" name="_csrf">
-
-            <div class="form-group">
-              <label for="email" class="control-label">Email</label>
-              <input type="text" name="email" id="login-email" placeholder="Email" autofocus="" class="form-control">
-            </div>
-
-            <div class="form-group">
-              <label for="password" class="control-label">Password</label>
-              <input type="password" name="password" id="login-password" placeholder="Password" class="form-control">
-            </div>
-
-            <div class="form-group">
-              <button type="submit" id="submit-login" class="btn btn-primary"><i class="fa fa-unlock-alt"></i>Login</button>
-              <a href="/forgot" class="btn btn-link">Forgot your password?</a>
-            </div>
-
-          </form>
+        <div id="tab-button-container">
+          <div id="login-tab-button" class="tab-button tab-button-hilite"><a href="#">Login</a></div>
+          <div id="signup-tab-button" class="tab-button"><a href="#">Signup</a></div>
         </div>
+
+        <div id="login-failure-message">
+        </div>
+
+        <form id="signup-form" style="display:none">
+
+          <input type="hidden" name="_csrf">
+
+          <div class="form-group">
+            <label for="email" class="control-label">Email</label>
+            <input type="email" name="email" id="email" placeholder="Email" autofocus class="form-control">
+          </div>
+
+          <div class="form-group">
+            <label for="password" class="control-label">Password</label>
+            <input type="password" name="password" id="password" placeholder="Password" class="form-control">
+          </div>
+
+          <div class="form-group">
+            <label for="confirmPassword" class="control-label">Confirm Password</label>
+            <input type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirm Password" class="form-control">
+          </div>
+
+          <div class="form-group">
+            <button type="submit" class="btn btn-success"><i class="fa fa-check"></i>Signup</button>
+          </div>
+
+        </form>
+
+        <form id="login-form" style="display:none">
+
+          <input type="hidden" name="_csrf">
+
+          <div class="form-group">
+            <label for="email" class="control-label">Email</label>
+            <input type="text" name="email" id="login-email" placeholder="Email" autofocus="" class="form-control">
+          </div>
+
+          <div class="form-group">
+            <label for="password" class="control-label">Password</label>
+            <input type="password" name="password" id="login-password" placeholder="Password" class="form-control">
+          </div>
+
+          <div class="form-group">
+            <button type="submit" id="submit-login" class="btn btn-primary"><i class="fa fa-unlock-alt"></i>Login</button>
+          </div>
+
+        </form>
 
       </script>
 
