@@ -31,6 +31,7 @@
 
           #login h1 { 
             font-size: 150px;
+            text-shadow: 0 1px white;
           }
 
           .title-box {
@@ -48,7 +49,7 @@
           #title-grey {
             height: 145px;
             z-index: 122;
-            color: #555;
+            color: #333;
           }
   
           #title-blue {
@@ -66,6 +67,11 @@
             width: 300px;
             margin-left: auto;
             margin-right: auto;
+          }
+
+          .login-container h5 {
+            color: #666;
+            text-shadow: 0 1px white;
           }
 
           .login-container a {
@@ -153,7 +159,7 @@
 
       <script>
         setTimeout(function(){ 
-          document.getElementById("title-grey").style.height = "50px";
+          document.getElementById("title-grey").style.height = "10px";
         }, 10);
       </script>
 
@@ -485,6 +491,7 @@
 
       <script type="text/template" id="login-template">
 
+        <h5>Visual programming on the web</h5>
         <div id="tab-button-container">
           <div id="login-tab-button" class="tab-button tab-button-hilite"><a href="#">Login</a></div>
           <div id="signup-tab-button" class="tab-button"><a href="#">Signup</a></div>

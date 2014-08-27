@@ -412,7 +412,7 @@ body {
 }
 
 #feedback {
-	z-index: 101;
+	z-index: 130;
 	display: none;
 	top: 0;
 	right: 0;

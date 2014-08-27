@@ -32,7 +32,6 @@ define(['backbone'], function(Backbone) {
       if ( !this.rendered ) {
         this.$el.find('.login-container').html( this.template( this.model.toJSON() ) );
         this.rendered = true;
-        this.$el.find('#title-grey').css('height', '50px');
 
         this.$el.find('.login-container').show(); 
       }
