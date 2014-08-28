@@ -66,7 +66,7 @@ define([  'backbone',
     showHelpOnFirstExperience: function(){
 
       var that = this;
-      
+
       if (this.model.login.get('isLoggedIn') && this.model.get('isFirstExperience')){
         setTimeout(function(){
           that.model.set( 'showingHelp', true);

@@ -142,6 +142,7 @@ module.exports = function (grunt) {
                     '<%= yeoman.dist %>/style.min.css': [
                         '.tmp/styles/{,*/}*.css',
                         '<%= yeoman.app %>/bower_components/jquery.ui/themes/base/*.css',
+                        '<%= yeoman.app %>/bower_components/components-font-awesome/css/font-awesome.min.css',
                         '<%= yeoman.app %>/styles/{,*/}*.css',
                     ]
                 }
@@ -160,10 +161,20 @@ module.exports = function (grunt) {
                         '*.html',
                         '*.json',
                         'images/{,*/}*.{webp,gif}',
-                        'bower_components/jquery.ui/themes/base/*.css',
                         'bower_components/jquery.ui/themes/base/images/*.png',
-                        'bower_components/pace/pace.min.js',
                         'scripts/lib/flood/*.js'
+                    ]
+                }]
+            },
+            fonts: {
+                files: [{
+                    expand: true,
+                    dot: true,
+                    flatten: true,
+                    cwd: '<%= yeoman.app %>',
+                    dest: '<%= yeoman.dist %>/fonts',
+                    src: [
+                        'bower_components/components-font-awesome/fonts/*.{ttf,eot,svg,woff,otf}'
                     ]
                 }]
             }

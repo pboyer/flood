@@ -12,6 +12,7 @@
 
         <!-- build:css style.min.css -->
         <link rel="stylesheet" href="bower_components/jquery.ui/themes/base/jquery.ui.all.css">
+        <link rel="stylesheet" href="bower_components/components-font-awesome/css/font-awesome.min.css">
         <link rel="stylesheet" href="styles/bootstrap.css">
         <link rel="stylesheet" href="styles/main.css">
         <!-- /build -->
@@ -42,8 +43,8 @@
             position: absolute;
             overflow: hidden;
 
-            transition: height 2s;
-            transition-timing-function: ease-in;
+            transition: height 3s;
+            transition-timing-function: ease-out;
           }
 
           #title-grey {
@@ -69,6 +70,7 @@
           }
 
           .login-container h5 {
+            font-size: 18px;
             color: #666;
             text-shadow: 0 1px white;
           }
@@ -105,10 +107,19 @@
             </div>
 
             <div id="more-menu">
-              <div id="login-button" class="menu-element">Logout</div>
-              <div id="help-button" class="menu-element">Help</div>
-              <div id="workspace-browser-button" class="menu-element">Workspaces</div>
-              <div id="feedback-button" class="menu-element">Send feedback</div>
+              <div id="login-button" class="menu-element">
+                <i class="fa fa-user fa-fw"></i>
+                Logout
+              </div>
+              <div id="help-button" class="menu-element">
+                <i class="fa fa-question fa-fw"></i>Help
+              </div>
+              <div id="feedback-button" class="menu-element">
+                <i class="fa fa-comment fa-fw"></i>Feedback
+              </div>
+              <div id="workspace-browser-button" class="menu-element">
+                <i class="fa fa-list-ul fa-fw"></i>Workspaces
+              </div>
             </div>
   
           </div> 
@@ -116,7 +127,7 @@
           <div id="workspaces">
 
             <div id="workspace_hide" class="rightside workspace-search-button-active">
-              Switch Focus
+              <span>3D</span> <i class="fa fa-fw fa-cube fa-2x" style="margin-left: 10px"></i>
             </div>
             <div class="workspaces_curtain row"></div>
 
@@ -291,7 +302,9 @@
       <script type="text/template" id="workspace-tab-template">
 
         <i class="icon-pencil dim-button edit-button" style="visibility: hidden; margin-left: 10px"></i>
-        <span class="workspace-tab-function <%= isCustomNode ? "" : "hidden" %>">f</span>
+        <span class="workspace-tab-function <%= isCustomNode ? "" : "hidden" %>">
+          <i class="fa fa-bolt"></i>
+        </span>
         <input class="workspace-name" disabled="disabled" value="<%= name %>"></input>
         <i class="icon-remove dim-button remove-button"></i>
 
@@ -416,13 +429,13 @@
 
           <div id="undo-button" class="workspace-search-button workspace-search-button-active">
 
-            Undo
+            <i class="fa fa-lg fa-fw dim-button fa-rotate-left white-icon"></i>
 
           </div>
 
           <div id="redo-button" class="workspace-search-button workspace-search-button-active">
 
-            Redo
+             <i class="fa fa-lg fa-fw  dim-button fa-repeat white-icon"></i>
 
           </div>
 
@@ -432,19 +445,19 @@
 
           <div id="copy-button" class="workspace-search-button workspace-search-button-active">
 
-            Copy
+            <i class="fa fa-lg fa-fw dim-button fa-copy white-icon"></i>
 
           </div>
 
           <div id="paste-button" class="workspace-search-button workspace-search-button-active">
 
-            Paste
+            <i class="fa fa-lg fa-fw dim-button fa-paste white-icon"></i>
 
           </div>
 
           <div id="delete-button" class="workspace-search-button workspace-search-button-active">
 
-            Delete
+            <i class="fa fa-lg fa-fw dim-button fa-eraser white-icon"></i>
 
           </div>
 
@@ -452,17 +465,16 @@
 
         <div class="workspace-search-container">
 
-          <div style="display: inline-block; color: #444; padding-left: 8px">Zoom</div>
           <div id="zoomin-button" class="workspace-search-button workspace-search-button-active">
-            +
+              <i class="fa fa-lg fa-fw dim-button fa-search-plus white-icon"></i>
           </div>
 
           <div id="zoomout-button" class="workspace-search-button workspace-search-button-active">
-            -
+            <i class="fa fa-lg fa-fw dim-button fa-search-minus white-icon"></i>
           </div>
 
           <div id="zoomreset-button" class="workspace-search-button workspace-search-button-active">
-            Reset
+             <i class="fa fa-lg fa-fw dim-button fa-arrows white-icon"></i>
           </div>
 
         </div>
@@ -470,7 +482,7 @@
         <div class="workspace-search-container">
 
           <div id="export-button" class="workspace-search-button workspace-search-button-active">
-            Export STL
+            <i class="fa fa-lg fa-fw dim-button fa-reply-all white-icon"></i>
           </div>
 
         </div>
@@ -520,7 +532,7 @@
           </div>
 
           <div class="form-group">
-            <button type="submit" class="btn btn-success"><i class="fa fa-check"></i>Signup</button>
+            <button type="submit" class="btn btn-success"><i class="fa fa-fw fa-check"></i>Signup</button>
           </div>
 
         </form>
@@ -540,7 +552,7 @@
           </div>
 
           <div class="form-group">
-            <button type="submit" id="submit-login" class="btn btn-primary"><i class="fa fa-unlock-alt"></i>Login</button>
+            <button type="submit" id="submit-login" class="btn btn-primary"><i class="fa fa-fw fa-unlock-alt"></i>Login</button>
           </div>
 
         </form>
@@ -551,7 +563,9 @@
 
         <div id="feedback-box">
           <i id="exit-feedback" class="icon-remove dim-button"></i>
-          <h3 id="feedback-title">Send Feedback</h3>
+          <h3 id="feedback-title">
+            <i class="fa fa-comment fa-2x fa-fw" style="padding-right: 10px"></i>Send Feedback
+          </h3>
           <p>Please drop us a line if with your comments, suggestions, or issues.</p>
 
           <div id="feedback-failure-message"></div>

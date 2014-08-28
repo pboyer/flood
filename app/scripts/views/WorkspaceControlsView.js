@@ -59,20 +59,22 @@ define(['backbone', 'List', 'SearchElementView', 'bootstrap'], function(Backbone
 
       this.list = new List(this.el, options);
 
-      var del = { show: 300 };
-
       // build button tooltips
-      this.$el.find('#undo-button').tooltip({title: "Ctrl/Cmd Z", delay: del});
-      this.$el.find('#redo-button').tooltip({title: "Ctrl/Cmd Y", delay: del});
+      this.$el.find('#undo-button').tooltip({title: "Undo"});
+      this.$el.find('#redo-button').tooltip({title: "Redo"});
 
-      this.$el.find('#copy-button').tooltip({title: "Ctrl/Cmd C", delay: del});
-      this.$el.find('#paste-button').tooltip({title: "Ctrl/Cmd V", delay: del});
+      this.$el.find('#copy-button').tooltip({title: "Copy"});
+      this.$el.find('#paste-button').tooltip({title: "Paste"});
 
-      this.$el.find('#delete-button').tooltip({title: "Backspace/Delete", delay: del});
+      this.$el.find('#delete-button').tooltip({title: "Delete"});
 
-      this.$el.find('#zoomin-button').tooltip({title: "Ctrl/Cmd +", delay: del});
-      this.$el.find('#zoomout-button').tooltip({title: "Ctrl/Cmd -", delay: del});
-      this.$el.find('#zoomreset-button').tooltip({title: "Ctrl/Cmd 0", delay: del});
+      this.$el.find('#zoomin-button').tooltip({title: "Zoom in"});
+      this.$el.find('#zoomout-button').tooltip({title: "Zoom out"});
+      this.$el.find('#zoomreset-button').tooltip({title: "Zoom reset"});
+
+      this.$el.find('#export-button').tooltip({title: "Export as STL"});
+
+      this.$('#workspace_hide').tooltip({title: "Switch between 3D view and nodes"});
 
     },
 
