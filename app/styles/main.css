@@ -682,21 +682,21 @@ body {
 .workspace {
 	z-index: 90;
 	position: absolute;
-	width: 20000px;
-	height: 20000px;
+	width: 8000px;
+	height: 8000px;
 }
 
 .workspace_back {
 	z-index: 50;
 	position: absolute;
-	width: 20000px;
-	height: 20000px;
+	width: 8000px;
+	height: 8000px;
 }
 
 .workspace_canvas {
 	position: absolute;
-	width: 20000px;
-	height: 20000px;
+	width: 8000px;
+	height: 8000px;
 	background-color: rgba(0,0,0,0.3);
 }
 

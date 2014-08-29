@@ -1,5 +1,7 @@
 CUSTOM NODES
 
+upon re-login, cannot add nodes
+
 if you close a workspace and it's still in use 
 	- add it to hidden workspaces
 	- otherwise completely remove it
