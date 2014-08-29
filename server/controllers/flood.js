@@ -86,7 +86,7 @@ exports.getMySession = function(req, res) {
 		if (err || !sesh || !sesh.workspaces || sesh.workspaces.length == 0 ) {
 			return initUserSession(req, res);
 		}
-
+		sesh.isFirstExperience = false;
 		return res.send(sesh);
 	});
 
