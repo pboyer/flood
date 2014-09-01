@@ -265,7 +265,12 @@ define(['backbone', 'List', 'SearchElementView', 'bootstrap'], function(Backbone
         var pom = document.createElement('a');
         pom.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
         pom.setAttribute('download', filename);
+
+        document.body.appendChild( pom );
+
         pom.click();
+
+        document.body.removeChild( pom );
     },
 
     elementClick: function(ele){

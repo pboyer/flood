@@ -1,13 +1,19 @@
 CUSTOM NODES
 
-upon re-login, cannot add nodes
+don't show previews in custom node workspaces
+
+nested custom nodes do not work immediately 
+	- you need to reload them to get them to work
+
+custom nodes should have special UI
+
+custom node dependencies are always visible, shouldn't be
 
 if you close a workspace and it's still in use 
 	- add it to hidden workspaces
 	- otherwise completely remove it
 
-stl export doesn't work on firefox
-icons for undo/redo/copy/paste/switch focus
+
 polygon node
 configure node-webkit endpoint URL
 
