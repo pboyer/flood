@@ -115,18 +115,21 @@
                 <i class="fa fa-user fa-fw"></i>
                 Logout
               </div>
-              <div id="help-button" class="menu-element">
-                <i class="fa fa-question fa-fw"></i>Help
-              </div>
-              <div id="feedback-button" class="menu-element">
-                <i class="fa fa-comment fa-fw"></i>Feedback
-              </div>
               <div id="workspace-browser-button" class="menu-element">
                 <i class="fa fa-list-ul fa-fw"></i>Workspaces
               </div>
             </div>
   
           </div> 
+
+          <div id="extra-menu">
+           <div id="feedback-button" class="menu-element">
+              <i class="fa fa-comment fa-fw"></i>
+            </div>
+            <div id="help-button" class="menu-element">
+              <i class="fa fa-question fa-fw"></i>
+            </div>
+          </div>
 
           <div id="workspaces">
 
@@ -250,6 +253,13 @@
 
           </ul>
         </div>
+
+      </script>
+
+      <script type="text/template" id="node-custom-template">
+
+          <i class="fa fa-fw fa-bolt"></i>          
+          <span class="name searchfield"><%= type.functionName  %></span>
 
       </script>
 
@@ -570,7 +580,7 @@
           <h3 id="feedback-title">
             <i class="fa fa-comment fa-2x fa-fw" style="padding-right: 10px"></i>Send Feedback
           </h3>
-          <p>Please drop us a line if with your comments, suggestions, or issues.</p>
+          <p>Feel free to send comments, suggestions, or issues.</p>
 
           <div id="feedback-failure-message"></div>
           <div id="feedback-sending-message">Sending...</div>

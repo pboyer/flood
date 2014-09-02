@@ -139,6 +139,7 @@ require.config({
         FormulaView: 'views/NodeViews/Formula',
         InputView: 'views/NodeViews/Input',
         OutputView: 'views/NodeViews/Output',
+        CustomNodeView: 'views/NodeViews/CustomNode',
 
         CSGNodeView: 'views/NodeViews/ThreeCSG',
 

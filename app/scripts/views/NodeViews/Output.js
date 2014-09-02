@@ -23,6 +23,8 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView'], function(Backbone, 
 
       BaseNodeView.prototype.render.apply(this, arguments);
 
+      this.$el.addClass('output-node');
+
       var that = this;
       var extra = this.model.get('extra');
       var name = extra.name != undefined ? extra.name : "";

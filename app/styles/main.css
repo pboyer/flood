@@ -46,6 +46,7 @@ body {
 
 #workspace-search-input-container {
 	padding-left: 10px;
+	box-shadow: 0 10px 12px #444;
 }
 
 .workspace-search-container ul {
@@ -84,6 +85,10 @@ body {
 .workspace-search-button-active:hover {
 	color: white;
 	background-color: #333;
+}
+
+.workspace-search-button-active:hover i {
+	opacity: 1;
 }
 
 .workspace-search-button-inactive {
@@ -183,6 +188,35 @@ body {
 	background-color: #FF7A7A;
 	color: white;
 	font-weight: bold;
+}
+
+#extra-menu .menu-element {
+	height: 40px;
+	width: 38px;
+	font-size: 14px;
+	border:none;
+}
+
+#extra-menu #help-button:hover {
+	color: #92d199;
+} 
+
+#extra-menu #feedback-button:hover {
+	color: #589cc8;
+} 
+
+#extra-menu .menu-element:hover {
+	background: #444;
+	color: white;
+}
+
+#extra-menu {
+	z-index: 99;
+	background: #222;
+	position: absolute;
+	width: 38px;
+	top: 80px;
+	right: 0px;
 }
 
 #feedback-box p {
@@ -385,10 +419,6 @@ body {
 	padding-bottom: 8px;
 }
 
-#workspace-search-input-container {
-	box-shadow: 0 10px 12px #444;
-}
-
 .exit-help-section {
 	display: inline-block;
 	font-size: 12px;
@@ -492,7 +522,7 @@ body {
 	max-height:  500px;
 	margin-top: -150px;
 	margin-left: -100px;
-	width: 200px;
+	width: 130px;
 	background: none;
 }
 
@@ -530,7 +560,7 @@ body {
 .library-search-input {
 	color: whitesmoke;
 	padding: 10px;
-	width: 200px;
+	width: 130px;
 	background: #222;
 	border: none;
 	font-size: 15px;
@@ -782,6 +812,8 @@ body {
 	color:black;
 }
 
+
+
 .node-settings {
 	position: absolute;
 	bottom: 0;
@@ -854,6 +886,14 @@ body {
 .num-data-container input{
 	width: 60px;
 	margin-left: 5px;
+}
+
+.input-node {
+	background: #f7e5a3;
+}
+
+.output-node {
+	background: #f7e5a3;
 }
 
 .node-inputs, .node-outputs {

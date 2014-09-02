@@ -1,4 +1,4 @@
-define(['backbone', 'List', 'SearchElementView', 'bootstrap'], function(Backbone, List, SearchElementView, bootstrap) {
+define(['backbone', 'List', 'SearchElementView', 'bootstrap', 'jquery'], function(Backbone, List, SearchElementView, bootstrap, $) {
 
   return Backbone.View.extend({
 
@@ -74,7 +74,10 @@ define(['backbone', 'List', 'SearchElementView', 'bootstrap'], function(Backbone
 
       this.$el.find('#export-button').tooltip({title: "Export as STL"});
 
-      this.$('#workspace_hide').tooltip({title: "Switch between 3D view and nodes"});
+      $('#workspace_hide').tooltip({title: "Switch between 3D view and nodes"});
+      
+      $('#help-button').tooltip({title: "Help", placement: "left"});
+      $('#feedback-button').tooltip({title: "Feedback", placement: "left"});
 
     },
 
