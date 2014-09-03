@@ -450,11 +450,28 @@ define(['FLOOD'], function(FLOOD) {
 
 	}.inherits( FLOOD.baseTypes.CSG );
 	
+	FLOOD.nodeTypes.Polygon = function() {
 
-	// Rectangle
+		var typeData = {
+			inputs: [ 	new FLOOD.baseTypes.InputPort( "Corners", [ FLOOD.QuotedArray, CSG.Vector ] )],
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [ CSG.Polygon ] ) ],
+			typeName: "Polygon" 
+		};
+
+		FLOOD.baseTypes.NodeType.call(this, typeData);
+
+		this.eval = function(pts) {
+
+			if (pts.length < 3) throw new Exception("You need more than 3 points to make a polygon");
+
+			return CSG.Polygon.createFromPoints( pts, false );
+
+		};
+
+	}.inherits( FLOOD.baseTypes.CSG );
+
 	// FLOOD.nodeTypes.ScaleUneven ( Solid, Plane, XFactor, YFactor, ZFactor )
 	// FLOOD.nodeTypes.Cuboid 
-	// FLOOD.nodeTypes.Polygon(Points)
 
 	FLOOD.nodeTypes.SolidSphere = function() {
 
