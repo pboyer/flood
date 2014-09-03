@@ -140,8 +140,7 @@ require.config({
         InputView: 'views/NodeViews/Input',
         OutputView: 'views/NodeViews/Output',
         CustomNodeView: 'views/NodeViews/CustomNode',
-
-        CSGNodeView: 'views/NodeViews/ThreeCSG',
+        ThreeCSGNodeView: 'views/NodeViews/ThreeCSG',
 
         OrbitControls: 'lib/OrbitControls',
         Viewport: 'lib/Viewport',

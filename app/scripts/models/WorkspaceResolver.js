@@ -21,6 +21,8 @@ define(['backbone', 'FLOOD'],
         return;
       }
 
+      console.log(this.workspace.get('name') + " is awaiting " + depIds );
+
       this.awaitedWorkspaceDependencyIds = [];
 
       var that = this;
@@ -29,25 +31,10 @@ define(['backbone', 'FLOOD'],
       depIds.forEach(function(x){
         that.awaitOrResolveDependency.call(that, x);
       });
-
-    },
-
-    generateAllDependencies: function(){
-
-      var that = this;
-      var directDependencies = this.workspace.getCustomNodes().map(function(x){ return x.get('type').functionId; });
-      var indirectDependencies = directDependencies.map(function(x){ return that.app.get('workspaces').get(x); }).map(function(x){ return x.get('workspaceDependencyIds'); });
-
-      var allDependencyLists = directDependencies.concat( indirectDependencies );
-
-      return _.union.apply(null, allDependencyLists );
-
     },
 
     cleanupDependencies: function(){
-
-      this.workspace.set('workspaceDependencyIds', this.generateAllDependencies());
-
+      this.workspace.set( 'workspaceDependencyIds', this.workspace.regenerateDependencies() );
     },
 
     awaitOrResolveDependency: function(id){

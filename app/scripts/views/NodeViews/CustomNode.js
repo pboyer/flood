@@ -1,6 +1,6 @@
-define(['underscore', 'jquery', 'BaseNodeView'], function(_, $, BaseNodeView) {
+define(['underscore', 'jquery', 'ThreeCSGNodeView'], function(_, $, ThreeCSGNodeView) {
 
-  return BaseNodeView.extend({
+  return ThreeCSGNodeView.extend({
 
     innerTemplate : _.template( $('#node-custom-template').html() ),
 

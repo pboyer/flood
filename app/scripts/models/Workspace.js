@@ -148,14 +148,6 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
         return json;
     },
 
-    addWorkspaceDependency: function(id, watchDependency){
-      this.resolver.addWorkspaceDependency(id, watchDependency);
-    },
-
-    syncCustomNodesWithWorkspace: function(workspace){
-      this.resolver.syncCustomNodesWithWorkspace(workspace);
-    },
-
     initializeRunner: function(){
 
       this.runner = new Runner({id : this.get('_id') }, { workspace: this });
@@ -417,12 +409,24 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
 
     },
 
+    regenerateDependencies: function(){
+
+      var that = this;
+      var directDependencies = this.getCustomNodes().map(function(x){ return x.get('type').functionId; });
+      var indirectDependencies = directDependencies.map(function(x){ return that.app.get('workspaces').get(x); }).map(function(x){ return x.get('workspaceDependencyIds'); });
+
+      var allDependencyLists = directDependencies.concat( indirectDependencies );
+
+      return _.union.apply(null, allDependencyLists );
+
+    },
+
     addNode: function(data){
 
       if ( data.typeName === "CustomNode" ){
         var id = data.extra.functionId;
         this.addWorkspaceDependency( id, true );
-        this.sendDefinitionToRunner( id );
+        this.sendCompleteDefinitionRunner( id );
       }
 
       var datac = JSON.parse( JSON.stringify( data ) );
@@ -438,16 +442,47 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
 
     },
 
-    sendDefinitionToRunner: function( id ){
+    addWorkspaceDependency: function(id, watchDependency){
 
+      this.resolver.addWorkspaceDependency(id, watchDependency);
+
+    },
+
+    syncCustomNodesWithWorkspace: function(workspace){
+
+      this.resolver.syncCustomNodesWithWorkspace(workspace);
+
+    },
+
+    sendCompleteDefinitionRunner: function( id ){
+
+      // custom node workspace
       if (!this.runner) {
         return;
       }
 
-      this.runner.addDefinition( this.app.getLoadedWorkspace( id ) );
+      var ws = this.app.getLoadedWorkspace( id );
+
+      var allDeps = ws.regenerateDependencies().concat([id]);
+
+      allDeps.forEach(function(depId){
+        this.sendDefinitionToRunner( depId );
+      }.bind(this) );
 
     },
 
+    sendDefinitionToRunner: function( id ){
+
+      // custom node workspace
+      if (!this.runner) {
+        return;
+      }
+
+      var ws = this.app.getLoadedWorkspace( id );
+
+      this.runner.addDefinition( ws );
+
+    },
 
     removeNode: function(data){
 
@@ -717,8 +752,6 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
                             });
 
       this.runner.run( bottomNodes );
-
-      console.log(this.app.attributes);
 
     },
 

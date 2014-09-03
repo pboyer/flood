@@ -1,11 +1,23 @@
 CUSTOM NODES
 
-don't show previews in custom node workspaces
+unnested cn
+
+placing new unnested custom node works
+refresh continues to work
+
+nested cn
+
+placing new custom node does not work
+after refresh works
+
+
+custom node UI should subclass ThreeCSG
 
 nested custom nodes do not work immediately 
 	- you need to reload them to get them to work
 
-custom nodes should have special UI
+
+don't show previews in custom node workspaces
 
 custom node dependencies are always visible, shouldn't be
 
