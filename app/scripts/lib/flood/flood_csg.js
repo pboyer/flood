@@ -470,8 +470,68 @@ define(['FLOOD'], function(FLOOD) {
 
 	}.inherits( FLOOD.baseTypes.CSG );
 
+	FLOOD.nodeTypes.SolidCuboid = function() {
+
+		var typeData = {
+			inputs: [ 	new FLOOD.baseTypes.InputPort( "MinCorner", [ CSG.Vector ], new CSG.Vector([0,0,0]) ),
+						new FLOOD.baseTypes.InputPort( "MaxCorner", [ CSG.Vector ], new CSG.Vector([5, 5, 5]) ) ],
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [ CSG ] ) ],
+			typeName: "SolidCuboid" 
+		};
+
+		FLOOD.baseTypes.NodeType.call(this, typeData );
+
+		this.eval = function(minPoint, maxPoint) {
+
+			if (minPoint.z > maxPoint.z ){
+				var t = minPoint;
+				minPoint = maxPoint;
+				maxPoint = t;
+			}
+
+			var x = new CSG.Vector([1,0,0]);
+			var y = new CSG.Vector([0,1,0]);
+			var w = maxPoint.x - minPoint.x;
+			var h = maxPoint.y - minPoint.y;
+			var d = maxPoint.z - minPoint.z;
+
+			var pts = [
+				minPoint, 
+				minPoint.plus( x.times(w) ),
+				minPoint.plus( x.times(w)).plus( y.times(h) ),
+				minPoint.plus( y.times(h) )
+			];
+
+			var poly = CSG.Polygon.createFromPoints( pts, false );
+
+			return extrude( poly, new CSG.Vector( [0,0,d] ));
+
+		};
+
+	}.inherits( FLOOD.baseTypes.CSG );
+
+	FLOOD.nodeTypes.SolidCube = function() {
+
+		var typeData = {
+			inputs: [ 	new FLOOD.baseTypes.InputPort( "Center", [ CSG.Vector ], new CSG.Vector([0,0,0]) ),
+						new FLOOD.baseTypes.InputPort( "Radius", [ Number ], 10 ) ],
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [ CSG ] ) ],
+			typeName: "SolidCube" 
+		};
+
+		FLOOD.baseTypes.NodeType.call(this, typeData );
+
+		this.eval = function(center, radius) {
+
+			return CSG.cube({
+					  center: center,
+					  radius: radius
+					});
+		};
+
+	}.inherits( FLOOD.baseTypes.CSG );
+
 	// FLOOD.nodeTypes.ScaleUneven ( Solid, Plane, XFactor, YFactor, ZFactor )
-	// FLOOD.nodeTypes.Cuboid 
 
 	FLOOD.nodeTypes.SolidSphere = function() {
 
@@ -520,26 +580,52 @@ define(['FLOOD'], function(FLOOD) {
 
 	}.inherits( FLOOD.baseTypes.CSG );
 
-	FLOOD.nodeTypes.SolidCube = function() {
+	var extrude = function(polygon, offset) {
 
-		var typeData = {
-			inputs: [ 	new FLOOD.baseTypes.InputPort( "Center", [ CSG.Vector ], new CSG.Vector([0,0,0]) ),
-						new FLOOD.baseTypes.InputPort( "Radius", [ Number ], 10 ) ],
-			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [ CSG ] ) ],
-			typeName: "SolidCube" 
-		};
+		// get CS from profile plane
+		var plane = polygon.plane;
+		var z = plane.normal;
+		var o = z.times( plane.w );
 
-		FLOOD.baseTypes.NodeType.call(this, typeData );
+		var helperVec = z.minus(new CSG.Vector(1,0,0)).length() < 1e-5 ? new CSG.Vector(1,0,0) : new CSG.Vector(0,1,0);
 
-		this.eval = function(center, radius) {
+		var x = z.cross( helperVec ).unit();
+		var y = z.cross( x );
 
-			return CSG.cube({
-					  center: center,
-					  radius: radius
-					});
-		};
+		var trf = new CSG.Matrix4x4( [ 	x.x, x.y, x.z, o.x, 
+																		y.x, y.y, y.z, o.y, 
+																		z.x, z.y, z.z, o.z,
+																		0,   0,   0,   1    ]);
 
-	}.inherits( FLOOD.baseTypes.CSG );
+		var trfinv = new CSG.Matrix4x4( [ 	x.x, y.x, z.x, -o.x, 
+																				x.y, y.y, z.y, -o.y, 
+																				x.z, y.z, z.z, -o.z,
+																				0,   0,   0,   1    ]);
+
+		var cc = [];
+
+		for (var i = 0; i < polygon.vertices.length; i++){
+
+			var cp = polygon.vertices[i].pos;
+
+			// align polygon with 2d CS
+			var cpp = cp.multiply4x4( trfinv );
+
+			cc.push( new CSG.Vector2D( cpp.x, cpp.y ) );
+
+		}
+
+		// extrude to create polygon
+		var profile2D = new CSG.Polygon2D( cc, false );
+
+		// transform the extrusion vector
+		var offsetTrf = trf.rightMultiply1x3Vector( offset );
+		var ext = profile2D.extrude({ offset: offsetTrf });
+
+		// transform back to original CS
+		return ext.transform( trf );
+
+	};
 
 	FLOOD.nodeTypes.SolidExtrusion = function() {
 
@@ -552,52 +638,7 @@ define(['FLOOD'], function(FLOOD) {
 
 		FLOOD.baseTypes.NodeType.call(this, typeData );
 
-		this.eval = function(polygon, offset) {
-
-			// get CS from profile plane
-			var plane = polygon.plane;
-			var z = plane.normal;
-			var o = z.times( plane.w );
-
-			var helperVec = z.minus(new CSG.Vector(1,0,0)).length() < 1e-5 ? new CSG.Vector(1,0,0) : new CSG.Vector(0,1,0);
-
-			var x = z.cross( helperVec ).unit();
-			var y = z.cross( x );
-
-			var trf = new CSG.Matrix4x4( [ 	x.x, x.y, x.z, o.x, 
-																			y.x, y.y, y.z, o.y, 
-																			z.x, z.y, z.z, o.z,
-																			0,   0,   0,   1    ]);
-
-			var trfinv = new CSG.Matrix4x4( [ 	x.x, y.x, z.x, -o.x, 
-																					x.y, y.y, z.y, -o.y, 
-																					x.z, y.z, z.z, -o.z,
-																					0,   0,   0,   1    ]);
-
-			var cc = [];
-
-			for (var i = 0; i < polygon.vertices.length; i++){
-
-				var cp = polygon.vertices[i].pos;
-
-				// align polygon with 2d CS
-				var cpp = cp.multiply4x4( trfinv );
-
-				cc.push( new CSG.Vector2D( cpp.x, cpp.y ) );
-
-			}
-
-			// extrude to create polygon
-			var profile2D = new CSG.Polygon2D( cc, false );
-
-			// transform the extrusion vector
-			var offsetTrf = trf.rightMultiply1x3Vector( offset );
-			var ext = profile2D.extrude({ offset: offsetTrf });
-
-			// transform back to original CS
-			return ext.transform( trf );
-
-		};
+		this.eval = extrude;
 
 	}.inherits( FLOOD.baseTypes.CSG );
 
