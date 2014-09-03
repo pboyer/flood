@@ -425,6 +425,10 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
 
       if ( data.typeName === "CustomNode" ){
         var id = data.extra.functionId;
+
+        // do not allow recursion
+        if (id === this.get('id')) return;
+
         this.addWorkspaceDependency( id, true );
         this.sendCompleteDefinitionRunner( id );
       }
@@ -465,9 +469,6 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
 
       var allDeps = ws.regenerateDependencies().concat([id]);
 
-
-      console.log( allDeps );
-
       var that = this;
       allDeps.forEach(function(depId){
         that.sendDefinitionToRunner( depId );
@@ -483,8 +484,6 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
       }
 
       var ws = this.app.getLoadedWorkspace( id );
-
-      console.log(ws);
 
       this.runner.addDefinition( ws );
 

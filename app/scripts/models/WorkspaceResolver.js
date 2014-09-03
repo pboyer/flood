@@ -21,8 +21,6 @@ define(['backbone', 'FLOOD'],
         return;
       }
 
-      console.log(this.workspace.get('name') + " is awaiting " + depIds );
-
       this.awaitedWorkspaceDependencyIds = [];
 
       var that = this;
