@@ -203,6 +203,8 @@ define(['backbone'], function(Backbone) {
 
 	 	addDefinition: function(workspace){
 
+	 		console.log(workspace.toJSON())
+
 	  	var c = workspace.toJSON();
 	  	c.kind = "addDefinition";
 	  	c.workspace_id = c._id;

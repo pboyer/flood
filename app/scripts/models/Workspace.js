@@ -465,9 +465,13 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
 
       var allDeps = ws.regenerateDependencies().concat([id]);
 
+
+      console.log( allDeps );
+
+      var that = this;
       allDeps.forEach(function(depId){
-        this.sendDefinitionToRunner( depId );
-      }.bind(this) );
+        that.sendDefinitionToRunner( depId );
+      });
 
     },
 
@@ -479,6 +483,8 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
       }
 
       var ws = this.app.getLoadedWorkspace( id );
+
+      console.log(ws);
 
       this.runner.addDefinition( ws );
 

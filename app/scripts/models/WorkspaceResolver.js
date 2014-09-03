@@ -54,13 +54,11 @@ define(['backbone', 'FLOOD'],
 
       var index = this.awaitedWorkspaceDependencyIds.indexOf( workspace.id );
 
-      console.log(workspace)
-
       if (index < 0) return;
 
       this.awaitedWorkspaceDependencyIds.remove(index);
       this.workspace.sendDefinitionToRunner( workspace.id );
-      this.watchDependency( workspace );
+      this.watchOneDependency( workspace );
       this.syncCustomNodesWithWorkspace( workspace );
 
       if (this.awaitedWorkspaceDependencyIds.length === 0) {
@@ -70,7 +68,43 @@ define(['backbone', 'FLOOD'],
 
     },
 
-    watchDependency: function( customNodeWorkspace ){
+    addWorkspaceDependency: function( id, watch ){
+
+      var ws = this.app.getLoadedWorkspace(id);
+
+      if (!ws) throw new Error("You tried to add an unloaded workspace as a dependency!")
+
+      var depDeps = ws.get('workspaceDependencyIds')
+        , currentDeps = this.workspace.get('workspaceDependencyIds')
+        , unionDeps = _.union( [id], currentDeps, depDeps );
+
+      this.workspace.set( 'workspaceDependencyIds', unionDeps );
+
+      if (watch) this.watchDependency( id );
+
+    },
+
+    watchDependency: function( id ){
+
+      var ws = this.app.getLoadedWorkspace(id);
+
+      var allDepWorkspaces = ws.get('workspaceDependencyIds').concat( id );
+
+      allDepWorkspaces.forEach(function(depWs){
+        this.watchOneDependency( depWs );
+      }.bind( this ) );
+
+    },
+
+    watchedDependencies: {},
+
+    watchOneDependency: function( customNodeWorkspace ){
+
+      if ( !customNodeWorkspace.id ) 
+        customNodeWorkspace = this.app.getLoadedWorkspace( customNodeWorkspace );
+
+      if ( this.watchedDependencies[ customNodeWorkspace.id ] ) return;
+      this.watchedDependencies[ customNodeWorkspace.id ] = true;
 
       var that = this;
 
@@ -82,22 +116,6 @@ define(['backbone', 'FLOOD'],
       customNodeWorkspace.on('change:workspaceDependencyIds', sync, this);
       customNodeWorkspace.on('requestRun', syncAndRequestRun, this );
       customNodeWorkspace.on('updateRunner', syncAndUpdateRunner, this );
-
-    },
-
-    addWorkspaceDependency: function( id, watchDependency ){
-
-      var ws = this.app.getLoadedWorkspace(id);
-
-      if (!ws) throw new Error("You tried to add an unloaded workspace as a dependency!")
-
-      if (watchDependency) this.watchDependency( ws );
-
-      var depDeps = ws.get('workspaceDependencyIds')
-        , currentDeps = this.workspace.get('workspaceDependencyIds')
-        , unionDeps = _.union( [id], currentDeps, depDeps );
-
-      this.workspace.set( 'workspaceDependencyIds', unionDeps );
 
     },
 
@@ -258,7 +276,7 @@ define(['backbone', 'FLOOD'],
         x.trigger('updateRunner');
       });
 
-      if (indirectlyAffectedNodes.length > 0) this.workspace.sync('update', this);
+      if (indirectlyAffectedNodes.length > 0) this.workspace.sync('update', this.workspace );
 
     }
 
