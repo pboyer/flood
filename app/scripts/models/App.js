@@ -13,6 +13,7 @@ define(['backbone', 'Workspaces', 'Node', 'Login', 'Workspace', 'SearchElements'
       name: "DefaultSession",
       workspaces: new Workspaces(),
       backgroundWorkspaces: [],
+      awaitedWorkspaces: [],
       currentWorkspace: null,
       showingBrowser: false,
       showingSearch: false,
@@ -34,19 +35,21 @@ define(['backbone', 'Workspaces', 'Node', 'Login', 'Workspace', 'SearchElements'
       this.get('workspaces').on('remove', this.workspaceRemoved, this);
     },
 
-    workspaceRemoved: function(){
-
-      // we need to determine the 
-
-    },
+    workspaceIdsAwaitingParse : [],
 
     parse : function(resp) {
 
       var old = this.get('workspaces').slice();
+
+      this.workspaceIdsAwaitingParse = _.pluck( resp.workspaces, '_id');
+
       this.get('workspaces').add(resp.workspaces, {app: this});
       this.get('workspaces').remove(old);
 
+      this.workspaceIdsAwaitingParse = [];
+
       resp.workspaces = this.get('workspaces');
+
       return resp;
 
     },
@@ -60,21 +63,21 @@ define(['backbone', 'Workspaces', 'Node', 'Login', 'Workspace', 'SearchElements'
 
     toJSON : function() {
 
-        if (this._isSerializing) {
-            return this.id || this.cid;
-        }
+      if (this._isSerializing) {
+          return this.id || this.cid;
+      }
 
-        this._isSerializing = true;
+      this._isSerializing = true;
 
-        var json = _.clone(this.attributes);
+      var json = _.clone(this.attributes);
 
-        _.each(json, function(value, name) {
-            _.isFunction(value.toJSON) && (json[name] = value.toJSON());
-        });
+      _.each(json, function(value, name) {
+          _.isFunction(value.toJSON) && (json[name] = value.toJSON());
+      });
 
-        this._isSerializing = false;
+      this._isSerializing = false;
 
-        return json;
+      return json;
     },
 
     enableAutosave: function(){
@@ -97,13 +100,7 @@ define(['backbone', 'Workspaces', 'Node', 'Login', 'Workspace', 'SearchElements'
     },
 
     getLoadedWorkspace: function(id){
-
-      var workspaces = this.get('workspaces').where({ _id: id });
-
-      if (workspaces.length === 0) return undefined;
-
-      return workspaces[0];
-
+      return this.get('workspaces').get(id);
     },
 
     newWorkspace: function( callback ){
@@ -143,13 +140,22 @@ define(['backbone', 'Workspaces', 'Node', 'Login', 'Workspace', 'SearchElements'
 
     },
 
-    loadWorkspace: function( id, callback ){
+    loadWorkspaceDependency: function(id){
 
-      var ws = this.get('workspaces').get(id);
+      if ( _.contains( this.workspaceIdsAwaitingParse, id ) ) return;
+
+      this.setWorkspaceToBackground( id );
+      this.loadWorkspace( id );
+
+    },
+
+    loadWorkspace: function( id, callback ){
 
       var that = this;
 
       $.get("/ws/" + id, function(data, status){
+
+        console.log('workspace loaded ' + data.name )
 
         var ws = new Workspace(data, {app: that});
         that.get('workspaces').add( ws );
@@ -177,7 +183,7 @@ define(['backbone', 'Workspaces', 'Node', 'Login', 'Workspace', 'SearchElements'
 
     removeWorkspaceFromBackground: function( id ){
 
-      if ( this.isBackgroundWorkspace(id) ){
+      if ( _.contains( this.get('backgroundWorkspaces'), id) ){
         var copy = this.get('backgroundWorkspaces').slice(0);
         copy.remove(copy.indexOf(id));
         this.set('backgroundWorkspaces', copy);

@@ -504,8 +504,6 @@ define(['FLOOD'], function(FLOOD) {
 
 			var poly = CSG.Polygon.createFromPoints( pts, false );
 
-			console.log(d)
-
 			return extrude( poly, new CSG.Vector( [0,0,d] ));
 
 		};

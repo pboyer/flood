@@ -41,8 +41,7 @@ define(['backbone', 'FLOOD'],
       if (ws) return this.resolveDependency(ws);
  
       this.awaitedWorkspaceDependencyIds.push(id);
-      
-      this.app.loadWorkspace( id ); 
+      this.app.loadWorkspaceDependency( id ); 
 
     },
 
