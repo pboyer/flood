@@ -1,30 +1,10 @@
 CUSTOM NODES
 
-unnested cn
-
-placing new unnested custom node works
-refresh continues to work
-
-nested cn
-
-placing new custom node does not work
-after refresh works
-
-
-custom node UI should subclass ThreeCSG
-
-nested custom nodes do not work immediately 
-	- you need to reload them to get them to work
-
-
-don't show previews in custom node workspaces
-
-custom node dependencies are always visible, shouldn't be
-
 if you close a workspace and it's still in use 
 	- add it to hidden workspaces
 	- otherwise completely remove it
 
+don't show previews in custom node workspaces
 
 polygon node
 configure node-webkit endpoint URL
@@ -33,9 +13,7 @@ dropping in a previously created, nested custom node causes placed node to retur
 enter custom node by double clicking on the node instance
 paste should be offset to workspace center
 
-
 deletion is too slow
-
 
 UI
 

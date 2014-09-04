@@ -13,7 +13,6 @@ define(['backbone', 'Workspaces', 'Node', 'Login', 'Workspace', 'SearchElements'
       name: "DefaultSession",
       workspaces: new Workspaces(),
       backgroundWorkspaces: [],
-      awaitedWorkspaces: [],
       currentWorkspace: null,
       showingBrowser: false,
       showingSearch: false,
@@ -76,6 +75,13 @@ define(['backbone', 'Workspaces', 'Node', 'Login', 'Workspace', 'SearchElements'
       });
 
       this._isSerializing = false;
+
+      // dont save the background workspaces, they will be dynamically
+      // loaded on startup
+      var backWs = this.get('backgroundWorkspaces');
+      json.workspaces = json.workspaces.filter(function(x){
+        return !_.contains( backWs, x._id );
+      });
 
       return json;
     },
