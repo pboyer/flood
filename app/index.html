@@ -67,7 +67,7 @@
           .form-group label { color: #AAA; }
 
           .login-container {
-            padding-top: 180px;
+            padding-top: 170px;
             width: 300px;
             margin-left: auto;
             margin-right: auto;
@@ -77,12 +77,6 @@
             font-size: 18px;
             color: #666;
             text-shadow: 0 1px white;
-          }
-
-          .login-container a {
-            color: #444;
-            font-weight: bold;
-            font-size: 15px;
           }
 
         </style>
@@ -518,9 +512,14 @@
       <script type="text/template" id="login-template">
 
         <h5>Visual programming on the web</h5>
-        <div id="tab-button-container">
+        
+        <a href="/auth/google" class="btn btn-block btn-google-plus btn-social"><i class="fa fa-google-plus"></i>Sign in with Google</a>
+        <a href="/auth/facebook" class="btn btn-block btn-facebook btn-social"><i class="fa fa-facebook"></i>Sign in with Facebook</a>
+
+        <!-- <div id="tab-button-container">
           <div id="login-tab-button" class="tab-button tab-button-hilite"><a href="#">Login</a></div>
           <div id="signup-tab-button" class="tab-button"><a href="#">Signup</a></div>
+
         </div>
 
         <div id="login-failure-message">
@@ -569,7 +568,9 @@
             <button type="submit" id="submit-login" class="btn btn-primary"><i class="fa fa-fw fa-unlock-alt"></i>Login</button>
           </div>
 
-        </form>
+          
+
+        </form> !-->
 
       </script>
 
