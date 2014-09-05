@@ -427,7 +427,7 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
         var id = data.extra.functionId;
 
         // do not allow recursion
-        if (id === this.get('id')) return;
+        if (id === this.get('_id')) return;
 
         this.addWorkspaceDependency( id, true );
         this.sendCompleteDefinitionRunner( id );
