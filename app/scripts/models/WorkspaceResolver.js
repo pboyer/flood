@@ -97,8 +97,9 @@ define(['backbone', 'FLOOD'],
 
     watchOneDependency: function( customNodeWorkspace ){
 
-      if ( !customNodeWorkspace.id ) 
+      if ( !customNodeWorkspace.id ){
         customNodeWorkspace = this.app.getLoadedWorkspace( customNodeWorkspace );
+      } 
 
       if ( this.watchedDependencies[ customNodeWorkspace.id ] ) return;
       this.watchedDependencies[ customNodeWorkspace.id ] = true;
@@ -116,31 +117,28 @@ define(['backbone', 'FLOOD'],
 
     },
 
-    getIndirectlyAffectedCustomNodes: function(functionId){
-
-      var cns = this.workspace.getCustomNodes();
-
-      var thisApp = this.app;
-      return cns.filter(function(cn){
-
-        var id = cn.get('type').functionId
-          , ws = thisApp.getLoadedWorkspace( id );
-
-        if (!ws) return false;
-
-        var wsd = ws.get('workspaceDependencyIds');
-        return id != functionId && wsd.indexOf( functionId ) != -1;
-
-      });
-
-    },
-
     syncCustomNodesWithWorkspace: function(workspace){
 
       if (typeof workspace === "string") workspace = this.app.getLoadedWorkspace(workspace);
 
+      this.syncDependencies( workspace );
       this.syncDirectlyAffectedCustomNodesWithWorkspace( workspace );
       this.syncIndirectlyAffectedCustomNodesWithWorkspace( workspace );
+
+    },
+
+    syncDependencies: function( depWorkspace ){
+
+      // if a new dependency is now added, make sure we add it to this workspace's runner
+      var currDeps = this.workspace.get('workspaceDependencyIds');
+      var depDeps = depWorkspace.get('workspaceDependencyIds');
+      
+      var newDeps = _.difference( depDeps, currDeps );
+
+      newDeps.forEach(function(id){
+        this.workspace.sendDefinitionToRunner( this.app.getLoadedWorkspace( id ) );
+        this.addWorkspaceDependency( id, true );
+      }.bind(this));
 
     },
 
@@ -275,7 +273,27 @@ define(['backbone', 'FLOOD'],
 
       if (indirectlyAffectedNodes.length > 0) this.workspace.sync('update', this.workspace );
 
-    }
+    },
+
+    getIndirectlyAffectedCustomNodes: function(functionId){
+
+      var cns = this.workspace.getCustomNodes();
+
+      var thisApp = this.app;
+      return cns.filter(function(cn){
+
+        var id = cn.get('type').functionId
+          , ws = thisApp.getLoadedWorkspace( id );
+
+        if (!ws) return false;
+
+        var wsd = ws.get('workspaceDependencyIds');
+        return id != functionId && wsd.indexOf( functionId ) != -1;
+
+      });
+
+    },
+
 
   });
 
