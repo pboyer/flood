@@ -26,7 +26,7 @@ exports.postFeedback = function(req, res) {
 	if (!emailTarget) return res.status(500).send({ msg: "Feedback temporarily unsupported" });
 
 	smtpTransport.sendMail({
-    from: 'feedback@floodmodeler.com',
+    from: 'feedback@floodeditor.com',
     to: emailTarget,
     subject: "\"" + ns.subject + "\" says " + req.user.email,
     text: ns.message
