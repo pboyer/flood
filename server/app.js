@@ -19,6 +19,9 @@ var mongoose = require('mongoose');
 var passport = require('passport');
 var expressValidator = require('express-validator');
 var connectAssets = require('connect-assets');
+var https = require('https');
+var http = require('http');
+var fs = require('fs');
 
 /**
  * Load controllers.
@@ -220,8 +223,25 @@ app.use(errorHandler());
  * Start Express server.
  */
 
-app.listen(app.get('port'), function() {
-  console.log("✔ Express server listening on port %d in %s mode", app.get('port'), app.get('env'));
-});
+var keyfn = 'ssl/server.key';
+var crtfn = 'ssl/server.crt';
+
+if ( fs.existsSync( keyfn ) || fs.existsSync( crtfn ) ){
+
+  var key = fs.readFileSync(keyfn, 'utf8');
+  var crt = fs.readFileSync(crtfn, 'utf8');
+  var cred = { key: key, cert: crt };
+
+  // https.createServer(options, app).listen(443);
+  https.createServer(cred, app).listen(443, function() {
+    console.log("✔ Secure Express server listening on port %d in %s mode", 443, app.get('env'));
+  });
+
+} else {
+  app.listen( app.get('port'), function() {
+    console.log("✔ Express server listening on port %d in %s mode", app.get('port'), app.get('env'));
+  });
+}
+
 
 module.exports = app;
