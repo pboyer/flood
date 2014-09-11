@@ -1,0 +1,639 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>flood</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width">
+
+        <link rel="stylesheet" href="style.min.css">
+
+        <style>
+
+          #login {
+            background: #e3e3e3;
+            text-align: center;
+            z-index: 120;
+            right: 0;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            padding: 40px;
+          }
+
+          #login h1 { 
+            padding: 0;
+            margin: 0;
+            font-size: 150px;
+            text-shadow: 0 1px white;
+          }
+
+          .title-box {
+            width: 350px;
+            left: 50%;
+            margin-left: -175px;
+
+            position: absolute;
+            overflow: hidden;
+
+            transition: height 3s;
+            transition-timing-function: ease-out;
+          }
+
+          #title-grey {
+            height: 145px;
+            z-index: 122;
+            color: #333;
+            width: 350px;
+          }
+  
+          #title-blue {
+            position: absolute;
+            color: #589cc8;
+            width: 350px;
+          }
+
+          .form-group {padding: 5px;}
+
+          .form-group label { color: #AAA; }
+
+          .login-container {
+            padding-top: 170px;
+            width: 300px;
+            margin-left: auto;
+            margin-right: auto;
+          }
+
+          .login-container h5 {
+            font-size: 18px;
+            color: #666;
+            text-shadow: 0 1px white;
+          }
+
+        </style>
+
+    </head>
+    
+    <body>
+
+        <div id="app" class="row col">
+
+          <div id="top_container" class="row" style="overflow: visible;">
+                
+            <div id="workspace-tabs"></div>
+
+            <div id="add-workspace-button" class="menu-element" style="float: left;">
+              <i class="icon-file dim-button"></i>
+            </div>
+
+            <div id="add-workspace-select-element">
+              <div id="add-workspace-select-container">
+                <ul>
+                  <li id="add-project-workspace">Project</li>
+                  <li id="add-node-workspace">Custom node</li>
+                </ul>
+              </div>
+            </div>
+
+            <div id="more-menu">
+              <div id="login-button" class="menu-element">
+                <i class="fa fa-user fa-fw"></i>
+                Logout
+              </div>
+              <div id="workspace-browser-button" class="menu-element">
+                <i class="fa fa-list-ul fa-fw"></i>Workspaces
+              </div>
+            </div>
+  
+          </div> 
+
+          <div id="extra-menu">
+           <div id="feedback-button" class="menu-element">
+              <i class="fa fa-comment fa-fw"></i>
+            </div>
+            <div id="help-button" class="menu-element">
+              <i class="fa fa-question fa-fw"></i>
+            </div>
+          </div>
+
+          <div id="workspaces">
+
+            <div id="workspace_hide" class="rightside workspace-search-button-active">
+              <span>3D</span> <i class="fa fa-fw fa-cube fa-2x" style="margin-left: 10px"></i>
+            </div>
+            <div class="workspaces_curtain row"></div>
+
+          </div>
+
+          <div id="login" class="row col">
+              
+            <div id="title-container">
+              <div class="title-box" id="title-grey">
+                <h1>flood</h1>
+              </div>
+
+              <div class="title-box" id="title-blue">
+                <h1>flood</h1>
+              </div>
+            </div>
+
+            <div class="login-container">
+              <h5>Wait for it...</h5>
+            </div>
+          </div>
+
+          <div id="help" class="col">
+            
+          </div>
+
+          <div id="feedback" class="row col">
+            
+          </div>
+
+          <div id="workspace-browser" class="col">
+            
+          </div>
+
+          <div id="viewer" class="row blur"></div>
+
+        </div>
+
+      </body>
+
+      <script>
+        setTimeout(function(){ 
+          document.getElementById("title-grey").style.height = "10px";
+        }, 10);
+      </script>
+
+      <script type="text/template" id="node-template">
+
+        <div class="node-last-value-container">
+          <div class="node-last-value"><%- preview %></div>
+          <div class="node-failure-message"><%- failureMessage %></div>
+        </div>
+
+        <ul class="node-inputs">
+
+          <% _.each(type.inputs, function(ele, index) { %> 
+            <li class="node-port node-port-input" data-index=" <%= index %> "> 
+              <span class="node-port-name"><%= ele.name %></span>
+            </li>
+          <% }); %>
+        </ul>
+
+        <ul class="node-inputs-extra">
+          <% _.each(type.inputs, function(ele, index) { %> 
+            <li class="node-port-extra" data-index=" <%= index %> "> 
+              
+              <div class="dropdown">
+
+                <a data-toggle="dropdown" href="#">&#8942;</a>
+
+                <ul class="dropdown-menu" role="menu" style="padding: 5px;" aria-labelledby="dLabel">
+
+                  <li role="presentation" style="color: black">
+                      <input type="checkbox" class="use-default-checkbox" data-index="<%= index %>" <%= !ignoreDefaults[index] ? "checked" : ""%> > Use default : <%= ele.defaultVal != undefined ? JSON.stringify( ele.defaultVal ) : "None" %>
+                  </li>
+
+                </ul>
+              </div>
+                    
+            </li>
+          <% }); %>
+        </ul>
+
+        <div class="node-data-container" >
+          <span class="name searchfield"><%= typeName != "CustomNode" ? typeName : type.functionName  %></span>
+        </div>
+
+        <ul class="node-outputs" >
+          <% _.each(type.outputs, function(ele, index) { %> 
+            <li class="node-port node-port-output" data-index=" <%= index %> "> <span class="node-port-name"> <%= ele.name %> </span> </li> 
+          <% }); %>
+        </ul>
+
+        <div class="dropdown node-settings" style="position:absolute">
+
+          <a data-toggle="dropdown" href="#">
+            <span style="color:black; padding: 1px">...</span>
+          </a>
+
+          <ul class="dropdown-menu" role="menu" style="padding: 5px; font-size: 10px" aria-labelledby="dLabel">
+
+            <li class="toggle-vis">
+              <a role="menuitem" tabindex="-1" href="#" style="font-size: 10px" >
+                <i class="icon-eye-open"></i><span style="padding-left: 5px">Hide geometry</span>
+              </a>
+            </li>
+
+            <li class="dropdown-header" style="font-size: 10px; padding: 0" >Replication</li>
+
+            <li >
+              <div class="btn-group btn-group-xs" style="padding: 0px; padding-top: 5px; font-size: 10px">
+                <button type="button" class="rep-type btn btn-default"  style="font-size: 10px" data-rep-type="applyLongest">Long</button>
+                <button type="button" class="rep-type btn btn-default"  style="font-size: 10px" data-rep-type="applyCartesian">Cross</button>
+              </div>
+            </li>
+
+          </ul>
+        </div>
+
+      </script>
+
+      <script type="text/template" id="node-custom-template">
+
+          <i class="fa fa-fw fa-bolt"></i>          
+          <span class="name searchfield"><%= type.functionName  %></span>
+
+      </script>
+
+      <script type="text/template" id="node-formula-template">
+
+        <a href="#" class="add-input"> + </a> 
+        <a href="#" class="remove-input" style="padding-left: 10px; padding-right: 10px"> - </a>
+        <input type="text" class="formula-text-input" placeholder="Custom formula" value="<%= extra.script %>">
+
+      </script>
+
+      <script type="text/template" id="node-input-template">
+
+        <div class="node-data-container node-input-container">
+          <input type="text" class="text-input" placeholder="Input name" value="<%= extra.script %>">
+        </div>
+
+        <ul class="node-outputs" >
+          <% _.each(type.outputs, function(ele, index) { %> 
+            <li class="node-port node-port-output" data-index=" <%= index %> "> <span class="node-port-name"> <%= ele.name %> </span> </li> 
+          <% }); %>
+        </ul>
+
+      </script>
+
+      <script type="text/template" id="node-output-template">
+
+        <ul class="node-inputs">
+          <% _.each(type.inputs, function(ele, index) { %> 
+            <li class="node-port node-port-input" data-index=" <%= index %> "> <span class="node-port-name"> <%= ele.name %> </span>  </li> 
+          <% }); %>
+        </ul>
+
+        <div class="node-data-container node-output-container">
+          <input type="text" class="text-input" placeholder="Output name" value="<%= extra.script %>">
+        </div>
+
+      </script>
+
+      <script type="text/template" id="node-watch-template">
+
+        <ul class="node-inputs">
+          <% _.each(type.inputs, function(ele, index) { %> 
+            <li class="node-port node-port-input" data-index=" <%= index %> "> <span class="node-port-name"> <%= ele.name %> </span>  </li> 
+          <% }); %>
+        </ul>
+
+        <div class="node-data-container watch-data-container">
+          <span class="name searchfield"><pre><%= prettyValue ? prettyValue : "Nothing" %></pre></span>
+        </div>
+
+      </script>
+
+      <script type="text/template" id="workspace-tab-template">
+
+        <i class="icon-pencil dim-button edit-button" style="visibility: hidden; margin-left: 10px"></i>
+        <span class="workspace-tab-function <%= isCustomNode ? "" : "hidden" %>">
+          <i class="fa fa-bolt"></i>
+        </span>
+        <input class="workspace-name" disabled="disabled" value="<%= name %>"></input>
+        <i class="icon-remove dim-button remove-button"></i>
+
+      </script>
+
+      <script type="text/template" id="node-num-template">
+
+        <div class="node-data-container">
+
+          <div class="slider" style="display: inline-block; width: 140px; height: 8px; margin: 0; padding: 0"></div>
+
+          <div class="num-data-container" style="display: inline-block;">
+            <input type="number" class="currentValue" value="<%= type.value %>" />
+          </div>
+
+        </div>
+
+        <ul class="node-outputs" >
+          <% _.each(type.outputs, function(ele, index) { %> 
+            <li class="node-port node-port-output" data-index=" <%= index %> "> <span class="node-port-name"> <%= ele.name %> </span> </li> 
+          <% }); %>
+        </ul>
+
+         <div class="dropdown keep-open node-settings" style="position:absolute">
+
+          <a href="#" data-toggle="dropdown" href="#">
+            <span style="color:black; padding: 1px">...</span>
+          </a>
+
+          <ul class="dropdown-menu" role="menu" style="padding: 5px; color: black" aria-labelledby="dLabel">
+
+            <li role="presentation">
+               Min:<input type="number" class="num-min">
+            </li>
+
+            <li role="presentation">
+               Max: <input type="number" class="num-max">
+            </li>
+
+            <li role="presentation">
+               Step: <input type="number" class="num-step">
+            </li>
+
+          </ul>
+        </div>
+
+      </script>
+
+      <script type="text/template" id="search-template">
+        <div class="search-top-container">
+          <input placeholder="Add a node..." class="library-search-input search"></input>
+        </div>
+        <ul class="list search-list">
+        </ul>
+      </script>
+
+      <script type="text/template" id="workspace-browser-template">
+
+        <div id="workspace-browser-contents">
+
+          <span class="workspace-browser-header row" id="workspace-browser-header-projects">
+            Projects
+            <i class="workspace-browser-header-refresh icon-refresh dim-button workspace-browser-refresh" ></i>
+          </span>
+          <ul class="workspace-browser-element-list row scroll-y" id="workspace-browser-projects"></ul>
+
+          <span class="workspace-browser-header row" id="workspace-browser-header-custom-nodes">
+            Custom Nodes
+            <i class="workspace-browser-header-refresh icon-refresh dim-button workspace-browser-refresh" ></i>
+          </span>
+          <ul class="workspace-browser-element-list row scroll-y" id="workspace-browser-custom-nodes"></ul>
+
+        </div>
+      </script>
+
+      <script type="text/template" id="workspace-browser-element-template">
+
+        <div style="display: inline-block;" class="workspace-browser-element-data">
+          <%= name %>
+          <br>
+          <span class="workspace-browser-element-date"><%= prettyDate %></span>
+        </div>
+        
+        <div style="display: inline-block; visibility: hidden" class="dropdown workspace-browser-element-ellipsis" >
+
+          <a data-toggle="dropdown" href="#">&#8230;</a>
+
+          <ul class="dropdown-menu" role="menu" style="padding: 5px;" aria-labelledby="dLabel">
+
+            <li role="presentation" class="deleteWorkspace">
+              <a role="menuitem" tabindex="-1" href="#">
+                Delete...
+              </a>
+            </li>
+
+          </ul>
+        </div>
+
+        <div style="float: right; visibility: hidden" class="workspace-browser-element-open">
+          Open
+        </div>
+
+      </script>
+
+      <script type="text/template" id="workspace-search-template">
+        
+        <div class="workspace-search-container" id="workspace-search-input-container">
+
+          <ul class="list search-list" style="display:none;">
+          </ul>
+
+          <div class="search-bottom-container">
+
+            <i style="display:inline-block;" class="icon-search icon-white dim-button" ></i>
+            <input placeholder="Add a node..." id="bottom-search" class="library-search-input search"></input>
+
+          </div>
+
+        </div>
+
+        <div class="workspace-search-container">
+
+          <div id="undo-button" class="workspace-search-button workspace-search-button-active">
+
+            <i class="fa fa-lg fa-fw dim-button fa-rotate-left white-icon"></i>
+
+          </div>
+
+          <div id="redo-button" class="workspace-search-button workspace-search-button-active">
+
+             <i class="fa fa-lg fa-fw  dim-button fa-repeat white-icon"></i>
+
+          </div>
+
+        </div>
+
+        <div class="workspace-search-container">
+
+          <div id="copy-button" class="workspace-search-button workspace-search-button-active">
+
+            <i class="fa fa-lg fa-fw dim-button fa-copy white-icon"></i>
+
+          </div>
+
+          <div id="paste-button" class="workspace-search-button workspace-search-button-active">
+
+            <i class="fa fa-lg fa-fw dim-button fa-paste white-icon"></i>
+
+          </div>
+
+          <div id="delete-button" class="workspace-search-button workspace-search-button-active">
+
+            <i class="fa fa-lg fa-fw dim-button fa-eraser white-icon"></i>
+
+          </div>
+
+        </div>
+
+        <div class="workspace-search-container">
+
+          <div id="zoomin-button" class="workspace-search-button workspace-search-button-active">
+              <i class="fa fa-lg fa-fw dim-button fa-search-plus white-icon"></i>
+          </div>
+
+          <div id="zoomout-button" class="workspace-search-button workspace-search-button-active">
+            <i class="fa fa-lg fa-fw dim-button fa-search-minus white-icon"></i>
+          </div>
+
+          <div id="zoomreset-button" class="workspace-search-button workspace-search-button-active">
+             <i class="fa fa-lg fa-fw dim-button fa-arrows white-icon"></i>
+          </div>
+
+        </div>
+
+        <div class="workspace-search-container">
+
+          <div id="export-button" class="workspace-search-button workspace-search-button-active">
+            <i class="fa fa-lg fa-fw dim-button fa-reply-all white-icon"></i>
+          </div>
+
+        </div>
+
+      </script>
+
+      <script type="text/template" id="workspace-runner-status-template">
+
+      </script>
+
+      <script type="text/template" id="search-element-template">
+        <span class="name"><%= name %></span>
+      </script>
+
+      <script type="text/template" id="connection-template">
+        M<%-aX%>,<%-aY%> C<%-bX%>,<%-bY%> <%-cX%>,<%-cY%> <%-dX%>,<%-dY%>
+      </script>
+
+      <script type="text/template" id="login-template">
+
+        <h5>Visual programming on the web</h5>
+        
+        <a href="/auth/google" class="btn btn-block btn-google-plus btn-social"><i class="fa fa-google-plus"></i>Sign in with Google</a>
+        <a href="/auth/facebook" class="btn btn-block btn-facebook btn-social"><i class="fa fa-facebook"></i>Sign in with Facebook</a>
+
+        <!-- <div id="tab-button-container">
+          <div id="login-tab-button" class="tab-button tab-button-hilite"><a href="#">Login</a></div>
+          <div id="signup-tab-button" class="tab-button"><a href="#">Signup</a></div>
+
+        </div>
+
+        <div id="login-failure-message">
+        </div>
+
+        <form id="signup-form" style="display:none">
+
+          <input type="hidden" name="_csrf">
+
+          <div class="form-group">
+            <label for="email" class="control-label">Email</label>
+            <input type="email" name="email" id="email" placeholder="Email" autofocus class="form-control">
+          </div>
+
+          <div class="form-group">
+            <label for="password" class="control-label">Password</label>
+            <input type="password" name="password" id="password" placeholder="Password" class="form-control">
+          </div>
+
+          <div class="form-group">
+            <label for="confirmPassword" class="control-label">Confirm Password</label>
+            <input type="password" name="confirmPassword" id="confirmPassword" placeholder="Confirm Password" class="form-control">
+          </div>
+
+          <div class="form-group">
+            <button type="submit" class="btn btn-success"><i class="fa fa-fw fa-check"></i>Signup</button>
+          </div>
+
+        </form>
+
+        <form id="login-form" style="display:none">
+
+          <input type="hidden" name="_csrf">
+
+          <div class="form-group">
+            <label for="email" class="control-label">Email</label>
+            <input type="text" name="email" id="login-email" placeholder="Email" autofocus="" class="form-control">
+          </div>
+
+          <div class="form-group">
+            <label for="password" class="control-label">Password</label>
+            <input type="password" name="password" id="login-password" placeholder="Password" class="form-control">
+          </div>
+
+          <div class="form-group">
+            <button type="submit" id="submit-login" class="btn btn-primary"><i class="fa fa-fw fa-unlock-alt"></i>Login</button>
+          </div>
+
+          
+
+        </form> !-->
+
+      </script>
+
+      <script type="text/template" id="feedback-template">
+
+        <div id="feedback-box">
+          <i id="exit-feedback" class="icon-remove dim-button"></i>
+          <h3 id="feedback-title">
+            <i class="fa fa-comment fa-2x fa-fw" style="padding-right: 10px"></i>Send Feedback
+          </h3>
+          <p>Feel free to send comments, suggestions, or issues.</p>
+
+          <div id="feedback-failure-message"></div>
+          <div id="feedback-sending-message">Sending...</div>
+          <div id="feedback-success-message">Sent!</div>
+
+          <form id="feedback-form">
+
+            <input type="hidden" name="_csrf">
+
+            <div class="form-group">
+              <label for="subject" class="control-label">Subject</label>
+              <input type="text" name="subject" id="feedback-subject" placeholder="Subject" autofocus="" class="form-control">
+            </div>
+
+            <div class="form-group">
+              <label for="message" class="control-label">Message</label>
+              <textarea name="message" id="feedback-message" placeholder="Message" autofocus="" class="form-control"></textarea>
+            </div>
+
+            <div class="form-group">
+              <button type="submit" id="submit-feedback" class="btn btn-primary">Submit</button>
+            </div>
+
+          </form>
+        </div>
+        </div>
+
+      </script>
+
+      <script type="text/template" id="help-section-template">
+
+        <div class="enter-help-section" data-target-id="<%= targetId %>" style="left: <%= elementPosition[0] %>px; top: <%= elementPosition[1] %>px;">
+          ?
+        </div>
+        <div class="help-section" data-target-id="<%= targetId %>" style="left: <%= elementPosition[0] + offset[0] %>px; top: <%= elementPosition[1] + offset[1]  %>px;">
+          <span><%= title %> </span>
+          <p><%= text %></p>
+          <div class="exit-help-section" data-target-id="<%= targetId %>">Ok, got it!</div>
+          <div class="exit-help" data-target-id="<%= targetId %>">Exit all</div>
+        </div>
+
+      </script>
+
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+
+        <!-- Google Analytics: change UA-XXXXX-X to be your site's ID. -->
+        <!-- <script>
+            var _gaq=[['_setAccount','UA-XXXXX-X'],['_trackPageview']];
+            (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+            g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+            s.parentNode.inertBefore(g,s)}(document,'script'));
+        </script> -->
+
+    <!-- Application source. -->
+    <script data-main="/scripts/main" src="source.min.js"></script>
+
+</body>
+</html>
