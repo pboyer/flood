@@ -321,8 +321,7 @@ input[type="button"].btn-block {
 .connection {
 	fill:none; 
 	stroke-width: 3.2;
-	stroke:#777;
-	box-shadow: 1px 1px 10px red;
+	stroke:#555;
 }
 
 .partial-function-connection {
