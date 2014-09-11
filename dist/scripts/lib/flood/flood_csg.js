@@ -362,13 +362,32 @@ define(['FLOOD'], function(FLOOD) {
 			var pl = new CSG.Plane(n,w);
 			pl.origin = o;
 			pl.xaxis = x.unit();
-			pl.yaxis = n.cross(pl.xaxis);
+			pl.yaxis = y.unit();
 			
 			return pl;
 
 		};
 
 	}.inherits( FLOOD.baseTypes.CSG );
+
+	FLOOD.nodeTypes.PlaneComponents = function() {
+
+		var typeData = {
+			inputs: [ 	new FLOOD.baseTypes.InputPort( "Plane", [ CSG.Plane ], initPlane() )],
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "Origin", [ CSG.Vector ] ), 
+									new FLOOD.baseTypes.OutputPort( "XAxis", [ CSG.Vector ] ), 
+									new FLOOD.baseTypes.OutputPort( "YAxis", [ CSG.Vector ] ),
+									new FLOOD.baseTypes.OutputPort( "Normal", [ CSG.Vector ] )],
+			typeName: "PlaneComponents" 
+		};
+
+		FLOOD.baseTypes.NodeType.call(this, typeData );
+
+		this.eval = function(plane) {
+			return new FLOOD.MultiOutResult({"0" : plane.origin, "1" : plane.xaxis, "2" : plane.yaxis, "3" : plane.xaxis.cross(plane.yaxis) });
+		};
+
+	}.inherits( FLOOD.baseTypes.NodeType);
 
 	var initPlane = function(){
 
