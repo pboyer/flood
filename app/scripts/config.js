@@ -159,9 +159,9 @@ require.config({
         jqueryuicore: '../bower_components/jquery.ui/ui/jquery.ui.core',
         jqueryuimouse: '../bower_components/jquery.ui/ui/jquery.ui.mouse',
         jqueryuiwidget: '../bower_components/jquery.ui/ui/jquery.ui.widget',
-        jquery: '../bower_components/jquery/jquery',
-        backbone: '../bower_components/backbone-amd/backbone',
-        underscore: '../bower_components/underscore-amd/underscore',
+        jquery: '../bower_components/jquery/jquery.min',
+        backbone: '../bower_components/backbone-amd/backbone-min',
+        underscore: '../bower_components/underscore-amd/underscore-min',
     }
 
 });
