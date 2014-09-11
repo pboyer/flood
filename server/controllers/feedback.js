@@ -15,9 +15,7 @@ var emailTarget = secrets.feedback.email;
 
 exports.postFeedback = function(req, res) {
 
-	if (!req.user) {
-		return res.status(401).send("You are not logged in");
-	}
+	if (!req.user) return res.status(401).send("You are not logged in");
 
 	if (!req.body) return res.status(500).send('Malformed body');
 
@@ -26,15 +24,15 @@ exports.postFeedback = function(req, res) {
 	if (!emailTarget) return res.status(500).send({ msg: "Feedback temporarily unsupported" });
 
 	smtpTransport.sendMail({
-    from: 'feedback@floodeditor.com',
-    to: emailTarget,
-    subject: "\"" + ns.subject + "\" says " + req.user.email,
-    text: ns.message
+	    from: req.user.email,
+	    to: emailTarget,
+	    subject: "[FLOOD FEEDBACK] : \"" + ns.subject ? ns.subject : "Empty subject" + "\"",
+	    text: ns.message ? ns.message : "Empty body",
 		}, function(err) {
 	    if (err) {
 	      return res.status(500).send({ msg: "Could not send feedback!  Try again later!" });
 	    }
-	    return res.send('success', { msg: 'Feedback has been sent successfully!' });
+	    return res.send({ msg: 'Feedback has been sent successfully!' });
 	  });
 
 };
