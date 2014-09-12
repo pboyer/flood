@@ -605,8 +605,6 @@ define(['FLOOD'], function(FLOOD) {
 
 	CSG.Matrix4x4.prototype.inverse = function(){
 
-		console.log('okay')
-
 		// based on http://www.euclideanspace.com/maths/algebra/matrix/functions/inverse/fourD/index.htm
 		var te = new Array(16);
 		var me = this.elements;
@@ -632,8 +630,6 @@ define(['FLOOD'], function(FLOOD) {
 		te[7] = n12*n33*n41 - n13*n32*n41 + n13*n31*n42 - n11*n33*n42 - n12*n31*n43 + n11*n32*n43;
 		te[11] = n13*n22*n41 - n12*n23*n41 - n13*n21*n42 + n11*n23*n42 + n12*n21*n43 - n11*n22*n43;
 		te[15] = n12*n23*n31 - n13*n22*n31 + n13*n21*n32 - n11*n23*n32 - n12*n21*n33 + n11*n22*n33;
-
-		console.log('nope')
 
 		var det = n11 * te[ 0 ] + n21 * te[ 4 ] + n31 * te[ 8 ] + n41 * te[ 12 ];
 

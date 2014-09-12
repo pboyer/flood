@@ -6,7 +6,7 @@
     <head>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title>flood</title>
+        <title>Editor Beta - Flood</title>
         <meta name="description" content="">
         <meta name="viewport" content="width=device-width">
 
@@ -77,6 +77,42 @@
             font-size: 18px;
             color: #666;
             text-shadow: 0 1px white;
+          }
+
+          #app-fail {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            color: #333;
+            z-index: 125;
+            background: #960018;
+          }
+
+          #app-fail-container {
+            border-radius: 6px;
+            width: 450px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 20px;
+            background: whitesmoke;
+            margin-top: 50px;
+          }
+    
+          #app-fail-container i {
+            font-size: 150px;
+            color: grey;
+          }
+
+          #app-fail-container h1 {
+            text-align: center;
+          }
+
+          #app-fail-container p {
+            padding-top: 20px;
+            color: grey;
           }
 
         </style>
@@ -164,6 +200,19 @@
           </div>
 
           <div id="viewer" class="row blur"></div>
+
+          <div id="app-fail" style="display: none">
+  
+            <div id="app-fail-container">
+              <h1><i class="fa fa-fw fa-2x fa-exclamation-triangle"></i></h1>
+              <h1>Flood requires WebGL!</h1>
+              <p>
+                It's also possible that WebGL is disabled in your browser or has failed to load.  You'll need to use a 
+                web browser that <a href="http://caniuse.com/#search=webgl">supports WebGL</a> to use Flood.  
+              </p>
+            </div>
+
+          </div>
 
         </div>
 
@@ -622,6 +671,24 @@
           <div class="exit-help-section" data-target-id="<%= targetId %>">Ok, got it!</div>
           <div class="exit-help" data-target-id="<%= targetId %>">Exit all</div>
         </div>
+
+      </script>
+
+
+      <script>
+
+        function checkWebGL() { 
+           try{
+            var canvas = document.createElement( 'canvas' ); 
+            return !! window.WebGLRenderingContext && ( 
+                 canvas.getContext( 'webgl' ) || canvas.getContext( 'experimental-webgl' ) );
+           }catch( e ) { return false; } 
+         };
+
+        if (!checkWebGL()) {
+          var appfail = document.getElementById("app-fail");
+          appfail.style.display = '';
+        }
 
       </script>
 
