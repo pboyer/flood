@@ -1,15 +1,8 @@
 CUSTOM NODES
 
-if you close a workspace and it's still in use 
-	- add it to hidden workspaces
-	- otherwise completely remove it
-
 don't show previews in custom node workspaces
-
-polygon node
 configure node-webkit endpoint URL
 
-dropping in a previously created, nested custom node causes placed node to return null value
 enter custom node by double clicking on the node instance
 paste should be offset to workspace center
 
