@@ -356,13 +356,17 @@ define(['FLOOD'], function(FLOOD) {
 
 		this.eval = function(o, x, y) {
 
+			if (x.length() < 1e-6) throw new Error("The X Axis must be longer than 0.");
+			if (y.length() < 1e-6) throw new Error("The Y Axis must be longer than 0.");
+			if (x.cross(y).length() < 1e-6) throw new Error("The X and Y Axis must form a plane");
+
 			var n = x.cross(y).unit();
 			var w = n.dot(o);
 
 			var pl = new CSG.Plane(n,w);
 			pl.origin = o;
 			pl.xaxis = x.unit();
-			pl.yaxis = y.unit();
+			pl.yaxis = n.cross(x).unit();
 			
 			return pl;
 
@@ -599,51 +603,86 @@ define(['FLOOD'], function(FLOOD) {
 
 	}.inherits( FLOOD.baseTypes.CSG );
 
+	CSG.Matrix4x4.prototype.inverse = function(){
+
+		console.log('okay')
+
+		// based on http://www.euclideanspace.com/maths/algebra/matrix/functions/inverse/fourD/index.htm
+		var te = new Array(16);
+		var me = this.elements;
+
+		var n11 = me[0], n12 = me[4], n13 = me[8], n14 = me[12];
+		var n21 = me[1], n22 = me[5], n23 = me[9], n24 = me[13];
+		var n31 = me[2], n32 = me[6], n33 = me[10], n34 = me[14];
+		var n41 = me[3], n42 = me[7], n43 = me[11], n44 = me[15];
+
+		te[0] = n23*n34*n42 - n24*n33*n42 + n24*n32*n43 - n22*n34*n43 - n23*n32*n44 + n22*n33*n44;
+		te[4] = n14*n33*n42 - n13*n34*n42 - n14*n32*n43 + n12*n34*n43 + n13*n32*n44 - n12*n33*n44;
+		te[8] = n13*n24*n42 - n14*n23*n42 + n14*n22*n43 - n12*n24*n43 - n13*n22*n44 + n12*n23*n44;
+		te[12] = n14*n23*n32 - n13*n24*n32 - n14*n22*n33 + n12*n24*n33 + n13*n22*n34 - n12*n23*n34;
+		te[1] = n24*n33*n41 - n23*n34*n41 - n24*n31*n43 + n21*n34*n43 + n23*n31*n44 - n21*n33*n44;
+		te[5] = n13*n34*n41 - n14*n33*n41 + n14*n31*n43 - n11*n34*n43 - n13*n31*n44 + n11*n33*n44;
+		te[9] = n14*n23*n41 - n13*n24*n41 - n14*n21*n43 + n11*n24*n43 + n13*n21*n44 - n11*n23*n44;
+		te[13] = n13*n24*n31 - n14*n23*n31 + n14*n21*n33 - n11*n24*n33 - n13*n21*n34 + n11*n23*n34;
+		te[2] = n22*n34*n41 - n24*n32*n41 + n24*n31*n42 - n21*n34*n42 - n22*n31*n44 + n21*n32*n44;
+		te[6] = n14*n32*n41 - n12*n34*n41 - n14*n31*n42 + n11*n34*n42 + n12*n31*n44 - n11*n32*n44;
+		te[10] = n12*n24*n41 - n14*n22*n41 + n14*n21*n42 - n11*n24*n42 - n12*n21*n44 + n11*n22*n44;
+		te[14] = n14*n22*n31 - n12*n24*n31 - n14*n21*n32 + n11*n24*n32 + n12*n21*n34 - n11*n22*n34;
+		te[3] = n23*n32*n41 - n22*n33*n41 - n23*n31*n42 + n21*n33*n42 + n22*n31*n43 - n21*n32*n43;
+		te[7] = n12*n33*n41 - n13*n32*n41 + n13*n31*n42 - n11*n33*n42 - n12*n31*n43 + n11*n32*n43;
+		te[11] = n13*n22*n41 - n12*n23*n41 - n13*n21*n42 + n11*n23*n42 + n12*n21*n43 - n11*n22*n43;
+		te[15] = n12*n23*n31 - n13*n22*n31 + n13*n21*n32 - n11*n23*n32 - n12*n21*n33 + n11*n22*n33;
+
+		console.log('nope')
+
+		var det = n11 * te[ 0 ] + n21 * te[ 4 ] + n31 * te[ 8 ] + n41 * te[ 12 ];
+
+		if ( det == 0 ) {
+			var msg = "Matrix4.getInverse(): can't invert matrix, determinant is 0";
+			throw new Error( msg ); 
+		}
+
+		var detInv = 1 / det;
+
+		te = te.map(function(x){ return x * detInv });
+
+		return new CSG.Matrix4x4( te );
+	}
+
 	var extrude = function(polygon, offset) {
 
 		// get CS from profile plane
 		var plane = polygon.plane;
 		var z = plane.normal;
-		var o = z.times( plane.w );
+		var o = polygon.vertices[0].pos;
 
-		var helperVec = z.minus(new CSG.Vector(1,0,0)).length() < 1e-5 ? new CSG.Vector(1,0,0) : new CSG.Vector(0,1,0);
+		var helperVec = z.minus(new CSG.Vector(1,0,0)).length() > 1e-5 ? new CSG.Vector(1,0,0) : new CSG.Vector(0,1,0);
 
 		var x = z.cross( helperVec ).unit();
 		var y = z.cross( x );
 
-		var trf = new CSG.Matrix4x4( [ 	x.x, x.y, x.z, o.x, 
-																		y.x, y.y, y.z, o.y, 
-																		z.x, z.y, z.z, o.z,
+		var trf = new CSG.Matrix4x4( [ 	x.x, x.y, x.z, 0, 
+																		y.x, y.y, y.z, 0, 
+																		z.x, z.y, z.z, 0,
 																		0,   0,   0,   1    ]);
 
-		var trfinv = new CSG.Matrix4x4( [ 	x.x, y.x, z.x, -o.x, 
-																				x.y, y.y, z.y, -o.y, 
-																				x.z, y.z, z.z, -o.z,
-																				0,   0,   0,   1    ]);
+		var trfinv = trf.inverse();
 
 		var cc = [];
 
 		for (var i = 0; i < polygon.vertices.length; i++){
-
-			var cp = polygon.vertices[i].pos;
-
-			// align polygon with 2d CS
-			var cpp = cp.multiply4x4( trfinv );
-
+			var cp = polygon.vertices[i].pos.minus( o );
+			var cpp = trf.rightMultiply1x3Vector( cp );
 			cc.push( new CSG.Vector2D( cpp.x, cpp.y ) );
-
 		}
 
 		// extrude to create polygon
 		var profile2D = new CSG.Polygon2D( cc, false );
-
-		// transform the extrusion vector
 		var offsetTrf = trf.rightMultiply1x3Vector( offset );
 		var ext = profile2D.extrude({ offset: offsetTrf });
 
-		// transform back to original CS
-		return ext.transform( trf );
-
+		// transform solid back to original cs
+		return ext.transform( CSG.Matrix4x4.translation( o ).multiply( trfinv ) );
 	};
 
 	FLOOD.nodeTypes.SolidExtrusion = function() {
