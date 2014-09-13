@@ -5,7 +5,7 @@
 
 ###What is it?
 
-flood is a [dataflow](http://en.wikipedia.org/wiki/Dataflow_programming)-style visual programming language based on Scheme that runs on JavaScript.  It is based on the [Dynamo](http://github.com/ikeough/Dynamo) visual programming language.  flood runs in a browser and as a standalone application on all platforms via [node-webkit](https://github.com/rogerwang/node-webkit).  
+flood is a [dataflow](http://en.wikipedia.org/wiki/Dataflow_programming)-style visual programming language based on Scheme written in JavaScript.  flood runs in a browser and as a standalone application on all platforms via [node-webkit](https://github.com/rogerwang/node-webkit).  
 
 ###Features
 
@@ -20,7 +20,7 @@ flood is a [dataflow](http://en.wikipedia.org/wiki/Dataflow_programming)-style v
 * Constructive solid geometry - Cube, cylinder, sphere, union, intersect, subtract
 * "Always on" continuous execution
 
-flood, like early versions of Dynamo, is based on Scheme and thus has many of the features of that language.  It uses a [lightweight scheme interpreter](http://github.com/pboyer/scheme.js) I wrote called scheme.js.
+flood, like early versions of [Dynamo](http://github.com/ikeough/Dynamo), is based on Scheme and thus has many of the features of that language.  It uses a [lightweight scheme interpreter](http://github.com/pboyer/scheme.js) I wrote called scheme.js.
 
 ###Getting started
 
