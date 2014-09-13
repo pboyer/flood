@@ -28,8 +28,6 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView'], function(Backbone, 
         }
       });
 
-      render();
-
     },
 
     colorSelected: function(){
@@ -110,7 +108,6 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView'], function(Backbone, 
     onRemove: function(){
       this.model.workspace.off('change:current', this.changeVisibility, this);
       scene.remove(this.threeGeom); 
-      render();
     }, 
 
     evaluated: false,
@@ -255,13 +252,11 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView'], function(Backbone, 
         
       if (!this.model.get('visible') || !this.model.workspace.get('current') )
       {
-        scene.remove(this.threeGeom);
+        this.threeGeom.traverse(function(e) { e.visible = false; });
       } else if ( this.model.get('visible') )
       {
-        scene.add(this.threeGeom);
+        this.threeGeom.traverse(function(e) { e.visible = true; });
       }
-
-      render();
 
     },
 

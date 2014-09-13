@@ -27,8 +27,8 @@ define([  'backbone',
       this.listenTo(this.model, 'change', this.render);
       this.$workspace_tabs = this.$('#workspace-tabs');
 
-      this.model.get('workspaces').on('add', this.addWorkspaceTab, this);
-      this.model.get('workspaces').on('remove', this.removeWorkspaceTab, this);
+      this.model.get('workspaces').on('add', this.workspaceAdded, this);
+      this.model.get('workspaces').on('remove', this.workspaceRemoved, this);
 
       this.model.on('change:showingSettings', this.viewSettings, this);
       this.model.on('change:showingFeedback', this.viewFeedback, this);
@@ -253,7 +253,7 @@ define([  'backbone',
 
     workspaceCounter: 1,
 
-    addWorkspaceTab: function(workspace){
+    workspaceAdded: function(workspace){
 
       if ( this.model.isBackgroundWorkspace(workspace.id) ) return;
 
@@ -267,7 +267,7 @@ define([  'backbone',
 
     },
 
-    removeWorkspaceTab: function(workspace){
+    workspaceRemoved: function(workspace){
 
       // The Workspace can no longer be current
       workspace.set('current', false);
@@ -288,6 +288,7 @@ define([  'backbone',
 
       this.workspaceTabViews[workspace.get('_id')].$el.remove();
       delete this.workspaceTabViews[workspace.get('_id')];
+      delete this.workspaceViews[workspace.get('_id')];
 
     },
 
@@ -319,20 +320,20 @@ define([  'backbone',
 
     hideWorkspace: function(workspaceView){
       if (workspaceView != undefined)
-        workspaceView.$el.hide();
+        workspaceView.$el.css('display','none');
     },
 
     showWorkspace: function(workspaceView){
 
       // if the workspace tab does not exist
       this.model.removeWorkspaceFromBackground( workspaceView.model.id );
-      this.addWorkspaceTab( workspaceView.model );
+      this.workspaceAdded( workspaceView.model );
 
       if (!$.contains(document.documentElement, workspaceView.$el[0])){
         this.$el.children('#workspaces').append( this.currentWorkspaceView.$el );
       }
       
-      workspaceView.$el.show();
+      workspaceView.$el.css('display','block');
 
     },
 
@@ -364,7 +365,7 @@ define([  'backbone',
         if (!this.workspaceTabViews){
           this.workspaceTabViews = {};
 
-          workspaces.each( this.addWorkspaceTab, this );
+          workspaces.each( this.workspaceAdded, this );
         }
 
       // hide current workspace, show workspace
@@ -407,8 +408,8 @@ define([  'backbone',
       this.$el.find('#workspace_hide i').addClass('icon-arrow-left');
 
       // change whether workspace_container is visible or not
-      this.currentWorkspaceView.$el.show();
-      this.workspaceControlsView.$el.show();
+      this.currentWorkspaceView.$el.css('display','block');
+      this.workspaceControlsView.$el.css('display','block');
 
       $('#viewer').addClass('blur');
     },

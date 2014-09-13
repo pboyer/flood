@@ -153,7 +153,10 @@ define(['backbone', 'Workspace', 'ConnectionView', 'MarqueeView', 'NodeViewTypes
 
     updateZoom: function(){
 
-      var center = this.getCenter();
+      if (this.cachedZoom === this.model.get('zoom')) return this;
+      this.cachedZoom = this.model.get('zoom');
+
+      // var center = this.getCenter();
 
       this.$workspace.css('transform', 'scale(' + this.model.get('zoom') + ')' );
       this.$workspace.css('transform-origin', "0 0" );
@@ -342,6 +345,7 @@ define(['backbone', 'Workspace', 'ConnectionView', 'MarqueeView', 'NodeViewTypes
         view.delegateEvents();
 
         if (!view.el.parentNode){
+
           view.render();
           this_.$workspace_canvas.prepend( view.el );
 
