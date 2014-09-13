@@ -738,7 +738,9 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
 
     run: function() {
 
+      console.warn('workspace.run', this.runner )
       if ( !this.runAllowed || this.get('isCustomNode') ){
+        console.log('rejectng run')
         this.runRejected = true;
         return;
       }
@@ -746,6 +748,7 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
       this.runReject = false;
 
       if (this.get('nodes').length === 0){
+        console.log('no nodes!')
         return;
       }
         
@@ -756,6 +759,7 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
                               return ele.get('_id');
                             });
 
+      console.log('workspace.run.continue')
       this.runner.run( bottomNodes );
 
     },

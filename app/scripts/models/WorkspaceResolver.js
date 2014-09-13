@@ -17,6 +17,8 @@ define(['backbone', 'FLOOD'],
     initializeDependencies: function(depIds){
 
       if (depIds.length === 0 || !depIds ) {
+
+        console.log('workspaces ready')
         this.workspace.trigger('requestRun');
         return;
       }

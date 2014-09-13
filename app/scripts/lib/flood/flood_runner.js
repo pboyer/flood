@@ -68,6 +68,9 @@ on_removeAll = function(){
 
 on_run = function(data){
 
+	console.log('run request received')
+	console.log(JSON.stringify(data))
+
 	var workspace = lookupWorkspace(data.workspace_id);
 	if (!workspace) return fail({ kind: "run", msg: "The workspace id given is not valid" }, data.silent);
 

@@ -1,4 +1,4 @@
-define(['backbone'], function(Backbone) {
+define(['backbone','underscore'], function(Backbone, _) {
 
 	return Backbone.Model.extend({
 
@@ -24,6 +24,8 @@ define(['backbone'], function(Backbone) {
 
 			this.runCount = 0;
 			this.averageRunTime = 0;
+
+			this.run = _.throttle(this.run, 120);
 
 	  },
 
@@ -120,12 +122,12 @@ define(['backbone'], function(Backbone) {
 
 	  runQueued : false,
 
-	  run: _.throttle(function( bottomIds ){
+	  run: function( bottomIds ){
 
 	  	this.post({ kind: "run", bottom_ids: bottomIds });
 	  	this.set('isRunning', true);
 
-	  }, 120),
+	  },
 
 	  watchNodeEvents: function( node ){
 
