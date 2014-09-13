@@ -254,6 +254,7 @@ define(['backbone', 'Workspace', 'ConnectionView', 'MarqueeView', 'NodeViewTypes
 
         var nodeView = this_.nodeViews[nodeModel.get('_id')];
 
+        // if NodeView has not been drawn
         if ( nodeView === undefined){
 
           var NodeView = NodeViewTypes.Base;
@@ -264,14 +265,14 @@ define(['backbone', 'Workspace', 'ConnectionView', 'MarqueeView', 'NodeViewTypes
           nodeView = new NodeView({ model: nodeModel, workspaceView: this_, workspace: this_.model });
           this_.nodeViews[ nodeView.model.get('_id') ] = nodeView;
 
-        }
+          this_.$workspace.prepend( nodeView.$el );
+          nodeView.render();
+          nodeView.makeDraggable();
+          nodeView.delegateEvents();
+          
+          this_.$workspace_canvas.append( nodeView.portGroup );
 
-        this_.$workspace.prepend( nodeView.$el );
-        nodeView.render();
-        nodeView.makeDraggable();
-        nodeView.delegateEvents();
-        
-        this_.$workspace_canvas.append( nodeView.portGroup );
+        }
 
       });
 
