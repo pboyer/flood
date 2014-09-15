@@ -11,7 +11,7 @@ if (typeof require != 'function' && typeof window != "object") {
 
 }
 
-define('FLOODCSG',['FLOOD'], function(FLOOD) {
+define(['FLOOD'], function(FLOOD) {
 
 	CSG.prototype.render = function() {
 

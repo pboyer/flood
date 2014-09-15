@@ -14,7 +14,7 @@ if (typeof require != 'function' && typeof window != "object") {
 
 }
 	
-define('scheme',function() {
+define(function() {
 
 	// Env
 	// A dictionary of symbol-value pairs
