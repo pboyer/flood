@@ -387,6 +387,7 @@ input[type="button"].btn-block {
 	overflow-y: hidden;
 }
 
+
 #login-failure-message {
 	padding: 10px;
 	margin: 10px;
@@ -409,6 +410,10 @@ input[type="button"].btn-block {
 #extra-menu #feedback-button:hover {
 	color: #589cc8;
 } 
+
+#feedback-form textarea {
+	max-width: 100%;
+}
 
 #extra-menu .menu-element:hover {
 	background: #444;
