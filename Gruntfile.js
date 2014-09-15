@@ -134,6 +134,15 @@ module.exports = function (grunt) {
                     src: '{,*/}*.{png,jpg,jpeg}',
                     dest: '<%= yeoman.dist %>/images'
                 }]
+            },
+            jqueryui: {
+                files: [{
+                    expand: true,
+                    flatten: true,
+                    cwd: '<%= yeoman.app %>',
+                    src: 'bower_components/jquery.ui/themes/base/images/*.png',
+                    dest: '<%= yeoman.dist %>/images'
+                }]
             }
         },
         cssmin: {
@@ -160,8 +169,7 @@ module.exports = function (grunt) {
                         '.htaccess',
                         '*.html',
                         '*.json',
-                        'images/{,*/}*.{webp,gif}',
-                        'bower_components/jquery.ui/themes/base/images/*.png',
+                        'images/{,*/}*.{webp,gif,png}',
                         'bower_components/jquery/jquery.js',
                         'bower_components/components-font-awesome/css/font-awesome.min.css',
                         'scripts/lib/flood/*.js'
