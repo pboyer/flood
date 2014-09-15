@@ -5,4 +5,3 @@ app/bower_components
 .tmp/
 dist_desktop
 .DS_Store
-dist

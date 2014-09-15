@@ -12,7 +12,7 @@ if (typeof require != 'function' && typeof window != "object") {
 
 }
 
-define(function() {
+define('FLOOD',function() {
 
 	// initialize core types
 	if (!FLOOD) var FLOOD = {};
