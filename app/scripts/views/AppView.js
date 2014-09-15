@@ -102,8 +102,12 @@ define([  'backbone',
       if ( !(e.metaKey || e.ctrlKey) && !isBackspaceOrDelete ) return;
 
       // do not capture from input
-      if (e.originalEvent.srcElement && e.originalEvent.srcElement.nodeName === "INPUT") return;
+      if (e.originalEvent.srcElement && e.originalEvent.srcElement.nodeName === "INPUT" ) return;
       if (e.target.nodeName === "INPUT") return;
+
+      // do not capture from textarea
+      if (e.originalEvent.srcElement && e.originalEvent.srcElement.nodeName === "TEXTAREA" ) return;
+      if (e.target.nodeName === "TEXTAREA") return;
 
       // keycodes: http://css-tricks.com/snippets/javascript/javascript-keycodes/
       switch (e.keyCode) {
