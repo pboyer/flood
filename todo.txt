@@ -1,17 +1,14 @@
+do not allow dragging node too far
+zoom from center in workspace
+why is drag so slow?
+deletion is too slow
+enter custom node by double clicking on the node instance
+paste should be offset to workspace center
+move stl export code out of workspacecontrolsview
+
 CUSTOM NODES
 
 don't show previews in custom node workspaces
-configure node-webkit endpoint URL
-
-enter custom node by double clicking on the node instance
-paste should be offset to workspace center
-
-deletion is too slow
-
-UI
-
-drop down to export to STL, or OBJ
-
 
 WORKSPACES MENU
 
@@ -21,17 +18,15 @@ disable node lacing
 icons for nodes
 should remember the old 3d orientation
 
-
 FEATURE
 
-example workspaces
+example workspaces!
 fork a workspace
 share workspaces
 describe workspace
 arbitrary javascript node - better than formula
 NURBS in flood
 run execution in ui thread, make calls to ui thread from worker
-
 
 THOUGHTS
 
