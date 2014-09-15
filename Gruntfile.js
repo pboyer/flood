@@ -162,6 +162,8 @@ module.exports = function (grunt) {
                         '*.json',
                         'images/{,*/}*.{webp,gif}',
                         'bower_components/jquery.ui/themes/base/images/*.png',
+                        'bower_components/jquery/jquery.js',
+                        'bower_components/components-font-awesome/css/font-awesome.min.css',
                         'scripts/lib/flood/*.js'
                     ]
                 }]
