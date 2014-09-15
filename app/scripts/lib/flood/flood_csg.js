@@ -2,9 +2,10 @@ if (typeof define !== 'function') {
     var define = require('amdefine')(module);
 }
 
+// web worker context
 if (typeof require != 'function' && typeof window != "object") { 
 
-	var define = function(x, y){
+	var define = function(name, x, y){
 		if (typeof x === "function") x(FLOOD);
 		if (typeof y === "function") y(FLOOD);
 	};

@@ -2,6 +2,7 @@ if (typeof define !== 'function') {
     var define = require('amdefine')(module);
 }
 
+// Webworker context
 if (typeof require != 'function' && typeof window != "object") { 
 
 	var FLOOD = {};
