@@ -24,14 +24,16 @@ define(['backbone', 'WorkspaceBrowserElementView'], function(Backbone, Workspace
 
     render: function(arg) {
 
-      this.$el.html( this.template( this.model.toJSON() ) );
+      if (!this.rendered) {
+        this.$el.html( this.template( this.model.toJSON() ) );
+        this.contents = this.$el.find('#workspace-browser-contents');
+        this.customNodes = this.$el.find('#workspace-browser-custom-nodes');
+        this.projects = this.$el.find('#workspace-browser-projects');
+      }
 
-      this.contents = this.$el.find('#workspace-browser-contents');
-
-      this.customNodes = this.$el.find('#workspace-browser-custom-nodes');
+      this.rendered = true;
+      
       this.customNodes.empty();
-
-      this.projects = this.$el.find('#workspace-browser-projects');
       this.projects.empty();
 
     },
@@ -43,6 +45,9 @@ define(['backbone', 'WorkspaceBrowserElementView'], function(Backbone, Workspace
 
     customNodeHeaderClick: function(e){
 
+      // do not resize when refresh is clicked
+      if ( $(e.target).hasClass('workspace-browser-refresh') ) return;
+
       this.projects.hide();
       this.customNodes.show();
 
@@ -52,6 +57,8 @@ define(['backbone', 'WorkspaceBrowserElementView'], function(Backbone, Workspace
 
     projectHeaderClick: function(e){
 
+      if ( $(e.target).hasClass('workspace-browser-refresh') ) return;
+      
       this.customNodes.hide();
       this.projects.show();
 
