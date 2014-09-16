@@ -14,6 +14,12 @@ if (typeof require != 'function' && typeof window != "object") {
 
 define('FLOODCSG',['FLOOD'], function(FLOOD) {
 
+	// type name overrides
+	CSG.floodTypeName = "Solid";
+	CSG.Polygon.floodTypeName = "Polygon";
+	CSG.Vector.floodTypeName = "Vector";
+	CSG.Plane.floodTypeName = "Plane";
+
 	CSG.prototype.render = function() {
 
 		var obj = { vertices : [], faces: [] };
@@ -88,6 +94,7 @@ define('FLOODCSG',['FLOOD'], function(FLOOD) {
 		return{ "linestrip": linestrip };
 
 	};
+
 
 
 	FLOOD.nodeTypes.Vector = function() {

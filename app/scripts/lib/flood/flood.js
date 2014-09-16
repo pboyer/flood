@@ -324,8 +324,19 @@ define('FLOOD',function() {
 
 	FLOOD.baseTypes.NodePort = function(name, type, parentNode, parentIndex, oppNode, oppIndex) {
 		
+		function constructPortTypeName(type) { 
+			if (!type) return;
+			if (type instanceof Array) return type.map( constructPortTypeName ).join(" of ");
+			if (type.floodTypeName) return type.floodTypeName;
+
+			var funcNameRegex = /function (.{1,})\(/;
+			var results = (funcNameRegex).exec(type.toString());
+			return (results && results.length > 1) ? results[1] : "";
+		};
+
 		this.name = name;
 		this.type = type;
+		this.typeName = constructPortTypeName( type );
 		this.parentNode = parentNode;
 		this.parentIndex = parentIndex != undefined ? parentIndex : 0;
 		this.oppNode = oppNode;
@@ -1672,7 +1683,8 @@ define('FLOOD',function() {
 	  var result = this[ replicationType ](this_arg, args, options);
 
 	  if (result.length === 0){
-	  	throw new Error("You supplied the wrong input types. ");
+	  	throw new Error("The type of data you supplied to this node is incorrect! The ports were expecting: " 
+	  			+ this_arg.inputs.map(function(x){ return x.name + ":" + x.typeName; }).join(", ") );
 	  }
 
 	  return result;

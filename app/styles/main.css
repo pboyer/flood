@@ -321,7 +321,7 @@ input[type="button"].btn-block {
 .connection {
 	fill:none; 
 	stroke-width: 3.2;
-	stroke:#555;
+	stroke:#333;
 }
 
 .partial-function-connection {
@@ -413,6 +413,26 @@ input[type="button"].btn-block {
 
 #feedback-form textarea {
 	max-width: 100%;
+}
+
+.node-dropdown-menu .dropdown-header {
+	text-transform: uppercase;
+	font-size: 9px;
+	padding: 2px;
+}
+
+.node-dropown-menu-item {
+	display: inline-block;
+	margin: 5px 0px 5px 10px;
+	color: black;
+}
+
+.node-dropown-menu-item:hover {
+	color: black;
+}
+
+.node-dropdown-menu {
+	padding: 10px;
 }
 
 #extra-menu .menu-element:hover {

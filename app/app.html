@@ -294,10 +294,20 @@
 
                 <a data-toggle="dropdown" href="#">&#8942;</a>
 
-                <ul class="dropdown-menu" role="menu" style="padding: 5px;" aria-labelledby="dLabel">
+                <ul class="dropdown-menu node-dropdown-menu" role="menu" aria-labelledby="dLabel">
+
+                  <% if (ele.typeName) { %>
+                    <li class="dropdown-header">Type</li>
+                    <span class="node-dropown-menu-item"><%= ele.typeName %></span>
+                  <% } %>
 
                   <li role="presentation" style="color: black">
-                      <input type="checkbox" class="use-default-checkbox" data-index="<%= index %>" <%= !ignoreDefaults[index] ? "checked" : ""%> > Use default : <%= ele.defaultVal != undefined ? JSON.stringify( ele.defaultVal ) : "None" %>
+                    <li class="dropdown-header" style="padding: 0">Use Default</li>
+                    
+                    <span class="node-dropown-menu-item"> 
+                      <input type="checkbox" class="use-default-checkbox" data-index="<%= index %>" <%= !ignoreDefaults[index] ? "checked" : ""%> >
+                      <%= ele.defaultVal != undefined ? JSON.stringify( ele.defaultVal ) : "None" %>
+                    </span>
                   </li>
 
                 </ul>
@@ -323,17 +333,17 @@
             <span style="color:black; padding: 1px">...</span>
           </a>
 
-          <ul class="dropdown-menu" role="menu" style="padding: 5px; font-size: 10px" aria-labelledby="dLabel">
+          <ul class="dropdown-menu node-dropdown-menu" role="menu" aria-labelledby="dLabel">
 
-            <li class="toggle-vis">
-              <a role="menuitem" tabindex="-1" href="#" style="font-size: 10px" >
-                <i class="icon-eye-open"></i><span style="padding-left: 5px">Hide geometry</span>
-              </a>
+            <li class="dropdown-header" style="font-size: 10px; padding: 0" >Visibility</li>
+
+            <li class="toggle-vis node-dropown-menu-item">
+              <i class="icon-eye-open"></i><span style="padding-left: 5px">Hide geometry</span>
             </li>
 
-            <li class="dropdown-header" style="font-size: 10px; padding: 0" >Replication</li>
+            <li class="dropdown-header">Replication</li>
 
-            <li >
+            <li class="node-dropown-menu-item">
               <div class="btn-group btn-group-xs" style="padding: 0px; padding-top: 5px; font-size: 10px">
                 <button type="button" class="rep-type btn btn-default"  style="font-size: 10px" data-rep-type="applyLongest">Long</button>
                 <button type="button" class="rep-type btn btn-default"  style="font-size: 10px" data-rep-type="applyCartesian">Cross</button>
@@ -437,19 +447,16 @@
             <span style="color:black; padding: 1px">...</span>
           </a>
 
-          <ul class="dropdown-menu" role="menu" style="padding: 5px; color: black" aria-labelledby="dLabel">
+          <ul class="dropdown-menu node-dropdown-menu" role="menu" style="color: black" aria-labelledby="dLabel">
 
-            <li role="presentation">
-               Min:<input type="number" class="num-min">
-            </li>
+            <span class="dropdown-header">Min</span>
+            <input type="number" class="num-min">
 
-            <li role="presentation">
-               Max: <input type="number" class="num-max">
-            </li>
+            <span class="dropdown-header">Max</span>
+            <input type="number" class="num-max">
 
-            <li role="presentation">
-               Step: <input type="number" class="num-step">
-            </li>
+            <span class="dropdown-header">Stepsize</span>
+            <input type="number" class="num-step">
 
           </ul>
         </div>
@@ -495,7 +502,7 @@
 
           <a data-toggle="dropdown" href="#">&#8230;</a>
 
-          <ul class="dropdown-menu" role="menu" style="padding: 5px;" aria-labelledby="dLabel">
+          <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
 
             <li role="presentation" class="deleteWorkspace">
               <a role="menuitem" tabindex="-1" href="#">
