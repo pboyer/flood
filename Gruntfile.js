@@ -172,6 +172,7 @@ module.exports = function (grunt) {
                         'images/{,*/}*.{webp,gif,png}',
                         'bower_components/jquery/jquery.js',
                         'bower_components/components-font-awesome/css/font-awesome.min.css',
+                        'bower_components/components-font-awesome/fonts/*.{ttf,eot,svg,woff,otf}'
                         'scripts/lib/flood/*.js'
                     ]
                 }]
@@ -180,8 +181,9 @@ module.exports = function (grunt) {
                 files: [{
                     expand: true,
                     dot: true,
+                    flatten: true,
                     cwd: '<%= yeoman.app %>',
-                    dest: '<%= yeoman.dist %>',
+                    dest: '<%= yeoman.dist %>/fonts',
                     src: [
                         'bower_components/components-font-awesome/fonts/*.{ttf,eot,svg,woff,otf}'
                     ]
