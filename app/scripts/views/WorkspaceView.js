@@ -45,6 +45,20 @@ define(['backbone', 'Workspace', 'ConnectionView', 'MarqueeView', 'NodeViewTypes
       this.renderMarquee();
 
       this.renderRunnerStatus();
+
+      // var that = this;
+      // this.$el.bind('mousewheel',function(e){
+      //     console.log('yo yo')
+          
+      //     if(e.originalEvent.wheelDelta / 120 > 0) {
+      //         this.model.set('zoom', this.model.get('zoom') + 0.09 );
+      //     }
+      //     else{
+      //         this.model.set('zoom', this.model.get('zoom') - 0.09 );
+      //     }
+
+      //     return false;
+      // }.bind(this));
       
     },
 
@@ -154,25 +168,51 @@ define(['backbone', 'Workspace', 'ConnectionView', 'MarqueeView', 'NodeViewTypes
     updateZoom: function(){
 
       if (this.cachedZoom === this.model.get('zoom')) return this;
-      this.cachedZoom = this.model.get('zoom');
 
-      // var center = this.getCenter();
+      this.zoomFactor = this.model.get('zoom') / (this.cachedZoom ? this.cachedZoom : this.model.get('zoom') );
+      this.cachedZoom = this.model.get('zoom');
 
       this.$workspace.css('transform', 'scale(' + this.model.get('zoom') + ')' );
       this.$workspace.css('transform-origin', "0 0" );
+
+      // get scroll here, because it gets removed by the following lines
+      var s = this.getNewScroll();
 
       // force redraw in chrome, otherwise the nodes look blurry
       this.$workspace.css('display', 'none').height();
       this.$workspace.css('display', 'block');
 
+      // set new scroll
+      this.$el.scrollLeft( s[0] );
+      this.$el.scrollTop( s[1] );
+
       return this;
 
     },
 
-    updateOffset: function(){
+    getNewScroll: function(){
 
-      // this.$el.scrollLeft( this.model.get('offset')[0] );
-      // this.$el.scrollTop( this.model.get('offset')[1] );
+      // get the origin of the zoom
+
+      var z = this.zoomFactor;
+      var ox = this.$el.scrollLeft();
+      var oy = this.$el.scrollTop();
+      var w = this.$el.width();
+      var h = this.$el.height();
+
+      // this is the offset from the center in document coordinates
+      var O = [w / 2, h / 2]; 
+
+      var sx = z * ( ox + O[0] ) - O[0];
+      var sy = z * ( oy + O[1] ) - O[1];
+
+      if (sx < 0) sx = 0;
+      if (sy < 0) sy = 0;
+
+      return [sx,sy];
+    },
+
+    updateOffset: function(){
 
       return this;
 
