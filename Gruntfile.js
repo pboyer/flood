@@ -172,7 +172,7 @@ module.exports = function (grunt) {
                         'images/{,*/}*.{webp,gif,png}',
                         'bower_components/jquery/jquery.js',
                         'bower_components/components-font-awesome/css/font-awesome.min.css',
-                        'bower_components/components-font-awesome/fonts/*.{ttf,eot,svg,woff,otf}'
+                        'bower_components/components-font-awesome/fonts/*.{ttf,eot,svg,woff,otf}',
                         'scripts/lib/flood/*.js'
                     ]
                 }]
