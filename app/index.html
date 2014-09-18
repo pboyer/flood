@@ -19,7 +19,14 @@
           margin: 0;
           padding: 0;
           font-family:Helvetica, Arial, "Lucida Grande", sans-serif;
+          background: #272822;
         }
+
+        .row, .col { overflow: hidden; position: absolute; }
+        .row { left: 0; right: 0; }
+        .col { top: 0; bottom: 0; }
+        .scroll-x { overflow-x: auto; }
+        .scroll-y { overflow-y: auto; }
 
         #title {
           background: #e3e3e3;
@@ -28,7 +35,7 @@
           right: 0;
           left: 0;
           top: 0;
-          height: 500px;
+          height: 400px;
 
           background-image: -ms-radial-gradient(center, circle closest-corner, #E3E3E3 0%, #C4C4C4 100%);
           background-image: -moz-radial-gradient(center, circle closest-corner, #E3E3E3 0%, #C4C4C4 100%);
@@ -51,7 +58,7 @@
         }
 
         .title-box {
-          width: 500px;
+          width: 400px;
           left: 50%;
           margin-left: -250px;
 
@@ -166,7 +173,7 @@
           background: #272822;
           padding-top: 35px;
           padding-bottom: 25px;
-          top: 400px;
+          top: 500px;
           bottom: 60px;
         }
 
@@ -227,18 +234,27 @@
         #footer {
           background: #e3e3e3;
           color: #333;
-          padding: 20px;
           text-align: right;
+          height: 50px;
           left: 0;
           right: 0;
           bottom: 0;
           font-size: 14px;
+          position: absolute;
         }
   
         #footer p {
           display: inline-block;
           padding-left: 15px;
           color: grey;
+          padding: 7px;
+        }
+
+        #container {
+          top: 0;
+          left: 0;
+          right: 0;
+          bottom: 50px;
         }
 
         #footer a {
@@ -256,104 +272,108 @@
     </head>
     
     <body>
+    
+      <div id="container" class="row scroll-y">
+  
+        <div id="title">
+            
+          <div id="title-container">
+            <div class="title-box" id="title-grey">
+              <h1>flood</h1>
+            </div>
 
-      <div id="title" class="row">
-          
-        <div id="title-container">
-          <div class="title-box" id="title-grey">
-            <h1>flood</h1>
-          </div>
-
-          <div class="title-box" id="title-blue">
-            <h1>flood</h1>
-          </div>
-        </div>
-
-        <div class="editor-container"><span>EDITOR</span></div>
-
-        <div id="links-container">
-          <a href="https://www.floodeditor.com/app.html">
-            <div class="link-button" id="tryit">Try the beta!</div>
-          </a>
-          <br>
-          <span>A modern web browser with WebGL is required</span>
-        </div>
-
-      </div>
-
-      <div id="example-row" class="row">
-
-        <div id="example-nav">
-          <div class="example-nav-button selected" id="example-nav-button-3d">3D Modeling & Printing</div>
-          <div class="example-nav-button" id="example-nav-button-programming">Visual Programming</div>
-          <div class="example-nav-button" id="example-nav-button-cloudbased">Cloud-Based</div>
-        </div>
-
-        <div id="example-3d" class="example">
-
-          <div class="example-text">
-            <div class="example-text-internal">
-              <h3>Parametric solid modeling for 3D printing</h3>
-              <p>Flood beta is a parametric solid modeler in your browser.  It provides:</p>
-              <ul>
-                <li>An intuitive, familiar modeling process</li>
-                <li>Watertight meshes suitable for 3D printing</li>
-                <li>STL export (accepted by Shapeways)</li>
-              </ul>
-              <p>Further, because Flood is a fully-fledged programming language, you can create your own solid types
-                and combine them however you want.
-              </p>
+            <div class="title-box" id="title-blue">
+              <h1>flood</h1>
             </div>
           </div>
 
-          <div class="example-image">
-            <img src="images/thumb.csg.png">
+          <div class="editor-container"><span>EDITOR</span></div>
+
+          <div id="links-container">
+            <a href="https://www.floodeditor.com/app.html">
+              <div class="link-button" id="tryit">Try the beta!</div>
+            </a>
+            <br>
+            <span>A modern web browser with WebGL is required</span>
           </div>
 
         </div>
 
-        <div id="example-programming" class="example hidden">
-          <div class="example-image">
-            <img src="images/thumb.programming.png">
+        <div id="example-row">
+
+          <div id="example-nav">
+            <div class="example-nav-button selected" id="example-nav-button-3d">3D Modeling & Printing</div>
+            <div class="example-nav-button" id="example-nav-button-programming">Visual Programming</div>
+            <div class="example-nav-button" id="example-nav-button-cloudbased">Cloud-Based</div>
           </div>
-          <div class="example-text">
-            <div class="example-text-internal">
-              <h3>Visual programming powered by HTML5</h3>
-              <p>Flood is a fully-fledged, open-source visual programming language.  It includes:</p>
-              <ul>
-                <li>Custom nodes - Create your own nodes for reuse</li>
-                <li>Write JavaScript inline in your nodes</li>
-                <li>Functional programming - Map, filter, reduce</li>
-              </ul>
-              <p>All execution is performed in a background thread in your browser, so Flood is responsive and safe.
+
+          <div id="example-3d" class="example">
+
+            <div class="example-text">
+              <div class="example-text-internal">
+                <h3>Parametric solid modeling for 3D printing</h3>
+                <p>Flood beta is a parametric solid modeler in your browser.  It provides:</p>
+                <ul>
+                  <li>An intuitive, familiar modeling process</li>
+                  <li>Watertight meshes suitable for 3D printing</li>
+                  <li>STL export (accepted by Shapeways)</li>
+                </ul>
+                <p>Further, because Flood is a fully-fledged programming language, you can create your own solid types
+                  and combine them however you want.
+                </p>
+              </div>
+            </div>
+
+            <div class="example-image">
+              <img src="images/thumb.csg.png">
+            </div>
+
+          </div>
+
+          <div id="example-programming" class="example hidden">
+            <div class="example-image">
+              <img src="images/thumb.programming.png">
+            </div>
+            <div class="example-text">
+              <div class="example-text-internal">
+                <h3>Visual programming powered by HTML5</h3>
+                <p>Flood is a fully-fledged, open-source visual programming language.  It includes:</p>
+                <ul>
+                  <li>Custom nodes - Create your own nodes for reuse</li>
+                  <li>Write JavaScript inline in your nodes</li>
+                  <li>Functional programming - Map, filter, reduce</li>
+                </ul>
+                <p>All execution is performed in a background thread in your browser, so Flood is responsive and safe.
+              </div>
             </div>
           </div>
-        </div>
 
-        <div id="example-cloudbased" class="example hidden">
-          <div class="example-image">
-            <img src="images/cloudbased.png">
-          </div>
-          <div class="example-text">
-            <div class="example-text-internal">
-              <h3>No need to save</h3>
-              <p>
-                Like most familiar cloud-based applications, you never have to save in Flood.  Your work is
-                automatically synced, and everytime you open the application you come right back 
-                to the state you were in before.  
-              </p>
+          <div id="example-cloudbased" class="example hidden">
+            <div class="example-image">
+              <img src="images/cloudbased.png">
+            </div>
+            <div class="example-text">
+              <div class="example-text-internal">
+                <h3>No need to save</h3>
+                <p>
+                  Like most familiar cloud-based applications, you never have to save in Flood.  Your work is
+                  automatically synced, and everytime you open the application you come right back 
+                  to the state you were in before.  
+                </p>
 
-              <ul>
-                <li>Continuous autosave</li>
-                <li>Undo-redo</li>
-                <li>Come back to your previous session with zero effort</li>
-              </ul>
-              <p>
-                So feel free to come back to your work wherever 
-                and whenever you want!
-              </p>
+                <ul>
+                  <li>Continuous autosave</li>
+                  <li>Undo-redo</li>
+                  <li>Come back to your previous session with zero effort</li>
+                </ul>
+                <p>
+                  So feel free to come back to your work wherever 
+                  and whenever you want!
+                </p>
+              </div>
             </div>
           </div>
+
         </div>
 
       </div>
