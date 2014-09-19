@@ -169,6 +169,22 @@ body {
   background-image: none;
 }
 
+.btn-flood {
+  margin-top: 40px;
+  color: #ffffff;
+  background-color: #AAA;
+  border-color: rgba(0, 0, 0, 0.2);
+}
+.btn-flood:hover,
+.btn-flood:focus,
+.btn-flood:active,
+.btn-flood.active,
+.open .dropdown-toggle .btn-flood {
+  color: #ffffff;
+  background-color: #999;
+  border-color: rgba(0, 0, 0, 0.2);
+}
+
 .btn-google-plus {
   margin-top: 40px;
   color: #ffffff;
@@ -497,10 +513,7 @@ input[type="button"].btn-block {
 
 .tab-button {
 	display: inline-block;
-	padding: 10px;
-	padding-bottom: 30px;
-	padding-top: 26px;
-	size: 20px;
+	padding: 5px;
 }
 
 .menu-element i {
@@ -523,8 +536,7 @@ input[type="button"].btn-block {
 #tab-button-container {
 	margin-left: auto;
 	margin-right: auto;
-	width: 150px;
-	text-shadow: 0 1px white;
+	width: 300px;
 }
 
 #workspace-browser {

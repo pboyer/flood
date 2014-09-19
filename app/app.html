@@ -29,6 +29,7 @@
             background: #e3e3e3;
             text-align: center;
             padding: 40px;
+            z-index: 120;
             right: 0;
             left: 0;
             top: 0;
@@ -93,17 +94,6 @@
             position: absolute;
             color: #589cc8;
             width: 500px;
-          }
-
-          #login {
-            background: #e3e3e3;
-            text-align: center;
-            z-index: 120;
-            right: 0;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            padding: 40px;
           }
 
           .form-group {padding: 5px;}
@@ -186,7 +176,7 @@
 
             <div id="more-menu">
               <div id="login-button" class="menu-element">
-                <i class="fa fa-user fa-fw"></i>
+                <i class="fa fa-sign-out fa-fw"></i>
                 Logout
               </div>
               <div id="workspace-browser-button" class="menu-element">
@@ -214,7 +204,7 @@
 
           </div>
 
-          <div id="login" class="row col">
+          <div id="login" class="row col scroll-y">
 
             <div id="title-container">
               <div class="title-box" id="title-grey">
@@ -613,16 +603,11 @@
 
       <script type="text/template" id="login-template">
 
-        <a href="/auth/google" class="btn btn-block btn-google-plus btn-social"><i class="fa fa-google-plus"></i>Sign in with Google</a>
-        <a href="/auth/facebook" class="btn btn-block btn-facebook btn-social"><i class="fa fa-facebook"></i>Sign in with Facebook</a>
-
-        <div id="tab-button-container">
-          <div id="login-tab-button" class="tab-button tab-button-hilite"><a href="#">Login</a></div>
-          <div id="signup-tab-button" class="tab-button"><a href="#">Signup</a></div>
-
+        <div id="login-failure-message">
         </div>
 
-        <div id="login-failure-message">
+        <div id="tab-button-container">
+          <a id="login-tab-button" href="#" class="btn btn-block btn-flood btn-social"><i class="fa fa-check"></i>Sign in with Flood</a>
         </div>
 
         <form id="signup-form" style="display:none">
@@ -668,9 +653,12 @@
             <button type="submit" id="submit-login" class="btn btn-primary"><i class="fa fa-fw fa-unlock-alt"></i>Login</button>
           </div>
 
-          
-
         </form> 
+
+        <div id="signup-tab-button" class="tab-button"><a href="#">New account...</a></div>
+
+        <a href="/auth/google" class="btn btn-block btn-google-plus btn-social"><i class="fa fa-google-plus"></i>Sign in with Google</a>
+        <a href="/auth/facebook" class="btn btn-block btn-facebook btn-social"><i class="fa fa-facebook"></i>Sign in with Facebook</a>
 
       </script>
 
