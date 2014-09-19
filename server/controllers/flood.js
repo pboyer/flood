@@ -3,7 +3,8 @@ var mongoose = require('mongoose')
 	, Workspace = require('../models/Workspace').WorkspaceModel
 	, User = require('../models/User')
 	, async = require('async')
-	, _ = require('underscore');
+	, _ = require('underscore')
+	, ExampleWorkspaces = require('./exampleWorkspaces');
 
 var initNonUserSession = function(req, res){
 
@@ -35,19 +36,27 @@ var initNonUserSession = function(req, res){
 var initUserSession = function(req, res){
 
 	var user = req.user;
-	var nws = new Workspace({name : "My first workspace"});
-	var newSesh = new Session({name : "Empty session", workspaces : [ nws ]});
+	var nws = new Workspace(ExampleWorkspaces.myFirstProject);
+	var nws1 = new Workspace(ExampleWorkspaces.myFirstCustomNode);
+	var newSesh = new Session({name : "Session", workspaces : [ nws, nws1 ]});
+
+	nws.maintainers = [ req.user ];
+	nws1.maintainers = [ req.user ];
 
 	nws.save(function(errWs){
 
 		if (errWs) return res.status(500).send("Failed to initialize user workspace");
 
-		newSesh.save(function(errSesh){
+		nws1.save(function(errWs1){
+
+			if (errWs1) return res.status(500).send("Failed to initialize user workspace");
+
+			newSesh.save(function(errSesh){
 				
 				if (errSesh) return res.status(500).send("Failed to initialize user session");
 
 				user.lastSession = newSesh;
-				user.workspaces = [ nws ];
+				user.workspaces = [ nws, nws1 ];
 				user.markModified("lastSession workspaces");		
 
 				user.save(function(err){
@@ -63,6 +72,9 @@ var initUserSession = function(req, res){
 					});
 				});
 			});
+
+		});
+		
 	});
 	
 };

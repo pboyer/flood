@@ -46,7 +46,8 @@ define(['backbone', 'List', 'SearchElementView', 'bootstrap', 'jquery'], functio
       this.app.SearchElements.forEach(function(ele) {
 
         var eleView = new SearchElementView({ model: ele }, { appView: that.appView, app: that.app, 
-          click: function(e){ that.elementClick.call(that, e); } });
+          click: function(e){ that.elementClick.call(that, e); } 
+        });
 
         eleView.render();
         that.$list.append( eleView.$el );
@@ -277,6 +278,8 @@ define(['backbone', 'List', 'SearchElementView', 'bootstrap', 'jquery'], functio
     },
 
     elementClick: function(ele){
+
+      console.log('elementClick')
 
       this.addNode( ele.model.get('name') );
 

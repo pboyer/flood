@@ -12,7 +12,7 @@ define(['backbone'], function(Backbone) {
 	  			{ title: "Node Library",
 	  				targetId : "bottom-search",
 	  				offset: [5, -110],
-	  				text: "This is one place where you can add new nodes.  You can also double click to search"
+	  				text: "This is one place where you can add new nodes.  You can also double click on the workspace to add nodes."
 	  			},
 	  			{ title: "3D Focus Control",
 	  				targetId : "workspace_hide",

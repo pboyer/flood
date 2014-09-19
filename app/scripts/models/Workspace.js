@@ -423,6 +423,8 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
 
     addNode: function(data){
 
+      this.get('nodes').deselectAll();
+
       if ( data.typeName === "CustomNode" ){
         var id = data.extra.functionId;
 
