@@ -1054,8 +1054,6 @@ input[type="button"].btn-block {
 	color:black;
 }
 
-
-
 .node-settings {
 	position: absolute;
 	bottom: 0;
@@ -1074,7 +1072,16 @@ input[type="button"].btn-block {
 
 .node-number-input {
 	padding:2px;
-	margin:2px;`
+	margin:2px;
+}
+
+.currentValue {
+	box-shadow: none;
+}
+
+.currentValue:-moz-placeholder,
+.currentValue:focus {
+    box-shadow:none !important;
 }
 
 .node-evaluating {
