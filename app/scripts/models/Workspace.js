@@ -329,7 +329,13 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
       var that = this;
 
       var nodes = {};
-      var nodeOffset = Math.min( 20, Math.abs( 80 * Math.random() ) );
+
+      var centerX = (1 / this.get('zoom')) * (this.get('offset')[0] + 80);
+      var centerY = (1 / this.get('zoom')) * (this.get('offset')[1] + 80);
+
+      var topLeft = _.reduce(cb.nodes, function(a, x){
+        return [ Math.min(a[0], x.position[0] ), Math.min(a[1], x.position[1] )];
+      }, [ 1e8, 1e8 ] );
 
       var nodeCount = 0;
 
@@ -337,7 +343,11 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
 
         // give new id for building the paste
         nodes[x._id] = x;
-        nodes[x._id].position = [ x.position[0] + nodeOffset, x.position[1] + nodeOffset ];
+
+        var posX = x.position[0] - topLeft[0] + centerX;
+        var posY = x.position[1] - topLeft[1] + centerY;
+
+        nodes[x._id].position = [ posX, posY ];
         nodes[x._id]._id = that.makeId();
         nodeCount++;
 
