@@ -16,6 +16,7 @@ var workspaceSchema = new Schema({
   , selectedNodes: [ Schema.Types.Mixed ]
   , isPublic: { type: Boolean, default: false }
   , zoom: { type: Number, default: 1 }
+  , offset: [{ type: Number }]
   , lastSaved: Date
   , maintainers: [{type: Schema.ObjectId, ref: 'User' }]
   , undoStack: [ Schema.Types.Mixed ]

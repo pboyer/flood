@@ -115,6 +115,7 @@ define(['backbone', 'Workspace', 'ConnectionView', 'MarqueeView', 'NodeViewTypes
     },
 
     endWorkspacePan: function(event){
+      this.model.set('offset', [this.$el.scrollLeft(), this.$el.scrollTop()])
       this.$workspace.unbind('mousemove', this.workspacePan);
       this.$workspace.unbind('mouseup', this.endWorkspacePan);
     },
@@ -232,9 +233,7 @@ define(['backbone', 'Workspace', 'ConnectionView', 'MarqueeView', 'NodeViewTypes
         var s = this.getNewScroll();
       }
 
-      // set new scroll
-      this.$el.scrollLeft( s[0] );
-      this.$el.scrollTop( s[1] );
+      this.model.set('offset', s);
 
       return this;
 
@@ -243,8 +242,8 @@ define(['backbone', 'Workspace', 'ConnectionView', 'MarqueeView', 'NodeViewTypes
     getNewScroll: function(x, y){
 
       var z = this.zoomFactor;
-      var ox = this.$el.scrollLeft();
-      var oy = this.$el.scrollTop();
+      var ox = this.model.get('offset')[0];
+      var oy = this.model.get('offset')[1];
 
       if (!x || !y){
         var w = this.$el.width();
@@ -266,6 +265,11 @@ define(['backbone', 'Workspace', 'ConnectionView', 'MarqueeView', 'NodeViewTypes
     },
 
     updateOffset: function(){
+
+      var s = this.model.get('offset');
+
+      this.$el.scrollLeft( s[0] );
+      this.$el.scrollTop( s[1] );
 
       return this;
 

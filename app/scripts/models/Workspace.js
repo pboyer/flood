@@ -18,7 +18,7 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
       isPublic: false,
       isRunning: false,
       lastSaved: Date.now(),
-      offset: [0,0],
+      offset: [4000,4000],
 
       // undo/redo stack
       undoStack: [],
@@ -43,6 +43,12 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
     initialize: function(atts, arr) {
 
       atts = atts || {};
+
+      // if offset is not defined
+      if (!atts.offset || isNaN( atts.offset[0] ) || isNaN( atts.offset[1] )){
+        atts.offset = this.defaults.offset;
+        this.set( 'offset', this.defaults.offset );
+      }
 
       this.app = arr.app;
 
@@ -91,6 +97,7 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
       this.on('runCommand', throttledSync, this);
       this.on('change:name', throttledSync, this);
       this.on('change:zoom', throttledSync, this);
+      this.on('change:offset', throttledSync, this);
       this.on('change:workspaceDependencyIds', throttledSync, this);
       this.on('requestRun', this.run, this);
 
@@ -207,7 +214,6 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
     },
 
     parse : function(resp) {
-
       resp.nodes = new Nodes( resp.nodes );
       resp.connections = new Connections( resp.connections )
       return resp;

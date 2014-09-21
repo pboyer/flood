@@ -954,21 +954,21 @@ input[type="button"].btn-block {
 .workspace {
 	z-index: 90;
 	position: absolute;
-	width: 8000px;
-	height: 8000px;
+	width: 20000px;
+	height: 20000px;
 }
 
 .workspace_back {
 	z-index: 50;
 	position: absolute;
-	width: 8000px;
-	height: 8000px;
+	width: 20000px;
+	height: 20000px;
 }
 
 .workspace_canvas {
 	position: absolute;
-	width: 8000px;
-	height: 8000px;
+	width: 20000px;
+	height: 20000px;
 	background-color: rgba(0,0,0,0.3);
 }
 

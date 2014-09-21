@@ -375,6 +375,8 @@ define(['backbone', 'jqueryuidraggable', 'bootstrap'], function(Backbone, jquery
       if (pos[0] < 0) pos[0] = 0;
       if (pos[1] < 0) pos[1] = 0;
 
+
+
       this.position = pos;
 
       this.$el.css("left", this.position[0] );
