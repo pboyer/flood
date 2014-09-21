@@ -254,7 +254,7 @@ exports.myFirstProject =
       "name":"DefaultNodeName",
       "position":[  
         4350,
-        467
+        4467
       ],
       "typeName":"RegularPolygon",
       "selected":false,
