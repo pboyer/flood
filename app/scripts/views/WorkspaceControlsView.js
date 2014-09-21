@@ -94,58 +94,42 @@ define(['backbone', 'List', 'SearchElementView', 'bootstrap', 'jquery'], functio
       }, 100);
     },
 
-    currentWorkspace: function(){
-      return this.app.get('workspaces').get( this.app.get('currentWorkspace') );
-    },
-
     deleteClick: function(){
-      this.currentWorkspace().removeSelected();
+      this.app.getCurrentWorkspace().removeSelected();
     },
 
     copyClick: function(){
-      this.currentWorkspace().copy();
+      this.app.getCurrentWorkspace().copy();
     },
 
     pasteClick: function(){
-      this.currentWorkspace().paste();
+      this.app.getCurrentWorkspace().paste();
     },
 
     undoClick: function(){
-      this.currentWorkspace().undo();
+      this.app.getCurrentWorkspace().undo();
     },
 
     redoClick: function(){
-      this.currentWorkspace().redo();
+      this.app.getCurrentWorkspace().redo();
     },
 
     zoomresetClick: function(){
-      this.currentWorkspace().set('zoom', 1.0);
+      this.app.getCurrentWorkspace().set('zoom', 1.0);
     },
 
     zoominClick: function(){
-      this.currentWorkspace().zoomIn();
+      this.app.getCurrentWorkspace().zoomIn();
     },
 
     zoomoutClick: function(){
-      this.currentWorkspace().zoomOut();
-    },
-
-    getWorkspaceCenter: function(){
-
-      var w = this.appView.currentWorkspaceView.$el.width()
-        , h = this.appView.currentWorkspaceView.$el.height()
-        , ho = this.appView.currentWorkspaceView.$el.scrollTop()
-        , wo = this.appView.currentWorkspaceView.$el.scrollLeft()
-        , zoom = 1 / this.currentWorkspace().get('zoom');
-
-      return [zoom * (wo + w / 2), zoom * (ho + h / 2)];
+      this.app.getCurrentWorkspace().zoomOut();
     },
 
     addNode: function(name){
 
       if (name === undefined ) return;
-
-      this.currentWorkspace().addNodeByNameAndPosition( name, this.getWorkspaceCenter() );
+      this.app.getCurrentWorkspace().addNodeByNameAndPosition( name, this.appView.getCurrentWorkspaceCenter() );
 
     },
 
@@ -235,7 +219,7 @@ define(['backbone', 'List', 'SearchElementView', 'bootstrap', 'jquery'], functio
 
       var res = this.getFileFromSelected( this.stlConverter );
 
-      var wsName = this.currentWorkspace().get('name');
+      var wsName = this.app.getCurrentWorkspace().get('name');
 
       this.download(wsName + ".stl", res);
 
@@ -243,7 +227,7 @@ define(['backbone', 'List', 'SearchElementView', 'bootstrap', 'jquery'], functio
 
     getFileFromSelected: function(converterFunc){
 
-      var ws = this.currentWorkspace();
+      var ws = this.app.getCurrentWorkspace();
 
       var text = "";
       var vertexOffset = 0;
@@ -278,8 +262,6 @@ define(['backbone', 'List', 'SearchElementView', 'bootstrap', 'jquery'], functio
     },
 
     elementClick: function(ele){
-
-      console.log('elementClick')
 
       this.addNode( ele.model.get('name') );
 

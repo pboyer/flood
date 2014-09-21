@@ -220,7 +220,7 @@ define([  'backbone',
 
         // if we haven't already, create the search view element and add to the ui
         if (this.searchView === undefined){
-          this.searchView = new SearchView( { model: new Search() }, {app: this.model } );
+          this.searchView = new SearchView( { model: new Search() }, {app: this.model, appView: this } );
           this.searchView.render();
           this.$el.find('#workspaces').prepend(this.searchView.$el);
 
@@ -293,6 +293,18 @@ define([  'backbone',
       this.workspaceTabViews[workspace.get('_id')].$el.remove();
       delete this.workspaceTabViews[workspace.get('_id')];
       delete this.workspaceViews[workspace.get('_id')];
+
+    },
+
+    getCurrentWorkspaceCenter: function(){
+
+      var w = this.currentWorkspaceView.$el.width()
+        , h = this.currentWorkspaceView.$el.height()
+        , ho = this.currentWorkspaceView.$el.scrollTop()
+        , wo = this.currentWorkspaceView.$el.scrollLeft()
+        , zoom = 1 / this.model.getCurrentWorkspace().get('zoom');
+
+      return [zoom * (wo + w / 2), zoom * (ho + h / 2)];
 
     },
 

@@ -239,10 +239,7 @@ exports.getWorkspaces = function(req, res) {
 	User.findById( user._id )
 		.populate('workspaces', 'name lastSaved isPublic maintainers isModified isCustomNode')
 		.exec(function(e, u) {
-			console.log(u);
 			var filtered = u.workspaces.filter(function(x, i){ return x.isModified === true || i === 0; }).sort(dateSort);
-			console.log(filtered);
-
 			return res.send( filtered );
 	}); 
 

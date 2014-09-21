@@ -8,7 +8,8 @@ define(['backbone'], function(Backbone) {
     initialize: function(atts) { 
 
       this.app = this.model.app;
-      this.listenTo( this.model, 'change', this.render);
+      this.listenTo( this.model, 'change:name', this.render);
+      this.listenTo( this.model, 'change:current', this.render);
 
     },
 

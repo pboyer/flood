@@ -1015,22 +1015,58 @@ define('FLOOD',function() {
 
 		this.eval = function(min, max, steps) {
 
+			if (min > max) throw new Error('Max must be greater than Min!');
+			if (steps <= 0) throw new Error('The Steps must be greater than 0.');
+			if (min === max) throw new Error('Min is equal to Max!');
+
 			var range = new QuotedArray();
 
-			if (min > max || steps <= 0){
-				return range;
+			if (steps > 1){
+				var stepSize = (max - min) / (steps-1);
+				for (var i = 0; i < steps-1; i++){
+					range.push(min + i * stepSize);
+				}
 			}
-			 
-			var stepSize = (max - min) / steps;
-			for (var i = 0; i < steps; i++){
-				range.push(min + i * stepSize);
+
+			range.push(max);
+
+			return range;
+		};
+
+	}.inherits( FLOOD.baseTypes.NodeType );
+
+	FLOOD.nodeTypes.Steps = function() {
+
+		var typeData = {
+			inputs: [ 	new FLOOD.baseTypes.InputPort( "Min", [Number], 0.0 ),
+									new FLOOD.baseTypes.InputPort( "Max", [Number], 1.0 ),
+									new FLOOD.baseTypes.InputPort( "StepSize", [Number], 0.1 ) ],
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [QuotedArray, Number] ) ],
+			typeName: "Steps" 
+		};
+
+		FLOOD.baseTypes.NodeType.call(this, typeData );
+
+		this.eval = function(min, max, stepSize) {
+
+			if (min > max) throw new Error('Max must be greater than Min!');
+			if (stepSize <= 1e-6 ) throw new Error('The StepSize is less than 0.');
+			if (min === max) throw new Error('Min is equal to Max!');
+
+			var range = new QuotedArray();
+
+
+			var step = min;
+
+			while (step <= max){
+				range.push(step);
+				step += stepSize;
 			}
 
 			return range;
-
 		};
 
-	}.inherits( FLOOD.baseTypes.NodeType )
+	}.inherits( FLOOD.baseTypes.NodeType );
 
 	FLOOD.nodeTypes.Repeat = function() {
 
@@ -1154,6 +1190,22 @@ define('FLOOD',function() {
 
 	}.inherits( FLOOD.baseTypes.NodeType );
 
+	FLOOD.nodeTypes.ListReverse = function() {
+
+		var typeData = {
+			inputs: [ 	new FLOOD.baseTypes.InputPort( "List", [QuotedArray, AnyType], new QuotedArray() )],
+			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [AnyType] ) ],
+			typeName: "ListReverse" 
+		};
+
+		FLOOD.baseTypes.NodeType.call(this, typeData );
+
+		this.eval = function(L) {
+			return L.slice(0).reverse().toQuotedArray();
+		};
+
+	}.inherits( FLOOD.baseTypes.NodeType );
+
 	FLOOD.nodeTypes.ListSort = function() {
 
 		var typeData = {
@@ -1248,7 +1300,7 @@ define('FLOOD',function() {
 			inputs: [ 	new FLOOD.baseTypes.InputPort( "Function", [Function] ),
 									new FLOOD.baseTypes.InputPort( "List", [QuotedArray, AnyType] )],
 			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [AnyType] ) ],
-			typeName: "Filter" 
+			typeName: "ListFilter" 
 		};
 
 		FLOOD.baseTypes.NodeType.call(this, typeData );

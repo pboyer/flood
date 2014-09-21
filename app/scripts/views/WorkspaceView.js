@@ -29,7 +29,6 @@ define(['backbone', 'Workspace', 'ConnectionView', 'MarqueeView', 'NodeViewTypes
 
       this.model.on('change:zoom', this.updateZoom, this );
       this.model.on('change:offset', this.updateOffset, this );
-
       this.model.on('change:isRunning', this.renderRunnerStatus, this);
 
       this.listenTo(this.model, 'change:nodes', function() {
@@ -46,25 +45,38 @@ define(['backbone', 'Workspace', 'ConnectionView', 'MarqueeView', 'NodeViewTypes
 
       this.renderRunnerStatus();
 
-      // var that = this;
-      // this.$el.bind('mousewheel',function(e){
-      //     console.log('yo yo')
-          
-      //     if(e.originalEvent.wheelDelta / 120 > 0) {
-      //         this.model.set('zoom', this.model.get('zoom') + 0.09 );
-      //     }
-      //     else{
-      //         this.model.set('zoom', this.model.get('zoom') - 0.09 );
-      //     }
+      this.$el.bind('mousewheel',function(e){
 
-      //     return false;
-      // }.bind(this));
+        this.isMouseWheel = true;
+        this.clientX = e.clientX;
+        this.clientY = e.clientY;
+
+        var delta = 0;
+
+        if ( e.originalEvent.wheelDelta !== undefined ) { // WebKit / Opera / Explorer 9
+          delta = e.originalEvent.wheelDelta;
+        } else if ( e.originalEvent.detail !== undefined ) { // Firefox
+          delta = - e.originalEvent.detail;
+        }
+
+        if( delta > 0 ) {
+            if (this.model.get('zoom') < 1) 
+              this.model.set('zoom', Math.min(1, this.model.get('zoom') + delta * 0.0005 ));
+        } else {
+            if (this.model.get('zoom') > 0.25) 
+              this.model.set('zoom', Math.max( 0.25, this.model.get('zoom') + delta * 0.0005 ));
+        }
+
+        this.isMouseWheel = false;
+
+        return false;
+      }.bind(this));
       
     },
 
     events: {
       'mousedown .workspace_back':  'deselectAll',
-      'mousedown .workspace_back':  'startMarqueeDrag',
+      'mousedown .workspace_back':  'startWorkspaceDrag',
       'dblclick .workspace_back':  'showNodeSearch'
     },
 
@@ -80,10 +92,41 @@ define(['backbone', 'Workspace', 'ConnectionView', 'MarqueeView', 'NodeViewTypes
               .updateOffset();
     },
 
-    startMarqueeDrag: function(event){
-
+    startWorkspaceDrag: function(event){
       this.deselectAll();
 
+      if (event.ctrlKey || event.which === 2){
+        this.startWorkspacePan(event);
+      } else {
+        this.startMarqueeDrag(event);
+      }
+    },
+
+    // workspace panning
+
+    panStart: [0,0],
+
+    startWorkspacePan: function(event){
+      this.panStart = [ event.pageX,  event.pageY ];
+      this.scrollStart = [ this.$el.scrollLeft(), this.$el.scrollTop() ];
+      
+      this.$workspace.bind('mousemove', $.proxy( this.workspacePan, this) );
+      this.$workspace.bind('mouseup', $.proxy( this.endWorkspacePan, this) );
+    },
+
+    endWorkspacePan: function(event){
+      this.$workspace.unbind('mousemove', this.workspacePan);
+      this.$workspace.unbind('mouseup', this.endWorkspacePan);
+    },
+
+    workspacePan: function(event){
+      this.$el.scrollLeft( this.scrollStart[0] + this.panStart[0] - event.pageX );
+      this.$el.scrollTop( this.scrollStart[1] + this.panStart[1] - event.pageY );
+    },
+
+    // marquee drag
+
+    startMarqueeDrag: function(event){
       var offset = this.$workspace.offset()
         , zoom = this.model.get('zoom')
         , posInWorkspace = [ (1 / zoom) * (event.pageX - offset.left), (1 / zoom) * ( event.pageY - offset.top) ];
@@ -161,13 +204,20 @@ define(['backbone', 'Workspace', 'ConnectionView', 'MarqueeView', 'NodeViewTypes
         , wo = this.$el.scrollLeft()
         , zoom = 1 / this.model.get('zoom');
 
-      return [wo + w / 2, ho + h / 2];
+      return [zoom * (wo + w / 2), zoom * (ho + h / 2)];
 
     },
 
     updateZoom: function(){
 
-      if (this.cachedZoom === this.model.get('zoom')) return this;
+      if (this.model.get('zoom') < 0) {
+        this.model.set('zoom', 0.25); 
+        return this;
+      }
+
+      if (this.cachedZoom === this.model.get('zoom')) {
+        return this;
+      }
 
       this.zoomFactor = this.model.get('zoom') / (this.cachedZoom ? this.cachedZoom : this.model.get('zoom') );
       this.cachedZoom = this.model.get('zoom');
@@ -176,11 +226,11 @@ define(['backbone', 'Workspace', 'ConnectionView', 'MarqueeView', 'NodeViewTypes
       this.$workspace.css('transform-origin', "0 0" );
 
       // get scroll here, because it gets removed by the following lines
-      var s = this.getNewScroll();
-
-      // force redraw in chrome, otherwise the nodes look blurry
-      this.$workspace.css('display', 'none').height();
-      this.$workspace.css('display', 'block');
+      if (this.isMouseWheel){
+        var s = this.getNewScroll( this.clientX, this.clientY );
+      } else {
+        var s = this.getNewScroll();
+      }
 
       // set new scroll
       this.$el.scrollLeft( s[0] );
@@ -190,21 +240,24 @@ define(['backbone', 'Workspace', 'ConnectionView', 'MarqueeView', 'NodeViewTypes
 
     },
 
-    getNewScroll: function(){
-
-      // get the origin of the zoom
+    getNewScroll: function(x, y){
 
       var z = this.zoomFactor;
       var ox = this.$el.scrollLeft();
       var oy = this.$el.scrollTop();
-      var w = this.$el.width();
-      var h = this.$el.height();
 
-      // this is the offset from the center in document coordinates
-      var O = [w / 2, h / 2]; 
+      if (!x || !y){
+        var w = this.$el.width();
+        var h = this.$el.height();
 
-      var sx = z * ( ox + O[0] ) - O[0];
-      var sy = z * ( oy + O[1] ) - O[1];
+        // this is the offset from the center in document coordinates
+        var centerOffset = [w / 2, h / 2]; 
+      } else {
+        var centerOffset = [x,y];
+      }
+
+      var sx = z * ( ox + centerOffset[0] ) - centerOffset[0];
+      var sy = z * ( oy + centerOffset[1] ) - centerOffset[1];
 
       if (sx < 0) sx = 0;
       if (sy < 0) sy = 0;
@@ -230,9 +283,10 @@ define(['backbone', 'Workspace', 'ConnectionView', 'MarqueeView', 'NodeViewTypes
     showNodeSearch: function(e){
       this.app.set('showingSearch', true);
 
-      var z = this.model.get('zoom');
-      var offX  = z * (e.offsetX || e.clientX - $(e.target).offset().left);
-      var offY  = z * (e.offsetY || e.clientY - $(e.target).offset().top);
+      // the position of the click in workspace coordinates
+      var z = 1 / this.model.get('zoom');
+      var offX  = z * (e.clientX + this.$el.scrollLeft());
+      var offY  = z * (e.clientY + this.$el.scrollTop());
 
       this.app.newNodePosition = [offX, offY];
     },
