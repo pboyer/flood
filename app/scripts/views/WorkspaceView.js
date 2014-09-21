@@ -45,7 +45,7 @@ define(['backbone', 'Workspace', 'ConnectionView', 'MarqueeView', 'NodeViewTypes
 
       this.renderRunnerStatus();
 
-      this.$el.bind('mousewheel',function(e){
+      this.$el.bind('mousewheel DOMMouseScroll MozMousePixelScroll',function(e){
 
         this.isMouseWheel = true;
         this.clientX = e.clientX;
@@ -56,7 +56,7 @@ define(['backbone', 'Workspace', 'ConnectionView', 'MarqueeView', 'NodeViewTypes
         if ( e.originalEvent.wheelDelta !== undefined ) { // WebKit / Opera / Explorer 9
           delta = e.originalEvent.wheelDelta;
         } else if ( e.originalEvent.detail !== undefined ) { // Firefox
-          delta = - e.originalEvent.detail;
+          delta = -e.originalEvent.detail;
         }
 
         if( delta > 0 ) {
@@ -107,6 +107,8 @@ define(['backbone', 'Workspace', 'ConnectionView', 'MarqueeView', 'NodeViewTypes
     panStart: [0,0],
 
     startWorkspacePan: function(event){
+      event.preventDefault();
+
       this.panStart = [ event.pageX,  event.pageY ];
       this.scrollStart = [ this.$el.scrollLeft(), this.$el.scrollTop() ];
       
