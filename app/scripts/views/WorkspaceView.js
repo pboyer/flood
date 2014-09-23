@@ -312,6 +312,8 @@ define(['backbone', 'Workspace', 'ConnectionView', 'MarqueeView', 'NodeViewTypes
       var zy = wsh / nth;
       var nz = Math.min( zx, zy ); // the new zoom is the lesser of these two - TODO account for zoom min
 
+      nz = Math.min(1, nz);
+
       // set the zoom
       this.model.set('zoom', nz );
 
