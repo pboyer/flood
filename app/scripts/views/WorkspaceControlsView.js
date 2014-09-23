@@ -71,7 +71,7 @@ define(['backbone', 'List', 'SearchElementView', 'bootstrap', 'jquery'], functio
 
       this.$el.find('#zoomin-button').tooltip({title: "Zoom in"});
       this.$el.find('#zoomout-button').tooltip({title: "Zoom out"});
-      this.$el.find('#zoomreset-button').tooltip({title: "Zoom reset"});
+      this.$el.find('#zoomreset-button').tooltip({title: "Zoom fit"});
 
       this.$el.find('#export-button').tooltip({title: "Export as STL"});
 

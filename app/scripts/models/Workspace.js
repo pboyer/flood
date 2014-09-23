@@ -195,7 +195,7 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
 
     zoomIn: function(){
 
-      if ( this.get('zoom') > 1 ){
+      if ( this.get('zoom') + 0.2 > 1 ){
         return this.set('zoom', 1);
       }
 
@@ -205,7 +205,7 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
 
     zoomOut: function(){
 
-      if ( this.get('zoom') < 0.2 ){
+      if ( this.get('zoom') - 0.2 < 0.2 ){
         return this.set('zoom', 0.2);
       }
 
