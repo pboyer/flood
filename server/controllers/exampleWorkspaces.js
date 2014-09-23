@@ -472,7 +472,7 @@ exports.myFirstProject =
       }
     }
   ],
-  "name":"My First Project",
+  "name":"Example Project",
 };
 
 exports.myFirstCustomNode = 
@@ -593,6 +593,6 @@ exports.myFirstCustomNode =
       }
     }
   ],
-  "name":"My First Custom Node",
+  "name":"Example Custom Node",
   "isCustomNode": true
 };
