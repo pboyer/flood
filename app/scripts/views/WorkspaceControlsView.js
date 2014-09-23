@@ -115,7 +115,7 @@ define(['backbone', 'List', 'SearchElementView', 'bootstrap', 'jquery'], functio
     },
 
     zoomresetClick: function(){
-      this.app.getCurrentWorkspace().set('zoom', 1.0);
+      this.appView.currentWorkspaceView.zoomAll();
     },
 
     zoominClick: function(){

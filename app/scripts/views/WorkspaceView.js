@@ -266,6 +266,61 @@ define(['backbone', 'Workspace', 'ConnectionView', 'MarqueeView', 'NodeViewTypes
       return [sx,sy];
     },
 
+    boundingBox: function(){
+
+      // build list of nodeViews in ws
+      var nvs = [];
+      for (var nv in this.nodeViews){ 
+        nvs.push( this.nodeViews[nv] ); 
+      }
+
+      return nvs.reduce(function(a, x){
+
+        var p = x.model.get('position');
+        var nw = x.$el.width();
+        var nh = x.$el.height();
+
+        return [  Math.min(p[0], a[0]), 
+                  Math.max(p[0] + nw, a[1]),
+                  Math.min(p[1], a[2]),
+                  Math.max(p[1] + nh, a[3]) ];
+
+      }, [ Number.MAX_VALUE, 0, Number.MAX_VALUE, 0 ] ); // minx, maxx, miny, maxy
+
+    },
+
+    zoomAll: function(){
+
+      var bb = this.boundingBox();
+
+      // this is the min offset we expect from the bounding box in document space
+      var o = 20 * (1 / this.model.get('zoom') );
+      bb = [bb[0] - o, bb[1] + o, bb[2] - o, bb[3] + o ];
+
+      // calculate zoom
+
+      // we do this by first determining the width and height of the ws
+      var wsw = this.$el.width();
+      var wsh = this.$el.height();
+
+      // now we determine the width of the node collection
+      var ntw = bb[1] - bb[0];
+      var nth = bb[3] - bb[2];
+
+      // we calculate the zoom from the ratio between the node bbox and workspace size
+      var zx = wsw / ntw;
+      var zy = wsh / nth;
+      var nz = Math.min( zx, zy ); // the new zoom is the lesser of these two - TODO account for zoom min
+
+      // set the zoom
+      this.model.set('zoom', nz );
+
+      // set the offset, taking into account the new zoom
+      var offset = [ nz * bb[0], nz * bb[2] ];
+      this.model.set('offset', offset);
+
+    },
+
     updateOffset: function(){
 
       var s = this.model.get('offset');
