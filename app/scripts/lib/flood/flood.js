@@ -769,12 +769,12 @@ define('FLOOD',function() {
 
 	}.inherits( FLOOD.baseTypes.NodeType );
 
-	FLOOD.nodeTypes.Print = function() {
+	FLOOD.nodeTypes.Show = function() {
 
 		var typeData = {
 			inputs: [ 	new FLOOD.baseTypes.InputPort( "Anything", [AnyType], null ) ],
 			outputs: [ 	new FLOOD.baseTypes.OutputPort( "⇒", [AnyType] ) ],
-			typeName: "Print" 
+			typeName: "Show" 
 		};
 
 		FLOOD.baseTypes.NodeType.call(this, typeData );

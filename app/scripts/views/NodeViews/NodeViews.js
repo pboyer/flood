@@ -4,7 +4,7 @@ define(['BaseNodeView', 'WatchNodeView', 'NumNodeView', 'ThreeCSGNodeView', 'For
   var nodeViewTypes = {};
 
   nodeViewTypes.Base = ThreeCSGNodeView;
-  nodeViewTypes.Print = WatchNodeView;
+  nodeViewTypes.Show = WatchNodeView;
   nodeViewTypes.Number = NumNodeView;
   nodeViewTypes.CustomNode = CustomNodeView;
 
