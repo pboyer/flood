@@ -225,12 +225,20 @@ app.use(errorHandler());
 
 var keyfn = 'ssl/server.key';
 var crtfn = 'ssl/server.crt';
+var intafn = 'ssl/int_ssl_a.pem';
+var intbfn = 'ssl/int_ssl_b.pem';
+var intcfn = 'ssl/int_ssl_c.pem';
 
-if ( fs.existsSync( keyfn ) || fs.existsSync( crtfn ) ){
+if ( fs.existsSync( keyfn ) && fs.existsSync( crtfn ) 
+  && fs.existsSync( intafn ) && fs.existsSync( intbfn ) && fs.existsSync( intcfn )){
 
   var key = fs.readFileSync(keyfn, 'utf8');
   var crt = fs.readFileSync(crtfn, 'utf8');
-  var cred = { key: key, cert: crt };
+  var inta = fs.readFileSync(intafn, 'utf8');
+  var intb = fs.readFileSync(intbfn, 'utf8');
+  var intc = fs.readFileSync(intcfn, 'utf8');
+
+  var cred = { key: key, cert: crt, ca: [ inta, intb, intc ] };
 
   https.createServer(cred, app).listen(443, function() {
     console.log("✔ Secure Express server listening on port %d in %s mode", 443, app.get('env'));
