@@ -14,6 +14,7 @@
     "listjs": "1.0.0",
     "modernizr": "~2.6.2",
     "q":"1.0",
+    "jqueryui-touch-punch":"furf/jquery-ui-touch-punch",
     "pace":"0.5.1",
     "components-font-awesome":"4.1.0"
   },

@@ -42,9 +42,16 @@ require.config({
             ],
             exports: 'OrbitControls'
         },
+        jqueryuitouchpunch: {
+            deps: [
+                'jquery'
+            ],
+            exports: 'jqueryuitouchpunch'
+        },
         jqueryuislider: {
             deps: [
                 'jquery',
+                'jqueryuitouchpunch',
                 'jqueryuimouse',
                 'jqueryuicore',
                 'jqueryuiwidget'
@@ -54,6 +61,7 @@ require.config({
         jqueryuidraggable: {
             deps: [
                 'jquery',
+                'jqueryuitouchpunch',
                 'jqueryuimouse',
                 'jqueryuicore',
                 'jqueryuiwidget'
@@ -63,19 +71,22 @@ require.config({
         jqueryuimouse: {
             deps: [
                 'jquery',
+                'jqueryuitouchpunch',
                 'jqueryuiwidget'
             ],
             exports: 'jqueryuimouse'
         },
         jqueryuicore: {
             deps: [
-                'jquery'
+                'jquery',
+                'jqueryuitouchpunch'
             ],
             exports: 'jqueryuicore'
         },
         jqueryuiwidget: {
             deps: [
-                'jquery'
+                'jquery',
+                'jqueryuitouchpunch'
             ],
             exports: 'jqueryuiwidget'
         },
@@ -154,6 +165,7 @@ require.config({
         bootstrap: '../bower_components/bootstrap/dist/js/bootstrap',
         List: '../bower_components/listjs/dist/list.min',
         Three: '../bower_components/threejs/build/three.min',
+        jqueryuitouchpunch: '../bower_components/jqueryui-touch-punch/jquery.ui.touch-punch',
         jqueryuislider: '../bower_components/jquery.ui/ui/jquery.ui.slider',
         jqueryuidraggable: '../bower_components/jquery.ui/ui/jquery.ui.draggable',
         jqueryuicore: '../bower_components/jquery.ui/ui/jquery.ui.core',
