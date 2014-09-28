@@ -10,7 +10,7 @@ define(['backbone', 'Workspace', 'ConnectionView', 'MarqueeView', 'NodeViewTypes
       'touchstart .workspace_back':  'deselectAll',
       'mousedown .workspace_back':  'startWorkspaceDrag',
       'dblclick .workspace_back':  'showNodeSearch',
-      
+
       // mousewheel
       'mousewheel':  'mousewheelMove',
       'DOMMouseScroll':  'mousewheelMove',
@@ -57,6 +57,8 @@ define(['backbone', 'Workspace', 'ConnectionView', 'MarqueeView', 'NodeViewTypes
 
       this.renderRunnerStatus();
 
+
+
     },
 
     render: function() {
@@ -68,7 +70,62 @@ define(['backbone', 'Workspace', 'ConnectionView', 'MarqueeView', 'NodeViewTypes
               .renderNodes()
               .renderRunnerStatus()
               .updateZoom()
-              .updateOffset();
+              .updateOffset()
+              .setupHammer();
+    },
+
+    hammerSetupDone: false,
+
+    setupHammer: function(){
+
+      if (this.hammerSetupDone) return this;
+      this.hammerSetupDone = true;
+
+      function isTouchDevice() {  
+        try {  
+          document.createEvent("TouchEvent");  
+          return true;  
+        } catch (e) {  
+          return false;  
+        }  
+      }
+
+      if (!isTouchDevice()) return;
+
+      this.$workspace_back.on('touchmove', function(e){
+        e.preventDefault();
+      })
+
+      // panning
+      var mc = new Hammer(this.$workspace_back.get(0));
+      mc.get('pan').set({ direction: Hammer.DIRECTION_ALL, pointers: 2 });
+
+      // start pan
+      mc.on('panstart', function(){
+        this.scrollStart = [ this.$el.scrollLeft(), this.$el.scrollTop() ];
+      }.bind(this));
+
+      // pan
+      mc.on('pan', function(ev) {
+        this.$el.scrollLeft( this.scrollStart[0] - ev.deltaX );
+        this.$el.scrollTop( this.scrollStart[1] - ev.deltaY );
+      }.bind(this));
+
+      // end pan
+      mc.on('panend', function(){
+        this.model.set('offset', [ this.$el.scrollLeft(), this.$el.scrollTop() ] );
+      }.bind(this));
+
+      // pinching
+      // var mc2 = new Hammer(this.$workspace_back.get(0));
+      // mc2.on('pinch', function(ev) {
+      //   ev.preventDefault();
+      //   this.$el.scrollLeft( 30 );
+      //   this.model.set('zoom', this.model.get('zoom') * 1.05 );
+      // }.bind( this ));
+
+      return this;
+
     },
 
     mousewheelMove: function(e){
