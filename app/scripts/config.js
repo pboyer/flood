@@ -161,6 +161,7 @@ require.config({
         scheme: 'lib/flood/scheme',
 
         // bower
+        Hammer: '../bower_components/hammerjs/hammer',
         almond: '../bower_components/almond/almond',
         bootstrap: '../bower_components/bootstrap/dist/js/bootstrap',
         List: '../bower_components/listjs/dist/list.min',

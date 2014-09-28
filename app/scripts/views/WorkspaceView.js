@@ -1,9 +1,21 @@
-define(['backbone', 'Workspace', 'ConnectionView', 'MarqueeView', 'NodeViewTypes'], function(Backbone, Workspace, ConnectionView, MarqueeView, NodeViewTypes){
+define(['backbone', 'Workspace', 'ConnectionView', 'MarqueeView', 'NodeViewTypes', 'Hammer'], function(Backbone, Workspace, ConnectionView, MarqueeView, NodeViewTypes, Hammer){
 
   return Backbone.View.extend({
 
     tagName: 'div',
     className: 'workspace_container row',
+
+    events: {
+      'mousedown .workspace_back':  'deselectAll',
+      'touchstart .workspace_back':  'deselectAll',
+      'mousedown .workspace_back':  'startWorkspaceDrag',
+      'dblclick .workspace_back':  'showNodeSearch',
+      
+      // mousewheel
+      'mousewheel':  'mousewheelMove',
+      'DOMMouseScroll':  'mousewheelMove',
+      'MozMousePixelScroll':  'mousewheelMove',
+    },
 
     initialize: function(atts) { 
 
@@ -45,39 +57,6 @@ define(['backbone', 'Workspace', 'ConnectionView', 'MarqueeView', 'NodeViewTypes
 
       this.renderRunnerStatus();
 
-      this.$el.bind('mousewheel DOMMouseScroll MozMousePixelScroll',function(e){
-
-        this.isMouseWheel = true;
-        this.clientX = e.clientX;
-        this.clientY = e.clientY;
-
-        var delta = 0;
-
-        if ( e.originalEvent.wheelDelta !== undefined ) { // WebKit / Opera / Explorer 9
-          delta = e.originalEvent.wheelDelta;
-        } else if ( e.originalEvent.detail !== undefined ) { // Firefox
-          delta = -e.originalEvent.detail;
-        }
-
-        if( delta > 0 ) {
-            if (this.model.get('zoom') < 1) 
-              this.model.set('zoom', Math.min(1, this.model.get('zoom') + delta * 0.0005 ));
-        } else {
-            if (this.model.get('zoom') > 0.25) 
-              this.model.set('zoom', Math.max( 0.25, this.model.get('zoom') + delta * 0.0005 ));
-        }
-
-        this.isMouseWheel = false;
-
-        return false;
-      }.bind(this));
-      
-    },
-
-    events: {
-      'mousedown .workspace_back':  'deselectAll',
-      'mousedown .workspace_back':  'startWorkspaceDrag',
-      'dblclick .workspace_back':  'showNodeSearch'
     },
 
     render: function() {
@@ -90,6 +69,34 @@ define(['backbone', 'Workspace', 'ConnectionView', 'MarqueeView', 'NodeViewTypes
               .renderRunnerStatus()
               .updateZoom()
               .updateOffset();
+    },
+
+    mousewheelMove: function(e){
+
+      this.isMouseWheel = true;
+      this.clientX = e.clientX;
+      this.clientY = e.clientY;
+
+      var delta = 0;
+
+      if ( e.originalEvent.wheelDelta !== undefined ) { // WebKit / Opera / Explorer 9
+        delta = e.originalEvent.wheelDelta;
+      } else if ( e.originalEvent.detail !== undefined ) { // Firefox
+        delta = -e.originalEvent.detail;
+      }
+
+      if( delta > 0 ) {
+          if (this.model.get('zoom') < 1) 
+            this.model.set('zoom', Math.min(1, this.model.get('zoom') + delta * 0.0005 ));
+      } else {
+          if (this.model.get('zoom') > 0.25) 
+            this.model.set('zoom', Math.max( 0.25, this.model.get('zoom') + delta * 0.0005 ));
+      }
+
+      this.isMouseWheel = false;
+
+      return false;
+
     },
 
     startWorkspaceDrag: function(event){
