@@ -76,7 +76,7 @@ define(['backbone', 'Workspace', 'ConnectionView', 'MarqueeView', 'NodeViewTypes
 
     hammerSetupDone: false,
 
-    toWorkspaceCoordinates: function(x, y){
+    inWorkspaceCoordinates: function(x, y){
       var offset = this.$workspace.offset()
         , zoom = this.model.get('zoom');
 
@@ -111,7 +111,7 @@ define(['backbone', 'Workspace', 'ConnectionView', 'MarqueeView', 'NodeViewTypes
       // start marquee
       mcm.on('panstart', function(event){
 
-        this.model.marquee.setStartCorner( this.toWorkspaceCoordinates(event.center.x, event.center.y) );
+        this.model.marquee.setStartCorner( this.inWorkspaceCoordinates(event.center.x, event.center.y) );
 
       }.bind(this));
 
@@ -119,7 +119,7 @@ define(['backbone', 'Workspace', 'ConnectionView', 'MarqueeView', 'NodeViewTypes
       mcm.on('pan', function(event) {
 
         this.model.marquee.set('hidden', false);
-        this.model.marquee.setEndCorner( this.toWorkspaceCoordinates(event.center.x, event.center.y) );
+        this.model.marquee.setEndCorner( this.inWorkspaceCoordinates(event.center.x, event.center.y) );
         this.doMarqueeSelect();
 
       }.bind(this));
@@ -165,9 +165,17 @@ define(['backbone', 'Workspace', 'ConnectionView', 'MarqueeView', 'NodeViewTypes
         var val = this.zoomStart * ev.scale;
 
         if (val < 0.25) val = 0.25;
-        if (val > 2) val = 2;
+        if (val > 1) val = 1;
 
         this.model.set('zoom', val );
+      }.bind( this ));
+
+
+      // tap
+      mc.add( new Hammer.Tap({ taps: 2 }) );
+
+      mc.on('tap', function(e) {
+        this.showNodeSearch({ clientX: e.center.x, clientY: e.center.y });
       }.bind( this ));
 
       return this;
@@ -240,7 +248,7 @@ define(['backbone', 'Workspace', 'ConnectionView', 'MarqueeView', 'NodeViewTypes
     // marquee drag
 
     startMarqueeDrag: function(event){
-      this.model.marquee.setStartCorner( this.toWorkspaceCoordinates(event.pageX, event.pageY) );
+      this.model.marquee.setStartCorner( this.inWorkspaceCoordinates(event.pageX, event.pageY) );
       
       this.$workspace.bind('mousemove', $.proxy( this.marqueeDrag, this) );
       this.$workspace.bind('mouseup', $.proxy( this.endMarqueeDrag, this) );
@@ -255,7 +263,7 @@ define(['backbone', 'Workspace', 'ConnectionView', 'MarqueeView', 'NodeViewTypes
     marqueeDrag: function(event){
 
       this.model.marquee.set('hidden', false);
-      this.model.marquee.setEndCorner( this.toWorkspaceCoordinates(event.pageX, event.pageY) );
+      this.model.marquee.setEndCorner( this.inWorkspaceCoordinates(event.pageX, event.pageY) );
       this.doMarqueeSelect();
 
     },
@@ -456,22 +464,29 @@ define(['backbone', 'Workspace', 'ConnectionView', 'MarqueeView', 'NodeViewTypes
     },
 
     startProxyDrag: function(event){
+      this.$workspace.bind('touchmove', $.proxy( this.proxyTouchDrag, this) );
       this.$workspace.bind('mousemove', $.proxy( this.proxyDrag, this) );
+      this.$workspace.bind('touchend', $.proxy( this.endProxyDrag, this) );
       this.$workspace.bind('mouseup', $.proxy( this.endProxyDrag, this) );
     },
 
     endProxyDrag: function(event){
+      this.$workspace.unbind('touchmove', this.proxyTouchDrag );
       this.$workspace.unbind('mousemove', this.proxyDrag);
+      this.$workspace.unbind('touchend', this.endProxyDrag);
       this.$workspace.unbind('mouseup', this.endProxyDrag);
+      
       this.model.endProxyConnection();
     },
 
-    proxyDrag: function(event){
-      var offset = this.$workspace.offset()
-        , zoom = this.model.get('zoom')
-        , posInWorkspace = [ (1 / zoom) * (event.pageX - offset.left), (1 / zoom) * ( event.pageY - offset.top) ];
+    proxyTouchDrag: function(event){
+      this.model.proxyConnection.set('endProxyPosition', 
+        this.inWorkspaceCoordinates(event.originalEvent.touches[0].pageX, event.originalEvent.touches[0].pageY));
+      event.preventDefault(); // prevents mousemove
+    },
 
-      this.model.proxyConnection.set('endProxyPosition', posInWorkspace);
+    proxyDrag: function(event){
+      this.model.proxyConnection.set('endProxyPosition', this.inWorkspaceCoordinates(event.pageX, event.pageY));
     },
 
     renderProxyConnection: function() {

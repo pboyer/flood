@@ -11,8 +11,12 @@ define(['backbone', 'jqueryuidraggable', 'bootstrap'], function(Backbone, jquery
 
     events: {
       'mousedown .node-port-output': 'beginPortConnection',
-      'mouseup .node-port-input': 'endPortConnection',
       'mousedown .node-port-input': 'beginPortDisconnection',
+      'mouseup .node-port-input': 'endPortConnection',
+
+      'touchstart .node-port-output': 'beginTouchConnection',
+      'touchstart .node-port-input': 'beginTouchDisconnection',
+
       'click':  'selectThis',
       'change .use-default-checkbox': 'useDefaultClick',
       'click .toggle-vis': 'toggleGeomVis',
@@ -131,7 +135,6 @@ define(['backbone', 'jqueryuidraggable', 'bootstrap'], function(Backbone, jquery
     },
 
     beginPortDisconnection: function(e){
-
       var index = parseInt( $(e.currentTarget).attr('data-index') );
 
       if ( !this.model.isPortConnected(index, false) )
@@ -147,6 +150,12 @@ define(['backbone', 'jqueryuidraggable', 'bootstrap'], function(Backbone, jquery
       e.stopPropagation();
     },
 
+    beginPortConnection: function(e){
+      var index = parseInt( $(e.currentTarget).attr('data-index') );
+      this.workspace.startProxyConnection(this.model.get('_id'), index, this.getPortPosition(index, true));
+      e.stopPropagation();
+    },
+
     endPortConnection: function(e){
 
       if ( !this.workspace.draggingProxy )
@@ -158,10 +167,49 @@ define(['backbone', 'jqueryuidraggable', 'bootstrap'], function(Backbone, jquery
 
     },
 
-    beginPortConnection: function(e){
+    // touch-specific handlers
+
+    // simply kill the connection
+    beginTouchDisconnection: function(e){
+      
       var index = parseInt( $(e.currentTarget).attr('data-index') );
-      this.workspace.startProxyConnection(this.model.get('_id'), index, this.getPortPosition(index, true));
+
+      if ( !this.model.isPortConnected(index, false) )
+        return;
+
+      var inputConnections = this.model.get('inputConnections')
+        , connection = inputConnections[index][0]
+        , oppos = connection.getOpposite( this.model );
+
+      this.workspace.removeConnection( connection.toJSON() );
+
       e.stopPropagation();
+      e.preventDefault();
+    },
+
+    // special handling of touch events
+    beginTouchConnection: function(e){
+      
+      $('body').one('touchend', function(e){
+
+        var changedTouches = e.originalEvent.changedTouches[0];
+        var elem = $( document.elementFromPoint(changedTouches.pageX, changedTouches.pageY) );
+
+        if (!elem.hasClass("node-port-input")){
+          elem = elem.parent('.node-port-input')
+        }
+
+        if (!elem.attr('data-index')) return;
+
+        this.workspace.draggingProxy = true;
+
+        var e = $.Event( "mouseup" );
+        elem.trigger(e);
+
+        this.workspace.draggingProxy = false;
+
+      }.bind( this ));
+
     },
 
     select: function() {
