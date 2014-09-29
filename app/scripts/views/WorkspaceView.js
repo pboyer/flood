@@ -76,6 +76,13 @@ define(['backbone', 'Workspace', 'ConnectionView', 'MarqueeView', 'NodeViewTypes
 
     hammerSetupDone: false,
 
+    toWorkspaceCoordinates: function(x, y){
+      var offset = this.$workspace.offset()
+        , zoom = this.model.get('zoom');
+
+      return [ (1 / zoom) * (x - offset.left), (1 / zoom) * ( y - offset.top) ];
+    },
+
     setupHammer: function(){
 
       if (this.hammerSetupDone) return this;
@@ -96,9 +103,37 @@ define(['backbone', 'Workspace', 'ConnectionView', 'MarqueeView', 'NodeViewTypes
         e.preventDefault();
       })
 
-      // panning
-      var mc = new Hammer(this.$workspace_back.get(0));
-      mc.get('pan').set({ direction: Hammer.DIRECTION_ALL, pointers: 2 });
+      // marquee - single finger on .workspace_back
+
+      var mcm = new Hammer.Manager(this.$workspace_back.get(0));
+      mcm.add( new Hammer.Pan({ direction: Hammer.DIRECTION_ALL, pointers: 1 }) );
+
+      // start marquee
+      mcm.on('panstart', function(event){
+
+        this.model.marquee.setStartCorner( this.toWorkspaceCoordinates(event.center.x, event.center.y) );
+
+      }.bind(this));
+
+      // marquee
+      mcm.on('pan', function(event) {
+
+        this.model.marquee.set('hidden', false);
+        this.model.marquee.setEndCorner( this.toWorkspaceCoordinates(event.center.x, event.center.y) );
+        this.doMarqueeSelect();
+
+      }.bind(this));
+
+      // end marquee
+      mcm.on('panend', function(){
+
+        this.model.marquee.set('hidden', true);
+
+      }.bind(this));
+
+
+      var mc = new Hammer.Manager(this.el);
+      mc.add( new Hammer.Pan({ direction: Hammer.DIRECTION_ALL, pointers: 3 }) );
 
       // start pan
       mc.on('panstart', function(){
@@ -107,22 +142,33 @@ define(['backbone', 'Workspace', 'ConnectionView', 'MarqueeView', 'NodeViewTypes
 
       // pan
       mc.on('pan', function(ev) {
-        this.$el.scrollLeft( this.scrollStart[0] - ev.deltaX );
-        this.$el.scrollTop( this.scrollStart[1] - ev.deltaY );
+        this.model.set('offset', [ this.scrollStart[0] - ev.deltaX, this.scrollStart[1] - ev.deltaY ] );
       }.bind(this));
 
       // end pan
       mc.on('panend', function(){
-        this.model.set('offset', [ this.$el.scrollLeft(), this.$el.scrollTop() ] );
+        this.zoomDisabled = true;
+        setTimeout(function(){ this.zoomDisabled = false; }.bind(this), 200)
       }.bind(this));
 
       // pinching
-      // var mc2 = new Hammer(this.$workspace_back.get(0));
-      // mc2.on('pinch', function(ev) {
-      //   ev.preventDefault();
-      //   this.$el.scrollLeft( 30 );
-      //   this.model.set('zoom', this.model.get('zoom') * 1.05 );
-      // }.bind( this ));
+      mc.add( new Hammer.Pinch({ threshold: 0.1 }) );
+
+      mc.on('pinchstart', function(ev) {
+        this.zoomStart = this.model.get('zoom');
+      }.bind( this ));
+
+      mc.on('pinch', function(ev) {
+
+        if (this.zoomDisabled) return;
+
+        var val = this.zoomStart * ev.scale;
+
+        if (val < 0.25) val = 0.25;
+        if (val > 2) val = 2;
+
+        this.model.set('zoom', val );
+      }.bind( this ));
 
       return this;
 
@@ -194,11 +240,7 @@ define(['backbone', 'Workspace', 'ConnectionView', 'MarqueeView', 'NodeViewTypes
     // marquee drag
 
     startMarqueeDrag: function(event){
-      var offset = this.$workspace.offset()
-        , zoom = this.model.get('zoom')
-        , posInWorkspace = [ (1 / zoom) * (event.pageX - offset.left), (1 / zoom) * ( event.pageY - offset.top) ];
-
-      this.model.marquee.setStartCorner( posInWorkspace );
+      this.model.marquee.setStartCorner( this.toWorkspaceCoordinates(event.pageX, event.pageY) );
       
       this.$workspace.bind('mousemove', $.proxy( this.marqueeDrag, this) );
       this.$workspace.bind('mouseup', $.proxy( this.endMarqueeDrag, this) );
@@ -213,12 +255,7 @@ define(['backbone', 'Workspace', 'ConnectionView', 'MarqueeView', 'NodeViewTypes
     marqueeDrag: function(event){
 
       this.model.marquee.set('hidden', false);
-
-      var offset = this.$workspace.offset()
-        , zoom = this.model.get('zoom')
-        , posInWorkspace = [ (1 / zoom) * (event.pageX - offset.left), (1 / zoom) * ( event.pageY - offset.top) ];
-
-      this.model.marquee.setEndCorner( posInWorkspace );
+      this.model.marquee.setEndCorner( this.toWorkspaceCoordinates(event.pageX, event.pageY) );
       this.doMarqueeSelect();
 
     },
