@@ -42,9 +42,30 @@ require.config({
             ],
             exports: 'OrbitControls'
         },
-        jqueryuitouchpunch: {
+        jqueryuicore: {
             deps: [
                 'jquery'
+            ],
+            exports: 'jqueryuicore'
+        },
+        jqueryuiwidget: {
+            deps: [
+                'jquery'
+            ],
+            exports: 'jqueryuiwidget'
+        },
+        jqueryuimouse: {
+            deps: [
+                'jquery',
+                'jqueryuiwidget'
+            ],
+            exports: 'jqueryuimouse'
+        },
+        jqueryuitouchpunch: {
+            deps: [
+                'jquery',
+                'jqueryuicore',
+                'jqueryuimouse'
             ],
             exports: 'jqueryuitouchpunch'
         },
@@ -67,28 +88,6 @@ require.config({
                 'jqueryuiwidget'
             ],
             exports: 'jqueryuidraggable'
-        },
-        jqueryuimouse: {
-            deps: [
-                'jquery',
-                'jqueryuitouchpunch',
-                'jqueryuiwidget'
-            ],
-            exports: 'jqueryuimouse'
-        },
-        jqueryuicore: {
-            deps: [
-                'jquery',
-                'jqueryuitouchpunch'
-            ],
-            exports: 'jqueryuicore'
-        },
-        jqueryuiwidget: {
-            deps: [
-                'jquery',
-                'jqueryuitouchpunch'
-            ],
-            exports: 'jqueryuiwidget'
         },
         bootstrap: {
             deps: [
