@@ -48,7 +48,12 @@ define(['backbone', 'List', 'SearchElementView'], function(Backbone, List, Searc
     },
 
     highlightInput: function(){
-      this.$input.focus().select();
+
+      if (this.app.get('showingSearch')) {
+        this.$input.focus().select();
+      } else {
+        this.$input.blur();
+      }
     },
 
     addNode: function(name){
@@ -70,7 +75,7 @@ define(['backbone', 'List', 'SearchElementView'], function(Backbone, List, Searc
 
         this.addNode( nodeName );
         this.app.set('showingSearch', false);
-
+        
       } else if ( event.keyCode === 27) { // esc key exits search
         this.app.set('showingSearch', false);
       }
