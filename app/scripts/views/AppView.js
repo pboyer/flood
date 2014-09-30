@@ -13,16 +13,19 @@ define([  'backbone',
           'LoginView',
           'Login',
           'FeedbackView',
-          'Feedback' ], 
+          'Feedback', 
+          'fastclick' ], 
           function(Backbone, App, WorkspaceView, Search, SearchView, WorkspaceControlsView, 
             WorkspaceTabView, Workspace, WorkspaceBrowser, WorkspaceBrowserView, HelpView, 
-            Help, LoginView, Login, FeedbackView, Feedback ) {
+            Help, LoginView, Login, FeedbackView, Feedback, fastclick ) {
 
   return Backbone.View.extend({
 
     el: '#app',
 
     initialize: function() { 
+
+      var f = new fastclick(document.body);
 
       this.listenTo(this.model, 'change', this.render);
       this.$workspace_tabs = this.$('#workspace-tabs');

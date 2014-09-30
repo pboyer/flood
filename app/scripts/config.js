@@ -174,6 +174,7 @@ require.config({
         jquery: '../bower_components/jquery/jquery.min',
         backbone: '../bower_components/backbone-amd/backbone-min',
         underscore: '../bower_components/underscore-amd/underscore-min',
+        fastclick: '../bower_components/fastclick/lib/fastclick',
     }
 
 });
