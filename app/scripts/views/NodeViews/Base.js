@@ -1,4 +1,4 @@
-define(['backbone', 'jqueryuidraggable', 'bootstrap'], function(Backbone, jqueryuidraggable, bootstrap) {
+define(['backbone', 'jqueryuidraggable', 'bootstrap', 'Hammer'], function(Backbone, jqueryuidraggable, bootstrap, Hammer) {
 
   return Backbone.View.extend({
 
@@ -16,8 +16,10 @@ define(['backbone', 'jqueryuidraggable', 'bootstrap'], function(Backbone, jquery
 
       'touchstart .node-port-output': 'beginTouchConnection',
       'touchstart .node-port-input': 'beginTouchDisconnection',
-
+      
+      'touchstart': 'touchstart',
       'click':  'selectThis',
+
       'change .use-default-checkbox': 'useDefaultClick',
       'click .toggle-vis': 'toggleGeomVis',
       'click .rep-type': 'replicationClick'
@@ -214,6 +216,21 @@ define(['backbone', 'jqueryuidraggable', 'bootstrap'], function(Backbone, jquery
 
     select: function() {
       this.model.set( 'selected', true );
+    },
+
+    touchstart: function(event){
+      // is the user pressing on an input?
+      var shouldIgnore = event.target != null 
+          && ( event.target.tagName.toLowerCase() == "input" || event.target.tagName.toLowerCase() == "textarea" );
+
+      if(shouldIgnore) {
+        // need to focus the input - on iOS the input never gets focussed
+        event.target.focus();
+
+        // we prevent the node from being selected
+        this.selectable = false;
+        setTimeout(function(){ this.selectable = true; }.bind(this), 300);
+      }
     },
 
     selectable: true,
