@@ -18,7 +18,6 @@ define(['backbone', 'List', 'SearchElementView', 'bootstrap', 'jquery'], functio
       'keyup .library-search-input': 'searchKeyup',
       'focus .library-search-input': 'focus',
       'blur .library-search-input': 'blur',
-      
       'click #delete-button': 'deleteClick',
       'click #undo-button': 'undoClick',
       'click #redo-button': 'redoClick',
@@ -27,9 +26,7 @@ define(['backbone', 'List', 'SearchElementView', 'bootstrap', 'jquery'], functio
       'click #zoomin-button': 'zoominClick',
       'click #zoomout-button': 'zoomoutClick',
       'click #zoomreset-button': 'zoomresetClick',
-      'click #export-button': 'exportClick',
-
-      'touchstart .workspace-search-button-active': 'touchstartButton'
+      'click #export-button': 'exportClick'
     },
 
     render: function(arg) {
@@ -83,18 +80,6 @@ define(['backbone', 'List', 'SearchElementView', 'bootstrap', 'jquery'], functio
       $('#help-button').tooltip({title: "Help", placement: "left"});
       $('#feedback-button').tooltip({title: "Feedback", placement: "left"});
 
-    },
-
-    touchstartButton: function(event){
-      // get the target action
-      var id = $(event.currentTarget).attr('id');
-      var name = id.slice( 0, -7 );
-
-      // don't allow the later click event to occur
-      event.preventDefault();
-
-      // call the click fast
-      this[name + "Click"]();
     },
 
     focus: function(event){
