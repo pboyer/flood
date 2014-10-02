@@ -67,7 +67,7 @@ define(['backbone'], function(Backbone) {
     startEdit: function(e) {
       
       this.$input.prop('disabled', false);
-      this.$input.focus();
+      this.$input.focus().select();
       this.$input.css('pointer-events', 'auto');
 
       e.stopPropagation();
