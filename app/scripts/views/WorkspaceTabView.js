@@ -22,7 +22,11 @@ define(['backbone'], function(Backbone) {
       'mouseover': 'showEditButton',
       'mouseout': 'hideEditButton',
       'click .edit-button': 'startEdit',
-      'blur .workspace-name': 'endEdit'
+      'blur .workspace-name': 'endEdit',
+
+      // touch
+      'touchstart .edit-button': 'startEdit',
+      'touchstart': 'toggleShowingEditButton'
 
     },
 
@@ -40,8 +44,24 @@ define(['backbone'], function(Backbone) {
 
     },
 
+    toggleShowingEditButton: function(){
+
+      if ( this.editButtonShown ){
+        this.editButtonShown = false;
+        this.hideEditButton();
+      } else {
+        this.editButtonShown = true;
+        this.showEditButton();
+      }
+
+    },
+
     showEditButton: function() {
       this.$('.edit-button').css('visibility', 'visible');
+    },
+
+    hideEditButton: function() {
+      this.$('.edit-button').css('visibility', 'hidden');
     },
 
     startEdit: function(e) {
@@ -54,13 +74,13 @@ define(['backbone'], function(Backbone) {
     },
 
     endEdit: function() {
+
+      // the edit button is still visible on touch devices
+      this.hideEditButton();
+
       this.$input.prop('disabled', true);
       this.$input.css('pointer-events', 'none');
       this.model.set('name', this.$input.val() );
-    },
-
-    hideEditButton: function() {
-      this.$('.edit-button').css('visibility', 'hidden');
     },
 
     click: function(e) {

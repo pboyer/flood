@@ -64,6 +64,16 @@ define([  'backbone',
       'mouseout #add-workspace-button': 'hideAddWorkspaceSelect',
       'mouseover #add-workspace-select-element': 'showAddWorkspaceSelect',
       'mouseout #add-workspace-select-element': 'hideAddWorkspaceSelect',
+
+      // touch
+      'touchstart #add-workspace-button': 'toggleAddWorkspaceSelect'
+
+    },
+
+    toggleAddWorkspaceSelect: function(){
+
+      $('#add-workspace-select-element').toggle();
+
     },
 
     showHelpOnFirstExperience: function(){
