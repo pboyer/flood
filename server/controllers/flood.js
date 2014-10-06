@@ -79,6 +79,10 @@ var initUserSession = function(req, res){
 	
 };
 
+exports.getCustomizerWorkspace = function(req, res){
+	return res.send( ExampleWorkspaces.myFirstProject );
+}
+
 exports.getMySession = function(req, res) {
 
 	var user = req.user;

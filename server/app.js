@@ -111,6 +111,9 @@ app.use(function(req, res, next) {
 
 // flood routes
 
+// customizer (experimental)
+app.get('/cd', floodController.getCustomizerWorkspace);
+
 app.get('/mys', floodController.getMySession);
 app.put('/mys', floodController.putMySession);
 app.get('/nws', floodController.getNewWorkspace );

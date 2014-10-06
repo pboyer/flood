@@ -111,35 +111,52 @@ require.config({
         WorkspaceBrowserElements: 'collections/WorkspaceBrowserElements',
 
         // backbone models
-        App: 'models/App',
-        Connection: 'models/Connection',
-        Marquee: 'models/Marquee',
-        Node: 'models/Node',
-        Search: 'models/Search',
-        SearchElement: 'models/SearchElement',
-        Workspace: 'models/Workspace',
-        Runner: 'models/Runner',
-        Help: 'models/Help',
-        Feedback: 'models/Feedback',
-        Login: 'models/Login',
-        WorkspaceBrowserElement: 'models/WorkspaceBrowserElement',
-        WorkspaceBrowser: 'models/WorkspaceBrowser',
-        WorkspaceResolver: 'models/WorkspaceResolver',
+
+            // customizer
+            CustomizerApp: 'models/customizer/CustomizerApp',
+
+            // editor
+            App: 'models/App',
+            Connection: 'models/Connection',
+            Marquee: 'models/Marquee',
+            Node: 'models/Node',
+            Search: 'models/Search',
+            SearchElement: 'models/SearchElement',
+            Workspace: 'models/Workspace',
+            Runner: 'models/Runner',
+            Help: 'models/Help',
+            Feedback: 'models/Feedback',
+            Login: 'models/Login',
+            WorkspaceBrowserElement: 'models/WorkspaceBrowserElement',
+            WorkspaceBrowser: 'models/WorkspaceBrowser',
+            WorkspaceResolver: 'models/WorkspaceResolver',
 
         // backbone views
-        AppView: 'views/AppView',
-        ConnectionView: 'views/ConnectionView',
-        MarqueeView: 'views/MarqueeView',
-        SearchView: 'views/SearchView',
-        WorkspaceControlsView: 'views/WorkspaceControlsView',
-        SearchElementView: 'views/SearchElementView',
-        WorkspaceView: 'views/WorkspaceView',
-        WorkspaceTabView: 'views/WorkspaceTabView',
-        HelpView: 'views/HelpView',
-        FeedbackView: 'views/FeedbackView',
-        LoginView: 'views/LoginView',
-        WorkspaceBrowserElementView: 'views/WorkspaceBrowserElementView',
-        WorkspaceBrowserView: 'views/WorkspaceBrowserView',
+
+            // customizer
+            BaseWidgetView: 'views/customizer/widgets/Base',
+            GeometryWidgetView: 'views/customizer/widgets/Geometry',
+            NumberWidgetView: 'views/customizer/widgets/Number',
+
+            CustomizerAppView: 'views/customizer/CustomizerAppView',
+            CustomizerHeaderView: 'views/customizer/CustomizerHeaderView',
+            CustomizerViewerView: 'views/customizer/CustomizerViewerView',
+            CustomizerWorkspaceView: 'views/customizer/CustomizerWorkspaceView',
+
+            // editor
+            AppView: 'views/AppView',
+            ConnectionView: 'views/ConnectionView',
+            MarqueeView: 'views/MarqueeView',
+            SearchView: 'views/SearchView',
+            WorkspaceControlsView: 'views/WorkspaceControlsView',
+            SearchElementView: 'views/SearchElementView',
+            WorkspaceView: 'views/WorkspaceView',
+            WorkspaceTabView: 'views/WorkspaceTabView',
+            HelpView: 'views/HelpView',
+            FeedbackView: 'views/FeedbackView',
+            LoginView: 'views/LoginView',
+            WorkspaceBrowserElementView: 'views/WorkspaceBrowserElementView',
+            WorkspaceBrowserView: 'views/WorkspaceBrowserView',
         
         // node backbone views
         NodeViewTypes: 'views/NodeViews/NodeViews',
