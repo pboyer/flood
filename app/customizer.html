@@ -156,10 +156,10 @@
         <div id="customizer-app">
 
           <div id="customizer-header">
-            <h4>Customizer</h4>
           </div>
 
-          <div id="customizer-workspace"></div>
+          <div id="customizer-workspace">
+          </div>
 
           <div id="customizer-viewer"></div>
 
@@ -208,34 +208,12 @@
 
       <script type="text/template" id="widget-number-template">
 
-        <div class="node-data-container">
+        <span class="name"><%= typeName != "CustomNode" ? typeName : type.functionName  %></span>
 
-          <div class="slider" style="display: inline-block; width: 140px; height: 8px; margin: 0; padding: 0"></div>
+        <div class="slider" style="display: inline-block; width: 140px; height: 8px; margin: 0; padding: 0"></div>
 
-          <div class="num-data-container" style="display: inline-block;">
-            <input type="number" class="currentValue" style="number-node-input" value="<%= type.value %>" />
-          </div>
-
-        </div>
-
-        <div class="dropdown keep-open" style="position:absolute">
-
-          <a href="#" data-toggle="dropdown" href="#">
-            <span style="color:black; padding: 1px">...</span>
-          </a>
-
-          <ul class="dropdown-menu node-dropdown-menu" role="menu" style="color: black" aria-labelledby="dLabel">
-
-            <span class="dropdown-header">Min</span>
-            <input type="number" class="num-min">
-
-            <span class="dropdown-header">Max</span>
-            <input type="number" class="num-max">
-
-            <span class="dropdown-header">Stepsize</span>
-            <input type="number" class="num-step">
-
-          </ul>
+        <div class="num-data-container" style="display: inline-block;">
+          <input type="number" class="currentValue" style="number-node-input" value="<%= type.value %>" />
         </div>
 
       </script>

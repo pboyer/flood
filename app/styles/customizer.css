@@ -8,18 +8,14 @@
 	box-shadow: 0 10px 30px #888;
 }
 
-#customize-header-title {
-	color: grey;
-	padding-left: 10px;
-}
-
 #customizer-workspace {
+	color: black;
 	position: absolute;
-	top: 50px;
-	left: 0;
-	bottom: 0;
-	width: 300px;
-	background: #333;
+	top: 80px;
+	left: 30px;
+	padding: 5px;
+	z-index: 1;
+	background: rgba(0, 0, 0, 0.05);
 }
 
 #customizer-viewer {
@@ -27,8 +23,9 @@
 	top: 50px;
 	right: 0;
 	bottom: 0;
-	left: 300px;
+	left: 0;
 	background: black;
+	z-index: 0;
 }
 
 #customizer-header {
@@ -40,7 +37,14 @@
 }
 
 #customize-header-tag {
-	font-style: italic;
+	text-transform: uppercase;
+	font-size: 15px;
+	color: grey;
+}
+
+#customize-header-title {
+	padding: 10px;
+	padding-left: 20px;
 }
 
 #customizer-header-controls {
@@ -48,4 +52,19 @@
 	position: absolute;
 	top: 0;
 	right: 0;
+}
+
+.widget {
+	width:370px;
+	background: rgba(255,255,255, 0.1);
+	margin: 20px;
+}
+
+.widget .name {
+	text-transform: uppercase;
+	color: grey;
+	display: inline-block;
+	width: 120px;
+	text-align: right;
+	padding-right: 20px;
 }

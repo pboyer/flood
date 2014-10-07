@@ -23,7 +23,11 @@ define(['backbone', 'BaseWidgetView', 'GeometryWidgetView', 'NumberWidgetView'],
         widgetView = this.map[x.get('type').typeName];
       }
 
-      this.$el.append( (new widgetView({model: x})).render().$el )
+      var widget = new widgetView({model: x});
+
+      if (x.get('type').typeName in this.map){
+        this.$el.append( widget.render().$el );
+      }
 
     },
 

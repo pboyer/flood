@@ -300,7 +300,13 @@
         </ul>
 
         <div class="node-data-container" >
-          <span class="name searchfield"><%= typeName != "CustomNode" ? typeName : type.functionName  %></span>
+          <span class="name">
+            <% if ( !name || name === "DefaultNodeName" || name === "") { %>
+              <%= typeName != "CustomNode" ? typeName : type.functionName  %>
+            <% } else { %>
+              <%= name %>
+            <% } %>
+          </span>
         </div>
 
         <ul class="node-outputs" >
@@ -330,6 +336,11 @@
                 <button type="button" class="rep-type btn btn-default"  style="font-size: 10px" data-rep-type="applyLongest">Long</button>
                 <button type="button" class="rep-type btn btn-default"  style="font-size: 10px" data-rep-type="applyCartesian">Cross</button>
               </div>
+            </li>
+
+            <li class="dropdown-header">Name</li>
+            <li class="node-dropown-menu-item">
+              <input class="name-input" value="<%= name %>">
             </li>
 
           </ul>
@@ -409,7 +420,13 @@
 
         <div class="node-data-container">
 
-          <div class="slider" style="display: inline-block; width: 140px; height: 8px; margin: 0; padding: 0"></div>
+          <% if (name && name != "DefaultNodeName" && name != "") { %>
+            <span style="margin-right: 10px" class="name">
+              <%= name %>
+            </span>
+          <% } %>
+
+          <div class="slider" style="display: inline-block; width: 120px; height: 8px; margin: 0; padding: 0"></div>
 
           <div class="num-data-container" style="display: inline-block;">
             <input type="number" class="currentValue" style="number-node-input" value="<%= type.value %>" />
@@ -431,14 +448,27 @@
 
           <ul class="dropdown-menu node-dropdown-menu" role="menu" style="color: black" aria-labelledby="dLabel">
 
-            <span class="dropdown-header">Min</span>
-            <input type="number" class="num-min">
+            <li class="dropdown-header">Min</li>
+            <li class="node-dropown-menu-item">
+              <input type="number" class="num-min">
+            </li>
 
-            <span class="dropdown-header">Max</span>
-            <input type="number" class="num-max">
+            <li class="dropdown-header">Max</li>
+            <li class="node-dropown-menu-item">
+              <input type="number" class="num-max">
+            </li>
 
-            <span class="dropdown-header">Stepsize</span>
-            <input type="number" class="num-step">
+            <li class="dropdown-header">Stepsize</li>
+            <li class="node-dropown-menu-item">
+              <input type="number" class="num-step">
+            </li>
+
+            <li class="dropdown-header">Name</li>
+            <li class="node-dropown-menu-item">
+              <input class="name-input" value="<%= name %>">
+            </li>
+            
+            <li class="dropdown-header">Hide in customizer <input type="checkbox"  style="margin-left: 10px" class="lock-input"></li>
 
           </ul>
         </div>
