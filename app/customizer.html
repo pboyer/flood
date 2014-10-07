@@ -202,13 +202,25 @@
 
       <script type="text/template" id="widget-template">
         
-        <span class="name searchfield"><%= typeName != "CustomNode" ? typeName : type.functionName  %></span>
+        <span class="name">
+          <% if ( !name || name === "DefaultNodeName" || name === "") { %>
+            <%= typeName != "CustomNode" ? typeName : type.functionName  %>
+          <% } else { %>
+            <%= name %>
+          <% } %>
+        </span>
 
       </script>
 
       <script type="text/template" id="widget-number-template">
 
-        <span class="name"><%= typeName != "CustomNode" ? typeName : type.functionName  %></span>
+        <span class="name">
+          <% if ( !name || name === "DefaultNodeName" || name === "") { %>
+            <%= typeName != "CustomNode" ? typeName : type.functionName  %>
+          <% } else { %>
+            <%= name %>
+          <% } %>
+        </span>
 
         <div class="slider" style="display: inline-block; width: 140px; height: 8px; margin: 0; padding: 0"></div>
 
