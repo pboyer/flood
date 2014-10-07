@@ -80,7 +80,16 @@ var initUserSession = function(req, res){
 };
 
 exports.getCustomizerWorkspace = function(req, res){
-	return res.send( ExampleWorkspaces.myFirstProject );
+
+	Workspace.findById( req.params.id, function(err, ws){
+
+		// TODO: confirm if public or user is logged in
+
+		if (err || !ws) res.status(404).send("Workspace not found!");
+
+		return res.send( ws );
+
+	});
 }
 
 exports.getMySession = function(req, res) {

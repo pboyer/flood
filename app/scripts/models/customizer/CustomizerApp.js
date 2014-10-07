@@ -7,8 +7,13 @@ define(['backbone', 'App'],
 
       // get the url from the page
       // customize this url
+      console.log(  );
 
-      return '/cd/';
+      var comps = document.URL.split('/customize-');
+
+      console.log( '/custdata/' + comps[ comps.length - 1] )
+
+      return '/custdata/' + comps[ comps.length - 1];
     },
 
     parse : function(resp) {

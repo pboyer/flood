@@ -17,6 +17,8 @@ define(['backbone', 'BaseWidgetView', 'GeometryWidgetView', 'NumberWidgetView'],
 
     buildWidget: function(x){
 
+      if (x.get('extra') != undefined && x.get('extra').lock) return;
+
       var widgetView = GeometryWidgetView;
 
       if (x.get('type').typeName in this.map){
