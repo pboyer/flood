@@ -468,7 +468,9 @@
               <input class="name-input" value="<%= name %>">
             </li>
             
-            <li class="dropdown-header">Hide in customizer <input type="checkbox"  style="margin-left: 10px" class="lock-input"></li>
+            <li class="dropdown-header">
+              Hide in customizer <input type="checkbox" style="margin-left: 10px" <%= extra.lock ? "checked" : ""%> class="lock-input">
+            </li>
 
           </ul>
         </div>

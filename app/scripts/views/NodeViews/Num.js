@@ -36,6 +36,7 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView', 'jqueryuislider'], f
       var min = extra.min != undefined ? extra.min : -150;
       var max = extra.max != undefined ? extra.max : 150;
       var step = extra.step != undefined ? extra.step : 0.1;
+      var lock = extra.lock != undefined ? extra.lock : false;
       var value = extra.value != undefined ? extra.value : 0;
       if (value === undefined ) value = this.model.get('lastValue');
 
@@ -48,9 +49,6 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView', 'jqueryuislider'], f
           change: function(e, ui){  that.inputSet.call(that, e, ui); },
           slide: function(e, ui){ that.inputChanged.call(that, e, ui); } 
         });
-
-      // this.currentValueInput = this.$el.find('.currentValue');
-      // this.currentValueInput.html( value );
 
       this.currentValueInput = this.$el.find('.currentValue');
       this.currentValueInput.val( value );
@@ -67,6 +65,10 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView', 'jqueryuislider'], f
       this.stepInput = this.$el.find('.num-step');
       this.stepInput.val(step);
       this.stepInput.change( function(e){ that.stepChanged.call(that, e); e.stopPropagation(); });
+
+      this.lockInput = this.$el.find('.lock-input');
+      this.lockInput.val( lock );
+      this.lockInput.change( function(e){ that.lockChanged.call(that, e); e.stopPropagation(); });
 
       // adjust settings dropdown so that it stays open while editing
       // doesn't select the node when you're editing
@@ -102,6 +104,7 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView', 'jqueryuislider'], f
       this.minInput.html( data.min );
       this.maxInput.html( data.max );
       this.stepInput.html( data.step );
+      this.lockInput.val( data.lock );
       this.silent = false;
 
     },
@@ -140,19 +143,21 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView', 'jqueryuislider'], f
       this.slider.slider("option", "step", val);
     },
 
-    inputChanged: function(e,ui) {
-
-      var val = ui.value;
-      this.$el.find('.currentValue').html(val);
-
+    lockChanged: function(e){
+      this.inputSet();
     },
 
-    inputSet: function(e,ui) {
+    inputChanged: function(e,ui) {
+      var val = ui.value;
+      this.$el.find('.currentValue').html(val);
+    },
+
+    inputSet: function() {
 
       if ( this.silent ) return;
 
       var newValue = {   value: this.slider.slider("option", "value"), min: this.slider.slider("option", "min"), 
-        step: this.slider.slider("option", "step"), max: this.slider.slider("option", "max") };
+        step: this.slider.slider("option", "step"), max: this.slider.slider("option", "max"), lock: this.lockInput.is(':checked') };
 
       this.model.workspace.setNodeProperty({property: 'extra', _id: this.model.get('_id'), newValue: newValue });      
 
