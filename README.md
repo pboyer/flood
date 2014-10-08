@@ -50,7 +50,7 @@ You will also need to install MongoDB and run an instance on port 27017, the def
 
 ####Running the server
 
-For development, I recommend using the great nodemon tool;
+For development, I recommend using the great nodemon tool:
 
 	npm install -g nodemon
 
