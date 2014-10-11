@@ -27,8 +27,8 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
 
       // for custom nodes
       workspaceDependencyIds: [],
-      isCustomNode: false
-
+      isCustomNode: false,
+      isCustomizer: false
     },
 
     // connection creation
@@ -101,12 +101,26 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
       this.on('change:workspaceDependencyIds', throttledSync, this);
       this.on('requestRun', this.run, this);
 
+      // this should not be throttled
+      this.on('change:isCustomizer', function(){ this.sync('update', this); }, this);
+
       if ( this.get('isCustomNode') ) this.initializeCustomNode();
 
       this.resolver = new WorkspaceResolver(null, { app : this.app, workspace : this });
       this.resolver.resolveAll();
 
       this.app.trigger('workspaceLoaded', this);
+
+    },
+
+    getCustomizerUrl: function(){
+
+      // if (!this.get('isCustomizer')){
+      //   return "none";
+      // }
+
+      var domain = document.URL.match(/:\/\/(.[^/]+)/)[1];
+      return "http://" + domain + "/customize-" + this.id;
 
     },
 

@@ -184,11 +184,15 @@
           </div> 
 
           <div id="extra-menu">
-           <div id="feedback-button" class="menu-element">
+            <div id="feedback-button" class="menu-element">
               <i class="fa fa-comment fa-fw"></i>
             </div>
             <div id="help-button" class="menu-element">
               <i class="fa fa-question fa-fw"></i>
+            </div>
+
+            <div id="share-button" style="margin-top: 15px" class="menu-element">
+              <i class="fa fa-share fa-fw"></i>
             </div>
           </div>
 
@@ -219,7 +223,11 @@
             
           </div>
 
-          <div id="feedback" class="row col">
+          <div id="feedback" class="modal row col">
+            
+          </div>
+
+          <div id="share" class="modal row col">
             
           </div>
 
@@ -530,7 +538,6 @@
         <div style="float: right; visibility: hidden" class="workspace-browser-element-open">
           Open
         </div>
-
       </script>
 
       <script type="text/template" id="workspace-search-template">
@@ -606,7 +613,7 @@
         <div class="workspace-search-container">
 
           <div id="export-button" class="workspace-search-button workspace-search-button-active">
-            <i class="fa fa-lg fa-fw dim-button fa-reply-all white-icon"></i>
+            <i class="fa fa-lg fa-fw dim-button fa-download white-icon"></i>
           </div>
 
         </div>
@@ -686,9 +693,27 @@
 
       </script>
 
+      <script type="text/template" id="share-template">
+
+        <div id="share-box" class="modal-box">
+
+          <i id="exit-share" class="icon-remove dim-button"></i>
+          <h3 id="feedback-title">
+            <i class="fa fa-share fa-2x fa-fw" style="padding-right: 10px"></i>Share
+          </h3>
+          <p>You can share your project as a customizable product website.</p>
+
+          <h4>Publish '<%= name %>'</h4>
+          <input type="checkbox" class="is-customizer-checkbox" <%= isCustomizer ? "checked" : ""%> >
+          <input type="text" class="url" placeholder="Project Url" value="<%= url %>">
+
+        </div>
+
+      </script>
+
       <script type="text/template" id="feedback-template">
 
-        <div id="feedback-box">
+        <div id="feedback-box" class="modal-box">
           <i id="exit-feedback" class="icon-remove dim-button"></i>
           <h3 id="feedback-title">
             <i class="fa fa-comment fa-2x fa-fw" style="padding-right: 10px"></i>Send Feedback

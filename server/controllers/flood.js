@@ -83,12 +83,16 @@ exports.getCustomizerWorkspace = function(req, res){
 
 	Workspace.findById( req.params.id, function(err, ws){
 
-		// TODO: confirm if public or user is logged in
-
 		if (err || !ws) res.status(404).send("Workspace not found!");
 
-		return res.send( ws );
+		// its a public customizable workspace
+		if (ws.isCustomizer === true) return res.send( ws );
 
+		// its the users workspace, so they can see it
+		if (req.user && ws.maintainers.indexOf(req.user._id) != -1) return res.send( ws ); 
+		
+		return res.status(401).send("This workspace is either not public or you are not authorized to access it.")
+		
 	});
 }
 
@@ -150,9 +154,10 @@ exports.putMySession = function(req, res) {
 				w.undoStack = x.undoStack || w.undoStack;
 				w.workspaceDependencyIds = x.workspaceDependencyIds || w.workspaceDependencyIds;
 				w.isCustomNode = ( x.isCustomNode != undefined ) ? x.isCustomNode : w.isCustomNode;
+				w.isCustomizer = ( x.isCustomizer != undefined ) ? x.isCustomizer : w.isCustomizer;
 				w.isModified = true;
 
-				w.markModified("workspaceDependencyIds offset isCustomNode isModified name nodes connections currentWorkspace selectedNodes zoom lastSaved undoStack redoStack");
+				w.markModified("workspaceDependencyIds offset isCustomNode isCustomizer isModified name nodes connections currentWorkspace selectedNodes zoom lastSaved undoStack redoStack");
 
 				w.save(function(se){
 					if (se) return callback(se);
@@ -299,11 +304,12 @@ exports.putWorkspace = function(req, res) {
 		w.redoStack = x.redoStack || w.redoStack;
 		w.undoStack = x.undoStack || w.undoStack;
 		w.isCustomNode = ( x.isCustomNode != undefined ) ? x.isCustomNode : w.isCustomNode;
+		w.isCustomizer = ( x.isCustomizer != undefined ) ? x.isCustomizer : w.isCustomizer;
 		w.workspaceDependencyIds = x.workspaceDependencyIds || w.workspaceDependencyIds;
 		w.offset = x.offset || w.offset;
 		w.isModified = true;
 
-		w.markModified("workspaceDependencyIds name nodes connections currentWorkspace selectedNodes zoom offset lastSaved undoStack redoStack isModified");
+		w.markModified("workspaceDependencyIds name isCustomNode isCustomizer nodes connections currentWorkspace selectedNodes zoom offset lastSaved undoStack redoStack isModified");
 
 		w.save(function(se){
 			if (se) return res.status(500).send('Could not save the workspace');

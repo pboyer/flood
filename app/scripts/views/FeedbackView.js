@@ -8,7 +8,10 @@ define(['backbone'], function(Backbone) {
 
     events: { 'click #exit-feedback' : 'clickExit',
               'submit #submit-feedback' : 'clickSend', 
-              'click #submit-feedback' : 'clickSend' },
+              'click #submit-feedback' : 'clickSend',
+              'click' : 'clickExit',
+              'click .modal-box': 'stopPropagation' 
+            },
 
     template: _.template( $('#feedback-template').html() ),
 
@@ -31,6 +34,10 @@ define(['backbone'], function(Backbone) {
 
       return this;
 
+    },
+
+    stopPropagation: function(e){
+      e.stopPropagation();
     },
 
     fail: function(){

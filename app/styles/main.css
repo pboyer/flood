@@ -413,9 +413,10 @@ input[type="button"].btn-block {
 }
 
 #extra-menu .menu-element {
-	height: 40px;
+	height: 38px;
 	width: 38px;
 	font-size: 14px;
+	background: #222;
 	border:none;
 }
 
@@ -458,14 +459,13 @@ input[type="button"].btn-block {
 
 #extra-menu {
 	z-index: 99;
-	background: #222;
 	position: absolute;
 	width: 38px;
 	top: 80px;
 	right: 0px;
 }
 
-#feedback-box p {
+.modal-box p {
 	font-style: 12px;
 	padding: 5px;
 }
@@ -689,7 +689,7 @@ input[type="button"].btn-block {
 	margin: 30px;
 }
 
-#feedback {
+.modal {
 	z-index: 130;
 	display: none;
 	top: 0;
@@ -703,7 +703,7 @@ input[type="button"].btn-block {
 	color: white;
 }
 
-#feedback-box {
+.modal-box {
 	background: whitesmoke;
 	border: 1px solid #AAA;
 	position: relative;
@@ -715,7 +715,7 @@ input[type="button"].btn-block {
 	margin-bottom: auto;
 }
 
-#feedback-box h3 {
+.modal-box h3 {
 	color: grey;
 }
 
