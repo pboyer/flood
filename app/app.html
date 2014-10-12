@@ -701,20 +701,18 @@
           <h3 id="feedback-title">
             <i class="fa fa-share fa-2x fa-fw" style="padding-right: 10px"></i>Share
           </h3>
-          <p>You can share your project as a customizable product website</p>
+          <p>Share your project as a customizable product website</p>
 
           <div class="inner-box">
-            CURRENTLY <span class="indicator public">public</span> <span class="indicator private">private</span>
+            Sharing <br/>
+            <i class="fa fa-fw fa-toggle-off dim-button is-customizer-checkbox"></i> 
+            <span class="indicator public">public</span> <span class="indicator private">private</span>
           </div>
 
           <div class="inner-box">
-            URL <br/>
-            <input type="text" class="customizer-url" placeholder="Project Url" value="<%= url %>">
-          </div>
-
-          <div class="inner-box">
-            <input type="checkbox" class="is-customizer-checkbox" <%= isCustomizer ? "checked" : ""%> >
-            <span>Publish '<%= name %>'</span>
+            Stable URL <a href="http://<%= url %>" target="_blank" style="font-style: italic; color: grey">Visit</a>
+            <br/>
+            <input type="text" readonly class="customizer-url" placeholder="Project Url" value="<%= url %>">
           </div>
 
         </div>

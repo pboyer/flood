@@ -691,17 +691,18 @@ input[type="button"].btn-block {
 
 #share .inner-box {
 	padding-top: 8px;
-	padding-bottom: 8px;
+	padding-bottom: 15px;
 }
 
 #share .is-customizer-checkbox {
-	margin: 10px;
+	margin: 5px;
+	font-size: 20px;
 }
 
 #share .indicator {
 	color: white;
-	padding: 5px;
-	font-size: 15px;
+	padding: 8px;
+	font-size: 13px;
 	text-transform: uppercase;
 }
 
