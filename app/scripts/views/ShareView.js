@@ -35,10 +35,24 @@ define(['backbone'], function(Backbone) {
 
       if (!ws.isCustomizer){
         // we defer this as the input isn't necessarily yet in the dom
-        _.defer(function(){ this.$el.find('.url').focus().select(); }.bind(this) );
+        _.defer(function(){ this.$el.find('.customizer-url').focus().select(); }.bind(this) );
       }
 
+      this.updatePublicPrivate();
+
       return this;
+
+    },
+
+    updatePublicPrivate: function(){
+
+      if ( this.app.getCurrentWorkspace().get('isCustomizer') ){
+        this.$el.find('.public').show();
+        this.$el.find('.private').hide();
+      } else {
+        this.$el.find('.public').hide();
+        this.$el.find('.private').show();
+      }
 
     },
 
@@ -46,6 +60,8 @@ define(['backbone'], function(Backbone) {
 
       var ws = this.app.getCurrentWorkspace();
       ws.set('isCustomizer', this.$el.find('.is-customizer-checkbox').is(':checked') );
+
+      this.updatePublicPrivate();
 
     },
 

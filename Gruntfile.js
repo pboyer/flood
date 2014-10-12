@@ -23,70 +23,9 @@ module.exports = function (grunt) {
 
     grunt.initConfig({
         yeoman: yeomanConfig,
-        watch: {
-            livereload: {
-                files: [
-                    '<%= yeoman.app %>/*.html',
-                    '{.tmp,<%= yeoman.app %>}/styles/{,*/}*.css',
-                    '{.tmp,<%= yeoman.app %>}/scripts/{,*/}*.js',
-                    '<%= yeoman.app %>/images/{,*/}*.{png,jpg,jpeg,gif,webp}'
-                ],
-                tasks: ['livereload']
-            }
-        },
-        connect: {
-            options: {
-                port: 9000,
-                // change this to '0.0.0.0' to access the server from outside
-                hostname: 'localhost'
-            },
-            livereload: {
-                options: {
-                    middleware: function (connect) {
-                        return [
-                            lrSnippet,
-                            mountFolder(connect, '.tmp'),
-                            mountFolder(connect, 'app')
-                        ];
-                    }
-                }
-            },
-            test: {
-                options: {
-                    middleware: function (connect) {
-                        return [
-                            mountFolder(connect, '.tmp'),
-                            mountFolder(connect, 'test')
-                        ];
-                    }
-                }
-            },
-            dist: {
-                options: {
-                    middleware: function (connect) {
-                        return [
-                            mountFolder(connect, 'dist')
-                        ];
-                    }
-                }
-            }
-        },
-        open: {
-            server: {
-                path: 'http://localhost:<%= connect.options.port %>'
-            }
-        },
         clean: {
             dist: ['.tmp', '<%= yeoman.dist %>/*'],
             server: '.tmp'
-        },
-        mocha: {
-            all: {
-                options: {
-                    run: true,
-                    urls: ['http://localhost:<%= connect.options.port %>/index.html']
-                }
-            }
         },
         // This task uses James Burke's excellent r.js AMD builder to take all
         // modules and concatenate them into a single file.
@@ -96,14 +35,11 @@ module.exports = function (grunt) {
 
               mainConfigFile: "app/scripts/config.js",
 
-              // generateSourceMaps: true,
-
               include: ["main"],
               insertRequire: ["main"],
 
               out: "dist/source.min.js",
               optimize: "uglify",
-              // optimize: "none",
 
               // Since we bootstrap with nested `require` calls this option allows
               // R.js to find them.
@@ -122,7 +58,24 @@ module.exports = function (grunt) {
 
               // Do not preserve any license comments when working with source
               // maps.  These options are incompatible.
-              preserveLicenseComments: false
+              preserveLicenseComments: true
+            }
+          },
+          customizer: {
+            options: {
+
+              mainConfigFile: "app/scripts/config.js",
+
+              include: ["customizer"],
+              insertRequire: ["customizer"],
+
+              out: "dist/customizer.min.js",
+              optimize: "uglify",
+              findNestedDependencies: true,
+              name: "almond",
+              baseUrl: "app/scripts",
+              wrap: true,
+              preserveLicenseComments: true
             }
           }
         },
@@ -152,7 +105,16 @@ module.exports = function (grunt) {
                         '.tmp/styles/{,*/}*.css',
                         '<%= yeoman.app %>/bower_components/jquery.ui/themes/base/*.css',
                         '<%= yeoman.app %>/bower_components/components-font-awesome/css/font-awesome.min.css',
-                        '<%= yeoman.app %>/styles/{,*/}*.css',
+                        '<%= yeoman.app %>/styles/bootstrap.css',
+                        '<%= yeoman.app %>/styles/main.css',
+                    ],
+                    '<%= yeoman.dist %>/customizer.min.css': [
+                        '.tmp/styles/{,*/}*.css',
+                        '<%= yeoman.app %>/bower_components/jquery.ui/themes/base/*.css',
+                        '<%= yeoman.app %>/bower_components/components-font-awesome/css/font-awesome.min.css',
+                        '<%= yeoman.app %>/styles/bootstrap.css',
+                        '<%= yeoman.app %>/styles/main.css',
+                        '<%= yeoman.app %>/styles/customizer.css'
                     ]
                 }
             }
@@ -198,7 +160,8 @@ module.exports = function (grunt) {
         processhtml: {
           release: {
             files: {
-              "dist/app.html": ["app/app.html"]
+              "dist/app.html": ["app/app.html"],
+              "dist/customizer.html": ["app/customizer.html"]
             }
           }
         },
@@ -214,28 +177,6 @@ module.exports = function (grunt) {
             src: ['./dist/**'] // Your node-wekit app
         }
     });
-
-    grunt.renameTask('regarde', 'watch');
-
-    grunt.registerTask('server', function (target) {
-        if (target === 'dist') {
-            return grunt.task.run(['build', 'open', 'connect:dist:keepalive']);
-        }
-
-        grunt.task.run([
-            'clean:server',
-            'livereload-start',
-            'connect:livereload',
-            'open',
-            'watch'
-        ]);
-    });
-
-    grunt.registerTask('test', [
-        'clean:server',
-        'connect:test',
-        'mocha'
-    ]);
 
     grunt.registerTask('build', [
         'clean:dist',
@@ -257,7 +198,6 @@ module.exports = function (grunt) {
     ]);
 
     grunt.registerTask('default', [
-        'test',
         'build'
     ]);
 };

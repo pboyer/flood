@@ -120,7 +120,7 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
       // }
 
       var domain = document.URL.match(/:\/\/(.[^/]+)/)[1];
-      return "http://" + domain + "/customize-" + this.id;
+      return domain + "/customize-" + this.id;
 
     },
 
