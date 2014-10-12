@@ -728,6 +728,12 @@ input[type="button"].btn-block {
 	font-size: 14px;
 }
 
+#exit-share {
+	position: absolute;
+	right: 10px;
+	top: 10px;
+}
+
 .modal {
 	z-index: 130;
 	display: none;
@@ -753,6 +759,7 @@ input[type="button"].btn-block {
 	margin-right: auto;
 	margin-bottom: auto;
 }
+
 
 .modal p {
 	font-size: 20px;
@@ -899,6 +906,12 @@ input[type="button"].btn-block {
 	border-right: 1px solid #c7bbb1;
 }
 
+#add-workspace-button i {
+	color: black;
+	font-size: 13px;
+	padding-top: 3px;
+}
+
 #add-workspace-select-element {
 	float: left; 
 	overflow: visible;
@@ -909,7 +922,7 @@ input[type="button"].btn-block {
 	z-index: 200; 
 	position:relative; 
 	top: 30px; 
-	left: -24px; 
+	left: -32px; 
 	width: 80px;
 	color: #DDD
 }
@@ -954,6 +967,11 @@ input[type="button"].btn-block {
 	color: #e3e3e3;
 	display: inline-block;
 	border-left: 1px solid #c7bbb1;
+}
+
+.workspace-tab i {
+	color: black;
+	font-size: 12px;
 }
 
 .workspace-tab input{
@@ -1114,6 +1132,10 @@ input[type="button"].btn-block {
 
 .toggle-vis {
 	display: none;
+}
+
+.toggle-vis i {
+	font-size: 13px;
 }
 
 .node-number-input {

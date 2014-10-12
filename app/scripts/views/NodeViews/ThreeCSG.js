@@ -271,12 +271,12 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView'], function(Backbone, 
       var label = this.$toggleVis.find('span');
 
       if (this.model.get('visible')){
-        icon.addClass('icon-eye-open');
-        icon.removeClass('icon-eye-close');
+        icon.addClass('fa-eye');
+        icon.removeClass('fa-eye-slash');
         label.html('Hide geometry');
       } else {
-        icon.removeClass('icon-eye-open');
-        icon.addClass('icon-eye-close');
+        icon.removeClass('fa-eye');
+        icon.addClass('fa-eye-slash');
         label.html('Show geometry');
       }
 
