@@ -159,7 +159,7 @@
             <div id="workspace-tabs"></div>
 
             <div id="add-workspace-button" class="menu-element" style="float: left;">
-              <i class="fa fa-fw fa-file dim-button"></i>
+              <i class="fa fa-file dim-button"></i>
             </div>
 
             <div id="add-workspace-select-element">
@@ -704,14 +704,15 @@
           <p>Share your project as a customizable product website</p>
 
           <div class="inner-box">
-            Sharing <br/>
+           <span class="label">Sharing</span> 
+           <br>
             <i class="fa fa-fw fa-toggle-off dim-button is-customizer-checkbox"></i> 
             <span class="indicator public">public</span> <span class="indicator private">private</span>
           </div>
 
           <div class="inner-box">
-            Stable URL <a href="http://<%= url %>" target="_blank" style="font-style: italic; color: grey">Visit</a>
-            <br/>
+            <span class="label">Stable URL</span> <a href="http://<%= url %>" target="_blank" style="font-style: italic; ">Visit</a>
+            <br>
             <input type="text" readonly class="customizer-url" placeholder="Project Url" value="<%= url %>">
           </div>
 

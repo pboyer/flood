@@ -23,7 +23,7 @@ define(['backbone', 'CustomizerViewerView', 'CustomizerHeaderView', 'CustomizerW
     render: _.once(function() {
 
       (new CustomizerViewer()).render();
-      (new CustomizerHeader({model: this.model})).render();
+      (new CustomizerHeader({model: this.model.getCurrentWorkspace() })).render();
       (new CustomizerWorkspaceView({model: this.model.getCurrentWorkspace() })).render();
 
       return this;

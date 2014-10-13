@@ -8,7 +8,7 @@ define(['backbone'], function(Backbone) {
       'click #exit-share' : 'clickExit', 
       'click' : 'clickExit',
       'click .modal-box': 'stopPropagation',
-      'change .is-customizer-checkbox': 'checkboxChanged'
+      'click .is-customizer-checkbox': 'checkboxChanged'
     },
 
     template: _.template( $('#share-template').html() ),
@@ -47,9 +47,13 @@ define(['backbone'], function(Backbone) {
     updatePublicPrivate: function(){
 
       if ( this.app.getCurrentWorkspace().get('isCustomizer') ){
+        this.$el.find('.is-customizer-checkbox').removeClass("fa-toggle-off");
+        this.$el.find('.is-customizer-checkbox').addClass("fa-toggle-on");
         this.$el.find('.public').show();
         this.$el.find('.private').hide();
       } else {
+        this.$el.find('.is-customizer-checkbox').removeClass("fa-toggle-on");
+        this.$el.find('.is-customizer-checkbox').addClass("fa-toggle-off");
         this.$el.find('.public').hide();
         this.$el.find('.private').show();
       }
@@ -59,7 +63,7 @@ define(['backbone'], function(Backbone) {
     checkboxChanged: function(){
 
       var ws = this.app.getCurrentWorkspace();
-      ws.set('isCustomizer', this.$el.find('.is-customizer-checkbox').is(':checked') );
+      ws.set('isCustomizer', !ws.get('isCustomizer') );
 
       this.updatePublicPrivate();
 

@@ -159,9 +159,14 @@
           </div>
 
           <div id="customizer-workspace">
+            <div id="customizer-workspace-header">
+              <div id="hide-workspace" class="dim-button"><i class="fa fa-fw fa-arrow-circle-left"></i></div>
+            </div>
           </div>
 
           <div id="customizer-viewer"></div>
+
+          <div id="powered-by">Powered by <a href="http://www.floodeditor.com">FLOOD</a></div>
 
           <div id="customizer-login" class="row col scroll-y" style="display: none">
 
@@ -181,10 +186,10 @@
   
             <div id="app-fail-container">
               <h1><i class="fa fa-fw fa-2x fa-exclamation-triangle"></i></h1>
-              <h1>Flood requires WebGL!</h1>
+              <h1>Requires WebGL!</h1>
               <p>
                 It's also possible that WebGL is disabled in your browser or has failed to load.  You'll need to use a 
-                web browser that <a href="http://caniuse.com/#search=webgl">supports WebGL</a> to use Flood.  
+                web browser that <a href="http://caniuse.com/#search=webgl">supports WebGL</a> to use this app.  
               </p>
             </div>
 
@@ -233,13 +238,17 @@
       <script type="text/template" id="header-template">
 
         <div class="customize-header-container">
-          <span class="customize-header" id="customize-header-tag">Customize</span>
+          <span class="customize-header" id="customize-header-tag">Custom</span>
           <span class="customize-header" id="customize-header-title"><%= name %></span>
         </div>
 
         <div id="customizer-header-controls" class="dropdown">
 
-          <i class="fa fa-download fa-fw"></i>
+          <% if (!isCustomizer) { %> 
+            <span class="indicator private">private</span>
+          <% } %>
+
+          <i class="fa fa-download fa-fw dim-button"></i>
 
         </div>
 

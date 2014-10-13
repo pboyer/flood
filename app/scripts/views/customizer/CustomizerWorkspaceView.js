@@ -5,7 +5,9 @@ define(['backbone', 'BaseWidgetView', 'GeometryWidgetView', 'NumberWidgetView'],
 
     el: '#customizer-workspace',
 
-    events: {  },
+    events: { 
+      "click #hide-workspace" : "hideWorkspace"
+     },
 
     initialize: function( args, atts ) {
 
@@ -14,6 +16,8 @@ define(['backbone', 'BaseWidgetView', 'GeometryWidgetView', 'NumberWidgetView'],
     map: {
       "Number" : NumberWidgetView
     },
+
+    hasWidgets: false,
 
     buildWidget: function(x){
 
@@ -29,6 +33,27 @@ define(['backbone', 'BaseWidgetView', 'GeometryWidgetView', 'NumberWidgetView'],
 
       if (x.get('type').typeName in this.map){
         this.$el.append( widget.render().$el );
+        this.hasWidgets = true;
+      }
+
+    },
+
+    visible: true,
+
+    hideWorkspace: function(){
+
+      if (this.visible){
+        this.$el.addClass('workspace-contracted');
+        this.$el.find('.widget').css('visibility', 'hidden');
+        this.$el.find('#hide-workspace i').removeClass('fa-arrow-circle-left');
+        this.$el.find('#hide-workspace i').addClass('fa-arrow-circle-right');
+        this.visible = false;
+      } else {
+        this.$el.removeClass('workspace-contracted');
+        this.$el.find('.widget').css('visibility', 'visible');
+        this.$el.find('#hide-workspace i').removeClass('fa-arrow-circle-right');
+        this.$el.find('#hide-workspace i').addClass('fa-arrow-circle-left');
+        this.visible = true;
       }
 
     },
@@ -36,6 +61,8 @@ define(['backbone', 'BaseWidgetView', 'GeometryWidgetView', 'NumberWidgetView'],
     render: function() {
 
       this.model.get('nodes').each(this.buildWidget.bind(this));
+
+      if (!this.hasWidgets) this.$el.hide();
 
       return this;
 

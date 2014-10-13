@@ -694,25 +694,32 @@ input[type="button"].btn-block {
 	padding-bottom: 15px;
 }
 
+#share .inner-box .label {
+	font-weight: bold;
+	color: grey;
+}
+
 #share .is-customizer-checkbox {
-	margin: 5px;
+	padding: 8px;
+	margin: 10px;
+	margin-right: 24px;
 	font-size: 20px;
 }
 
-#share .indicator {
+.indicator {
+	border-radius: 2px;
 	color: white;
 	padding: 8px;
-	font-size: 13px;
+	font-size: 14px;
 	text-transform: uppercase;
 }
 
-#share .private {
-	background-color: lightblue;
+.private {
+	background-color: #666;
 }
 
-#share .public {
+.public {
 	background-color: green;
-	display: none;
 }
 
 #share .customizer-url {
@@ -720,7 +727,6 @@ input[type="button"].btn-block {
 	font-size: 14px;
 	color: black;
 	padding: 4px;
-	margin-top: 10px;
 }
 
 #share span {
@@ -761,16 +767,18 @@ input[type="button"].btn-block {
 	margin-bottom: auto;
 }
 
-
 .modal p {
-	font-size: 20px;
+	font-size: 18px;
+	color: #444;
 	padding-top: 20px;
 	padding-bottom: 10px;
+	text-shadow: 0px 1px 0px white;
 }
 
 .modal-box h3 {
-	color: grey;
-	font-size: 30px;
+	color: #444;
+	text-shadow: 0px 1px 0px white;
+	font-size: 35px;
 }
 
 #exit-feedback {
@@ -909,7 +917,7 @@ input[type="button"].btn-block {
 
 #add-workspace-button i {
 	color: black;
-	font-size: 13px;
+	font-size: 12px;
 	padding-top: 3px;
 }
 
@@ -923,7 +931,7 @@ input[type="button"].btn-block {
 	z-index: 200; 
 	position:relative; 
 	top: 30px; 
-	left: -32px; 
+	left: -25px; 
 	width: 80px;
 	color: #DDD
 }
