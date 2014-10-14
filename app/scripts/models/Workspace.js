@@ -1,5 +1,5 @@
-define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Runner', 'Node', 'Marquee', 'WorkspaceResolver'], 
-    function(Backbone, Nodes, Connection, Connections, scheme, FLOOD, Runner, Node, Marquee, WorkspaceResolver) {
+define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Runner', 'Node', 'Marquee', 'WorkspaceResolver', 'GeometryExport'], 
+    function(Backbone, Nodes, Connection, Connections, scheme, FLOOD, Runner, Node, Marquee, WorkspaceResolver, GeometryExport) {
 
   return Backbone.Model.extend({
 
@@ -49,6 +49,7 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
         atts.offset = this.defaults.offset;
         this.set( 'offset', this.defaults.offset );
       }
+
 
       this.app = arr.app;
 
@@ -107,6 +108,12 @@ define(['backbone', 'Nodes', 'Connection', 'Connections', 'scheme', 'FLOOD', 'Ru
       this.resolver.resolveAll();
 
       this.app.trigger('workspaceLoaded', this);
+
+    },
+
+    exportSTL: function(){
+
+      GeometryExport.toSTL(scene, this.get('name') + ".stl" );
 
     },
 

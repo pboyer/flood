@@ -18,7 +18,8 @@
     "pace": "0.5.1",
     "components-font-awesome": "4.1.0",
     "hammerjs": "~2.0.4",
-    "fastclick": "~1.0.3"
+    "fastclick": "~1.0.3",
+    "FileSaver": "eliGrey/FileSaver.js"
   },
   "devDependencies": {}
 }

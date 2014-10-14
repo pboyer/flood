@@ -122,6 +122,7 @@ require.config({
         Help: 'models/Help',
         Feedback: 'models/Feedback',
         Login: 'models/Login',
+        GeometryExport: 'models/GeometryExport',
         WorkspaceBrowserElement: 'models/WorkspaceBrowserElement',
         WorkspaceBrowser: 'models/WorkspaceBrowser',
         WorkspaceResolver: 'models/WorkspaceResolver',
@@ -175,6 +176,7 @@ require.config({
         backbone: '../bower_components/backbone-amd/backbone-min',
         underscore: '../bower_components/underscore-amd/underscore-min',
         fastclick: '../bower_components/fastclick/lib/fastclick',
+        FileSaver: '../bower_components/FileSaver/FileSaver'
     }
 
 });

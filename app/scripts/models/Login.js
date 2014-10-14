@@ -10,7 +10,7 @@ define(['backbone'], function(Backbone) {
 	  	email : ""
 	  },
 
-		initialize: function(atts, vals) {
+	initialize: function(atts, vals) {
 	  	this.app = vals.app;
 	  },
 
