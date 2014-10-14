@@ -27,7 +27,7 @@ define(['backbone'], function(Backbone) {
 	  			{ title: "Export STL",
 	  				targetId : "export-button",
 	  				offset: [20,-110],
-	  				text: "Export all visible geometry to STL"
+	  				text: "Export all visible geometry to STL for 3D printing"
 	  			},
 	  			// { title: "Zoom",
 	  			// 	targetId : "zoomreset-button",
