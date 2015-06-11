@@ -257,8 +257,7 @@ exports.getWorkspaces = function(req, res) {
 	User.findById( user._id )
 		.populate('workspaces', 'name lastSaved isPublic maintainers isEdited isCustomNode')
 		.exec(function(e, u) {
-			var filtered = u.workspaces.filter(function(x, i){ return x.isEdited === true || i === 0; }).sort(dateSort);
-			return res.send( filtered );
+            return res.send(u.workspaces );
 	});
 
 };

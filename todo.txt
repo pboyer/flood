@@ -1,3 +1,5 @@
+font-awesome 404
+
 do not allow dragging node too far
 zoom from center in workspace
 why is drag so slow?
