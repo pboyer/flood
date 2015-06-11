@@ -45,8 +45,8 @@ define(['backbone', 'List', 'SearchElementView', 'bootstrap', 'jquery'], functio
 
       this.app.SearchElements.forEach(function(ele) {
 
-        var eleView = new SearchElementView({ model: ele }, { appView: that.appView, app: that.app, 
-          click: function(e){ that.elementClick.call(that, e); } 
+        var eleView = new SearchElementView({ model: ele }, { appView: that.appView, app: that.app,
+          click: function(e){ that.elementClick.call(that, e); }
         });
 
         eleView.render();
@@ -76,7 +76,7 @@ define(['backbone', 'List', 'SearchElementView', 'bootstrap', 'jquery'], functio
       this.$el.find('#export-button').tooltip({title: "Export as STL"});
 
       $('#workspace_hide').tooltip({title: "Switch between 3D view and nodes"});
-      
+
       $('#help-button').tooltip({title: "Help", placement: "left"});
       $('#feedback-button').tooltip({title: "Feedback", placement: "left"});
       $('#share-button').tooltip({title: "Share", placement: "left"});
@@ -156,9 +156,9 @@ define(['backbone', 'List', 'SearchElementView', 'bootstrap', 'jquery'], functio
 
         this.addNode( nodeName );
 
-      } 
+      }
 
-    } 
+    }
 
   });
 

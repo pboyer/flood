@@ -6,7 +6,7 @@ define(['backbone'], function(Backbone) {
 
     template: _.template( $('#header-template').html() ),
 
-    events: {  },
+    events: { "click .stl-download" : "downloadStl" },
 
     initialize: function( args, atts ) {
       this.listenTo(this.model, 'change', this.render);
@@ -17,6 +17,10 @@ define(['backbone'], function(Backbone) {
       this.$el.html( this.template( this.model.toJSON() ) );
       return this;
 
+    },
+
+    downloadStl: function() {
+        this.trigger("download-stl")
     }
 
   });

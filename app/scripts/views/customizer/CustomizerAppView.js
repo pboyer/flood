@@ -5,8 +5,8 @@
 // CustomizerNodeView - similar to a nodeview, but no inputs/outputs, simplified controls, potentially multiple options with labels
 // CustomizerViewer - allows you to view your customized geometry, with saved camera position
 
-define(['backbone', 'CustomizerViewerView', 'CustomizerHeaderView', 'CustomizerWorkspaceView'], 
-  function(Backbone, CustomizerViewer, CustomizerHeader, CustomizerWorkspaceView ) {
+define(['backbone', 'CustomizerViewerView', 'CustomizerHeaderView', 'CustomizerWorkspaceView'],
+  function(Backbone, CustomizerViewer, CustomizerHeaderView, CustomizerWorkspaceView ) {
 
   'use strict';
 
@@ -23,12 +23,14 @@ define(['backbone', 'CustomizerViewerView', 'CustomizerHeaderView', 'CustomizerW
     render: _.once(function() {
 
       (new CustomizerViewer()).render();
-      (new CustomizerHeader({model: this.model.getCurrentWorkspace() })).render();
+      var hv = new CustomizerHeaderView({model: this.model.getCurrentWorkspace() })
+      this.listenTo( hv, "download-stl", function(){ this.model.getCurrentWorkspace().exportSTL() } );;
+      hv.render();
       (new CustomizerWorkspaceView({model: this.model.getCurrentWorkspace() })).render();
 
       return this;
 
-    })
+    }),
 
   });
 });
