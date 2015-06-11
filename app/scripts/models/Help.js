@@ -3,7 +3,7 @@ define(['backbone'], function(Backbone) {
 	return Backbone.Model.extend({
 
 	  defaults: {
-	  	sections: 
+	  	sections:
 	  		[ { title: "Workspace Tabs",
 	  				targetId : "add-workspace-button",
 	  				offset: [5, 5],
@@ -29,7 +29,12 @@ define(['backbone'], function(Backbone) {
 	  				offset: [20,-110],
 	  				text: "Export all visible geometry to STL for 3D printing"
 	  			},
-	  			// { title: "Zoom",
+	  			{ title: "Share a customizer",
+	  				targetId : "share-button",
+	  				offset: [-200,10],
+	  				text: "Share a customizer with anyone on the internet!"
+	  			},
+                // { title: "Zoom",
 	  			// 	targetId : "zoomreset-button",
 	  			// 	offset: [20,-110],
 	  			// 	text: "Use this control the workspace zoom, or use Ctrl +, Ctrl -"
