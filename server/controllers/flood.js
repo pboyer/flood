@@ -17,10 +17,10 @@ var initNonUserSession = function(req, res){
 		if (errWs) return res.status(500).send("Failed to initialize user workspace");
 
 		newSesh.save(function(errSesh){
-				
+
 				if (errSesh) return res.status(500).send("Failed to initialize user session");
 
-				Session	
+				Session
 					.findById(newSesh.id)
 					.populate('workspaces')
 					.exec( function(err, sesh){
@@ -52,17 +52,17 @@ var initUserSession = function(req, res){
 			if (errWs1) return res.status(500).send("Failed to initialize user workspace");
 
 			newSesh.save(function(errSesh){
-				
+
 				if (errSesh) return res.status(500).send("Failed to initialize user session");
 
 				user.lastSession = newSesh;
 				user.workspaces = [ nws, nws1 ];
-				user.markModified("lastSession workspaces");		
+				user.markModified("lastSession workspaces");
 
 				user.save(function(err){
 					if (err) return res.status(500).send("Failed to save user session");
 
-					Session	
+					Session
 					.findById(user.lastSession )
 					.populate('workspaces')
 					.exec( function(err, sesh){
@@ -74,9 +74,9 @@ var initUserSession = function(req, res){
 			});
 
 		});
-		
+
 	});
-	
+
 };
 
 exports.getMySession = function(req, res) {
@@ -89,7 +89,7 @@ exports.getMySession = function(req, res) {
 
 	if (!user.lastSession){
 		return initUserSession(req, res);
-	}	
+	}
 
 	Session
 	.findById(user.lastSession )
@@ -137,14 +137,14 @@ exports.putMySession = function(req, res) {
 				w.undoStack = x.undoStack || w.undoStack;
 				w.workspaceDependencyIds = x.workspaceDependencyIds || w.workspaceDependencyIds;
 				w.isCustomNode = ( x.isCustomNode != undefined ) ? x.isCustomNode : w.isCustomNode;
-				w.isModified = true;
+				w.isEdited = true;
 
-				w.markModified("workspaceDependencyIds offset isCustomNode isModified name nodes connections currentWorkspace selectedNodes zoom lastSaved undoStack redoStack");
+				w.markModified("workspaceDependencyIds offset isCustomNode isEdited name nodes connections currentWorkspace selectedNodes zoom lastSaved undoStack redoStack");
 
 				w.save(function(se){
 					if (se) return callback(se);
 					return callback();
-				});	
+				});
 
 			});
 
@@ -152,7 +152,7 @@ exports.putMySession = function(req, res) {
 
 	});
 
-	async.waterfall(workspaceSaves, function(err) { 
+	async.waterfall(workspaceSaves, function(err) {
 
 		if (err) return res.status(500).send(err);
 
@@ -165,7 +165,7 @@ exports.putMySession = function(req, res) {
 
 			// TODO: validate ids
 			s.workspaces = ns.workspaces.map(function(x){ return x._id; });
-			s.currentWorkspace = ns.currentWorkspace; 
+			s.currentWorkspace = ns.currentWorkspace;
 			s.isFirstExperience = false;
 			s.lastSaved = Date.now();
 
@@ -176,7 +176,7 @@ exports.putMySession = function(req, res) {
 				return res.send("Success");
 			});
 
-		}); 
+		});
 
 	});
 
@@ -237,11 +237,11 @@ exports.getWorkspaces = function(req, res) {
 	if (!user) return res.status(403).send("Must be logged in to list your workspaces")
 
 	User.findById( user._id )
-		.populate('workspaces', 'name lastSaved isPublic maintainers isModified isCustomNode')
+		.populate('workspaces', 'name lastSaved isPublic maintainers isEdited isCustomNode')
 		.exec(function(e, u) {
-			var filtered = u.workspaces.filter(function(x, i){ return x.isModified === true || i === 0; }).sort(dateSort);
+			var filtered = u.workspaces.filter(function(x, i){ return x.isEdited === true || i === 0; }).sort(dateSort);
 			return res.send( filtered );
-	}); 
+	});
 
 };
 
@@ -256,8 +256,8 @@ exports.getWorkspace = function(req, res) {
 		}
 
 		return res.send(ws);
-		
-	}); 
+
+	});
 
 };
 
@@ -288,16 +288,16 @@ exports.putWorkspace = function(req, res) {
 		w.isCustomNode = ( x.isCustomNode != undefined ) ? x.isCustomNode : w.isCustomNode;
 		w.workspaceDependencyIds = x.workspaceDependencyIds || w.workspaceDependencyIds;
 		w.offset = x.offset || w.offset;
-		w.isModified = true;
+		w.isEdited = true;
 
-		w.markModified("workspaceDependencyIds name nodes connections currentWorkspace selectedNodes zoom offset lastSaved undoStack redoStack isModified");
+		w.markModified("workspaceDependencyIds name nodes connections currentWorkspace selectedNodes zoom offset lastSaved undoStack redoStack isEdited");
 
 		w.save(function(se){
 			if (se) return res.status(500).send('Could not save the workspace');
 			return res.status(200).send('Saved workspace');
-		});	
-		
-	}); 
+		});
+
+	});
 
 };
 

@@ -1,4 +1,4 @@
-var mongoose = require('mongoose')  
+var mongoose = require('mongoose')
   , Schema = mongoose.Schema;
 
 var sessionSchema = new Schema({
@@ -21,7 +21,7 @@ var workspaceSchema = new Schema({
   , maintainers: [{type: Schema.ObjectId, ref: 'User' }]
   , undoStack: [ Schema.Types.Mixed ]
   , redoStack: [ Schema.Types.Mixed ]
-  , isModified: { type: Boolean, default: false }
+  , isEdited: { type: Boolean, default: false }
   , isCustomNode: { type: Boolean, default: false }
   , workspaceDependencyIds: [{type: Schema.ObjectId, ref: 'Workspace' }]
 });
