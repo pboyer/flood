@@ -79,6 +79,7 @@ define(['backbone', 'List', 'SearchElementView', 'bootstrap', 'jquery'], functio
       
       $('#help-button').tooltip({title: "Help", placement: "left"});
       $('#feedback-button').tooltip({title: "Feedback", placement: "left"});
+      $('#share-button').tooltip({title: "Share", placement: "left"});
 
     },
 

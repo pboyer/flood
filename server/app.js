@@ -95,7 +95,9 @@ app.use(function(req, res, next) {
   next();
 });
 app.use(flash());
-app.use(express.static(path.join(__dirname, process.env.FLOOD_STATIC || '../app')));
+
+var staticFolder = process.env.FLOOD_STATIC || '../app';
+app.use(express.static(path.join(__dirname, staticFolder )));
 app.use(function(req, res, next) {
   // Keep track of previous URL
   if (req.method !== 'GET') return next();
@@ -110,6 +112,16 @@ app.use(function(req, res, next) {
  */
 
 // flood routes
+
+// customizer (experimental)
+app.get('/customize-:id',function(req,res){
+   var fileStream = fs.createReadStream(staticFolder + '/customizer.html');
+    fileStream.on('open', function () {
+        fileStream.pipe(res);
+    });
+});
+
+app.get('/custdata/:id', floodController.getCustomizerWorkspace);
 
 app.get('/mys', floodController.getMySession);
 app.put('/mys', floodController.putMySession);

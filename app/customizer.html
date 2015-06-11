@@ -1,0 +1,317 @@
+<!doctype html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+        <title>Customizer - Flood</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="user-scalable=no, width=device-width, initial-scale=1, maximum-scale=1">
+
+        <!-- build:css customizer.min.css -->
+        <link rel="stylesheet" href="bower_components/jquery.ui/themes/base/jquery.ui.all.css">
+        <link rel="stylesheet" href="bower_components/components-font-awesome/css/font-awesome.min.css">
+        <link rel="stylesheet" href="styles/customizer.css">
+        <link rel="stylesheet" href="styles/bootstrap.css">
+        <link rel="stylesheet" href="styles/main.css">
+        <!-- /build -->
+
+        <style>
+
+          body {
+            margin: 0;
+            padding: 0;
+            font-family:Helvetica, Arial, "Lucida Grande", sans-serif;
+          }
+
+          #login {
+            background: #e3e3e3;
+            text-align: center;
+            z-index: 120;
+            right: 0;
+            left: 0;
+            top: 0;
+            bottom: 0;
+
+            background-image: -ms-radial-gradient(center, circle closest-corner, #E3E3E3 0%, #C4C4C4 100%);
+            background-image: -moz-radial-gradient(center, circle closest-corner, #E3E3E3 0%, #C4C4C4 100%);
+            background-image: -o-radial-gradient(center, circle closest-corner, #E3E3E3 0%, #C4C4C4 100%);
+            background-image: -webkit-gradient(radial, center center, 0, center center, 497, color-stop(0, #E3E3E3), color-stop(1, #C4C4C4));
+            background-image: -webkit-radial-gradient(center, circle closest-corner, #E3E3E3 0%, #C4C4C4 100%);
+            background-image: radial-gradient(circle closest-corner at center, #E3E3E3 0%, #C4C4C4 100%);
+          }
+
+          .editor-container {
+            letter-spacing: 60px;
+            padding-top: 230px;
+            width: 450px;
+            margin-left: auto;
+            margin-right: auto;
+            font-size: 16px;
+            color: #666;
+            text-shadow: 0 1px white;
+          }
+
+          .editor-container span {
+            margin-left: 45px;
+          }
+
+          #title a {
+            text-decoration: none;
+          }
+
+          .title-box {
+            font-family:Helvetica, Arial, "Lucida Grande", sans-serif;
+            padding: 0;
+            margin: 0;
+            font-size: 180px;
+
+            text-shadow: 0 1px white;
+            width: 500px;
+            left: 50%;
+            margin-left: -250px;
+
+            position: absolute;
+            overflow: hidden;
+
+            transition: height 5s;
+            transition-timing-function: ease-out;
+          }
+
+
+          #title-grey {
+            height: 145px;
+            z-index: 122;
+            color: #272822;
+            width: 500px;
+          }
+
+          #title-blue {
+            position: absolute;
+            color: #589cc8;
+            width: 500px;
+          }
+
+          .form-group {padding: 5px;}
+
+          .form-group label { color: #AAA; }
+
+          .login-container {
+            padding-top: 50px;
+            width: 300px;
+            margin-left: auto;
+            margin-right: auto;
+          }
+
+          .login-container h5 {
+            font-size: 18px;
+            color: #666;
+            text-shadow: 0 1px white;
+          }
+
+          #app-fail {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            color: #333;
+            z-index: 125;
+            background: #960018;
+          }
+
+          #app-fail-container {
+            border-radius: 6px;
+            width: 450px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 20px;
+            background: whitesmoke;
+            margin-top: 50px;
+          }
+    
+          #app-fail-container i {
+            font-size: 150px;
+            color: grey;
+          }
+
+          #app-fail-container h1 {
+            text-align: center;
+          }
+
+          #app-fail-container p {
+            padding-top: 20px;
+            color: grey;
+          }
+
+        </style>
+
+    </head>
+    
+    <body>
+
+        <div id="customizer-app">
+
+          <div id="customizer-header">
+          </div>
+
+          <div id="customizer-workspace">
+            <div id="customizer-workspace-header">
+              <div id="hide-workspace" class="dim-button"><i class="fa fa-fw fa-arrow-circle-left"></i></div>
+            </div>
+          </div>
+
+          <div id="customizer-viewer"></div>
+
+          <div id="powered-by">Powered by <a href="http://www.floodeditor.com">FLOOD</a></div>
+
+          <div id="customizer-login" class="row col scroll-y" style="display: none">
+
+            <div id="title-container">
+              <div class="title-box" id="title-grey">flood</div>
+              <div class="title-box" id="title-blue">flood</div>
+            </div>
+
+            <div class="editor-container"><span>EDITOR</span></div>
+
+            <div class="customizer-login-container">
+              <h5>Wait for it...</h5>
+            </div>
+          </div>
+
+          <div id="app-fail" style="display: none">
+  
+            <div id="app-fail-container">
+              <h1><i class="fa fa-fw fa-2x fa-exclamation-triangle"></i></h1>
+              <h1>Requires WebGL!</h1>
+              <p>
+                It's also possible that WebGL is disabled in your browser or has failed to load.  You'll need to use a 
+                web browser that <a href="http://caniuse.com/#search=webgl">supports WebGL</a> to use this app.  
+              </p>
+            </div>
+
+          </div>
+
+        </div>
+
+      </body>
+
+      <script>
+        setTimeout(function(){ 
+          document.getElementById("title-grey").style.height = "10px";
+        }, 10);
+      </script>
+
+      <script type="text/template" id="widget-template">
+        
+        <span class="name">
+          <% if ( !name || name === "DefaultNodeName" || name === "") { %>
+            <%= typeName != "CustomNode" ? typeName : type.functionName  %>
+          <% } else { %>
+            <%= name %>
+          <% } %>
+        </span>
+
+      </script>
+
+      <script type="text/template" id="widget-number-template">
+
+        <span class="name">
+          <% if ( !name || name === "DefaultNodeName" || name === "") { %>
+            <%= typeName != "CustomNode" ? typeName : type.functionName  %>
+          <% } else { %>
+            <%= name %>
+          <% } %>
+        </span>
+
+        <div class="slider" style="display: inline-block; width: 140px; height: 8px; margin: 0; padding: 0"></div>
+
+        <div class="num-data-container" style="display: inline-block;">
+          <input type="number" class="currentValue" style="number-node-input" value="<%= type.value %>" />
+        </div>
+
+      </script>
+
+      <script type="text/template" id="header-template">
+
+        <div class="customize-header-container">
+          <span class="customize-header" id="customize-header-tag">Custom</span>
+          <span class="customize-header" id="customize-header-title"><%= name %></span>
+        </div>
+
+        <div id="customizer-header-controls" class="dropdown">
+
+          <% if (!isCustomizer) { %> 
+            <span class="indicator private">private</span>
+          <% } %>
+
+          <i class="fa fa-download fa-fw dim-button"></i>
+
+        </div>
+
+        <!--
+
+        <div id="customizer-header-controls" class="dropdown">
+
+          <a href="#" data-toggle="dropdown" href="#">
+            <i class="fa fa-download fa-fw"></i>
+          </a>
+
+          <ul class="dropdown-menu" role="menu" style="color: black" aria-labelledby="dLabel">
+
+            <span class="dropdown-header">Min</span>
+            <input type="number" class="num-min">
+
+            <span class="dropdown-header">Max</span>
+            <input type="number" class="num-max">
+
+          </ul>
+        </div>
+
+        !-->
+
+      </script>
+
+      <script>
+
+        function checkWebGL() { 
+           try{
+            var canvas = document.createElement( 'canvas' ); 
+            return !! window.WebGLRenderingContext && ( 
+                 canvas.getContext( 'webgl' ) || canvas.getContext( 'experimental-webgl' ) );
+           }catch( e ) { return false; } 
+         };
+
+        if (!checkWebGL()) {
+          var appfail = document.getElementById("app-fail");
+          appfail.style.display = '';
+        }
+
+      </script>
+
+        <!--[if lt IE 7]>
+            <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+        <![endif]-->
+
+    <!-- Application source. -->
+    <!-- build:[src] customizer.min.js -->
+    <script data-main="/scripts/customizer" src="/bower_components/requirejs/require.js"></script>
+    <!-- /build -->
+
+    <script>
+
+      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+      })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+      ga('create', 'UA-54947421-1', 'auto');
+      ga('send', 'pageview');
+
+    </script>
+
+</body>
+</html>

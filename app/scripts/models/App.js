@@ -17,6 +17,7 @@ define(['backbone', 'Workspaces', 'Node', 'Login', 'Workspace', 'SearchElements'
       showingBrowser: false,
       showingSearch: false,
       showingFeedback: false,
+      showingShare: false,
       showingHelp: false,
       isFirstExperience: false,
       clipBoard: {}

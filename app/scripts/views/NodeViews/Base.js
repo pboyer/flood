@@ -21,6 +21,7 @@ define(['backbone', 'jqueryuidraggable', 'bootstrap', 'Hammer'], function(Backbo
       'click':  'selectThis',
 
       'change .use-default-checkbox': 'useDefaultClick',
+      'blur .name-input': 'updateName',
       'click .toggle-vis': 'toggleGeomVis',
       'click .rep-type': 'replicationClick'
     },
@@ -35,6 +36,7 @@ define(['backbone', 'jqueryuidraggable', 'bootstrap', 'Hammer'], function(Backbo
       this.listenTo(this.model, 'change:lastValue', this.renderLastValue );
       this.listenTo(this.model, 'change:failureMessage', this.renderLastValue );
       this.listenTo(this.model, 'change:ignoreDefaults', this.colorPorts );
+      this.listenTo(this.model, 'change:name', this.render );
       this.listenTo(this.model, 'connection', this.colorPorts);
       this.listenTo(this.model, 'disconnection', this.colorPorts);
       this.listenTo(this.model, 'change:selected', this.colorSelected);
@@ -48,6 +50,14 @@ define(['backbone', 'jqueryuidraggable', 'bootstrap', 'Hammer'], function(Backbo
       this.$workspace_canvas = $('#workspace_canvas');
       this.position = this.model.get('position');
 
+    },
+
+    updateName: function(e){
+      var val = this.$el.find('.name-input').val();
+      if (this.model.get('name') === val) return;
+      
+      var cmd = { property: 'name', _id: this.model.get('_id'), newValue : val };
+      this.model.workspace.setNodeProperty(cmd);
     },
 
     onEvalFailed: function(exception){

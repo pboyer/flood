@@ -1,0 +1,112 @@
+#customizer-app {
+	background: #e3e3e3;
+	top: 0;
+	right: 0;
+	left: 0;
+	bottom: 0;
+	position: absolute;
+}
+
+#customizer-workspace-header {
+	position: absolute;
+	bottom: -12px;
+	right: -12px;
+	color: #444;
+	height: 20px;
+	padding: 10px;
+	font-size: 18px;
+	text-shadow: 0px 1px 1px whitesmoke;
+	text-align: right;
+}
+
+
+#customizer-workspace {
+	color: black;
+	position: absolute;
+	top: 100px;
+	left: 0;
+	width: 380px;
+	z-index: 1;
+	background: rgba(0, 0, 0, 0.14);
+}
+
+#customizer-workspace.workspace-contracted {
+	width: 20px;
+}
+
+#customizer-viewer {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+	background: black;
+	z-index: 0;
+}
+
+#customizer-header {
+	position: absolute;
+	top: 0;
+	right: 0;
+	left: 0;
+	height: 50px;
+	z-index: 2;
+	font-size: 20px;
+	display: inline-block;
+	padding: 20px;
+	padding-left: 30px;
+	font-color: #222;
+	text-shadow: 0px 1px 1px whitesmoke;
+}
+
+.indicator {
+	margin-right: 30px;
+}
+
+#customize-header-tag {
+	text-transform: uppercase;
+	font-size: 13px;
+	color: grey;
+	font-weight: bold;
+}
+
+#powered-by {
+	position: absolute;
+	z-index: 2;
+	right: 0;
+	bottom: 0;
+	height: 36px;
+	padding: 10px;
+	font-size: 12px;
+	color: black;
+	text-shadow: 0px 1px 0px grey;
+}
+
+#customize-header-title {
+	padding-left: 20px;
+	font-size: 24px;
+}
+
+#customizer-header-controls {
+	padding: 30px;
+	position: absolute;
+	top: 0;
+	right: 0;
+}
+
+.widget {
+	width:370px;
+	margin: 20px;
+}
+
+.widget .name {
+	font-weight: bold;
+	text-transform: uppercase;
+	color: #222;
+	display: inline-block;
+	width: 130px;
+	text-align: right;
+	padding-right: 15px;
+	font-size: 11px;
+	text-shadow: 0px 1px 1px white;
+}
