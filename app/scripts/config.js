@@ -99,8 +99,20 @@ require.config({
             deps: [
             ],
             exports: 'almond'
+        },
+        CodeMirror: {
+            exports: 'CodeMirror'
+        },
+        CodeMirrorJs: {
+            deps: [ 'CodeMirror'],
+            exports: 'CodeMirrorJs'
         }
     },
+    packages: [{
+        name: "codemirror",
+        location: "../bower_components/CodeMirror/",
+        main: "lib/codemirror"
+    }],
     paths: {
 
         // backbone collections
@@ -160,13 +172,13 @@ require.config({
             LoginView: 'views/LoginView',
             WorkspaceBrowserElementView: 'views/WorkspaceBrowserElementView',
             WorkspaceBrowserView: 'views/WorkspaceBrowserView',
-        
+
         // node backbone views
         NodeViewTypes: 'views/NodeViews/NodeViews',
         BaseNodeView: 'views/NodeViews/Base',
         WatchNodeView: 'views/NodeViews/Watch',
         NumNodeView: 'views/NodeViews/Num',
-        FormulaView: 'views/NodeViews/Formula',
+        ScriptView: 'views/NodeViews/Script',
         InputView: 'views/NodeViews/Input',
         OutputView: 'views/NodeViews/Output',
         CustomNodeView: 'views/NodeViews/CustomNode',
@@ -180,6 +192,7 @@ require.config({
         scheme: 'lib/flood/scheme',
 
         // bower
+
         Hammer: '../bower_components/hammerjs/hammer',
         almond: '../bower_components/almond/almond',
         bootstrap: '../bower_components/bootstrap/dist/js/bootstrap',

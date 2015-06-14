@@ -238,8 +238,9 @@ input[type="button"].btn-block {
 	font-size: 10px;
 }
 
-.formula-text-input {
-	min-width: 200px;
+.CodeMirror {
+	height: auto;
+	border: 1px solid rgba(0,0,0,0.2);
 }
 
 .workspace-runner-status {
@@ -486,6 +487,10 @@ input[type="button"].btn-block {
 	background-color: green;
 	color: white;
 	font-weight: bold;
+}
+
+.script-add-remove-ports {
+	float: left;
 }
 
 #feedback-failure-message {
@@ -1181,7 +1186,6 @@ input[type="button"].btn-block {
 	color: #555;
 	font-weight: bold;
 	display: inline-block;
-	text-align: center;
 	float: left;
 	padding: 5px 10px 14px 5px;
 }

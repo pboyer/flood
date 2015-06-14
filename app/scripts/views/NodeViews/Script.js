@@ -1,4 +1,4 @@
-define(['backbone', 'underscore', 'jquery', 'BaseNodeView', 'FLOOD'], function(Backbone, _, $, BaseNodeView, FLOOD) {
+define(['backbone', 'underscore', 'jquery', 'BaseNodeView', 'FLOOD', 'codemirror', 'codemirror/mode/javascript/javascript'], function(Backbone, _, $, BaseNodeView, FLOOD, CodeMirror) {
 
   return BaseNodeView.extend({
 
@@ -7,7 +7,7 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView', 'FLOOD'], function(B
       this.model.on('change:extra', this.onChangedExtra, this);
     },
 
-    innerTemplate : _.template( $('#node-formula-template').html() ),
+    innerTemplate : _.template( $('#node-script-template').html() ),
 
     getCustomContents: function() {
 
@@ -63,28 +63,30 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView', 'FLOOD'], function(B
     },
 
     renderNode: function() {
+        BaseNodeView.prototype.renderNode.apply(this, arguments);
 
-    	BaseNodeView.prototype.renderNode.apply(this, arguments);
-
-      this.input = this.$el.find('.formula-text-input');
+      var ta = this.$el.find('.script-text-input');
+      var cm = CodeMirror.fromTextArea(ta[0], { mode: "javascript" });
 
       var that = this;
 
-      this.input.focus(function(e){ 
+      cm.on("focus",function(e){
       	that.selectable = false;
       	that.model.set('selected', false);
-      	e.stopPropagation();
       });
 
-      this.input.blur(function(){ 
+      cm.on("change", function(){
+        setTimeout(function(x){ that.renderPorts() }, 0);
+      });
 
-      	var ex = JSON.parse( JSON.stringify( that.model.get('extra') ) );
-      	if ( ex.script === that.input.val() ) return;
+      cm.on("blur",function(){
+     	var ex = JSON.parse( JSON.stringify( that.model.get('extra') ) );
+      	if ( ex.script === cm.getValue() ) return;
 
-      	ex.script = that.input.val();
+      	ex.script = cm.getValue();
 
       	that.model.workspace.setNodeProperty({property: "extra", _id: that.model.get('_id'), newValue: ex });
-      	that.selectable = true; 
+      	that.selectable = true;
       });
 
       this.$el.find('.add-input').click(function(){ that.addInput.call(that); });
@@ -99,7 +101,7 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView', 'FLOOD'], function(B
 
       var ex = this.model.get('extra');
       var exCopy = JSON.parse( JSON.stringify( ex ) );
-      
+
       exCopy.numInputs = numInputs;
       this.model.workspace.setNodeProperty({property: "extra", _id: this.model.get('_id'), newValue: exCopy, oldValue: ex });
     },

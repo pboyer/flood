@@ -14,6 +14,7 @@
         <link rel="stylesheet" href="bower_components/jquery.ui/themes/base/jquery.ui.all.css">
         <link rel="stylesheet" href="bower_components/components-font-awesome/css/font-awesome.min.css">
         <link rel="stylesheet" href="styles/bootstrap.css">
+        <link rel="stylesheet" href="bower_components/CodeMirror/lib/codemirror.css">
         <link rel="stylesheet" href="styles/main.css">
         <!-- /build -->
 
@@ -363,12 +364,12 @@
 
       </script>
 
-      <script type="text/template" id="node-formula-template">
-
-        <a href="#" class="add-input"> + </a> 
-        <a href="#" class="remove-input" style="padding-left: 10px; padding-right: 10px"> - </a>
-        <input type="text" class="formula-text-input" placeholder="Custom formula" value="<%= extra.script %>">
-
+      <script type="text/template" id="node-script-template">
+	<div class="script-add-remove-ports">
+		<a href="#" class="add-input"> + </a> 
+        	<a href="#" class="remove-input" style="padding-left: 10px; padding-right: 10px"> - </a>
+	</div>
+        <textarea type="text" class="script-text-input" placeholder="Custom formula"><%= extra.script %></textarea>
       </script>
 
       <script type="text/template" id="node-input-template">

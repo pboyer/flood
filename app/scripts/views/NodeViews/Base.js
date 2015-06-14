@@ -42,9 +42,8 @@ define(['backbone', 'jqueryuidraggable', 'bootstrap', 'Hammer'], function(Backbo
       this.listenTo(this.model, 'change:selected', this.colorSelected);
       this.listenTo(this.model, 'change:visible', this.render);
       this.listenTo(this.model, 'change:isEvaluating', this.colorEvaluating);
-
-      this.model.on('evalFailed', this.onEvalFailed, this );
-      this.model.on('evalBegin', this.onEvalBegin, this );
+      this.listenTo(this.model, 'evalFailed', this.onEvalFailed );
+      this.listenTo(this.model, 'evalBegin', this.onEvalBegin );
 
       this.makeDraggable();
       this.$workspace_canvas = $('#workspace_canvas');
