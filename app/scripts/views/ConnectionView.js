@@ -33,11 +33,11 @@ define(['backbone'], function(Backbone) {
         var nodes = this.workspace.get('nodes');
 
         if (nodes.get(this.endId) != undefined ){
-          this.listenTo( nodes.get(this.endId), 'change:position', this.render);
+          this.listenTo( nodes.get(this.endId), 'change:position resized', this.render);
         }
         
         if (nodes.get(this.startId) != undefined ){
-          this.listenTo( nodes.get(this.startId), 'change:position', this.render);
+          this.listenTo( nodes.get(this.startId), 'change:position resized', this.render);
         }
       }
       

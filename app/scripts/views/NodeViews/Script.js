@@ -1,10 +1,10 @@
-define(['backbone', 'underscore', 'jquery', 'BaseNodeView', 'FLOOD', 'codemirror', 'codemirror/mode/javascript/javascript'], function(Backbone, _, $, BaseNodeView, FLOOD, CodeMirror) {
+define(['backbone', 'underscore', 'jquery', 'ThreeCSGNodeView', 'FLOOD', 'codemirror', 'codemirror/addon/hint/javascript-hint', 'codemirror/mode/javascript/javascript'], function(Backbone, _, $, ThreeCSGNodeView, FLOOD, CodeMirror) {
 
-  return BaseNodeView.extend({
+  return ThreeCSGNodeView.extend({
 
     initialize: function(args) {
-      BaseNodeView.prototype.initialize.apply(this, arguments);
-      this.model.on('change:extra', this.onChangedExtra, this);
+      ThreeCSGNodeView.prototype.initialize.apply(this, arguments);
+      this.listenTo(this.model,'change:extra', this.onChangedExtra);
     },
 
     innerTemplate : _.template( $('#node-script-template').html() ),
@@ -63,20 +63,26 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView', 'FLOOD', 'codemirror
     },
 
     renderNode: function() {
-        BaseNodeView.prototype.renderNode.apply(this, arguments);
+      ThreeCSGNodeView.prototype.renderNode.apply(this, arguments);
 
       var ta = this.$el.find('.script-text-input');
       var cm = CodeMirror.fromTextArea(ta[0], { mode: "javascript" });
 
       var that = this;
-
+      
       cm.on("focus",function(e){
-      	that.selectable = false;
+	that.selectable = false;
       	that.model.set('selected', false);
       });
 
       cm.on("change", function(){
-        setTimeout(function(x){ that.renderPorts() }, 0);
+	// we need to update the ports and connectors after moving the node
+        setTimeout(function(){ 
+		// update the position of the node ports
+		that.renderPorts(); 
+		// update the position of the connections
+		that.model.trigger('resized'); 
+	}, 0);
       });
 
       cm.on("blur",function(){
@@ -88,12 +94,11 @@ define(['backbone', 'underscore', 'jquery', 'BaseNodeView', 'FLOOD', 'codemirror
       	that.model.workspace.setNodeProperty({property: "extra", _id: that.model.get('_id'), newValue: ex });
       	that.selectable = true;
       });
-
+      
       this.$el.find('.add-input').click(function(){ that.addInput.call(that); });
       this.$el.find('.remove-input').click(function(){ that.removeInput.call(that); });
-
+      
       return this;
-
     },
 
     setNumInputsProperty: function(numInputs){

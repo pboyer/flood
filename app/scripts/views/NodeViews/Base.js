@@ -284,7 +284,6 @@ define(['backbone', 'jqueryuidraggable', 'bootstrap', 'Hammer'], function(Backbo
       }
 
       return this;
-
     },
 
     truncatePreview: function( value, maxElements ){
@@ -448,8 +447,6 @@ define(['backbone', 'jqueryuidraggable', 'bootstrap', 'Hammer'], function(Backbo
 
       if (pos[0] < 0) pos[0] = 0;
       if (pos[1] < 0) pos[1] = 0;
-
-
 
       this.position = pos;
 

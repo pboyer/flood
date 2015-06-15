@@ -19,6 +19,10 @@ define('FLOODCSG',['FLOOD'], function(FLOOD) {
 	CSG.Polygon.floodTypeName = "Polygon";
 	CSG.Vector.floodTypeName = "Vector";
 	CSG.Plane.floodTypeName = "Plane";
+	
+	CSG.Polygon.postProcess = csgPostProcess;
+	CSG.Vector.postProcess = csgPostProcess;
+	CSG.Plane.postProcess = csgPostProcess;
 
 	CSG.prototype.render = function() {
 

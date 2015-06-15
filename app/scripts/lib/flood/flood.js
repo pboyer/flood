@@ -671,10 +671,41 @@ define('FLOOD',function() {
 
 		FLOOD.baseTypes.NodeType.call(this, typeData);
 
-		// for formula implementers convenience
+		var csgPostProcess = function(value){
+
+			if (!value) return {};
+
+			if ( value.map ) {
+
+				var d = [];
+				for (var i = 0; i < value.length; i++){
+					if (value[i] === undefined) continue;
+					d.push( value[i].render ? value[i].render() : value[i] );
+				}
+
+				return d;
+			}
+
+			if (!value.render) return value;
+
+			return value.render();
+
+		};
+
+		this.postProcess = csgPostProcess;
+
+		// extend the environment for formula implementers convenience
 		var Sin = Math.sin, Cos = Math.cos, Abs = Math.abs, Tan = Math.tan, Random = Math.random,
 			Asin = Math.asin, Atan = Math.atan, Acos = Math.acos, Exp = Math.exp, Sqrt = Math.sqrt,
 			Pow = Math.pow, Pi = Math.PI, Eval = eval;
+
+		// extend the environment with all of the node types
+		var e = "";
+		for (var nt in FLOOD.nodeTypes){
+			e = e + "var " + nt + " = function(){ return (new FLOOD.nodeTypes." + nt + ").eval.apply(this, arguments); };";				
+		}
+
+		eval(e);
 
 		this.eval = function() {
 			var _fa = Array.prototype.slice.call(arguments, 0);
@@ -721,7 +752,7 @@ define('FLOOD',function() {
 				return x.name;
 			}).join(',');
 
-			return '(function('+ inputNames + ') { return ';
+			return '(function('+ inputNames + ')' + '{ return ';
 		};
 
 		var suffix = function(){
