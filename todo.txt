@@ -1,3 +1,5 @@
+fix compression issue with codemirror
+fix issue where +/- buttons dont work on script node
 font-awesome 404
 
 do not allow dragging node too far
