@@ -1,4 +1,4 @@
-define(['backbone', 'underscore', 'jquery', 'ThreeCSGNodeView', 'FLOOD', 'codemirror', 'codemirror/mode/javascript/javascript'], function(Backbone, _, $, ThreeCSGNodeView, FLOOD, CodeMirror) {
+define(['backbone', 'underscore', 'jquery', 'ThreeCSGNodeView', 'FLOOD', 'codemirror', 'codemirror/mode/javascript/javascript','codemirror/addon/hint/show-hint', 'codemirror/addon/hint/javascript-hint' ], function(Backbone, _, $, ThreeCSGNodeView, FLOOD, CodeMirror) {
 
   return ThreeCSGNodeView.extend({
 
@@ -62,13 +62,27 @@ define(['backbone', 'underscore', 'jquery', 'ThreeCSGNodeView', 'FLOOD', 'codemi
 
     },
 
+    extendScope: _.once(function(){
+
+     var or = CodeMirror.hint.javascript;
+     CodeMirror.hint.javascript = function(editor, options){
+	options.globalScope = FLOOD.nodeTypes;
+	return or(editor, options);	
+     }
+    }),
+
     renderNode: function() {
       ThreeCSGNodeView.prototype.renderNode.apply(this, arguments);
 
-      var ta = this.$el.find('.script-text-input');
-      var cm = CodeMirror.fromTextArea(ta[0], { mode: "javascript" });
+      this.extendScope();
 
-      var that = this;
+      var ta = this.$el.find('.script-text-input');
+      var cm = CodeMirror.fromTextArea(ta[0], 
+      	{ extraKeys: {"Ctrl-Space": "autocomplete"},
+	  mode: { name :"javascript" }
+	});
+	
+     var that = this;
       
       cm.on("focus",function(e){
 	that.selectable = false;

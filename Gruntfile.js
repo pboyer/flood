@@ -106,8 +106,9 @@ module.exports = function (grunt) {
                         '<%= yeoman.app %>/bower_components/jquery.ui/themes/base/*.css',
                         '<%= yeoman.app %>/bower_components/components-font-awesome/css/font-awesome.min.css',
                         '<%= yeoman.app %>/styles/bootstrap.css',
-                        '<%= yeoman.app %>/styles/main.css',
 			'<%= yeoman.app %>/bower_components/CodeMirror/lib/codemirror.css',
+			'<%= yeoman.app %>/bower_components/CodeMirror/addon/hint/show-hint.css',
+			'<%= yeoman.app %>/styles/main.css',
                     ],
                     '<%= yeoman.dist %>/customizer.min.css': [
                         '.tmp/styles/{,*/}*.css',

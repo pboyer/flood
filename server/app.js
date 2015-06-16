@@ -59,7 +59,6 @@ mongoose.connection.on('error', function() {
 /**
  * Express configuration.
  */
-
 var hour = 3600000;
 var day = hour * 24;
 var week = day * 7;
@@ -96,7 +95,7 @@ app.use(function(req, res, next) {
 });
 app.use(flash());
 
-var staticFolder = process.env.FLOOD_STATIC || '../dist';
+var staticFolder = process.env.FLOOD_STATIC || '../app';
 app.use(express.static(path.join(__dirname, staticFolder )));
 app.use(function(req, res, next) {
   // Keep track of previous URL
