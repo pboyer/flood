@@ -1,4 +1,4 @@
-define(['backbone', 'underscore', 'jquery', 'ThreeCSGNodeView', 'FLOOD', 'codemirror', 'codemirror/addon/hint/javascript-hint', 'codemirror/mode/javascript/javascript'], function(Backbone, _, $, ThreeCSGNodeView, FLOOD, CodeMirror) {
+define(['backbone', 'underscore', 'jquery', 'ThreeCSGNodeView', 'FLOOD', 'codemirror', 'codemirror/mode/javascript/javascript'], function(Backbone, _, $, ThreeCSGNodeView, FLOOD, CodeMirror) {
 
   return ThreeCSGNodeView.extend({
 

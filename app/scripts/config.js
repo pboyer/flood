@@ -99,15 +99,8 @@ require.config({
             deps: [
             ],
             exports: 'almond'
-        },
-        CodeMirror: {
-            exports: 'CodeMirror'
-        },
-        CodeMirrorJs: {
-            deps: [ 'CodeMirror'],
-            exports: 'CodeMirrorJs'
         }
-    },
+   },
     packages: [{
         name: "codemirror",
         location: "../bower_components/CodeMirror/",

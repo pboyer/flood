@@ -96,7 +96,7 @@ app.use(function(req, res, next) {
 });
 app.use(flash());
 
-var staticFolder = process.env.FLOOD_STATIC || '../app';
+var staticFolder = process.env.FLOOD_STATIC || '../dist';
 app.use(express.static(path.join(__dirname, staticFolder )));
 app.use(function(req, res, next) {
   // Keep track of previous URL
