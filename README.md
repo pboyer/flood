@@ -1,13 +1,13 @@
 ![Image](https://raw.github.com/pboyer/flood/master/extra/screenshot.png) 
 
 
-##flood
+## flood
 
-###What is it?
+### What is it?
 
 flood is a [dataflow](http://en.wikipedia.org/wiki/Dataflow_programming)-style visual programming language based on Scheme written in JavaScript.  flood runs in a browser and as a standalone application on all platforms via [node-webkit](https://github.com/rogerwang/node-webkit).  
 
-###Features
+### Features
 
 * Continuous autosave (a la Google Drive)
 * Instant node search
@@ -22,7 +22,7 @@ flood is a [dataflow](http://en.wikipedia.org/wiki/Dataflow_programming)-style v
 
 flood, like early versions of [Dynamo](http://github.com/ikeough/Dynamo), is based on Scheme and thus has many of the features of that language.  It uses a [lightweight scheme interpreter](http://github.com/pboyer/scheme.js) I wrote called scheme.js.
 
-###Getting started
+### Getting started
 
 The flood app is scaffolded with [Yeoman](http://yeoman.io/), uses [Grunt](http://gruntjs.com/) for task management and [Bower](http://bower.io/) for web package management.  If you're not familiar with these tools, you should take a look at the docs and get them installed.  
 
@@ -30,7 +30,7 @@ flood uses [require.js](http://requirejs.org/) to manage dependencies between Ja
 
 flood also has a server written in node.js that handles user authentication and model synchronization. 
 
-####Installing dependencies for the app
+#### Installing dependencies for the app
 
 To install all of the dependencies for the flood app, run the following commands in the root directory:
 
@@ -39,7 +39,7 @@ To install all of the dependencies for the flood app, run the following commands
 
 This will install all of the development dependencies for Grunt and all of the public dependencies with bower.
 
-####Installing dependencies for the server
+#### Installing dependencies for the server
 
 To install all of the node.js dependencies for the flood server, run the following commands in the "server" directory:
 
@@ -48,7 +48,7 @@ To install all of the node.js dependencies for the flood server, run the followi
 You will also need to install MongoDB and run an instance on port 27017, the default port for MongoDB.  You can get MongoDB [here](http://www.mongodb.org/downloads).
 
 
-####Running the server
+#### Running the server
 
 For development, I recommend using the great nodemon tool:
 
@@ -63,14 +63,14 @@ You can also run the server using:
 	node app.js
 
 
-####Building for the web (outdated)
+#### Building for the web (outdated)
 
 The entire app can be compressed into lightweight, minified, and concatenated css, js, and html files using Grunt:
 
 	grunt 
 
 
-####Building for the desktop
+#### Building for the desktop
 
 flood can be used as a standalone application via node-webkit.  Just do this:
 
@@ -79,11 +79,11 @@ flood can be used as a standalone application via node-webkit.  Just do this:
 This will generate binaries for use on Mac and Windows in the dist_desktop folder.
 
 
-###License
+### License
 
 The MIT License (MIT)
 
-Copyright (c) Peter Boyer 2014
+Copyright (c) Peter Boyer 2014-7
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
