@@ -9,15 +9,15 @@ flood is a [dataflow](http://en.wikipedia.org/wiki/Dataflow_programming)-style v
 
 ### Features
 
-* Continuous autosave (a la Google Drive)
-* Instant node search
-* Undo/redo (maintained across user sessions)
+* Constructive solid geometry - Cube, cylinder, sphere, union, intersect, subtract
+* Formula node - evaluate javascript in a node
+* Never save your work
+* Fast node library search
+* Undo/redo across user sessions
 * Copy/paste
 * Multiple workspaces
-* Background thread evaluation
+* Async evaluation
 * Partial function application
-* Formula node - evaluate javascript in a node
-* Constructive solid geometry - Cube, cylinder, sphere, union, intersect, subtract
 * "Always on" continuous execution
 
 flood, like early versions of [Dynamo](http://github.com/ikeough/Dynamo), is based on Scheme and thus has many of the features of that language.  It uses a [lightweight scheme interpreter](http://github.com/pboyer/scheme.js) I wrote called scheme.js.
